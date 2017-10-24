@@ -12,6 +12,10 @@ class ByteCodes
   end
   attr_accessor :pc, :codes
 
+  def <<(value)
+    @codes << value
+  end
+
   def next
     code = @codes[@pc]
     @pc += 1

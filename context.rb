@@ -7,4 +7,9 @@ class Context
     @constants = []
   end
   attr_accessor :stack, :constants
+  
+  def store_constant(value)
+    @constants << value
+    @constants.length - 1
+  end
 end
