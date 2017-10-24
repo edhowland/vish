@@ -20,9 +20,9 @@ rescue ErrorState => err
   $stderr.puts err.message
   x_status = err.exit_code
   $stderr.puts 'bytecodes:'
-  $stderr.p bc
+  $stderr.puts bc.inspect
   $stderr.puts 'Context'
-  $stderr.p ctx
+  $stderr.puts ctx.inspect
   rescue HaltState => state
     x_status = state.exit_code
 end

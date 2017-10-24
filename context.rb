@@ -22,4 +22,8 @@ class Context
     @vars[actual] = value
     actual
   end
+
+  def inspect
+    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}"
+  end
 end

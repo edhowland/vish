@@ -1,5 +1,8 @@
 # interp.rb - interpret method - interp
-
+# TODO: Make the loop internal guts follow this pseudo-code:
+# bcode = fetch
+# instruction = decode(bcode)
+# execute(instruction)
 # main interperter run loop:
 def interp(bc, ctx)
   pcodes = opcodes
