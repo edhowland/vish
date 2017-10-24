@@ -9,10 +9,7 @@ require_relative 'compile'
 
 source = load_source(ARGF)
 bc, ctx = compile(source)
-
-
-
-
+# Now run our bytecode interperter with bc and ctx
 interp(bc, ctx)
 
 puts 'The result is '
