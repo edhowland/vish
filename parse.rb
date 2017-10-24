@@ -3,5 +3,5 @@
 # TODO: Currently, the AST is just an Array
 
 def parse(string)
-  [Numeral.new(1), Numeral.new(34), BinaryAdd.new()]
+  [Numeral.new(1), Numeral.new(34), BinaryAdd.new(), LValue.new('result')]
 end

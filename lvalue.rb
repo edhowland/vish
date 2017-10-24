@@ -4,7 +4,7 @@
  class LValue < Terminal
 
   def emit(bc, ctx)
-    bc << :pushv
+    bc << :pushl
     bc << ctx.store_var(@value)
   end
 

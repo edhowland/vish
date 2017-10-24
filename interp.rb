@@ -2,11 +2,12 @@
 
 # main interperter run loop:
 def interp(bc, ctx)
-pcodes = opcodes
+  pcodes = opcodes
 
 loop do
   code = bc.next
   break if code.nil?
+  raise OpcodeError.new(code) unless pcodes.has_key?(code)
   pcodes[code].call(bc, ctx)
 end
 end

@@ -3,7 +3,7 @@
 require 'rubytree'
 
 
-
+require_relative 'opcode_error'
 require_relative 'bytecode'
 require_relative 'context'
 require_relative 'opcodes'
