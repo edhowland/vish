@@ -3,23 +3,15 @@
 
 require_relative 'viper'
 require_relative 'interp'
+require_relative 'load_source'
+require_relative 'compile'
 
 
-ctx = Context.new
-bc = ByteCodes.new
+source = load_source(ARGF)
+bc, ctx = compile(source)
 
 
 
-
-# Hand walk the AST
-# for this expression/statement
-# result = 1 + 34
-num_1 = Numeral.new(1)
-num_34 = Numeral.new(34)
-num_1.emit(bc, ctx)
-num_34.emit(bc, ctx)
-adder = BinaryAdd.new
-adder.emit(bc, ctx)
 
 interp(bc, ctx)
 

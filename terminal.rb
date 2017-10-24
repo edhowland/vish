@@ -4,8 +4,8 @@ class Terminal
   def initialize value
     @value = value
   end
-  attr_accessor :value
-  
+  attr_reader :value
+
   def emit(bc, ctx)
     raise 'Invalid call to base class Terminal#emit'
   end
