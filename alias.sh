@@ -2,4 +2,4 @@
 # alias.sh - sets some local aliases
 # source ./alias.sh
 
-alias rm='./main.rb empty.vsh'
+alias vm='./main.rb empty.vsh'

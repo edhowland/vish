@@ -3,6 +3,8 @@
 require 'rubytree'
 
 
+require_relative 'error_state'
+require_relative 'halt_state'
 require_relative 'opcode_error'
 require_relative 'bytecode'
 require_relative 'context'
