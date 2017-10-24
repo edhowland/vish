@@ -27,8 +27,5 @@ rescue ErrorState => err
     x_status = state.exit_code
 end
 
-puts 'The result is '
-p ctx.stack.pop
-
 exit(x_status)
 

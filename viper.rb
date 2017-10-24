@@ -2,8 +2,8 @@
 
 require 'rubytree'
 
-
 require_relative 'error_state'
+require_relative 'stack_not_empty'
 require_relative 'halt_state'
 require_relative 'opcode_error'
 require_relative 'bytecode'
@@ -15,5 +15,7 @@ require_relative 'numeral'
 require_relative 'binary_add'
 require_relative 'lvalue'
 require_relative 'assign'
+require_relative 'deref'
+require_relative 'final'
 
 

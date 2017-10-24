@@ -17,6 +17,8 @@ def opcodes
     # assignments and dereferences
     assign: ->(bc, ctx) {  var = ctx.stack.pop; value = ctx.stack.pop; ctx.vars[var] = value },
 
+    # environment instructions : print, . .etc
+    print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
     # machine low-level instructions: nop, halt, jmp, error, etc.
     nop: ->(bc, ctx) { },
     halt: ->(bc, ctx) { raise HaltState.new },
