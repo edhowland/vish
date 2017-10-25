@@ -1,0 +1,22 @@
+
+
+Git tags:
+
+AST:
+
+Implemented actual Abstract Syntax Tree using rubytree gem.
+Cleaned up interp.rb to code_interperter.rb
+Added debug support in pry_helper.rb. go method returns CodeInterperter.
+  for_broke(ci) will run the entire thing. E.g. for_broke(go)
+  one: method to run one fetch, decode and execute step.
+  what_is: given code from fetch, prints Human  readable value.
+
+
+working.example:
+
+First attempt. 
+Using interp.rb to pull the bytecodes and then run them given ByteCodes, Context.
+Main code in main.rb: Loads source, compiles and runs it in interp method.
+The parse method just returns 1 dimensional array of bytecodes.
+The opcodes method returns hash of bytecode to lambdas that
+  take ByteCodes, Context and manipulate the stack in  Context.stack.
