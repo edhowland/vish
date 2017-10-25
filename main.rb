@@ -10,10 +10,11 @@ require_relative 'compile'
 source = load_source(ARGF)
 bc, ctx = compile(source)
 # Now run our bytecode interperter with bc and ctx
-#binding.pry
 x_status = 0
 begin
-  interp(bc, ctx)
+# was: interp(bc, ctx)
+ci = CodeInterperter.new(bc, ctx)
+ci.run
 rescue OpcodeError => err
   $stderr.puts err.message
   exit(err.exit_code)
