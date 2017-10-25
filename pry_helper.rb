@@ -60,3 +60,16 @@ def one ci
   puts "result stack"
   dump_stack(ci)
 end
+
+
+def for_broke(ci)
+  begin
+    ci.run
+  
+ rescue HaltState
+   # nop
+  rescue err
+    puts err.message
+    puts 'should not have got this'
+  end
+end
