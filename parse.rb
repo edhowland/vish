@@ -20,8 +20,12 @@ end
 
 # s1 : result=42
 def statement1
-  s1 = mknode(Assign.new, 's1') <<
-    mknode(LValue.new('result'))
+#  s1 = mknode(Assign.new, 's1') <<
+#    mknode(LValue.new('result'))
+#  s1 << mknode(Numeral.new(42))
+
+  s1 = mknode(Assign.new, 's1')
+  s1 << mknode(LValue.new('result'))
   s1 << mknode(Numeral.new(42))
   s1
 end
