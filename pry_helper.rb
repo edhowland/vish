@@ -43,3 +43,20 @@ end
 def go
   CodeInterperter.new(*compile(''))
 end
+def dump_vars ci
+  ci.ctx.vars
+end
+
+
+def dump_stack ci
+  ci.ctx.stack
+end
+
+def one ci
+  c = ci.fetch
+  i = ci.decode c
+  ci.execute i
+  puts "code was: #{c}: #{what_is(c)}"
+  puts "result stack"
+  dump_stack(ci)
+end

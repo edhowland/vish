@@ -18,7 +18,7 @@ def opcodes
 
     # assignments and dereferences
     # :assign - pop the name of the var, pop the value, store in ctx.vars
-    assign: ->(bc, ctx) {  var = ctx.stack.pop; value = ctx.stack.pop; ctx.vars[var] = value },
+    assign: ->(bc, ctx) {  value = ctx.stack.pop; var = ctx.stack.pop; ctx.vars[var] = value },
 
     # environment instructions : print, . .etc
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
