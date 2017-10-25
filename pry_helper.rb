@@ -3,7 +3,7 @@
 # setup Pry environment
 require_relative 'vish'
 require_relative 'compile'
-require_relative 'interp'
+require_relative 'code_interperter'
 
 
 
