@@ -8,6 +8,7 @@ def compile(string)
   # Hand walk the AST
 
   ast = parse(string)
-  ast.each { |n| n.content.emit(bc, ctx) }
+  ast.postordered_each {|n| n.content.emit(bc, ctx) }
+#  ast.post_order_each { |n| n.content.emit(bc, ctx) }
   return bc, ctx
 end

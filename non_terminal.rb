@@ -4,4 +4,8 @@ class NonTerminal
   def emit(bc, ctx)
     raise 'Invalid call to NonTerminal.emit'
   end
+
+  def inspect
+    self.class.name
+  end
 end

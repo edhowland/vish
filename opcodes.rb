@@ -17,6 +17,7 @@ def opcodes
     add: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend1 + addend2) },
 
     # assignments and dereferences
+    # :assign - pop the name of the var, pop the value, store in ctx.vars
     assign: ->(bc, ctx) {  var = ctx.stack.pop; value = ctx.stack.pop; ctx.vars[var] = value },
 
     # environment instructions : print, . .etc

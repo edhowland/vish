@@ -9,4 +9,8 @@ class Terminal
   def emit(bc, ctx)
     raise 'Invalid call to base class Terminal#emit'
   end
+
+  def inspect
+    "#{self.class.name}: value: #{@value}"
+  end
 end
