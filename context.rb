@@ -2,7 +2,7 @@
 
 
 # This value is stored before any assignment(s)
-Undefined = 0xff
+Undefined = 'undefined'
 
 class Context
   def initialize
@@ -21,5 +21,9 @@ class Context
     actual = key.to_sym
     @vars[actual] = value
     actual
+  end
+
+  def inspect
+    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}"
   end
 end

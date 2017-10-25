@@ -21,5 +21,8 @@ class ByteCodes
     @pc += 1
     code
   end
+  def length
+    @codes.length
+  end
 end
 

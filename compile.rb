@@ -6,10 +6,9 @@ def compile(string)
   bc = ByteCodes.new
   ctx = Context.new
   # Hand walk the AST
-  #var_1 = LValue.new('result')
-  #var_1.emit(bc, ctx)
 
   ast = parse(string)
-  ast.each { |n| n.emit(bc, ctx) }
+  ast.postordered_each {|n| n.content.emit(bc, ctx) }
+#  ast.post_order_each { |n| n.content.emit(bc, ctx) }
   return bc, ctx
 end
