@@ -1,0 +1,45 @@
+# pry_helper.rb - Invoke with pry -r ./pry_helper.rb
+
+# setup Pry environment
+require_relative 'viper'
+require_relative 'compile'
+require_relative 'interp'
+
+
+
+
+def what_is code
+  result = 'undefined'
+  {
+    # 
+    pushc:  'pushes value of indexed constant',
+
+    # :pushv : 
+    pushv: 'Pushes value of named variable',
+    
+    # :pushl - 
+    pushl: 'Pushes name of LValue on stack',
+
+    # Arithmetic instructions. TODO:  add these: sub: mult: and div:
+    # TODO: Should we add Logical ops like :and and :or ?
+    # :add - 
+    add: 'BinararyAdd - Pops 2 operands and pushes the result of adding them',
+
+    # assignments and dereferences
+    # :assign - 
+    assign: 'Pop the name of the var, pop the value, store in ctx.vars',
+
+    # environment instructions : print, . .etc
+    print: 'Pops top value of stack and prints it to standard out',
+
+    # machine low-level instructions: nop, halt, jmp, error, etc.
+    # :cjmp - jump if top of stack is true. Do we need the opposite?
+    nop: ->(bc, ctx) { },
+    halt: ->(bc, ctx) { raise HaltState.new },
+    error: ->(bc, ctx) { raise ErrorState.new }
+  }[code] || result
+end
+
+def go
+  CodeInterperter.new(*compile(''))
+end

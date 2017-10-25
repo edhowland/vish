@@ -2,7 +2,7 @@
 
 
 # This value is stored before any assignment(s)
-Undefined = 0xff
+Undefined = 'undefined'
 
 class Context
   def initialize

@@ -10,6 +10,7 @@ require_relative 'compile'
 source = load_source(ARGF)
 bc, ctx = compile(source)
 # Now run our bytecode interperter with bc and ctx
+#binding.pry
 x_status = 0
 begin
   interp(bc, ctx)
