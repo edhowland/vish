@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # main.rb - main file for bytecode interpretation
 
-require_relative 'viper'
+require_relative 'vish'
 require_relative 'interp'
 require_relative 'load_source'
 require_relative 'compile'

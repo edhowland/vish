@@ -1,7 +1,7 @@
 # pry_helper.rb - Invoke with pry -r ./pry_helper.rb
 
 # setup Pry environment
-require_relative 'viper'
+require_relative 'vish'
 require_relative 'compile'
 require_relative 'interp'
 

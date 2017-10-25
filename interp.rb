@@ -24,6 +24,14 @@ class CodeInterperter
   def execute instruction
     instruction.call(@bc, @ctx)
   end
+
+  def run
+    while @bc.pc <= @bc.length
+      code = fetch
+      instruction = decode(code)
+      execute(instruction)
+    end
+  end
 end
 
 # main interperter run loop:
