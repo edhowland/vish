@@ -73,3 +73,10 @@ def for_broke(ci)
     puts 'should not have got this'
   end
 end
+
+
+# walker: walks the AST in pre-order, using .each
+def walker(ast)
+  ast.each {|e| p e.content }
+  nil
+end

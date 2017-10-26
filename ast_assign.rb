@@ -1,5 +1,7 @@
 # ast.rb - Placeholder for AST generation. Refactored from parse.rb
 
+
+
 # TODO:The AST is hand crafted
 
 $node_name = 0
@@ -9,12 +11,7 @@ def mknode(value, name=sprintf('%04d', $node_name))
 end
 
 # A program is :
-
-# expression1 ::= '35 + 2
-# assign ::= result '=' expression1
-# statement1 ::= assign
-# program ::= statement1 ';' statement2 _ final
-
+# program ::= statement; statement _ final
 def program(*args)
   pgm = mknode(Start.new, 'program')
   args.each {|a| pgm << a }
@@ -23,18 +20,15 @@ def program(*args)
   pgm
 end
 
-def expression1
-  add = mknode(BinaryAdd.new, 'expr1')
-  add << mknode(Numeral.new(35))
-  add << mknode(Numeral.new(2))
-  add
-end
-
-
+# s1 : result=42
 def statement1
+#  s1 = mknode(Assign.new, 's1') <<
+#    mknode(LValue.new('result'))
+#  s1 << mknode(Numeral.new(42))
+
   s1 = mknode(Assign.new, 's1')
   s1 << mknode(LValue.new('result'))
-  s1 << expression1
+  s1 << mknode(Numeral.new(42))
   s1
 end
 
