@@ -2,6 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     json (1.8.6)
+    parslet (1.8.0)
     rubytree (0.9.7)
       json (~> 1.8)
       structured_warnings (~> 0.2)
@@ -11,6 +12,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  parslet (~> 1.8)
   rubytree
 
 BUNDLED WITH
