@@ -9,4 +9,19 @@ end
 
 # Mini.new.parse("132432")  # => "132432"@0
 
+# REPL  without the L(oop)
+ecode = 1
+begin
+  puts 'vish> '
+  string = gets.chomp
+  Mini.new.parse(string)
+  puts 'done'
+  ecode = 0
+rescue => err
+  puts err.class.name
+  puts err.message
+end
 
+
+
+exit(ecode)
