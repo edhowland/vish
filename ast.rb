@@ -2,12 +2,7 @@
 
 # TODO:The AST is hand crafted
 # TODO : Remove this file from parse.rb. Replace with code from parslet parser generator.
-
-$node_name = 0
-def mknode(value, name=sprintf('%04d', $node_name))
-  $node_name += 1
-  Tree::TreeNode.new(name, value)
-end
+require_relative 'mknode'
 
 # A program is :
 
