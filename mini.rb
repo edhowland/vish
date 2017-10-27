@@ -22,7 +22,8 @@ class Mini < Parslet::Parser
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   rule(:expr) { funcall | sum | integer }
+  rule(:program) { expr.as(:program) }
 
   # The mainroot of our tree
-  root(:expr)
+  root(:program)
 end
