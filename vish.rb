@@ -16,6 +16,7 @@ require_relative 'binary_add'
 require_relative 'lvalue'
 require_relative 'assign'
 require_relative 'deref'
+require_relative 'funcall'
 
 # anchor nodes
 require_relative 'start'

@@ -1,4 +1,4 @@
 # TODO
 
-Need to fix gen.rb t resolve sum >> Integer, in :expr
-o 
+
+Eventually funcall in Mini class to change from puts(1,2) to 'puts 1 2'
