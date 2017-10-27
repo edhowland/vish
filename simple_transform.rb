@@ -4,15 +4,15 @@ require 'parslet'
 require_relative 'vish'
 
 class SimpleTransform < Parslet::Transform
-  rule(funcall: 'puts', arglist: sequence(:args)) {
+  rule(funcall: simple(:funcall), arglist: sequence(:args)) {
       # "puts(#{args.inspect})"
-      Funcall.new('puts', args)
+      Funcall.new(funcall, args)
         }
 end
 
 # for testing the above example rule:funcall
 def mktree
-   {funcall: 'puts', arglist: [1,2,3]}
+   {funcall: 'echo', arglist: [1,2,3]}
 end
 
 def mks
