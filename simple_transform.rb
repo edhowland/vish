@@ -6,7 +6,7 @@ require_relative 'vish'
 class SimpleTransform < Parslet::Transform
   rule(funcall: 'puts', arglist: sequence(:args)) {
       # "puts(#{args.inspect})"
-      Funcall.new(:funcall, args)
+      Funcall.new('puts', args)
         }
 end
 
