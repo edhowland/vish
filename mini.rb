@@ -1,6 +1,7 @@
 # mini.rb -  class Mini <  < Parslet::Parser
 # generates a parser from our grammar
-
+# This grammar accepts strings: integer | integer + integer | function(expr [, expr)
+# Usage: parser = Mini.new; parser.parse('puts(1+2,3)') => Hash of intermediate AST
   require 'parslet' 
 
 class Mini < Parslet::Parser
@@ -17,7 +18,11 @@ class Mini < Parslet::Parser
 
   rule(:oper) { match('[+]') >> space? }
   rule(:sum) { integer.as(:left) >> oper.as(:op) >> expr.as(:right) }
-  rule(:expr) { sum | integer }
+  rule(:arglist) { expr >> (comma >> expr).repeat }
+  rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
+  rule(:expr) { funcall | sum | integer }
+
+  # The mainroot of our tree
   root(:expr)
 end
