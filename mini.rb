@@ -11,9 +11,12 @@ class Mini < Parslet::Parser
     rule(:comma)      { str(',') >> space? }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
+  rule(:identifier) { match['a-z'].repeat(1) }
+
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
-  rule(:oper) { match('\+') >> space? }
+
+  rule(:oper) { match('[+]') >> space? }
   rule(:sum) { integer >> oper >> expr }
   rule(:expr) { sum | integer }
 
