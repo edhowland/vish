@@ -4,7 +4,13 @@
   require 'parslet' 
 
 class Mini < Parslet::Parser
-  rule(:integer) { match('[0-9]').repeat(1) >> space? }
+  # single character rules
+
+  rule(:lparen)     { str('(') >> space? }
+  rule(:rparen)     { str(')') >> space? }
+    rule(:comma)      { str(',') >> space? }
+
+  rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
   rule(:oper) { match('\+') >> space? }
