@@ -13,11 +13,6 @@ require_relative 'mknode'
 
 def program(*args)
   ProgramFactory.tree(*args)
-#  pgm = mknode(Start.new, 'program')
-#  args.each {|a| pgm << a }
-#  # get the final thing
-#  pgm << final
-#  pgm
 end
 
 def expression1
