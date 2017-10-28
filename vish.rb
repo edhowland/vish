@@ -28,3 +28,6 @@ require_relative 'binary_tree_factory'
 require_relative 'program_factory'
 
 
+
+# code emission stuff 
+require_relative 'emit_walker'
