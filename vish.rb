@@ -21,5 +21,8 @@ require_relative 'funcall'
 # anchor nodes
 require_relative 'start'
 require_relative 'final'
+
+# AST stuff
+require_relative 'mknode'
 require_relative 'binary_tree_factory'
 
