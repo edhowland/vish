@@ -12,7 +12,7 @@ require_relative 'mknode'
 # program ::= statement1 ';' statement2 _ final
 
 def program(*args)
-  ProgramFactory.tree(args)
+  ProgramFactory.tree(*args)
 #  pgm = mknode(Start.new, 'program')
 #  args.each {|a| pgm << a }
 #  # get the final thing
