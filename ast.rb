@@ -20,10 +20,7 @@ def program(*args)
 end
 
 def expression1
-  add = mknode(BinaryAdd.new, 'expr1')
-  add << mknode(Numeral.new(35))
-  add << mknode(Numeral.new(2))
-  add
+  BinaryTreeFactory.subtree(BinaryAdd, Numeral.new(35), Numeral.new(2))
 end
 
 
