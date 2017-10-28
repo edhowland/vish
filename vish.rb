@@ -25,4 +25,6 @@ require_relative 'final'
 # AST stuff
 require_relative 'mknode'
 require_relative 'binary_tree_factory'
+require_relative 'program_factory'
+
 

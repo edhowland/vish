@@ -8,4 +8,6 @@ require_relative 'vish'
 class AstTransform < Parslet::Transform
   rule(int: simple(:int)) { Numeral.new(int) }
   rule(left: simple(:lvalue), op: simple(:op), right: simple(:rvalue)) { BinaryTreeFactory.subtree(BinaryAdd, lvalue, rvalue) }
+  rule(program: simple(:program)) { ProgramFactory.tree(program) }
 end
+
