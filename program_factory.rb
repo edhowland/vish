@@ -6,7 +6,12 @@
 class ProgramFactory
   def self.tree(*args)
       pgm = mknode(Start.new, 'program')
-  args.each {|a| pgm << a }
+  args.each do |a|
+    if !a.instance_of? Tree::TreeNode
+      a = mknode(a)
+    end
+    pgm << a 
+  end
   pgm << mknode(Final.new, 'final')
   pgm
   end

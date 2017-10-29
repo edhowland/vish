@@ -4,6 +4,9 @@
 require_relative 'vish'
 require_relative 'compile'
 require_relative 'code_interperter'
+require_relative 'mini'
+require_relative 'ast_transform'
+
 
 
 
@@ -61,11 +64,11 @@ def one ci
   dump_stack(ci)
 end
 
-
+# Use with go command: for_broke go
 def for_broke(ci)
   begin
     ci.run
-  
+
  rescue HaltState
    # nop
   rescue err

@@ -16,3 +16,8 @@ will provide a nice wrapper around various things you can do here
 - interpret : load a bytecode from stdin or file and run it
 
 Eventually funcall in Mini class to change from puts(1,2) to 'puts 1 2'make ast_transform.rb in
+
+
+## Use of the highline Class is HighLine
+
+This gem might not be all that useful.
