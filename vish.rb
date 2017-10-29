@@ -1,6 +1,7 @@
 # Main requires for Viper lib
 
 require 'rubytree'
+require 'highline'
 
 require_relative 'error_state'
 require_relative 'stack_not_empty'

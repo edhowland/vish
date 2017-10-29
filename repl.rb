@@ -11,10 +11,16 @@ require_relative 'ast_transform'
 require_relative 'code_interperter'
 
 
+
+
 ecode = 1
+cli = HighLine.new
 begin
-  print 'vish> '
-  string = gets.chomp
+#  print 'vish> '
+ # string = gets.chomp
+loop do
+string = cli.ask 'vish> '
+  break  if string[0] == 'q' 
   ir  = Mini.new.parse(string)
 #   pp ir
   ast =  AstTransform.new.apply ir
@@ -22,9 +28,11 @@ begin
 bc, ctx = emit_walker ast
   ci = CodeInterperter.new(bc, ctx)
   result = ci.run
-  puts 'got:'
-    pp result
+
+
+end # of loop
   ecode = 0
+
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree
 rescue => err
