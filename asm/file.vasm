@@ -1,0 +1,8 @@
+# ../compiler/file.vshc disassembly into file.vasm
+pushc
+0
+pushc
+1
+add
+print
+halt
