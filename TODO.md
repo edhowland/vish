@@ -1,5 +1,24 @@
 # TODO
 
+
+
+## Completions
+
+MUST: Have some syntax for .vasm files to add Context stuff
+Should load .constants array and .vars hash
+Proposed syntax:
+
+```
+constants: 100, 33, 99, 45, 20
+vars:
+  name=13
+  var2=44
+  var3=55
+# end of vars
+```
+
+
+The vasm syntax will keep reading vars until no more indented lines, like in .haml
 ## Additions:
 
 Add in the thor gem from Yehuda. This
