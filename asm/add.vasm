@@ -1,5 +1,8 @@
 # add.vshc disassembly into add.vasm
+context:
 constants: 1,3
+vars:
+codes:
 pushc 0
 pushc 1
 add
