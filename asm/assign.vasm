@@ -1,4 +1,8 @@
 # assign.vshc disassembly into assign.vasm
+constants: 100
+vars:
+  name=undefined
+# bytecodes
 pushl name
 pushc 0
 assign
