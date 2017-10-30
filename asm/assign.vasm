@@ -1,8 +1,6 @@
-# ../compiler/assign.vshc disassembly into assign.vasm
-pushl
-name
-pushc
-0
+# assign.vshc disassembly into assign.vasm
+pushl name
+pushc 0
 assign
 print
 halt

@@ -20,8 +20,9 @@ begin
     code = enumr.next
     if has_operand? code
       operand = enumr.next
+      operand = " #{operand}"
     end
-    out.puts "#{code} #{operand}"
+    out.puts "#{code}#{operand}"
   end
 rescue StopIteration
   # nop
