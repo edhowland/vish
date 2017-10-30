@@ -9,6 +9,7 @@ class Mini < Parslet::Parser
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
     rule(:comma)      { str(',') >> space? }
+  rule(:equals) { str('=') >> space? }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:identifier) { match('[a-z]').repeat(1) }
@@ -18,11 +19,13 @@ class Mini < Parslet::Parser
 
   rule(:oper) { match('[+]') >> space? }
   rule(:sum) { integer.as(:left) >> oper.as(:op) >> expr.as(:right) }
+  rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   rule(:expr) { funcall | sum | integer }
-  rule(:program) { expr.as(:program) }
+  rule(:statement) { assign | expr }
+  rule(:program) { statement.as(:program) }
 
   # The mainroot of our tree
   root(:program)
