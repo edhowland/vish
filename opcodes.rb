@@ -1,4 +1,5 @@
 # opcodes.rb - Hash of lambdas representing various opcodes
+# MUST : Keep has_operand? code up-to-date when adding things here : @ end file
 
 def opcodes
   {
@@ -7,7 +8,7 @@ def opcodes
 
     # :pushv : Pushes value of named variable
     pushv: ->(bc, ctx) { var = bc.next; ctx.stack.push(ctx.vars[var]) },
-    
+
     # :pushl - Pushes name of LValue on stack
     pushl: ->(bc, ctx) { var = bc.next; ctx.stack.push(var) },
 
@@ -28,4 +29,8 @@ def opcodes
     halt: ->(bc, ctx) { raise HaltState.new },
     error: ->(bc, ctx) { raise ErrorState.new }
   }
+end
+
+def has_operand? code
+  [:pushc, :pushv, :pushl].member? code
 end
