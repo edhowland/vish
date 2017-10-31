@@ -11,18 +11,21 @@ class VasmGrammar < Parslet::Parser
   rule(:eq) { str('=') }
   rule(:octo) { str('#') }
   rule(:blahblah) { match(/[.a-zA-z0-9\ ]/).repeat(1) } 
+  rule(:identifier) { match('[a-z]').repeat(1) }
+  rule(:rvalue) { match('\d').repeat(1) }
+
   rule(:comment) { octo >> blahblah >> nl }
 
   # numbers
   rule(:integer) { match('[0-9]').repeat(1) }
 
   # context:
-  rule(:constants) { str('constants:') >> space >> integer >> (comma >> integer).repeat }
+  rule(:constants) { str('constants:') >> (space >> integer >> (comma >> integer).repeat).maybe >> nl }
 
 # vars:
   rule(:assign) { space >> space >> identifier >> eq >> rvalue >> nl }
-  rule(:vars) { str('vars') >> nl >> assign.repeat }
-  rule(:context) { constants >> vars }
+  rule(:vars) { str('vars:') >> nl >> assign.repeat }
+  rule(:context) { str('context:') >> nl >> constants >> vars}
   # codes:
   rule(:opcode) { match(/[a-z]/).repeat(1) }
   rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1) }
@@ -31,7 +34,7 @@ class VasmGrammar < Parslet::Parser
   rule(:statement) { opcode >> arg.maybe >> nl }
   rule(:sourceline) { comment | statement }
   rule(:codes) { str('codes:') >> nl >> sourceline.repeat(1) }
-rule(:program) { context >> codes }
+rule(:program) { comment >> context >> codes }
 
   # The root of our grammar for Vish assembly instructions
   root(:program)

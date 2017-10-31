@@ -4,6 +4,13 @@
 require_relative '../runtime/load_codes'
 require_relative '../opcodes'  # for has_operand? code
 
+def constants ctx
+  result = ''
+  unless ctx.constants.empty?
+    result = " #{ctx.constants.join(',')}"
+  end
+  result
+end
 
 fin, fout = ARGV
 
@@ -16,7 +23,7 @@ out.puts "# #{ARGV[0]} disassembly into #{ARGV[1]}"
 
 # write out the ctx : Context struct , sans the stack
 out.puts "context:"
-out.puts "constants: #{ctx.constants.join(',')}"
+out.puts "constants:" + constants(ctx)
 out.puts "vars:"
 ctx.vars.each_pair {|k, v| out.puts "  #{k}=#{v}" }
 out.puts "codes:"

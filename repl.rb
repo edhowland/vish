@@ -20,7 +20,7 @@ begin
  # string = gets.chomp
 loop do
 string = cli.ask 'vish> '
-  break  if string[0] == 'q' 
+  break  if string[0] == 'q' || string.chomp == 'exit' 
   ir  = Mini.new.parse(string)
 #   pp ir
   ast =  AstTransform.new.apply ir
