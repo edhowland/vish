@@ -21,12 +21,12 @@ class VasmGrammar < Parslet::Parser
   rule(:integer) { match('[0-9]').repeat(1) }
 
   # context:
-  rule(:constants) { str('constants:') >> (space >> integer >> (comma >> integer).repeat).maybe >> nl }
+  rule(:constants) { str('constants:') >> (space >> integer >> (comma >> integer).repeat).maybe.as(:clist) >> nl }
 
 # vars:
   rule(:assign) { str('  ') >> identifier >> eq >> rvalue >> nl }
-  rule(:vars) { str('vars:') >> nl >> assign.repeat }
-  rule(:context) { str('context:') >> nl >> constants >> vars}
+  rule(:vars) { str('vars:') >> nl >> assign.repeat.as(:vlist) }
+  rule(:context) { str('context:') >> nl >> constants.as(:constants) >> vars.as(:vars) }
   # codes:
   rule(:opcode) { match(/[a-z]/).repeat(1) }
   rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1) }
@@ -35,7 +35,7 @@ class VasmGrammar < Parslet::Parser
   rule(:statement) { opcode >> arg.maybe >> nl }
   rule(:sourceline) { comment | statement }
   rule(:codes) { str('codes:') >> nl >> sourceline.repeat(1) }
-rule(:program) { comment >> context >> codes }
+rule(:program) { comment >> context.as(:ctx) >> codes.as(:codes) }
 
   # The root of our grammar for Vish assembly instructions
   root(:program)
