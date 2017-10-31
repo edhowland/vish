@@ -2,6 +2,7 @@
 
 
 require 'parslet'
+require_relative 'single_chars'      # Import single character rules
 
 class VasmGrammar < Parslet::Parser
   rule(:space) { match('\s').repeat(1) }
@@ -12,7 +13,7 @@ class VasmGrammar < Parslet::Parser
   rule(:octo) { str('#') }
   rule(:blahblah) { match(/[.a-zA-z0-9\ ]/).repeat(1) } 
   rule(:identifier) { match('[a-z]').repeat(1) }
-  rule(:rvalue) { match('\d').repeat(1) }
+  rule(:rvalue) { match(/[a-zA-Z0-9]/).repeat(1) }
 
   rule(:comment) { octo >> blahblah >> nl }
 
@@ -23,7 +24,7 @@ class VasmGrammar < Parslet::Parser
   rule(:constants) { str('constants:') >> (space >> integer >> (comma >> integer).repeat).maybe >> nl }
 
 # vars:
-  rule(:assign) { space >> space >> identifier >> eq >> rvalue >> nl }
+  rule(:assign) { str('  ') >> identifier >> eq >> rvalue >> nl }
   rule(:vars) { str('vars:') >> nl >> assign.repeat }
   rule(:context) { str('context:') >> nl >> constants >> vars}
   # codes:
