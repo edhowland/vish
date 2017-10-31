@@ -32,8 +32,9 @@ class VasmGrammar < Parslet::Parser
   rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1) }
   rule(:arg) { space >> operand }
 
-  rule(:statement) { opcode.as(:opcode) >> arg.maybe.as(:operand) >> nl }
-  rule(:sourceline) { statement.as(:statement) }
+  rule(:statement1) { opcode.as(:opcode) >> nl }
+  rule(:statement2) { opcode.as(:opcode) >> arg.as(:operand) >> nl }
+  rule(:sourceline) { statement1 | statement2 }
   rule(:codes) { str('codes:') >> nl >> sourceline.repeat(1) }
 rule(:program) { comment >> context.as(:ctx) >> codes.as(:codes) }
 

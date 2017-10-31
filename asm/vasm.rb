@@ -28,8 +28,8 @@ begin
 
   ctx.constants = im[:ctx][:constants]
   ctx.vars = im[:ctx][:vars][:vlist].to_h
-  bc = ByteCodes.new;
-  bc.codes = im[:codes].map {|x| x[:statement] }.flatten
+  bc = ByteCodes.new
+  bc.codes = im[:codes].flatten
   out = File.open(fout, 'w')
   store_codes(bc, ctx, out)
 rescue Parslet::ParseFailed => failure

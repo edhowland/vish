@@ -1,5 +1,7 @@
 # pry_helper.rb - pry helps for vish/asm dir
 
+require_relative '../runtime/load_codes'
+
 require_relative 'vasm_grammar'
 require_relative 'utilities'
 require_relative 'vasm_transform'
