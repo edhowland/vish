@@ -5,6 +5,8 @@
   require 'parslet' 
 
 class Mini < Parslet::Parser
+  # empty string
+  rule(:empty) { str('').as(:empty) }
   # single character rules
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
@@ -24,7 +26,7 @@ class Mini < Parslet::Parser
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   rule(:expr) { funcall | sum | integer }
-  rule(:statement) { assign | expr }
+  rule(:statement) { assign | expr | empty }
   rule(:program) { statement.as(:program) }
 
   # The mainroot of our tree
