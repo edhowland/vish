@@ -21,10 +21,10 @@ class VasmGrammar < Parslet::Parser
   rule(:integer) { match('[0-9]').repeat(1) }
 
   # context:
-  rule(:constants) { str('constants:') >> (space >> integer >> (comma >> integer).repeat).maybe.as(:clist) >> nl }
+  rule(:constants) { str('constants:') >> (space >> integer.as(:int) >> (comma >> integer.as(:int)).repeat).maybe.as(:clist) >> nl }
 
 # vars:
-  rule(:assign) { str('  ') >> identifier >> eq >> rvalue >> nl }
+  rule(:assign) { str('  ') >> identifier.as(:ident) >> eq >> rvalue.as(:rvalue) >> nl }
   rule(:vars) { str('vars:') >> nl >> assign.repeat.as(:vlist) }
   rule(:context) { str('context:') >> nl >> constants.as(:constants) >> vars.as(:vars) }
   # codes:

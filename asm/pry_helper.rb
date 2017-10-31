@@ -1,6 +1,8 @@
 # pry_helper.rb - pry helps for vish/asm dir
 
 require_relative 'vasm_grammar'
+require_relative 'utilities'
+require_relative 'vasm_transform'
 
 def rfile fname
   s = File.read(fname)
@@ -18,4 +20,11 @@ def run &blk
   rescue Parslet::ParseFailed => failure
     puts failure.parse_failure_cause.ascii_tree 
   end
+end
+
+
+def ex fname
+  s, l = rfile fname
+  p = pars
+  p.parse s
 end

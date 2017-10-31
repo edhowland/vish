@@ -1,6 +1,6 @@
 # assign.vshc disassembly into assign.vasm
 context:
-constants: 100
+constants: 1,3
 vars:
   name=undefined
   straw=155
