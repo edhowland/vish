@@ -16,3 +16,11 @@ end
 def mkint value
   value.to_i
 end
+def mkbcode(stmnt)
+  opcode = stmnt[:opcode].to_s.to_sym
+  oper = stmnt[:operand]
+  result = [opcode]
+  result << oper.to_s unless oper.nil?
+  result
+  
+end

@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # vasm.rb - assembles .vasm files into .vshc bytecode files
 
+require_relative '../compiler/store_codes'
+
 require_relative 'vasm_grammar'
 require_relative 'utilities'
 require_relative 'vasm_transform'
@@ -26,7 +28,10 @@ begin
 
   ctx.constants = im[:ctx][:constants]
   ctx.vars = im[:ctx][:vars][:vlist].to_h
-  p ctx
+  bc = ByteCodes.new;
+  bc.codes = im[:codes].map {|x| x[:statement] }.flatten
+  out = File.open(fout, 'w')
+  store_codes(bc, ctx, out)
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree  
 end
