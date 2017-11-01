@@ -29,11 +29,11 @@ class VasmGrammar < Parslet::Parser
   rule(:context) { str('context:') >> nl >> constants.as(:constants) >> vars.as(:vars) }
   # codes:
   rule(:opcode) { match(/[a-z]/).repeat(1) }
-  rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1) }
+  rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1).as(:operand) }
   rule(:arg) { space >> operand }
 
   rule(:statement1) { opcode.as(:opcode) >> nl }
-  rule(:statement2) { opcode.as(:opcode) >> arg.as(:operand) >> nl }
+  rule(:statement2) { opcode.as(:opcode) >> arg >> nl }
   rule(:sourceline) { statement1 | statement2 }
   rule(:codes) { str('codes:') >> nl >> sourceline.repeat(1) }
 rule(:program) { comment >> context.as(:ctx) >> codes.as(:codes) }
