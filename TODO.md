@@ -1,24 +1,20 @@
 # TODO
 
+## Implement Arithmetic expressions
 
+- :sub - subtracts items on stack and pushes result
+- :mult - performs multiplication on top 2 items on stack, pushes result
+- :div - Perfroms division on top 2 items on stack and pushes result
+
+These codes can be checked with asm/vasm.rb and runtime/vre.rb.
+
+### Compiler additons:
+
+After implementing mkdir lib,
+add BinarySub etc. for AST construction.
 
 ## Completions
 
-MUST: Have some syntax for .vasm files to add Context stuff
-Should load .constants array and .vars hash
-Proposed syntax:
-
-```
-constants: 100, 33, 99, 45, 20
-vars:
-  name=13
-  var2=44
-  var3=55
-# end of vars
-```
-
-
-The vasm syntax will keep reading vars until no more indented lines, like in .haml
 ## Additions:
 
 Add in the thor gem from Yehuda. This
