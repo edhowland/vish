@@ -34,3 +34,7 @@ end
 def has_operand? code
   [:pushc, :pushv, :pushl].member? code
 end
+
+def has_numeric_operand? code
+  [:pushc].member? code
+end

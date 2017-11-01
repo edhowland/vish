@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # vasm.rb - assembles .vasm files into .vshc bytecode files
 
+require_relative '../opcodes'
+
 require_relative '../compiler/store_codes'
 
 require_relative 'vasm_grammar'
@@ -29,7 +31,11 @@ begin
   ctx.constants = im[:ctx][:constants]
   ctx.vars = im[:ctx][:vars][:vlist].to_h
   bc = ByteCodes.new
-  bc.codes = im[:codes].flatten
+
+# restore the int-iness of numeric opcodes
+  codes = im[:codes].map {|c| has_numeric_operand?(c[0]) ? [c[0], c[1].to_i] : c }.flatten
+
+  bc.codes = codes
   out = File.open(fout, 'w')
   store_codes(bc, ctx, out)
 rescue Parslet::ParseFailed => failure
