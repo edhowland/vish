@@ -2,12 +2,7 @@
 
 # TODO:The AST is hand crafted
 # TODO : Remove this file from parse.rb. Replace with code from parslet parser generator.
-
-$node_name = 0
-def mknode(value, name=sprintf('%04d', $node_name))
-  $node_name += 1
-  Tree::TreeNode.new(name, value)
-end
+require_relative 'mknode'
 
 # A program is :
 
@@ -17,18 +12,11 @@ end
 # program ::= statement1 ';' statement2 _ final
 
 def program(*args)
-  pgm = mknode(Start.new, 'program')
-  args.each {|a| pgm << a }
-  # get the final thing
-  pgm << final
-  pgm
+  ProgramFactory.tree(*args)
 end
 
 def expression1
-  add = mknode(BinaryAdd.new, 'expr1')
-  add << mknode(Numeral.new(35))
-  add << mknode(Numeral.new(2))
-  add
+  BinaryTreeFactory.subtree(BinaryAdd, Numeral.new(35), Numeral.new(2))
 end
 
 

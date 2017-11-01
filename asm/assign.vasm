@@ -1,0 +1,11 @@
+# assign.vshc disassembly into assign.vasm
+context:
+constants: 100
+vars:
+  name=undefined
+codes:
+pushl name
+pushc 0
+assign
+print
+halt

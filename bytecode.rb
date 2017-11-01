@@ -24,5 +24,8 @@ class ByteCodes
   def length
     @codes.length
   end
+  def to_h
+    {codes: @codes, pc: @pc }
+  end
 end
 
