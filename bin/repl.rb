@@ -5,10 +5,10 @@
 
 require 'pp'
 
-require_relative 'vish'
-require_relative 'mini'
-require_relative 'ast_transform'
-require_relative 'code_interperter'
+require_relative '../vish'
+require_relative '../mini'
+require_relative '../ast_transform'
+require_relative '../code_interperter'
 
 
 
