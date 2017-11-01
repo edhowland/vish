@@ -5,4 +5,5 @@ require_relative 'test_helper'
 
 require_relative 'test_bytecodes'
 require_relative 'test_context'
+require_relative 'test_code_interperter'
 

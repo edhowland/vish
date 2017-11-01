@@ -2,11 +2,11 @@
 # runs until bc.codes are exhausted.
 
 class CodeInterperter
-  def initialize bc, ctx
+  def initialize bc, ctx, &hook
     @bc = bc
     @ctx = ctx
     @bcodes = opcodes
-
+    hook.call(@bc, @ctx, @bcodes) if block_given?
   end
   attr_accessor :bc, :ctx
 
