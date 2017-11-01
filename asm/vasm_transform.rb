@@ -3,7 +3,7 @@
 class VasmTransform < Parslet::Transform
   rule(int: simple(:int)) { mkint(int) }
 
-  rule(clist: simple(:clist)) { [clist] }
+  rule(clist: simple(:clist)) { clist.nil? ? [] : [clist] }
   rule(clist: sequence(:clist)) { mkconstants(clist) }
   # vars
   rule(ident: simple(:ident), rvalue: simple(:rvalue)) { [ident.to_s, rvalue.to_s] }
