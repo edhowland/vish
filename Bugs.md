@@ -1,3 +1,3 @@
 # Bugs
 
-## assignment cannot use expression other than simple integer
+## Bug: asm/vasm.rb cannot deal with pathnames containing /'s in pathname for comment node

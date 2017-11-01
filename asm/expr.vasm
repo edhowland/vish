@@ -1,0 +1,13 @@
+# expr.vasm
+context:
+constants: 1,4
+vars:
+  name=undefined
+codes:
+pushl name
+pushc 0
+pushc 1
+add
+assign
+print
+halt
