@@ -1,18 +1,5 @@
 # TODO
 
-## Implement Arithmetic expressions
-
-- :sub - subtracts items on stack and pushes result
-- :mult - performs multiplication on top 2 items on stack, pushes result
-- :div - Perfroms division on top 2 items on stack and pushes result
-
-These codes can be checked with asm/vasm.rb and runtime/vre.rb.
-
-### Compiler additons:
-
-After implementing mkdir lib,
-add BinarySub etc. for AST construction.
-
 ## Completions
 
 ## Additions:
