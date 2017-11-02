@@ -4,7 +4,7 @@
 # Usage: parser = Mini.new; parser.parse('puts(1+2,3)') => Hash of intermediate AST
   require 'parslet' 
 
-class Mini < Parslet::Parser
+class VishParser < Parslet::Parser
   # empty string
   rule(:empty) { str('').as(:empty) }
   # single character rules

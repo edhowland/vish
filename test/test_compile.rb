@@ -4,7 +4,7 @@ require_relative 'test_helper'
 
 class TestCompile < BaseSpike
   def set_up
-    @parser = Mini.new
+    @parser = VishParser.new
     @transform = AstTransform.new
     @result = ''
 #    @stdout = $stdout

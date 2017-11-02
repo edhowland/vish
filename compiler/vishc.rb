@@ -13,7 +13,7 @@ fin, fout = ARGV
 fin = File.open(fin, 'r')
 source = fin.read
 fin.close
-parser = Mini.new
+parser = VishParser.new
 tr = AstTransform.new
 
 ir = parser.parse source

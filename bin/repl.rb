@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # REPL  without the L(oop)
-# Uses the Mini Parslet generated parser
 
 require 'pp'
 
@@ -17,7 +16,7 @@ begin
 loop do
 string = cli.ask 'vish> '
   break  if string[0] == 'q' || string.chomp == 'exit' 
-  ir  = Mini.new.parse(string)
+  ir  = VishParser.new.parse(string)
 #   pp ir
   ast =  AstTransform.new.apply ir
 #   ast.each {|n| p n.content }
