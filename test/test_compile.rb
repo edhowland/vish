@@ -4,7 +4,7 @@ require_relative 'test_helper'
 
 class TestCompile < BaseSpike
   def set_up
-    @parser = Mini.new
+    @parser = VishParser.new
     @transform = AstTransform.new
     @result = ''
 #    @stdout = $stdout
@@ -39,6 +39,24 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 10
   end
+  def test_sub
+    bc, ctx = compile '6 -3'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 3
+  end
+  def test_mult
+    bc, ctx = compile '15 *3'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 45
+  end
+  def test_div
+    bc, ctx = compile '99/33'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 3
+  end
   def test_assign_value_to_var
     bc, ctx = compile 'name=5'
     ci = mkci bc, ctx
@@ -53,10 +71,10 @@ class TestCompile < BaseSpike
     assert_eq ctx.vars[:var], 9
   end
   def test_dereference_named_varaiable
-    skip 'Need to complete parser rules and ast transform fo this'
     bc, ctx = compile ':name'
     ci = mkci bc,ctx
     ctx.vars[:name] = 99
     ci.run
+    assert_eq @result, 99
   end
 end

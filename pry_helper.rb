@@ -1,11 +1,7 @@
 # pry_helper.rb - Invoke with pry -r ./pry_helper.rb
 
 # setup Pry environment
-require_relative 'vish'
-require_relative 'compile'
-require_relative 'code_interperter'
-require_relative 'mini'
-require_relative 'ast_transform'
+require_relative 'lib/vish'
 
 
 

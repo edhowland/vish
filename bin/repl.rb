@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 # REPL  without the L(oop)
-# Uses the Mini Parslet generated parser
 
 require 'pp'
 
@@ -14,14 +13,14 @@ cli = HighLine.new
 begin
 #  print 'vish> '
  # string = gets.chomp
+ctx = Context.new
 loop do
 string = cli.ask 'vish> '
   break  if string[0] == 'q' || string.chomp == 'exit' 
-  ir  = Mini.new.parse(string)
-#   pp ir
+  ir  = VishParser.new.parse(string)
   ast =  AstTransform.new.apply ir
-#   ast.each {|n| p n.content }
-bc, ctx = emit_walker ast
+
+bc, ctx = emit_walker ast, ctx
   ci = CodeInterperter.new(bc, ctx)
   result = ci.run
 
