@@ -21,6 +21,11 @@ class CodeInterperter
   def execute instruction
     instruction.call(@bc, @ctx)
   end
+  def step
+          code = fetch
+      instruction = decode(code)
+      execute(instruction)
+  end
   # run: Runs entire @bc.codes until exhausted. Normally AST will cause this
   # to raise HaltState
   def run
