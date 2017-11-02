@@ -28,10 +28,13 @@ class VishParser < Parslet::Parser
   rule(:oper)  { plus | minus | star | fslash }
   rule(:arith) { integer.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
+  rule(:deref) { colon >> identifier.as(:deref) }
+
+  # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
-  rule(:expr) { funcall | arith | integer }
+  rule(:expr) { funcall | arith | deref | integer }
   rule(:statement) { assign | expr | empty }
   rule(:program) { statement.as(:program) }
 

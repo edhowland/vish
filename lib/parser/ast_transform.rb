@@ -1,7 +1,4 @@
 # ast_transform.rb - class AstTransform <  Parslet::Transform
-# TODO: remove the following note:
-# This class is a spike for implementing a transform from
-# the output of Mini.new.parse into a Rubytree tree of Terminals and NonTerminals
 
 #require_relative 'vish'
 
@@ -12,6 +9,10 @@ class AstTransform < Parslet::Transform
   # arithmetic expressions
   rule(left: simple(:lvalue), op: simple(:op), right: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+
+  # dereference a variable
+  rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
+
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
 end
 
