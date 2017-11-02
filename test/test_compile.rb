@@ -54,7 +54,7 @@ class TestCompile < BaseSpike
   end
   def test_dereference_named_varaiable
     skip 'Need to complete parser rules and ast transform fo this'
-    bc, ctx = compile 'name'
+    bc, ctx = compile ':name'
     ci = mkci bc,ctx
     ctx.vars[:name] = 99
     ci.run
