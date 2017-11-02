@@ -1,15 +1,13 @@
 #!/usr/bin/env ruby
 # vasm.rb - assembles .vasm files into .vshc bytecode files
 
-require_relative '../opcodes'
+require_relative '../lib/vish'
 
 require_relative '../compiler/store_codes'
 
 require_relative 'vasm_grammar'
 require_relative 'utilities'
 require_relative 'vasm_transform'
-require_relative '../context'
-require_relative '../bytecode'
 
 
 

@@ -1,6 +1,6 @@
 # utilities.rb - methods: mkconstants, ...
 
-require_relative '../context'
+require_relative '../lib/vish'
 
 
 def mkcontext ctx

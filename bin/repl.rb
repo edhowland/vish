@@ -1,14 +1,10 @@
 #!/usr/bin/env ruby
 # REPL  without the L(oop)
 # Uses the Mini Parslet generated parser
-# TODO:  Make this work with AstTransform class, then emit the bc stuff, then run
 
 require 'pp'
 
-require_relative '../vish'
-require_relative '../mini'
-require_relative '../ast_transform'
-require_relative '../code_interperter'
+require_relative '../lib/vish'
 
 
 

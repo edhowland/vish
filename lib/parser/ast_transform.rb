@@ -3,7 +3,7 @@
 # This class is a spike for implementing a transform from
 # the output of Mini.new.parse into a Rubytree tree of Terminals and NonTerminals
 
-require_relative 'vish'
+#require_relative 'vish'
 
 class AstTransform < Parslet::Transform
   # handle the empty input case
