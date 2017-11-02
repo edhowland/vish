@@ -45,4 +45,16 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 3
   end
+  def test_can_mult
+    @ctx.constants = [18,10]
+    @bc.codes = [:pushc, 0, :pushc, 1, :mult, :debug, :halt]
+    @ci.run
+    assert_eq @result, 180
+  end
+  def test_can_div
+    @ctx.constants = [500,10]
+    @bc.codes = [:pushc, 0, :pushc, 1, :div, :debug, :halt]
+    @ci.run
+    assert_eq @result, 50
+  end
 end

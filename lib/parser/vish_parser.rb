@@ -1,7 +1,7 @@
-# mini.rb -  class Mini <  < Parslet::Parser
+# vish_parser.rb -  class VishParser <  < Parslet::Parser
 # generates a parser from our grammar
 # This grammar accepts strings: integer | integer + integer | function(expr [, expr)
-# Usage: parser = Mini.new; parser.parse('puts(1+2,3)') => Hash of intermediate AST
+# Usage: parser = VishParser.new; parser.parse('puts(1+2,3)') => Hash of intermediate AST
   require 'parslet' 
 
 class VishParser < Parslet::Parser
@@ -20,13 +20,14 @@ class VishParser < Parslet::Parser
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:identifier) { match('[a-z]').repeat(1) }
+
   # This is Whitespace, not a single space
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
 
-  rule(:oper)  { (plus | minus | star | fslash) >> space? }
+  rule(:oper)  { plus | minus | star | fslash }
       #{ match('[+]') >> space? }
-  rule(:sum) { integer.as(:left) >> oper.as(:op) >> expr.as(:right) }
+  rule(:sum) { integer.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }

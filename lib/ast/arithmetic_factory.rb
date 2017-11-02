@@ -8,6 +8,10 @@ class ArithmeticFactory
       BinaryAdd
     when '-'
       BinarySub
+    when '*'
+      BinaryMult
+    when '/'
+      BinaryDiv
     else
       raise "Unknown arithmetic operation requested: '#{op}'"
     end

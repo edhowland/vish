@@ -39,6 +39,24 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 10
   end
+  def test_sub
+    bc, ctx = compile '6 -3'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 3
+  end
+  def test_mult
+    bc, ctx = compile '15 *3'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 45
+  end
+  def test_div
+    bc, ctx = compile '99/33'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 3
+  end
   def test_assign_value_to_var
     bc, ctx = compile 'name=5'
     ci = mkci bc, ctx

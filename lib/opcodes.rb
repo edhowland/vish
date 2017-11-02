@@ -20,6 +20,10 @@ def opcodes
     # :sub - subtracts two things off the stack and pushes the result. The larger one is normally the stack - 1
     sub: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 - addend1) },
 
+    mult: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 * addend1) },
+
+    div: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 / addend1) },
+
     # assignments and dereferences
     # :assign - pop the name of the var, pop the value, store in ctx.vars
     assign: ->(bc, ctx) {  value = ctx.stack.pop; var = ctx.stack.pop; ctx.vars[var] = value },
