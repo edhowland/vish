@@ -15,7 +15,7 @@ class CodeInterperter
   end
 
   def decode(code)
-    @bcodes[code] || (raise OpcodeError.new)
+    @bcodes[code] || (raise OpcodeError.new(code))
   end
 
   def execute instruction

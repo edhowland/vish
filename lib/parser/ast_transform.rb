@@ -9,7 +9,8 @@ class AstTransform < Parslet::Transform
   # handle the empty input case
   rule(empty: simple(:empty)) { Nop.new }
   rule(int: simple(:int)) { Numeral.new(int) }
-  rule(left: simple(:lvalue), op: simple(:op), right: simple(:rvalue)) { BinaryTreeFactory.subtree(BinaryAdd, lvalue, rvalue) }
+  # arithmetic expressions
+  rule(left: simple(:lvalue), op: simple(:op), right: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
 end

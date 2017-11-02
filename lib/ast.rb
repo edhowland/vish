@@ -1,9 +1,14 @@
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 
+require_relative 'ast/arithmetic_factory'
 
 require_relative 'ast/assign'
 require_relative 'ast/binary_add'
+require_relative 'ast/binary_sub'
+require_relative 'ast/binary_mult'
+require_relative 'ast/binary_div'
+
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
 require_relative 'ast/final'

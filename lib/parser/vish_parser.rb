@@ -12,14 +12,20 @@ class VishParser < Parslet::Parser
   rule(:rparen)     { str(')') >> space? }
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
+  rule(:colon) { str(':') }
+  rule(:plus) { str('+') }
+  rule(:minus) { str('-') }
+  rule(:star) { str('*') }
+  rule(:fslash) { str('/') }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:identifier) { match('[a-z]').repeat(1) }
-
+  # This is Whitespace, not a single space
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
 
-  rule(:oper) { match('[+]') >> space? }
+  rule(:oper)  { (plus | minus | star | fslash) >> space? }
+      #{ match('[+]') >> space? }
   rule(:sum) { integer.as(:left) >> oper.as(:op) >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:arglist) { expr >> (comma >> expr).repeat }

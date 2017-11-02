@@ -13,6 +13,14 @@ class TestCodeInterperter < BaseSpike
       bcodes[:debug] = ->(bc, ctx) { @result = ctx.stack.pop }
     end
   end
+  def test_decode_raises_opcode_error_when_given_gibberish
+    @bc.codes = [:xyzzy]
+    code = @ci.fetch
+    assert_raises OpcodeError do
+      @ci.decode code
+    end
+    
+  end
   def test_can_add
     @ctx.constants = [5, 10]
     @bc.codes = [:pushc, 0, :pushc, 1, :add, :debug, :halt]
@@ -30,6 +38,11 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:pushv, 'var1', :debug, :halt]
     @ci.run
     assert_eq @result, 100
-    
+  end
+  def test_can_sub
+    @ctx.constants = [5,2]
+    @bc.codes = [:pushc,0,:pushc,1,:sub,:debug,:halt]
+    @ci.run
+    assert_eq @result, 3
   end
 end
