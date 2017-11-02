@@ -2,7 +2,7 @@
 # vdis.rb - Disassembles .vshc files into .vasm source
 
 require_relative '../runtime/load_codes'
-require_relative '../opcodes'  # for has_operand? code
+require_relative '../lib/vish'  # for has_operand? code
 
 def constants ctx
   result = ''

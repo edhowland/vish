@@ -1,5 +1,4 @@
-#!/usr/bin/env ruby
-# bytecode.rb - class ByteCode - collection of individual bytecodes
+# bytecodes.rb - class ByteCodes - collection of individual bytecodes
 # attr: pc : The current increment - Can be set for looping/branching, .etc
 #  :codes : The list of bytecodes
 # methods: :next : returns next element from codes

@@ -5,10 +5,7 @@
 # Usage: ./vishc file.vsh file.vshc
 
 
-require_relative '../vish'
-require_relative '../mini'
-require_relative '../ast_transform'
-require_relative '../emit_walker'
+require_relative '../lib/vish'
 require_relative 'store_codes'
 
 

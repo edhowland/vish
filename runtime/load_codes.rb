@@ -2,9 +2,9 @@
 # bc, ctx = ByteCodes, Context. Suitable for input to CodeInterperter
 
 
-require_relative '../vish'
-require_relative '../bytecode'
-require_relative '../context'
+require_relative '../lib/vish'
+#require_relative '../bytecode'
+#require_relative '../context'
 require_relative '../code_container'
 
 

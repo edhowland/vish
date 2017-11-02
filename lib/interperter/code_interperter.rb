@@ -2,11 +2,11 @@
 # runs until bc.codes are exhausted.
 
 class CodeInterperter
-  def initialize bc, ctx
+  def initialize bc, ctx, &hook
     @bc = bc
     @ctx = ctx
     @bcodes = opcodes
-
+    hook.call(@bc, @ctx, @bcodes) if block_given?
   end
   attr_accessor :bc, :ctx
 
@@ -20,6 +20,11 @@ class CodeInterperter
 
   def execute instruction
     instruction.call(@bc, @ctx)
+  end
+  def step
+          code = fetch
+      instruction = decode(code)
+      execute(instruction)
   end
   # run: Runs entire @bc.codes until exhausted. Normally AST will cause this
   # to raise HaltState
