@@ -10,6 +10,7 @@ class VishParser < Parslet::Parser
   # single character rules
   rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
+  rule(:octo) { str('#') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
     rule(:comma)      { str(',') >> space? }
@@ -26,6 +27,11 @@ class VishParser < Parslet::Parser
   # This is Whitespace, not a single space
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
+
+
+  # matches anything upto a newline
+  rule(:notnl) { match(/[^\n]/).repeat }
+  rule(:comment) { octo >> notnl >> newline }
 
   rule(:oper)  { plus | minus | star | fslash }
   rule(:arith) { integer.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }

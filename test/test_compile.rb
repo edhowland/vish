@@ -92,4 +92,12 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 13
   end
+  def test_comment
+    cmp = VishParser.new
+    cmp.comment.parse "# \n"
+  end
+  def test_comment_w_stuff
+    cmp = VishParser.new
+    cmp.comment.parse "# some awful Stuff!!&&@@[]dj .>?<\n"
+  end
 end
