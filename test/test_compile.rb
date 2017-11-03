@@ -110,4 +110,7 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq ctx.vars[:name], 12
   end
+  def test_compile_arith_expr_beginning_w_deref
+    bc, ctx = compile 'name=1;:name+4'
+  end
 end
