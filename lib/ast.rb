@@ -1,6 +1,7 @@
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 
+require_relative 'ast/clear_stack'
 require_relative 'ast/arithmetic_factory'
 
 require_relative 'ast/assign'

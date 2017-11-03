@@ -2,6 +2,16 @@
 
 ## Completions
 
+
+### Add proper Parslet error reporting to compiler/vishc.rb ...
+
+Get from bin/repl.rb
+
+- Add the ability in compiler/vishc.rb to handle multiple lines
+- Add '#' as start of a comment ignored until of line
+
+
+
 ## Additions:
 
 Add in the thor gem from Yehuda. This

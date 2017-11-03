@@ -8,6 +8,8 @@ class VishParser < Parslet::Parser
   # empty string
   rule(:empty) { str('').as(:empty) }
   # single character rules
+  rule(:newline) { str("\n") }
+  rule(:semicolon) { str(';') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
     rule(:comma)      { str(',') >> space? }
@@ -36,7 +38,9 @@ class VishParser < Parslet::Parser
 
   rule(:expr) { funcall | arith | deref | integer }
   rule(:statement) { assign | expr | empty }
-  rule(:program) { statement.as(:program) }
+  rule(:delim) { newline | semicolon }
+  rule(:statement_list) { statement >> (delim >> statement).repeat }
+  rule(:program) { statement_list.as(:program) }
 
   # The mainroot of our tree
   root(:program)

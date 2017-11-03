@@ -14,5 +14,6 @@ class AstTransform < Parslet::Transform
   rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
 
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
+  rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end
 

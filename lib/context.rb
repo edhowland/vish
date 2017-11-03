@@ -16,6 +16,10 @@ class Context
     @constants << value
     @constants.length - 1
   end
+  # clear the stack. Presumably at start of statement
+  def clear
+    @stack.clear
+  end
 
   def store_var(key, value=Undefined)
     actual = key.to_sym
