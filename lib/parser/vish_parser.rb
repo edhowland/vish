@@ -31,7 +31,7 @@ class VishParser < Parslet::Parser
 
   # matches anything upto a newline
   rule(:notnl) { match(/[^\n]/).repeat }
-  rule(:comment) { octo >> notnl >> newline }
+  rule(:comment) { octo >> notnl >> newline.maybe }
 
   rule(:oper)  { plus | minus | star | fslash }
   rule(:arith) { integer.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
@@ -44,7 +44,7 @@ class VishParser < Parslet::Parser
 
   rule(:expr) { funcall | arith | deref | integer }
   rule(:statement) { assign | expr | empty }
-  rule(:delim) { newline | semicolon }
+  rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { statement >> (delim >> statement).repeat }
   rule(:program) { statement_list.as(:program) }
 

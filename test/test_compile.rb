@@ -100,4 +100,14 @@ class TestCompile < BaseSpike
     cmp = VishParser.new
     cmp.comment.parse "# some awful Stuff!!&&@@[]dj .>?<\n"
   end
+  def test_compile_w_o_newline
+        cmp = VishParser.new
+    cmp.comment.parse '# comment'
+  end
+  def test_comment_w_expression
+    bc, ctx = compile "name=4*3# come\n:name\n"
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq ctx.vars[:name], 12
+  end
 end

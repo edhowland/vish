@@ -1,12 +1,4 @@
 # Bugs
-## Bug: Cannot seem to process multi line statement files:
-
-```
-name=2+4
-:name
-```
-
-
 
 ## Bug: Cannot parse the following:
 

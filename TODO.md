@@ -7,8 +7,6 @@
 
 Get from bin/repl.rb
 
-- Add the ability in compiler/vishc.rb to handle multiple lines
-- Add '#' as start of a comment ignored until of line
 
 
 
