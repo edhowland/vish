@@ -57,4 +57,10 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 50
   end
+  def test_cls
+    @ctx.constants = [0]
+    @bc.codes = [:cls, :pushc, 0, :cls, :halt]
+    @ci.run
+    assert @ctx.stack.empty?
+  end
 end

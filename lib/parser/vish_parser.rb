@@ -24,7 +24,7 @@ class VishParser < Parslet::Parser
   rule(:identifier) { match('[a-z]').repeat(1) }
 
   # This is Whitespace, not a single space
-  rule(:space) { match('\s').repeat(1) }
+  rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
 
   rule(:oper)  { plus | minus | star | fslash }

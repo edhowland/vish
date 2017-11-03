@@ -79,3 +79,11 @@ def walker(ast)
   ast.each {|e| p e.content }
   nil
 end
+
+
+  def compile string
+    ir = VishParser.new.parse string
+    ast = AstTransform.new.apply ir
+    emit_walker ast
+  end
+  

@@ -77,4 +77,19 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 99
   end
+  def test_2_statements_w_semicolon_delim
+    bc,ctx = compile('name=1;:name') 
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 1
+  end
+  def test_compile_multi_line_string
+    bc, ctx = compile "1\n1"
+  end
+  def test_multi_line_full_expression
+    bc, ctx = compile "var=2 * 4;pos=5 + :var\n:pos"
+    ci = mkci bc, ctx;
+    ci.run
+    assert_eq @result, 13
+  end
 end
