@@ -3,6 +3,8 @@
 
 def opcodes
   {
+    # Clear the stack. Used at start of every statement.
+    cls: ->(bc, ctx) { ctx.clear },
     # :pushc - Pushes value of indexed constant
     pushc: ->(bc, ctx) { i = bc.next; ctx.stack.push ctx.constants[i] },
 

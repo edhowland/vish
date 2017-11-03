@@ -77,4 +77,37 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 99
   end
+  def test_2_statements_w_semicolon_delim
+    bc,ctx = compile('name=1;:name') 
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 1
+  end
+  def test_compile_multi_line_string
+    bc, ctx = compile "1\n1"
+  end
+  def test_multi_line_full_expression
+    bc, ctx = compile "var=2 * 4;pos=5 + :var\n:pos"
+    ci = mkci bc, ctx;
+    ci.run
+    assert_eq @result, 13
+  end
+  def test_comment
+    cmp = VishParser.new
+    cmp.comment.parse "# \n"
+  end
+  def test_comment_w_stuff
+    cmp = VishParser.new
+    cmp.comment.parse "# some awful Stuff!!&&@@[]dj .>?<\n"
+  end
+  def test_compile_w_o_newline
+        cmp = VishParser.new
+    cmp.comment.parse '# comment'
+  end
+  def test_comment_w_expression
+    bc, ctx = compile "name=4*3# come\n:name\n"
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq ctx.vars[:name], 12
+  end
 end
