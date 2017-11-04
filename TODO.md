@@ -2,6 +2,10 @@
 
 ## Completions
 
+### REPL should consume any parser syntax exceptions and just say "Syntax Error"
+
+The syntax error can be logged in a logfile or in a variable in the VM ???
+
 ## Additions:
 
 Add in the thor gem from Yehuda. This
