@@ -16,6 +16,7 @@ fin.close
 parser = VishParser.new
 tr = AstTransform.new
 
+begin
 ir = parser.parse source
 
 ast = tr.apply(ir)
@@ -24,3 +25,10 @@ bc, ctx = emit_walker(ast)
 # now write it out to file.vshc
 io = File.open(fout, 'w')
 store_codes(bc, ctx, io)
+rescue Parslet::ParseFailed => failure
+  puts failure.parse_failure_cause.ascii_tree
+rescue => err
+  puts err.class.name
+  puts err.message
+  end
+  
