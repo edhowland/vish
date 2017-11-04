@@ -1,0 +1,16 @@
+# ../compiler/multiline.vshc disassembly into multiline.vasm
+context:
+constants: 1,4
+vars:
+  name=undefined
+codes:
+cls
+pushl name
+pushc 0
+pushc 1
+add
+assign
+cls
+pushv name
+print
+halt
