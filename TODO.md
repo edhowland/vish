@@ -2,14 +2,6 @@
 
 ## Completions
 
-
-### Add proper Parslet error reporting to compiler/vishc.rb ...
-
-Get from bin/repl.rb
-
-
-
-
 ## Additions:
 
 Add in the thor gem from Yehuda. This

@@ -34,7 +34,8 @@ class VishParser < Parslet::Parser
   rule(:comment) { octo >> notnl >> newline.maybe }
 
   rule(:oper)  { plus | minus | star | fslash }
-  rule(:arith) { integer.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
+  rule(:lvalue) { integer | deref }
+  rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) }
 

@@ -11,11 +11,12 @@ class VasmGrammar < Parslet::Parser
   rule(:comma) { str(',') }
   rule(:eq) { str('=') }
   rule(:octo) { str('#') }
-  rule(:blahblah) { match(/[.a-zA-z0-9\ ]/).repeat(1) } 
+  rule(:notnl) { match(/[^\n]/).repeat }
+
   rule(:identifier) { match('[a-z]').repeat(1) }
   rule(:rvalue) { match(/[a-zA-Z0-9]/).repeat(1) }
 
-  rule(:comment) { octo >> blahblah >> nl }
+  rule(:comment) { octo >> notnl >> nl.maybe }
 
   # numbers
   rule(:integer) { match('[0-9]').repeat(1) }
