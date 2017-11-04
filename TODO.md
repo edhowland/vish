@@ -2,6 +2,29 @@
 
 ## Completions
 
+### Add symbolic labels to assembly source for jumping
+
+```
+# sample source
+...
+codes:
+cls
+pushc 0
+pushc 1
+and
+jmpt lbl001
+cls
+pushc 2
+jmp lbl002
+lbl001:
+cls
+pushc 3
+lbl002:
+print
+halt
+```
+
+
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 
 The syntax error can be logged in a logfile or in a variable in the VM ???

@@ -25,6 +25,10 @@ def opcodes
     mult: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 * addend1) },
 
     div: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 / addend1) },
+    
+    # logical operators
+    and: ->(bc,ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 && v2) },
+    or: ->(bc,ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 || v2) },
 
     # comparison operators
     eq: ->(bc, ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 == v2) },

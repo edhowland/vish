@@ -110,4 +110,18 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_false @result
   end
+  
+  # test logical opcodes :or, :and
+  def test_and_pushes_true_when_2_tos_are_both_true
+    @ctx.constants = [true, true]
+    @bc.codes = [:cls, :pushc, 0, :pushc,  1, :and, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_or_pushes_true_w_2_tos_are_both_true
+        @ctx.constants = [true, true]
+    @bc.codes = [:cls, :pushc, 0, :pushc,  1, :and, :debug, :halt]
+    @ci.run
+    assert @result
+  end
 end
