@@ -19,7 +19,7 @@ class TestCodeInterperter < BaseSpike
     assert_raises OpcodeError do
       @ci.decode code
     end
-    
+
   end
   def test_can_add
     @ctx.constants = [5, 10]
@@ -62,5 +62,13 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:cls, :pushc, 0, :cls, :halt]
     @ci.run
     assert @ctx.stack.empty?
+  end
+
+  # branching bytecodes
+  def test_jmp_fwd
+  @ctx.constants = [3,4,5,6]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :add, :jmp, 13, :pushc, 2, :pushc, 3, :mult, :debug, :halt]
+    @ci.run
+    assert_eq @result, 7
   end
 end

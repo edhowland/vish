@@ -30,6 +30,10 @@ def opcodes
     # :assign - pop the name of the var, pop the value, store in ctx.vars
     assign: ->(bc, ctx) {  value = ctx.stack.pop; var = ctx.stack.pop; ctx.vars[var] = value },
 
+
+    # branching instructions
+    jmp: ->(bc, ctx) { loc = bc.next; bc.pc = loc },
+
     # environment instructions : print, . .etc
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
     # machine low-level instructions: nop, halt, jmp, error, etc.
@@ -41,9 +45,9 @@ def opcodes
 end
 
 def has_operand? code
-  [:pushc, :pushv, :pushl].member? code
+  [:pushc, :pushv, :pushl, :jmp].member? code
 end
 
 def has_numeric_operand? code
-  [:pushc].member? code
+  [:pushc, :jmp].member? code
 end
