@@ -1,0 +1,17 @@
+# ifelse.vasm simulates a if/then/else conditional
+context:
+constants: 0,1,5
+vars:
+codes:
+cls
+pushc 0
+pushc 1
+eq
+jmpt 13
+cls
+pushc 0
+jmp 16
+cls
+pushc 5
+print
+halt

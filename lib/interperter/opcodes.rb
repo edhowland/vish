@@ -37,6 +37,8 @@ def opcodes
 
     # branching instructions
     jmp: ->(bc, ctx) { loc = bc.next; bc.pc = loc },
+    # branch if top of stack is true
+    jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
 
     # environment instructions : print, . .etc
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
@@ -49,9 +51,9 @@ def opcodes
 end
 
 def has_operand? code
-  [:pushc, :pushv, :pushl, :jmp].member? code
+  [:pushc, :pushv, :pushl, :jmp, :jmpt].member? code
 end
 
 def has_numeric_operand? code
-  [:pushc, :jmp].member? code
+  [:pushc, :jmp, :jmpt].member? code
 end

@@ -71,6 +71,19 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 7
   end
+  def test_conditional_branch_jmpt
+    @ctx.constants = [0,0,5]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :jmpt, 11, :cls, :pushc, 0, :cls, :pushc, 2, :debug, :halt]
+    @ci.run
+    assert_eq @result, 5
+  end
+  # Should simulate a if/then/else branch
+  def test_jmpt_does_not_branch_when_tos_is_false
+    @ctx.constants = [1,0,5]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :jmpt, 13, :cls, :pushc, 0, :jmp, 16, :cls, :pushc, 5, :debug, :halt]
+    @ci.run
+    assert_eq @result, 1
+  end
 
   # comparison operators
   def test_eq
