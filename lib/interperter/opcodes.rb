@@ -26,6 +26,10 @@ def opcodes
 
     div: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 / addend1) },
 
+    # comparison operators
+    eq: ->(bc, ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 == v2) },
+    neq: ->(bc, ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 != v2) },
+
     # assignments and dereferences
     # :assign - pop the name of the var, pop the value, store in ctx.vars
     assign: ->(bc, ctx) {  value = ctx.stack.pop; var = ctx.stack.pop; ctx.vars[var] = value },

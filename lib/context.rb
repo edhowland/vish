@@ -20,6 +20,11 @@ class Context
   def clear
     @stack.clear
   end
+  
+  # pop 2 items off stack
+  def pop2
+    return @stack.pop, @stack.pop
+  end
 
   def store_var(key, value=Undefined)
     actual = key.to_sym

@@ -71,4 +71,30 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 7
   end
+
+  # comparison operators
+  def test_eq
+    @ctx.constants = [0,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_eq_finds_non_equality
+    @ctx.constants = [1,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
+  def test_neq_finds_non_equality_and_pushes_true
+        @ctx.constants = [1,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :neq, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_neq_finds_equality_and_pushes_false
+            @ctx.constants = [1,1]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :neq, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
 end
