@@ -124,4 +124,16 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert @result
   end
+  def test_not_gets_true_when_gets_false
+    @ctx.constants = [false]
+    @bc.codes = [:cls, :pushc, 0, :not, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_not_is_false_when_is_true
+    @ctx.constants = [true]
+    @bc.codes = [:cls, :pushc, 0, :not, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
 end

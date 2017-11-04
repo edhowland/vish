@@ -29,6 +29,7 @@ def opcodes
     # logical operators
     and: ->(bc,ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 && v2) },
     or: ->(bc,ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 || v2) },
+    not: ->(bc, ctx) { ctx.stack.push(! ctx.stack.pop) },
 
     # comparison operators
     eq: ->(bc, ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 == v2) },

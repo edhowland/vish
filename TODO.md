@@ -25,6 +25,9 @@ halt
 ```
 
 
+### Implement ==, !=, &&, || and ! operators in Vish grammar
+
+
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 
 The syntax error can be logged in a logfile or in a variable in the VM ???

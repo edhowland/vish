@@ -1,19 +1,22 @@
 # vasm_grammar.rb - class VasmGrammar < Parslet::Parser
 
-
 require 'parslet'
 require_relative 'single_chars'      # Import single character rules
 
 class VasmGrammar < Parslet::Parser
+# BUG: Make this work like in VishGrammar to be only whitespace excluding nl
   rule(:space) { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
+
+  # single characters
   rule(:nl) { str("\n") }
   rule(:comma) { str(',') }
   rule(:eq) { str('=') }
   rule(:octo) { str('#') }
   rule(:notnl) { match(/[^\n]/).repeat }
-
+  rule(:colon) { str(':') }
   rule(:identifier) { match('[a-z]').repeat(1) }
+  rule(:label) { colon >> identifier }
   rule(:rvalue) { match(/[a-zA-Z0-9]/).repeat(1) }
 
   rule(:comment) { octo >> notnl >> nl.maybe }

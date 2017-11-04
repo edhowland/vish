@@ -1,0 +1,11 @@
+# label.vasm - parses jmp targets
+context:
+constants:
+vars:
+codes:
+cls
+jmp :lbl001
+nop
+:lbl001
+print
+halt
