@@ -15,7 +15,9 @@ class VasmGrammar < Parslet::Parser
   rule(:octo) { str('#') }
   rule(:notnl) { match(/[^\n]/).repeat }
   rule(:colon) { str(':') }
-  rule(:identifier) { match('[a-z]').repeat(1) }
+  rule(:identifier) { match(/[a-zA-Z0-9_]/).repeat(1) } # .repeat(1)
+
+#  rule(:identifier) { match('[a-z]').repeat(1) }
   rule(:label) { colon >> identifier }
   rule(:rvalue) { match(/[a-zA-Z0-9]/).repeat(1) }
 
@@ -36,8 +38,8 @@ class VasmGrammar < Parslet::Parser
   rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1).as(:operand) }
   rule(:arg) { space >> operand }
 
-  rule(:statement1) { opcode.as(:opcode) >> nl }
-  rule(:statement2) { opcode.as(:opcode) >> arg >> nl }
+  rule(:statement1) { (label >> str(' ')).maybe >> opcode.as(:opcode) >> nl }
+  rule(:statement2) {(label >> str(' ')).maybe >>  opcode.as(:opcode) >> arg >> nl }
   rule(:sourceline) { statement1 | statement2 }
   rule(:codes) { str('codes:') >> nl >> sourceline.repeat(1) }
 rule(:program) { comment >> context.as(:ctx) >> codes.as(:codes) }
