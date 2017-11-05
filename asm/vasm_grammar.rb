@@ -36,7 +36,7 @@ class VasmGrammar < Parslet::Parser
   # codes:
   rule(:opcode) { match(/[a-z]/).repeat(1) }
   rule(:operand) { match(/[a-zA-Z0-9]/).repeat(1).as(:operand) }
-  rule(:arg) { space >> operand }
+  rule(:arg) { space >> (operand | label.as(:target)) }
 
   rule(:statement1) { (label.as(:label) >> str(' ')).maybe >> opcode.as(:opcode) >> nl }
   rule(:statement2) {(label.as(:label) >> str(' ')).maybe >>  opcode.as(:opcode) >> arg >> nl }

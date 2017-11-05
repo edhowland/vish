@@ -10,4 +10,8 @@ class Label < Opcode
   def label?
     true
   end
+  # find a matching target
+  def ==(target)
+    target.name == @name
+  end
 end

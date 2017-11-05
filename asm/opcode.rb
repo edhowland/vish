@@ -4,7 +4,7 @@ class Opcode
   def initialize opcode, operand=nil
     @opcode = opcode.to_sym
     @operand = operand
-    @operand = @operand.to_i if has_numeric_operand?(@opcode)
+
     @pc = nil
   end
 

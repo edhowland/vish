@@ -1,8 +1,9 @@
 # pry_helper.rb - pry helps for vish/asm dir
 
 require_relative '../runtime/load_codes'
-require_relative 'opcode'
-require_relative 'label'
+
+require_relative 'vasm_requires'
+
 
 require_relative 'vasm_grammar'
 require_relative 'utilities'
@@ -37,4 +38,13 @@ end
 def cfile fname
   f = File.open(fname, 'r')
   load_codes f
+end
+def vasm
+  return VasmGrammar.new, VasmTransform.new
+end
+def assemble fname
+  p, a = vasm
+  s,l = rfile fname
+  ir = p.parse s
+  a.apply ir
 end

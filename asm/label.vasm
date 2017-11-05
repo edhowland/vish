@@ -4,8 +4,12 @@ constants:
 vars:
 codes:
 cls
+jmp :lbl001
+cls
 pushc 0
 nop
 :lbl001 nop
+cls
+:lbl002 jmp :lbl001
 print
 halt

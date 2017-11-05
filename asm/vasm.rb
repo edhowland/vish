@@ -3,8 +3,8 @@
 
 require_relative '../lib/vish'
 
-require_relative 'opcode'
-require_relative 'label'
+require_relative 'vasm_requires'
+
 
 require_relative '../compiler/store_codes'
 
@@ -36,7 +36,9 @@ begin
 
 # restore the int-iness of numeric opcodes
 #  codes = im[:codes].map {|c| has_numeric_operand?(c[0]) ? [c[0], c[1].to_i] : c }.flatten
-  codes, labels = codes_and_labels(im[:codes])
+  codes, labels, targets = codes_and_labels(im[:codes])
+  codes = resolve_targets(codes, labels, targets)
+
   bc.codes = codes
   out = File.open(fout, 'w')
   store_codes(bc, ctx, out)
