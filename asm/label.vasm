@@ -3,6 +3,8 @@ context:
 constants:
 vars:
 codes:
+cls
+pushc 0
 nop
 :lbl001 nop
 print

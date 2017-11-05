@@ -1,10 +1,13 @@
 # pry_helper.rb - pry helps for vish/asm dir
 
 require_relative '../runtime/load_codes'
+require_relative 'opcode'
+require_relative 'label'
 
 require_relative 'vasm_grammar'
 require_relative 'utilities'
 require_relative 'vasm_transform'
+require_relative 'codes_and_labels'
 
 def rfile fname
   s = File.read(fname)
@@ -29,4 +32,9 @@ def ex fname
   s, l = rfile fname
   p = pars
   p.parse s
+end
+
+def cfile fname
+  f = File.open(fname, 'r')
+  load_codes f
 end
