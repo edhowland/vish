@@ -38,10 +38,12 @@ begin
 #  codes = im[:codes].map {|c| has_numeric_operand?(c[0]) ? [c[0], c[1].to_i] : c }.flatten
   codes, labels, targets = codes_and_labels(im[:codes])
   codes = resolve_targets(codes, labels, targets)
-
+  raise UnresolvedTargetsError.new(targets) if targets.any?(&:unresolved?)
   bc.codes = codes
   out = File.open(fout, 'w')
   store_codes(bc, ctx, out)
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree  
+rescue => err
+  puts err.message
 end
