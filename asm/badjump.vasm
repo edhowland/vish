@@ -1,0 +1,10 @@
+# badjump.vasm - unresolved joump targets
+context:
+constants:
+vars:
+codes:
+cls
+nop
+jmp :badjuju
+print
+halt
