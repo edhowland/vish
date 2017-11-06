@@ -16,6 +16,12 @@ class Target
   def unresolved?
     @pc.nil?
   end
+  def resolve!(opcode)
+    # do nothing
+  end
+  def value
+    self#
+  end
   def inspect
     "label: #{@name}: #{@pc} @line #{@line}, col #{@col}"
   end

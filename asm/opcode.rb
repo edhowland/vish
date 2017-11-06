@@ -4,7 +4,7 @@ class Opcode
   def initialize opcode, operand=nil
     @opcode = opcode.to_sym
     @operand = operand
-
+    @operand.resolve!(@opcode) unless @operand.nil? # tells the operand to resolve itself, E.g. do a to_i ...
     @pc = nil
   end
 
@@ -13,7 +13,7 @@ class Opcode
 
   def to_a
     result = [self]
-    result << @operand unless @operand.nil?
+    result << @operand.value unless @operand.nil?
     result
   end
 end

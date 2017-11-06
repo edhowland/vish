@@ -1,0 +1,23 @@
+# countdown.vasm
+context:
+constants: 0,10,1
+vars:
+  val=undefined
+codes:
+cls
+pushc 1
+pushl val
+assign
+:startloop pushv val
+pushc 2
+sub
+pushl val
+assign
+pushv val
+pushc 0
+eq
+jmpt :endloop
+jmp :startloop
+:endloop nop
+print
+halt

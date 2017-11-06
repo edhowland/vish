@@ -52,4 +52,6 @@ rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree  
 rescue => err
   puts err.message
+  # normally comment this out
+#  puts err.backtrace
 end
