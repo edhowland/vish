@@ -1,0 +1,8 @@
+# duplicate.vasm - test for duplicate labels
+context:
+constants:
+vars:
+codes:
+:dup1 nop
+:good print
+:dup1 halt

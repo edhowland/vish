@@ -1,4 +1,4 @@
-# label.vasm jmp with labels
+# label.vasm jmp with labels, at least one label is disconnected
 context:
 constants:
 vars:

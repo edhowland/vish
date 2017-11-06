@@ -1,0 +1,10 @@
+# goodlbl.vasm - a single label and jump targetd connected
+context:
+constants:
+vars:
+codes:
+cls
+jmp :good
+nop
+:good print
+halt

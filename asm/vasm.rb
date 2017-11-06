@@ -42,6 +42,12 @@ begin
   bc.codes = codes
   out = File.open(fout, 'w')
   store_codes(bc, ctx, out)
+
+  # check for any unfreiended labels
+  if labels.any?(&:unconnected?)
+    puts "Hmmm. We assembled your code into #{fout}, but we noticed some unconnected labels. Here they are"
+    labels.select(&:unconnected?).each {|l| puts l.inspect }
+  end
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree  
 rescue => err

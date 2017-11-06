@@ -4,6 +4,7 @@ class Target
   def initialize name
     @name = name.to_s
     @pc = nil
+    @line, @col = name.line_and_column
   end
   attr_reader :name, :pc
 
@@ -16,6 +17,6 @@ class Target
     @pc.nil?
   end
   def inspect
-    "label: #{@name}: #{@pc}"
+    "label: #{@name}: #{@pc} @line #{@line}, col #{@col}"
   end
 end
