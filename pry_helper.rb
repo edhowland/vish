@@ -87,3 +87,17 @@ end
     emit_walker ast
   end
   
+  # temp:
+  def tmps
+  'name=100;vam=25*4;:name != :vam'
+  end
+  
+  
+  def syntax_check string
+    begin
+      VishParser.new.parse string
+    rescue Parslet::ParseFailed => failure
+  puts failure.parse_failure_cause.ascii_tree
+    end
+  end
+  

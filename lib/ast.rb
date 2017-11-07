@@ -9,6 +9,11 @@ require_relative 'ast/binary_add'
 require_relative 'ast/binary_sub'
 require_relative 'ast/binary_mult'
 require_relative 'ast/binary_div'
+# Logical ops
+require_relative 'ast/binary_equality'
+require_relative 'ast/binary_inequality'
+
+
 
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'

@@ -12,6 +12,10 @@ class ArithmeticFactory
       BinaryMult
     when '/'
       BinaryDiv
+    when '=='
+      BinaryEquality
+    when '!='
+      BinaryInequality
     else
       raise "Unknown arithmetic operation requested: '#{op}'"
     end

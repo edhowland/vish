@@ -20,6 +20,10 @@ class VishParser < Parslet::Parser
   rule(:minus) { str('-') }
   rule(:star) { str('*') }
   rule(:fslash) { str('/') }
+  # Logical ops
+    rule(:equal_equal) { str('==') }
+  rule(:bang_equal) { str('!=') }
+
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:identifier) { match(/[a-zA-Z0-9_]/).repeat(1) } # .repeat(1)
@@ -33,7 +37,7 @@ class VishParser < Parslet::Parser
   rule(:notnl) { match(/[^\n]/).repeat }
   rule(:comment) { octo >> notnl >> newline.maybe }
 
-  rule(:oper)  { plus | minus | star | fslash }
+  rule(:oper)  { plus | minus | star | fslash | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
   rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }

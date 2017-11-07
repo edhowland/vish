@@ -117,4 +117,42 @@ class TestCompile < BaseSpike
   def test_can_match_complex_identifiers
     @parser.identifier.parse 'nname001'
   end
+  # logical ops
+  def test_equality_is_true
+    bc, ctx = compile '1==1'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, true
+  end
+  def test_equality_is_false
+    bc, ctx = compile 'val=5*5;:val == 44'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+  def test_inequality_is_true
+    bc, ctx = compile '5 != 6'
+    ci = mkci bc,ctx
+    ci.run
+    assert @result
+  end
+  def test_inequality_is_false_when_operands_match
+    bc, ctx = compile   'name=100;vam=25*4;:name != :vam'
+
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+  
+  # leading space check
+  def test_compile_leading_space
+    skip 'vish grammar cannot recognize leading spaces before a statement'
+        bc, ctx = compile ' 1 + 2'
+  end
+  def test_ordering_of_mult_and_eq_works
+    skip 'eq comes before mult in the expression: 4*4 == 16'
+    bc, ctx  = compile "4*4 == 16"
+    ci = mkci bc, ctx
+    ci.run
+  end
 end

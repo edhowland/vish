@@ -1,0 +1,15 @@
+# equality_fail.vshc disassembly into equality_fail.vasm
+context:
+constants: 4,4,16
+vars:
+codes:
+cls
+pushc 0
+pushc 1
+pushc 2
+eq
+mult
+cls
+nop
+print
+halt
