@@ -149,10 +149,5 @@ class TestCompile < BaseSpike
     skip 'vish grammar cannot recognize leading spaces before a statement'
         bc, ctx = compile ' 1 + 2'
   end
-  def test_ordering_of_mult_and_eq_works
-    skip 'eq comes before mult in the expression: 4*4 == 16'
-    bc, ctx  = compile "4*4 == 16"
-    ci = mkci bc, ctx
-    ci.run
-  end
+
 end

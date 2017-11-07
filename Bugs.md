@@ -1,31 +1,19 @@
 # Bugs
 
-
-## Bug: The following should work, but gets type conversion error
+## Caveat: avoid the following. Need parenthesis around expressions in grammar
 
 ```
-4*4 == 16
-Cannot convert false into int. ???
-
-# But this works:
+# works:
 16 == 4*4
-# So the order is important
+
+# does not work because of left associated binding
+4*4 == 16
+# get a type error
 ```
 
-This most likely arises because  
-the order of the emitted bytecodes is:
+Although the above works in Ruby, we need to do the following:
+
 ```
-codes:
-cls
-pushc 0
-pushc 1
-pushc 2
-eq
-mult
-cls
-nop
-print
-halt
+(4*4) == 16
 ```
 
-You can see the :eq occurs before the :mult
