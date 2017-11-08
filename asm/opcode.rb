@@ -3,6 +3,7 @@
 class Opcode < BasicOpcode
   def initialize opcode, operand=nil
     super opcode, operand
+    @operand.resolve!(@opcode) unless @operand.nil? # tells the operand to resolve itself, E.g. do a to_i ...
   end
 
   def to_a

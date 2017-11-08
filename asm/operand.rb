@@ -3,6 +3,8 @@
 class Operand < BasicOperand
   def initialize value
     super value
+    @value = value.to_s
+
     @line, @col = value.line_and_column
   end
   attr_reader :line, :col

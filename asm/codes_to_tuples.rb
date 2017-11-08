@@ -9,7 +9,7 @@ def codes_to_tuples codes
     if has_operand? code
       operand = e.next
     end
-    result << Opcode.new(code, Operand.new(operand))
+    result << BasicOpcode.new(code, BasicOperand.new(operand))
   end
-  result
+  result.map(&:to_a)
 end

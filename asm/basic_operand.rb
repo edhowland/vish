@@ -2,7 +2,11 @@
 
 class BasicOperand
   def initialize value
-    @value = value.to_s
+    @value = value
   end
   attr_reader :value
+
+  def to_a
+    @value.nil? ? [] : [self]
+  end
 end

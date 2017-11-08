@@ -17,7 +17,13 @@ def constants ctx
 end
 
 
-# capture codes into array of tuples [opcode, operand]
+def space_operand operand
+  if operand.nil?
+    ''
+  else
+    " #{operand.value}"
+  end
+end
 
 # main code
 fin, fout = ARGV
@@ -38,19 +44,8 @@ ctx.vars.each_pair {|k, v| out.puts "  #{k}=#{v}" }
 out.puts "codes:"
 
 # get array of opcode, tuples
-globs = codes_to_tuples bc.codes
-binding.pry
+tuples = codes_to_tuples bc.codes
+fmt = tuples.map {|c, o| "#{c.opcode.to_s}#{space_operand(o)}" }
+out.puts fmt.join("\n")
 
-#enumr = bc.codes.each
-#begin
-#  loop do
-#  operand = ''
-#    code = enumr.next
-#    if has_operand? code
-#      operand = enumr.next
-#      operand = " #{operand}"
-#    end
-#    out.puts "#{code}#{operand}"
-#  end
-#end
 out.close
