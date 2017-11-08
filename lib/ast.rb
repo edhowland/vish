@@ -5,6 +5,7 @@ require_relative 'ast/clear_stack'
 require_relative 'ast/arithmetic_factory'
 
 require_relative 'ast/assign'
+require_relative 'ast/unary_negation'
 require_relative 'ast/binary_add'
 require_relative 'ast/binary_sub'
 require_relative 'ast/binary_mult'
@@ -15,6 +16,7 @@ require_relative 'ast/binary_inequality'
 
 
 
+require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
 require_relative 'ast/final'

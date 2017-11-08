@@ -100,4 +100,9 @@ end
   puts failure.parse_failure_cause.ascii_tree
     end
   end
-  
+
+
+
+def pa
+  return VishParser.new, AstTransform.new
+end

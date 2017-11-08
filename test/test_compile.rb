@@ -149,5 +149,18 @@ class TestCompile < BaseSpike
     skip 'vish grammar cannot recognize leading spaces before a statement'
         bc, ctx = compile ' 1 + 2'
   end
-
+  
+  # ! negation
+  def test_negation_returns_true
+    bc, ctx = compile '! 1 == 2'
+    ci = mkci bc, ctx
+    ci.run
+    assert @result
+  end
+  def test_negation_returns_false
+    bc, ctx = compile '! 1 == 1'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false  @result
+  end
 end

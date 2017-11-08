@@ -21,6 +21,7 @@ class VishParser < Parslet::Parser
   rule(:star) { str('*') }
   rule(:fslash) { str('/') }
   # Logical ops
+  rule(:bang) { str('!') }
     rule(:equal_equal) { str('==') }
   rule(:bang_equal) { str('!=') }
 
@@ -39,6 +40,8 @@ class VishParser < Parslet::Parser
 
   rule(:oper)  { plus | minus | star | fslash | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
+
+  rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
   rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) }
@@ -47,7 +50,7 @@ class VishParser < Parslet::Parser
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
-  rule(:expr) { funcall | arith | deref | integer }
+  rule(:expr) { funcall | negation | arith | deref | integer }
   rule(:statement) { assign | expr | empty }
   rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { statement >> (delim >> statement).repeat }
