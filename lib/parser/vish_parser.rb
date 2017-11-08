@@ -29,7 +29,7 @@ class VishParser < Parslet::Parser
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:identifier) { match(/[a-zA-Z0-9_]/).repeat(1) } # .repeat(1)
 
-  # This is Whitespace, not a single space
+  # This is Whitespace, not a single space; does not include newlines. See that rule
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
 
@@ -50,10 +50,15 @@ class VishParser < Parslet::Parser
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
+  # Expressions, assignments, etc.
   rule(:expr) { funcall | negation | arith | deref | integer }
-  rule(:statement) { assign | expr | empty }
+
+  # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
+  rule(:statement) { space? >> (assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { statement >> (delim >> statement).repeat }
+
+  # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }
 
   # The mainroot of our tree

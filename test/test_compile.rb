@@ -146,7 +146,6 @@ class TestCompile < BaseSpike
   
   # leading space check
   def test_compile_leading_space
-    skip 'vish grammar cannot recognize leading spaces before a statement'
         bc, ctx = compile ' 1 + 2'
   end
   
@@ -162,5 +161,11 @@ class TestCompile < BaseSpike
     ci = mkci bc, ctx
     ci.run
     assert_false  @result
+  end
+  def test_empty_can_compile
+    bc, ctx = compile ''
+  end
+  def test_just_whitspace_can_compile
+    bc, ctx = compile '         ' # many spaces
   end
 end
