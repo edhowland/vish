@@ -1,5 +1,9 @@
 # vasm_requires.rb - requires for vasm
 
+require_relative 'basic_opcode'
+require_relative 'basic_operand'
+
+
 require_relative 'operand'
 require_relative 'opcode'
 require_relative 'unresolved_targets_error'

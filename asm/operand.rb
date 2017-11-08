@@ -1,11 +1,11 @@
-# operand.rb - class Operand sibling of Target
+# operand.rb - class Operand < BasicOperand; sibling of Target
 
-class Operand
+class Operand < BasicOperand
   def initialize value
-    @value = value.to_s
+    super value
     @line, @col = value.line_and_column
   end
-  attr_reader :value, :line, :col
+  attr_reader :line, :col
 
   def resolve! opcode
     if has_numeric_operand?(opcode)

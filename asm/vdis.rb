@@ -6,6 +6,7 @@ require_relative '../lib/vish'  # for has_operand? code
 require_relative 'vasm_requires'
 # Our own Target class: UnknownTarget
 require_relative 'unknown_target'
+require_relative 'dis_requires'
 
 def constants ctx
   result = ''
@@ -15,6 +16,10 @@ def constants ctx
   result
 end
 
+
+# capture codes into array of tuples [opcode, operand]
+
+# main code
 fin, fout = ARGV
 
 bc, ctx = load_codes(File.open(fin, 'r'))
@@ -31,18 +36,21 @@ out.puts "constants:" + constants(ctx)
 out.puts "vars:"
 ctx.vars.each_pair {|k, v| out.puts "  #{k}=#{v}" }
 out.puts "codes:"
-enumr = bc.codes.each
-begin
-  loop do
-  operand = ''
-    code = enumr.next
-    if has_operand? code
-      operand = enumr.next
-      operand = " #{operand}"
-    end
-    out.puts "#{code}#{operand}"
-  end
-# rescue StopIteration
-  # nop
-end
+
+# get array of opcode, tuples
+globs = codes_to_tuples bc.codes
+binding.pry
+
+#enumr = bc.codes.each
+#begin
+#  loop do
+#  operand = ''
+#    code = enumr.next
+#    if has_operand? code
+#      operand = enumr.next
+#      operand = " #{operand}"
+#    end
+#    out.puts "#{code}#{operand}"
+#  end
+#end
 out.close

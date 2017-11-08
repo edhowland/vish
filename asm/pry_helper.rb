@@ -10,6 +10,9 @@ require_relative 'utilities'
 require_relative 'vasm_transform'
 require_relative 'codes_and_labels'
 
+# vdis stuff
+require_relative 'dis_requires'
+
 def rfile fname
   s = File.read(fname)
   return s, s.lines
