@@ -1,7 +1,14 @@
 # TODO
 
 ## Completions
+### Add numeric expression precedence
 
+```
+3 * 10 + 4
+# should be 34, not 42 (Hint: 3 * 14)
+```
+
+#### Hould be able to override this withparenthesis: See bug in Bugs.md
 
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 
