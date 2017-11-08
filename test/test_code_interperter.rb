@@ -136,4 +136,11 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_false @result
   end
+
+  def test_code_can_exist_after_halt_bytecode
+  @ctx.constants = [100, 4, 99]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :div, :debug, :halt, :cls, :pushc, 2, :debug]
+    @ci.run
+    assert_eq @result, 25
+  end
 end

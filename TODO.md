@@ -10,6 +10,13 @@
 
 #### Hould be able to override this withparenthesis: See bug in Bugs.md
 
+#### Parslet grammar rules allow for precendences:
+
+```
+rule(:oper) { star | slash / plus | minus }
+# The '/' above means these preceeding expressions take precedence over the
+# following ones
+```
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 
 The syntax error can be logged in a logfile or in a variable in the VM ???

@@ -3,6 +3,9 @@
 
 require_relative '../runtime/load_codes'
 require_relative '../lib/vish'  # for has_operand? code
+require_relative 'vasm_requires'
+# Our own Target class: UnknownTarget
+require_relative 'unknown_target'
 
 def constants ctx
   result = ''
@@ -18,6 +21,7 @@ bc, ctx = load_codes(File.open(fin, 'r'))
 
 
 out = File.open(fout, 'w')
+# Output the comment that we disassembeled your bytecodes into vasm source.
 out.puts "# #{ARGV[0]} disassembly into #{ARGV[1]}"
 
 
@@ -38,7 +42,7 @@ begin
     end
     out.puts "#{code}#{operand}"
   end
-rescue StopIteration
+# rescue StopIteration
   # nop
 end
 out.close

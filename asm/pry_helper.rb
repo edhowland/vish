@@ -48,3 +48,9 @@ def assemble fname
   ir = p.parse s
   a.apply ir
 end
+
+# pa: return VasmGrammer.new, VasmTransform.new
+# Usage: p, a = pa;
+def pa
+  return  VasmGrammar.new, VasmTransform.new
+end
