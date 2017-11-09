@@ -45,7 +45,7 @@ out.puts "codes:"
 
 # get array of opcode, tuples
 tuples = codes_to_tuples bc.codes
-fmt = tuples.map {|c, o| "#{c.opcode.to_s}#{space_operand(o)}" }
+fmt = tuples.map {|c, o| "#{c.to_s}#{space_operand(o)}" }
 out.puts fmt.join("\n")
 
 out.close

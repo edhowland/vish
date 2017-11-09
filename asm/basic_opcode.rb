@@ -1,16 +1,20 @@
 # basic_opcode.rb - class BasicOpcode - parent of Opcode, others
 
 class BasicOpcode
-  def initialize opcode, operand=nil
+  def initialize opcode, operand=nil, pc=nil
     @opcode = opcode.to_sym
     @operand = operand
-    @pc = nil    
+    @pc = pc
   end
   attr_reader :opcode, :operand
   attr_accessor :pc
 
   def to_a
     self.send(which?(@operand), self, @operand)
+  end
+
+  def to_s
+    @opcode.to_s
   end
   # protected methods to pattern on match for to_a above
   protected
