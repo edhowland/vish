@@ -32,5 +32,9 @@ class ByteCodes
   def peek
     @codes[@pc]
   end
-end
 
+  # inspect: outputs string form ByteCodes instance
+  def inspect
+    "pc: #{@pc} codes: #{@codes.inspect}"
+  end
+end

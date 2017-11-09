@@ -1,0 +1,29 @@
+# jump_lite.vshc disassembly into jump_lite.vasm
+context:
+constants: 10,1,0
+vars:
+  count=undefined
+codes:
+cls
+pushl count
+pushc 0
+assign
+:start cls
+pushl count
+pushv count
+pushc 1
+sub
+assign
+cls
+pushv count
+pushc 2
+eq
+jmpt :final
+jmp :start
+cls
+nop
+cls
+nop
+pushv count
+:final spy
+halt
