@@ -26,5 +26,11 @@ class ByteCodes
   def to_h
     {codes: @codes, pc: @pc }
   end
+  
+  # for debugging
+  # peek: seek out the  next code that will be run
+  def peek
+    @codes[@pc]
+  end
 end
 

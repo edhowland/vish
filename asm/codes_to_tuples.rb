@@ -25,10 +25,12 @@ def codes_to_tuples codes
       operand = e.next
       _dummy = f.next
     end
+
     result << BasicOpcode.new(code, BasicOperand.new(operand), pc)
   end
 
   result.select {|c| c.opcode.to_s[0..2] == 'jmp' }.each {|c| c.extend Jumpable; t = result.find {|f| f.pc == c.operand.value }; t.extend Targetable  }
+#binding.pry
 
   result.map(&:to_a)
 end

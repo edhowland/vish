@@ -1,5 +1,10 @@
 # Bugs
 
+## Bug: Extra :nop statements in bytecode list.
+
+Probably due to ';', empty or comment lines in source in ast  tree.
+
+
 ## Caveat: avoid the following. Need parenthesis around expressions in grammar
 
 ```

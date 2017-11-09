@@ -9,6 +9,8 @@ alias vm='./main.rb empty.vsh'
 alias dpry='pry -r ./pry_helper.rb'
 
 export VISUAL=~/src/viper2/bin/viper
+export EDITOR=~/src/viper2/bin/viper
+
 vt() {
   vn "test/test_${1}.rb"
 }

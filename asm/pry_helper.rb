@@ -13,6 +13,10 @@ require_relative 'codes_and_labels'
 # vdis stuff
 require_relative 'dis_requires'
 
+# pry helper requires
+require_relative '../pry/lib'
+
+
 def rfile fname
   s = File.read(fname)
   return s, s.lines
@@ -57,3 +61,29 @@ end
 def pa
   return  VasmGrammar.new, VasmTransform.new
 end
+
+# misty: play misty for me: runs one step
+# + ci : The CodeInterperter
+def misty ci, &blk
+  begin
+  print 'stack: '; p ci.ctx.stack
+  puts 'vars: '; p ci.ctx.vars
+  print 'next instruction: '; p ci.peek
+  gets
+  ci.step
+  rescue HaltState
+    puts 'halted'
+  rescue OpcodeError => err
+    puts err.message
+  end
+end
+
+
+# nci : Makes a new ci from bc, ctx
+# Parameters:
+# + bc: ByteCodes
+# + ctx : Context
+def nci bc, ctx
+  CodeInterperter.new bc, ctx
+end
+
