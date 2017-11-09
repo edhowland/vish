@@ -18,6 +18,7 @@ rule(:oper) { star | slash / plus | minus }
 # following ones
 ```
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
+Giving the line, col numbers and the Parslet message top line
 
 The syntax error can be logged in a logfile or in a variable in the VM ???
 
