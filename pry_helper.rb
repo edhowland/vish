@@ -2,42 +2,11 @@
 
 # setup Pry environment
 require_relative 'lib/vish'
+require_relative 'pry/lib'
 
 
 
 
-
-def what_is code
-  result = 'undefined'
-  {
-    # 
-    pushc:  'pushes value of indexed constant',
-
-    # :pushv : 
-    pushv: 'Pushes value of named variable',
-    
-    # :pushl - 
-    pushl: 'Pushes name of LValue on stack',
-
-    # Arithmetic instructions. TODO:  add these: sub: mult: and div:
-    # TODO: Should we add Logical ops like :and and :or ?
-    # :add - 
-    add: 'BinararyAdd - Pops 2 operands and pushes the result of adding them',
-
-    # assignments and dereferences
-    # :assign - 
-    assign: 'Pop the name of the var, pop the value, store in ctx.vars',
-
-    # environment instructions : print, . .etc
-    print: 'Pops top value of stack and prints it to standard out',
-
-    # machine low-level instructions: nop, halt, jmp, error, etc.
-    # :cjmp - jump if top of stack is true. Do we need the opposite?
-    nop: ->(bc, ctx) { },
-    halt: ->(bc, ctx) { raise HaltState.new },
-    error: ->(bc, ctx) { raise ErrorState.new }
-  }[code] || result
-end
 
 def go
   CodeInterperter.new(*compile(''))
@@ -87,3 +56,42 @@ end
     emit_walker ast
   end
   
+  # temp:
+  def tmps
+  'name=100;vam=25*4;:name != :vam'
+  end
+  
+  
+  def syntax_check string
+    begin
+      VishParser.new.parse string
+    rescue Parslet::ParseFailed => failure
+  puts failure.parse_failure_cause.ascii_tree
+    end
+  end
+
+
+
+def pa
+  return VishParser.new, AstTransform.new
+end
+
+# misty: play misty for me: runs one step
+# + ci : The CodeInterperter
+def misty ci, &blk
+  print 'stack: '; p ci.ctx.stack
+  puts 'vars: '; p ci.ctx.vars
+  print 'next instruction: '; p ci.peek
+  gets
+  ci.step
+end
+
+
+# nci : Makes a new ci from bc, ctx
+# Parameters:
+# + bc: ByteCodes
+# + ctx : Context
+def nci bc, ctx
+  CodeInterperter.new bc, ctx
+end
+

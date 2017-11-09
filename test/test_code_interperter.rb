@@ -19,7 +19,7 @@ class TestCodeInterperter < BaseSpike
     assert_raises OpcodeError do
       @ci.decode code
     end
-    
+
   end
   def test_can_add
     @ctx.constants = [5, 10]
@@ -62,5 +62,85 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:cls, :pushc, 0, :cls, :halt]
     @ci.run
     assert @ctx.stack.empty?
+  end
+
+  # branching bytecodes
+  def test_jmp_fwd
+  @ctx.constants = [3,4,5,6]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :add, :jmp, 13, :pushc, 2, :pushc, 3, :mult, :debug, :halt]
+    @ci.run
+    assert_eq @result, 7
+  end
+  def test_conditional_branch_jmpt
+    @ctx.constants = [0,0,5]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :jmpt, 11, :cls, :pushc, 0, :cls, :pushc, 2, :debug, :halt]
+    @ci.run
+    assert_eq @result, 5
+  end
+  # Should simulate a if/then/else branch
+  def test_jmpt_does_not_branch_when_tos_is_false
+    @ctx.constants = [1,0,5]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :jmpt, 13, :cls, :pushc, 0, :jmp, 16, :cls, :pushc, 5, :debug, :halt]
+    @ci.run
+    assert_eq @result, 1
+  end
+
+  # comparison operators
+  def test_eq
+    @ctx.constants = [0,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_eq_finds_non_equality
+    @ctx.constants = [1,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :eq, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
+  def test_neq_finds_non_equality_and_pushes_true
+        @ctx.constants = [1,0]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :neq, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_neq_finds_equality_and_pushes_false
+            @ctx.constants = [1,1]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :neq, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
+  
+  # test logical opcodes :or, :and
+  def test_and_pushes_true_when_2_tos_are_both_true
+    @ctx.constants = [true, true]
+    @bc.codes = [:cls, :pushc, 0, :pushc,  1, :and, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_or_pushes_true_w_2_tos_are_both_true
+        @ctx.constants = [true, true]
+    @bc.codes = [:cls, :pushc, 0, :pushc,  1, :and, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_not_gets_true_when_gets_false
+    @ctx.constants = [false]
+    @bc.codes = [:cls, :pushc, 0, :not, :debug, :halt]
+    @ci.run
+    assert @result
+  end
+  def test_not_is_false_when_is_true
+    @ctx.constants = [true]
+    @bc.codes = [:cls, :pushc, 0, :not, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
+
+  def test_code_can_exist_after_halt_bytecode
+  @ctx.constants = [100, 4, 99]
+    @bc.codes = [:cls, :pushc, 0, :pushc, 1, :div, :debug, :halt, :cls, :pushc, 2, :debug]
+    @ci.run
+    assert_eq @result, 25
   end
 end

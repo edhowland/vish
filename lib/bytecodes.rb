@@ -26,5 +26,15 @@ class ByteCodes
   def to_h
     {codes: @codes, pc: @pc }
   end
-end
+  
+  # for debugging
+  # peek: seek out the  next code that will be run
+  def peek
+    @codes[@pc]
+  end
 
+  # inspect: outputs string form ByteCodes instance
+  def inspect
+    "pc: #{@pc} codes: #{@codes.inspect}"
+  end
+end

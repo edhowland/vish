@@ -7,12 +7,8 @@ class TestCompile < BaseSpike
     @parser = VishParser.new
     @transform = AstTransform.new
     @result = ''
-#    @stdout = $stdout
-#    $stdout = StringIO.new
   end
-  def tear_down
-#    $stdout = @stdout
-  end
+
   def compile string
     ir = @parser.parse string
     ast = @transform.apply ir
@@ -112,5 +108,65 @@ class TestCompile < BaseSpike
   end
   def test_compile_arith_expr_beginning_w_deref
     bc, ctx = compile 'name=1;:name+4'
+  end
+
+  def test_can_match_complex_identifiers
+    @parser.identifier.parse 'nname001'
+  end
+  # logical ops
+  def test_equality_is_true
+    bc, ctx = compile '1==1'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, true
+  end
+  def test_equality_is_false
+    bc, ctx = compile 'val=5*5;:val == 44'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+  def test_inequality_is_true
+    bc, ctx = compile '5 != 6'
+    ci = mkci bc,ctx
+    ci.run
+    assert @result
+  end
+  def test_inequality_is_false_when_operands_match
+    bc, ctx = compile   'name=100;vam=25*4;:name != :vam'
+
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+  
+  # leading space check
+  def test_compile_leading_space
+        bc, ctx = compile ' 1 + 2'
+  end
+  
+  # ! negation
+  def test_negation_returns_true
+    bc, ctx = compile '! 1 == 2'
+    ci = mkci bc, ctx
+    ci.run
+    assert @result
+  end
+  def test_negation_returns_false
+    bc, ctx = compile '! 1 == 1'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false  @result
+  end
+  def test_empty_can_compile
+    bc, ctx = compile ''
+  end
+  def test_just_whitspace_can_compile
+    bc, ctx = compile '         ' # many spaces
+  end
+  def test_empty_returns_only_program_start_finish_in_ast
+    ir = @parser.parse ''
+    ast = @transform.apply ir
+    assert_eq ast.length, 2
   end
 end

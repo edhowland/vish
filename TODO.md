@@ -1,6 +1,26 @@
 # TODO
 
 ## Completions
+### Add numeric expression precedence
+
+```
+3 * 10 + 4
+# should be 34, not 42 (Hint: 3 * 14)
+```
+
+#### Hould be able to override this withparenthesis: See bug in Bugs.md
+
+#### Parslet grammar rules allow for precendences:
+
+```
+rule(:oper) { star | slash / plus | minus }
+# The '/' above means these preceeding expressions take precedence over the
+# following ones
+```
+### REPL should consume any parser syntax exceptions and just say "Syntax Error"
+Giving the line, col numbers and the Parslet message top line
+
+The syntax error can be logged in a logfile or in a variable in the VM ???
 
 ## Additions:
 
