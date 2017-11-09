@@ -1,0 +1,7 @@
+# ../compiler/empty.vshc disassembly into empty.xxx
+context:
+constants:
+vars:
+codes:
+print
+halt

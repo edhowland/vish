@@ -6,7 +6,8 @@ class AstTransform < Parslet::Transform
   # debugging
 
   # handle the empty input case
-  rule(empty: simple(:empty)) { Nop.new }
+  rule(empty: simple(:empty)) { :ignore }    # Nop.new 
+
   rule(int: simple(:int)) { Numeral.new(int) }
 
   # logical operations

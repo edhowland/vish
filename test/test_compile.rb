@@ -7,12 +7,8 @@ class TestCompile < BaseSpike
     @parser = VishParser.new
     @transform = AstTransform.new
     @result = ''
-#    @stdout = $stdout
-#    $stdout = StringIO.new
   end
-  def tear_down
-#    $stdout = @stdout
-  end
+
   def compile string
     ir = @parser.parse string
     ast = @transform.apply ir
@@ -167,5 +163,10 @@ class TestCompile < BaseSpike
   end
   def test_just_whitspace_can_compile
     bc, ctx = compile '         ' # many spaces
+  end
+  def test_empty_returns_only_program_start_finish_in_ast
+    ir = @parser.parse ''
+    ast = @transform.apply ir
+    assert_eq ast.length, 2
   end
 end
