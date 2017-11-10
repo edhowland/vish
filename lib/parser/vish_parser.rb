@@ -42,7 +42,11 @@ class VishParser < Parslet::Parser
   rule(:comment) { octo >> notnl >> newline.maybe }
 
   # operators and precedence
-  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
+#  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
+  rule(:additive) { multiplicative.as(:l) >> plus.as(:o) >> multiplicative.as(:r) |
+    multiplicative }
+  rule(:multiplicative) { integer.as(:l) >> star.as(:o) >> integer.as(:r) |
+    integer.as(:i) }
   rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
