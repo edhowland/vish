@@ -169,4 +169,18 @@ class TestCompile < BaseSpike
     ast = @transform.apply ir
     assert_eq ast.length, 2
   end
+
+  # operator precedence
+  def test_multiplaction_before_addition
+    bc, ctx = compile '4+3*10'
+    ci = mkci bc,ctx
+    ci.run
+    assert_eq @result, 34
+  end
+  def test_reversed_mult_before_additionmethod
+    bc, ctx = compile '3*10+4'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 34
+  end
 end

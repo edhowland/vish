@@ -2,6 +2,9 @@
 # generates a parser from our grammar
 # This grammar accepts strings: integer | integer + integer | function(expr [, expr)
 # Usage: parser = VishParser.new; parser.parse('puts(1+2,3)') => Hash of intermediate AST
+# email address for parslet authors:
+# ruby.parslet@librelist.com
+
   require 'parslet' 
 
 class VishParser < Parslet::Parser
@@ -38,7 +41,9 @@ class VishParser < Parslet::Parser
   rule(:notnl) { match(/[^\n]/).repeat }
   rule(:comment) { octo >> notnl >> newline.maybe }
 
-  rule(:oper)  { plus | minus | star | fslash | equal_equal | bang_equal }
+  # operators and precedence
+  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
+  rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
