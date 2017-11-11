@@ -15,7 +15,9 @@ class Arith < Parslet::Parser
   rule(:term) { factor.as(:l) >> plus >> factor.as(:r)  |
        factor }
 
-  rule(:factor) { integer.as(:l) >> star >> integer.as(:r) | integer }
+  rule(:factor) { integer.as(:l) >> star >> integer.as(:r) | 
+      lparen >> term >> rparen |
+  integer }
 
     root(:term)
 end
