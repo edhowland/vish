@@ -57,8 +57,8 @@ class VishParser < Parslet::Parser
     lvalue }
 
   # comparators
-  rule(:equality) { lvalue.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
-  rule(:inequality) { lvalue.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
+  rule(:equality) { additive.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
+  rule(:inequality) { additive.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
   rule(:comparison) { equality | inequality }
 
   rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }

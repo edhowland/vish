@@ -231,5 +231,10 @@ class TestCompile < BaseSpike
     bc, ctx = compile '4!=4*4'
   end
 
-  # TODO: equality, inequality should allow for lvalues to be expressions
+  def test_inequality_should_allow_expression_for_lvalue
+    bc, ctx = compile '4*4 != 4'
+  end
+  def test_equality_should_allow_lvalue_to_be_an_additive_or_multiplicative
+    bc, ctx = compile '1+2*2 == 100'
+  end
 end
