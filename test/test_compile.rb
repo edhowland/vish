@@ -208,4 +208,13 @@ class TestCompile < BaseSpike
   def test_many_derefs_in_2_term_expression
     bc, ctx = compile ':name+:var*:exp'
   end
+  def test_deref_then_term_then_deref
+    bc, ctx = compile ':name+4 * :var'
+  end
+  def test_term_deref_deref
+    bc, ctx = compile '2+:name*:var'
+  end
+  def test_deref_deref_term
+    bc, ctx = compile ':name+:var*2'
+  end
 end
