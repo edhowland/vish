@@ -195,7 +195,6 @@ class TestCompile < BaseSpike
     
   end
 
-  # TODO: Must test expressions with derefs sprinkled among them
   def test_multi_factor_w_deref_in_middle
     bc, ctx = compile '3+4*:name'
   end
@@ -217,4 +216,20 @@ class TestCompile < BaseSpike
   def test_deref_deref_term
     bc, ctx = compile ':name+:var*2'
   end
+
+  # test combinations of types, equality, assignment + arithmetic
+  def test_equality_w_arithmetic
+    bc, ctx = compile '4 == 2*2'
+  end
+  def test_assign_to_result_of_expression
+    bc, ctx = compile 'name=4*12'
+  end
+  def test_assign_to_additive_then_multiplicative
+    bc, ctx = compile 'var=1+2*3'
+  end
+  def test_inequality_w_expression
+    bc, ctx = compile '4!=4*4'
+  end
+
+  # TODO: equality, inequality should allow for lvalues to be expressions
 end
