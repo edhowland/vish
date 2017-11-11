@@ -43,10 +43,13 @@ class VishParser < Parslet::Parser
 
   # operators and precedence
 #  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
-  rule(:additive) { multiplicative.as(:l) >> plus.as(:o) >> multiplicative.as(:r) |
+
+  rule(:add_op) { plus | minus }
+  rule(:mult_op) { star | fslash }
+  rule(:additive) { multiplicative.as(:left) >> add_op.as(:op) >> multiplicative.as(:right) |
     multiplicative }
-  rule(:multiplicative) { integer.as(:l) >> star.as(:o) >> integer.as(:r) |
-    integer.as(:i) }
+  rule(:multiplicative) { lvalue.as(:left) >> mult_op.as(:op) >> integer.as(:right) |  # maybe: expr
+    lvalue }
   rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
@@ -60,7 +63,7 @@ class VishParser < Parslet::Parser
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | arith | deref | integer }
+  rule(:expr) { funcall | negation | additive  | deref | integer } # arith
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (assign | expr | empty) }
