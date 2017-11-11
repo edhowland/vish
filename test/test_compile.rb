@@ -183,4 +183,29 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 34
   end
+
+  def test_long_set_of_additive_expressions
+    bc, ctx = compile '1+2+3'
+  end
+  def test_long_set_of_multiplicative_expressions
+    bc,ctx = compile '1*1*1*1*1'
+  end
+  def test_multiplicative_rule_works
+    bc, ctx = compile '3*10+11'
+    
+  end
+
+  # TODO: Must test expressions with derefs sprinkled among them
+  def test_multi_factor_w_deref_in_middle
+    bc, ctx = compile '3+4*:name'
+  end
+  def test_deref_at_start_of_2_part_expression
+    bc, ctx = compile ':name+2*3'
+  end
+  def test_deref_at_end_set_of_2_term_expression
+    bc, ctx = compile '1*2+:name'
+  end
+  def test_many_derefs_in_2_term_expression
+    bc, ctx = compile ':name+:var*:exp'
+  end
 end

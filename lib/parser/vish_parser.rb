@@ -53,7 +53,7 @@ class VishParser < Parslet::Parser
     multiplicative }
 
   # TODO: Check this. Should it be expr.as(:right) ?
-  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> integer.as(:right) |  # maybe: expr
+  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> lvalue.as(:right) |  # maybe: expr
     lvalue }
 
   # comparators

@@ -12,7 +12,8 @@ export VISUAL=~/src/viper2/bin/viper
 export EDITOR=~/src/viper2/bin/viper
 
 vt() {
-  vn "test/test_${1}.rb"
+  t=$1; shift 1
+  vn "test/test_${t}.rb" $@
 }
 rt() {
   ruby "test/test_${1}.rb"
