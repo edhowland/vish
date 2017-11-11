@@ -14,3 +14,7 @@ export EDITOR=~/src/viper2/bin/viper
 vt() {
   vn "test/test_${1}.rb"
 }
+rt() {
+  ruby "test/test_${1}.rb"
+}
+

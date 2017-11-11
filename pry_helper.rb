@@ -51,9 +51,13 @@ end
 
 
   def compile string
+  begin
     ir = VishParser.new.parse string
     ast = AstTransform.new.apply ir
-    emit_walker ast
+    emit_walker ast  
+  rescue Parslet::ParseFailed => failure
+    puts failure.parse_failure_cause.ascii_tree
+  end
   end
   
   # temp:

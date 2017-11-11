@@ -144,7 +144,7 @@ class TestCompile < BaseSpike
   def test_compile_leading_space
         bc, ctx = compile ' 1 + 2'
   end
-  
+
   # ! negation
   def test_negation_returns_true
     bc, ctx = compile '! 1 == 2'

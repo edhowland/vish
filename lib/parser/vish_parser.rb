@@ -8,6 +8,7 @@
   require 'parslet' 
 
 class VishParser < Parslet::Parser
+
   # empty string
   rule(:empty) { str('').as(:empty) }
   # single character rules
@@ -46,10 +47,20 @@ class VishParser < Parslet::Parser
 
   rule(:add_op) { plus | minus }
   rule(:mult_op) { star | fslash }
-  rule(:additive) { multiplicative.as(:left) >> add_op.as(:op) >> multiplicative.as(:right) |
+
+  rule(:additive) { multiplicative.as(:left) >> space? >> add_op.as(:op) >> space? >> multiplicative.as(:right) |
+
     multiplicative }
-  rule(:multiplicative) { lvalue.as(:left) >> mult_op.as(:op) >> integer.as(:right) |  # maybe: expr
+
+  # TODO: Check this. Should it be expr.as(:right) ?
+  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> integer.as(:right) |  # maybe: expr
     lvalue }
+
+  # comparators
+  rule(:equality) { lvalue.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
+  rule(:inequality) { lvalue.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
+  rule(:comparison) { equality | inequality }
+
   rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
@@ -63,7 +74,7 @@ class VishParser < Parslet::Parser
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | additive  | deref | integer } # arith
+  rule(:expr) { funcall | negation | comparison | additive  | deref | integer } # arith
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (assign | expr | empty) }
