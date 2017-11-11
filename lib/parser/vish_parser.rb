@@ -73,6 +73,8 @@ class VishParser < Parslet::Parser
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
+  # term: where the magic happens to make parenthesis work
+
   # Expressions, assignments, etc.
   rule(:expr) { funcall | negation | comparison | additive  | deref | integer } # arith
 

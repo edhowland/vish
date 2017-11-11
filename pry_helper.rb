@@ -3,6 +3,8 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
+require_relative 'arith'
+
 
 
 
