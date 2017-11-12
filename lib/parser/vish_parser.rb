@@ -43,7 +43,7 @@ class VishParser < Parslet::Parser
   rule(:comment) { octo >> notnl >> newline.maybe }
 
   # operators and precedence
-#  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
+  rule(:infix_oper) { infix_expression(expr, [star, 2, :left], [plus, 1, :right]) }
 
   rule(:add_op) { plus | minus }
   rule(:mult_op) { star | fslash }
