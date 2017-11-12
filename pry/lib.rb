@@ -91,3 +91,39 @@ def what_is code
   print "#{code}: "
    puts(opcodes[add_underline(code)] || 'undefined')
 end
+
+# array_walker, hash_walker - used to traverse output of Parslet::Parser first stage. IR
+def array_walker arr
+  puts '['
+  arr.each do |n|
+    case n
+    when Array
+      array_walker n
+    when Hash
+      hash_walker n
+    else
+      p n
+    end
+  end
+  puts ']'
+end
+
+
+
+
+
+def hash_walker h
+  puts '{'
+  h.each do |k, v|
+    print "\n#{k} => "
+    case v
+    when Hash
+      hash_walker v
+    when Array
+      array_walker v
+    else
+      print v.inspect
+    end
+  end
+  puts '}'
+end
