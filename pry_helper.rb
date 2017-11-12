@@ -52,9 +52,10 @@ def walker(ast)
 end
 
 
-  def compile string
+  def compile string, &blk
   begin
-    ir = VishParser.new.parse string
+  parser = (block_given? ? (yield VishParser.new) : VishParser.new)
+    ir = parser.parse string
     ast = AstTransform.new.apply ir
     emit_walker ast  
   rescue Parslet::ParseFailed => failure
