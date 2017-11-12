@@ -49,11 +49,11 @@ class VishParser < Parslet::Parser
   rule(:mult_op) { star | fslash }
 
   rule(:additive) { multiplicative.as(:left) >> space? >> add_op.as(:op) >> space? >> multiplicative.as(:right) |
-
     multiplicative }
 
   # TODO: Check this. Should it be expr.as(:right) ?
   rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> lvalue.as(:right) |  # maybe: expr
+    lparen >> space? >> additive >> space? >> rparen |
     lvalue }
 
   # comparators
