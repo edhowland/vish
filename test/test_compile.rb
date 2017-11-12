@@ -237,4 +237,36 @@ class TestCompile < BaseSpike
   def test_equality_should_allow_lvalue_to_be_an_additive_or_multiplicative
     bc, ctx = compile '1+2*2 == 100'
   end
+
+  # simple parenthesis grouping
+  def test_simple_paren_1_digit
+    bc, ctx = compile '(1)'
+    ci=mkci bc, ctx
+    ci.run
+    assert_eq @result, 1
+  end
+  def test_paren_plus_expression
+    bc, ctx = compile '(1+2)'
+    ci = mkci bc,ctx
+    ci.run
+    assert_eq @result, 3
+  end
+  def test_paren_mult_expression
+    bc, ctx = compile '(4*4)'
+    ci = mkci bc,ctx
+    ci.run
+    assert_eq @result, 16
+  end
+  def test_paren_w_2_plus
+    bc, ctx = compile '(1+2)+3'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 6
+  end
+  def test_paren_with_mult_w_another_additive_term
+    bc, ctx = compile '(4*4)+4'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 20
+  end
 end
