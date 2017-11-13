@@ -12,6 +12,10 @@ class ArithmeticFactory
       BinaryMult
     when '/'
       BinaryDiv
+    when '%'
+      BinaryModulo
+    when '**'
+      BinaryExponentiation
     when '=='
       BinaryEquality
     when '!='

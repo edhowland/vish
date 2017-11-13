@@ -37,14 +37,6 @@ ci = mkci bc, ctx
 end
 ```
 
-### Add these operators to precedence from the following Ruby docs:
-https://ruby-doc.org/core-2.2.0/doc/syntax/precedence_rdoc.html
-
-```
-** 
-% at same level as *, /
-```
-
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 Giving the line, col numbers and the Parslet message top line
 
