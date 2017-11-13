@@ -269,4 +269,13 @@ class TestCompile < BaseSpike
     ci.run
     assert_eq @result, 20
   end
+
+  # modulo, Exponentiation
+  def test_modulo
+    bc, ctx = compile '1%2'
+  end
+def test_raise_to_power
+  bc, ctx = compile '2**2'
+end
+  
 end

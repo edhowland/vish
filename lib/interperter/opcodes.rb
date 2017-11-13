@@ -28,6 +28,12 @@ def opcodes
     _div: 'Divides the top 2 items off stack, pushes the result.',
     div: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 / addend1) },
 
+    _mod: 'Modulo, computes the modulo of the top 2 arguments on the stack and pushes the result',
+    mod: ->(bc, ctx) { l, r = ctx.stack.pop(2); ctx.stack.push(l % r) },
+
+    _exp: 'performs exponenation on top 2 items on stack, pushes the rsult',
+    exp: ->(bc, ctx) { l, r = ctx.stack.pop(2); ctx.stack.push(l ** r) },
+
     # logical operators
     _and: 'Ands the top 2 items off the stack, pushes the result: true, false.',
     and: ->(bc,ctx) { v1, v2 = ctx.pop2; ctx.stack.push(v1 && v2) },

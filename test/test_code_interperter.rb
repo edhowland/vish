@@ -143,4 +143,16 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 25
   end
+  def test_can_modulo
+    @ctx.constants = [4,2]
+    @bc.codes = [:pushc, 0, :pushc, 1, :mod, :debug, :halt]
+    @ci.run
+    assert @result.zero?
+  end
+  def test_star_star_raises_2_squared_is_4
+    @ctx.constants = [2,2]
+    @bc.codes = [:pushc, 0, :pushc, 1, :exp, :debug, :halt]
+    @ci.run
+    assert_eq @result, 4
+  end
 end
