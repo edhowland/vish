@@ -2,8 +2,6 @@
 
 ## Completions
 
-### Add assign back into statement, ... ???
-
 ### Add in true, false keywords
 
 Will require creating another type of Terminal, like Numeral. Called Boolean.
@@ -30,7 +28,7 @@ results, only integers any on the number line.
 E.g.
 
 ```
-random.times do
+rando.times do
   expr_s = random_gen # like '4-20*1+5'
 bc, ctx = compile expr_s
 ci = mkci bc, ctx
@@ -38,31 +36,15 @@ ci = mkci bc, ctx
   assert_eq @result, eval(expr_s)
 end
 ```
-### Add numeric expression precedence
-
-```
-3 * 10 + 4
-# should be 34, not 42 (Hint: 3 * 14)
-```
-
-#### Hould be able to override this withparenthesis: See bug in Bugs.md
-
-#### Parslet grammar rules allow for precedence (via the infix_expression (fn/atom???)
-
-```
-rule(:oper) { star | slash / plus | minus }
-# The '/' above means these preceeding expressions take precedence over the
-# following ones
-```
 
 ### Add these operators to precedence from the following Ruby docs:
 https://ruby-doc.org/core-2.2.0/doc/syntax/precedence_rdoc.html
 
 ```
-!
 ** 
 % at same level as *, /
 ```
+
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 Giving the line, col numbers and the Parslet message top line
 
