@@ -1,22 +1,50 @@
 # TODO
 
 ## Completions
-### Add numeric expression precedence
+
+### Add in true, false keywords
+
+Will require creating another type of Terminal, like Numeral. Called Boolean.
+
+### Add randomizer, Ruby expression to testing of test/test_compiler.rb
+
+The idea here is to use Ruby to chack the result of evaluating the generated
+bytecode from the compiler step:
 
 ```
-3 * 10 + 4
-# should be 34, not 42 (Hint: 3 * 14)
+bc, ctx = compile '5*10+100/2'
+ci = mkci bc, ctx
+ci.run
+assert_eq @result, 5*10+100/2
+# Should be true
 ```
 
-#### Hould be able to override this withparenthesis: See bug in Bugs.md
+#### Randomizer
 
-#### Parslet grammar rules allow for precendences:
+This is type of fuzzing the input.
+Assume some form of random expression generator, like in a Ruby Fiber.
+It should return a string of random numbers up to 100, and a choic of operators among +, - and *. (/ or divide is left off to prevent rantional
+results, only integers any on the number line.
+E.g.
 
 ```
-rule(:oper) { star | slash / plus | minus }
-# The '/' above means these preceeding expressions take precedence over the
-# following ones
+rando.times do
+  expr_s = random_gen # like '4-20*1+5'
+bc, ctx = compile expr_s
+ci = mkci bc, ctx
+  ci.run
+  assert_eq @result, eval(expr_s)
+end
 ```
+
+### Add these operators to precedence from the following Ruby docs:
+https://ruby-doc.org/core-2.2.0/doc/syntax/precedence_rdoc.html
+
+```
+** 
+% at same level as *, /
+```
+
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 Giving the line, col numbers and the Parslet message top line
 

@@ -13,7 +13,7 @@ class AstTransform < Parslet::Transform
   # logical operations
 
   # arithmetic expressions
-  rule(left: simple(:lvalue), op: simple(:op), right: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
+  rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
   rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
 

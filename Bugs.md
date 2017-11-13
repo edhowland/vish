@@ -1,19 +1,12 @@
 # Bugs
 
-## Caveat: avoid the following. Need parenthesis around expressions in grammar
+## Very long vish scripts scripts do not work
+
+See compiler/very_long_script.vsh
+Run with:
 
 ```
-# works:
-16 == 4*4
-
-# does not work because of left associated binding
-4*4 == 16
-# get a type error
+cd compiler
+./vishc.rb very_long_script.{vsh,vshc}
+# Get Parslet failure
 ```
-
-Although the above works in Ruby, we need to do the following:
-
-```
-(4*4) == 16
-```
-

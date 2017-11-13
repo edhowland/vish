@@ -3,6 +3,8 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
+require_relative 'arith'
+
 
 
 
@@ -50,10 +52,15 @@ def walker(ast)
 end
 
 
-  def compile string
-    ir = VishParser.new.parse string
+  def compile string, &blk
+  begin
+  parser = (block_given? ? (yield VishParser.new) : VishParser.new)
+    ir = parser.parse string
     ast = AstTransform.new.apply ir
-    emit_walker ast
+    emit_walker ast  
+  rescue Parslet::ParseFailed => failure
+    puts failure.parse_failure_cause.ascii_tree
+  end
   end
   
   # temp:
