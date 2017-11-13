@@ -1,0 +1,23 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    highline (1.7.8)
+    json (1.8.6)
+    parslet (1.8.0)
+    rubytree (0.9.7)
+      json (~> 1.8)
+      structured_warnings (~> 0.2)
+    structured_warnings (0.3.0)
+    thor (0.20.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  highline (~> 1.7, >= 1.7.8)
+  parslet (~> 1.8)
+  rubytree
+  thor (~> 0.20.0)
+
+BUNDLED WITH
+   1.12.3

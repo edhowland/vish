@@ -1,0 +1,16 @@
+# cond_jump.vasm
+context:
+constants: 0,0,5
+vars:
+codes:
+cls
+pushc 0
+pushc 1
+eq
+jmpt 11
+cls
+pushc 0
+cls
+pushc 2
+print
+halt

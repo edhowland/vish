@@ -1,0 +1,7 @@
+# ../compiler/comment.vshc disassembly into comment.vasm
+context:
+constants:
+vars:
+codes:
+print
+halt

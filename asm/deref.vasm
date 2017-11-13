@@ -1,0 +1,9 @@
+# empty.vshc disassembly into empty.vasm
+context:
+constants:
+vars:
+  name=33
+codes:
+pushv name
+print
+halt
