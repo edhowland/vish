@@ -2,7 +2,6 @@
 
 class UnaryTreeFactory
   def self.subtree(klass, right)
-#binding.pry
     top = mknode(klass.new)
     if right.instance_of? Tree::TreeNode
       top << right

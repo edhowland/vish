@@ -50,21 +50,13 @@ class VishParser < Parslet::Parser
     [plus, 2, :right], [minus, 2, :right],
     [equal_equal, 1, :left], [bang_equal, 1, :left]) }
 
-
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
-#  rule(:add_op) { plus | minus }
-#  rule(:mult_op) { star | fslash }
-#
-#  rule(:additive) { multiplicative.as(:left) >> space? >> add_op.as(:op) >> space? >> multiplicative.as(:right) |
-#    multiplicative }
-#
-  # TODO: Check this. Should it be expr.as(:right) ?
 
   rule(:lvalue) { integer | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
-#  rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
+
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
 
@@ -72,7 +64,6 @@ class VishParser < Parslet::Parser
   rule(:arglist) { expr >> (comma >> expr).repeat }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
-  # term: where the magic happens to make parenthesis work
 
   # Expressions, assignments, etc.
   rule(:expr) { funcall | negation | infix_oper | deref | integer }
