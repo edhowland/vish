@@ -7,6 +7,8 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 [Viper](https://github.com/edhowland/viper)
 
+## Version 0.1.0
+
 
 You can enter simple commands with a shell-like syntax:
 
