@@ -84,7 +84,7 @@ class VishParser < Parslet::Parser
   # term: where the magic happens to make parenthesis work
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | comparison |  deref | integer }
+  rule(:expr) { funcall | negation | infix_oper | deref | integer }
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (assign | expr | empty) }

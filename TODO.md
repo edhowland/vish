@@ -2,6 +2,12 @@
 
 ## Completions
 
+### Add assign back into statement, ... ???
+
+### Add in true, false keywords
+
+Will require creating another type of Terminal, like Numeral. Called Boolean.
+
 ### Add randomizer, Ruby expression to testing of test/test_compiler.rb
 
 The idea here is to use Ruby to chack the result of evaluating the generated
