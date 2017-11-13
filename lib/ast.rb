@@ -10,6 +10,10 @@ require_relative 'ast/binary_add'
 require_relative 'ast/binary_sub'
 require_relative 'ast/binary_mult'
 require_relative 'ast/binary_div'
+require_relative 'ast/binary_modulo'
+require_relative 'ast/binary_exponentiation'
+
+
 # Logical ops
 require_relative 'ast/binary_equality'
 require_relative 'ast/binary_inequality'

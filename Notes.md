@@ -1,5 +1,11 @@
 # Notes
 
+## How to spell Exponentiation
+
+exponentiation
+
+
+
 ## From the mailing list
 
 > Wonderful works! And I would like to know how to handle parens in > 'infix_expression', like: > >      (a+b)/(a-b) That should be pretty obvious.. what did you try and how did it not work?

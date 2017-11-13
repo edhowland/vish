@@ -24,6 +24,8 @@ class VishParser < Parslet::Parser
   rule(:minus) { str('-') >> space? }
   rule(:star) { str('*') >> space? }
   rule(:fslash) { str('/') >> space? }
+  rule(:percent) { str('%') >> space? }
+  rule(:star_star) { str("\*\*") >> space? }
   # Logical ops
   rule(:bang) { str('!') }
     rule(:equal_equal) { str('==') >> space? }
@@ -46,7 +48,8 @@ class VishParser < Parslet::Parser
   # Note: Only do binary operators here. The meaning of infix!
   # TODO: Add: %, ** ... See TODO.md for precedence
   rule(:infix_oper) { infix_expression(group,
-    [star, 3, :left], [fslash, 3, :left], 
+    [star_star, 4, :left],
+    [star, 3, :left], [fslash, 3, :left], [percent, 3, :left],
     [plus, 2, :right], [minus, 2, :right],
     [equal_equal, 1, :left], [bang_equal, 1, :left]) }
 
