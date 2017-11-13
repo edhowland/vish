@@ -10,14 +10,16 @@ class Arith < Parslet::Parser
 
   rule(:plus) { str('+') }
   rule(:star) { str('*') }
+  rule(:minus) { str('-') }
+  rule(:fslash) { str('/') }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
-  rule(:term) { factor.as(:l) >> plus >> factor.as(:r)  |
-       factor }
-
-  rule(:factor) { integer.as(:l) >> star >> integer.as(:r) | 
-      lparen >> term >> rparen |
-  integer }
+#  rule(:term) { factor.as(:l) >> plus >> factor.as(:r)  |
+#       factor }
+#
+#  rule(:factor) { integer.as(:l) >> star >> integer.as(:r) | 
+#      lparen >> term >> rparen |
+#  integer }
 
     root(:term)
 end

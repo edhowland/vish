@@ -43,31 +43,32 @@ class VishParser < Parslet::Parser
   rule(:comment) { octo >> notnl >> newline.maybe }
 
   # operators and precedence
-  rule(:infix_oper) { infix_expression(expr, 
-    [star, 2, :left], [fslash, 2, :left], 
-    [plus, 1, :right], [minus, 1, :right]) }
+  rule(:infix_oper) { infix_expression(lvalue, # integer
+    [star, 3, :left], [fslash, 3, :left], 
+    [plus, 2, :right], [minus, 2, :right],
+    [equal_equal, 1, :left], [bang_equal, 1, :left]) }
 
-  rule(:add_op) { plus | minus }
-  rule(:mult_op) { star | fslash }
-
-  rule(:additive) { multiplicative.as(:left) >> space? >> add_op.as(:op) >> space? >> multiplicative.as(:right) |
-    multiplicative }
-
+#  rule(:add_op) { plus | minus }
+#  rule(:mult_op) { star | fslash }
+#
+#  rule(:additive) { multiplicative.as(:left) >> space? >> add_op.as(:op) >> space? >> multiplicative.as(:right) |
+#    multiplicative }
+#
   # TODO: Check this. Should it be expr.as(:right) ?
-  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> lvalue.as(:right) |  # maybe: expr
-    lparen >> space? >> additive >> space? >> rparen |
-    lvalue }
+#  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> lvalue.as(:right) |  # maybe: expr
+#    lparen >> space? >> additive >> space? >> rparen |
+#    lvalue }
 
   # comparators
-  rule(:equality) { additive.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
-  rule(:inequality) { additive.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
-  rule(:comparison) { equality | inequality }
+#  rule(:equality) { additive.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
+#  rule(:inequality) { additive.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
+#  rule(:comparison) { equality | inequality }
 
-  rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
+#  rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
-  rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
+#  rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) }
 
@@ -78,7 +79,7 @@ class VishParser < Parslet::Parser
   # term: where the magic happens to make parenthesis work
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | comparison | additive  | deref | integer } # arith
+  rule(:expr) { funcall | negation | comparison |  deref | integer }
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (assign | expr | empty) }
