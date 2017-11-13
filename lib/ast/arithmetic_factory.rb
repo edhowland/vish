@@ -3,7 +3,8 @@
 
 class ArithmeticFactory
   def self.subtree(op, left, right)
-    klass = case op
+#binding.pry
+    klass = case op.to_s.strip
     when '+'
       BinaryAdd
     when '-'

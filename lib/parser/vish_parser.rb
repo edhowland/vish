@@ -20,14 +20,14 @@ class VishParser < Parslet::Parser
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
-  rule(:plus) { str('+') }
-  rule(:minus) { str('-') }
-  rule(:star) { str('*') }
-  rule(:fslash) { str('/') }
+  rule(:plus) { str('+') >> space? }
+  rule(:minus) { str('-') >> space? }
+  rule(:star) { str('*') >> space? }
+  rule(:fslash) { str('/') >> space? }
   # Logical ops
   rule(:bang) { str('!') }
-    rule(:equal_equal) { str('==') }
-  rule(:bang_equal) { str('!=') }
+    rule(:equal_equal) { str('==') >> space? }
+  rule(:bang_equal) { str('!=') >> space? }
 
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
@@ -45,7 +45,7 @@ class VishParser < Parslet::Parser
   # operators and precedence
   # Note: Only do binary operators here. The meaning of infix!
   # TODO: Add: %, ** ... See TODO.md for precedence
-  rule(:infix_oper) { infix_expression(group, # integer # lvalue
+  rule(:infix_oper) { infix_expression(group,
     [star, 3, :left], [fslash, 3, :left], 
     [plus, 2, :right], [minus, 2, :right],
     [equal_equal, 1, :left], [bang_equal, 1, :left]) }
@@ -60,22 +60,13 @@ class VishParser < Parslet::Parser
 #    multiplicative }
 #
   # TODO: Check this. Should it be expr.as(:right) ?
-#  rule(:multiplicative) {  lvalue.as(:left) >> space? >> mult_op.as(:op) >> space? >> lvalue.as(:right) |  # maybe: expr
-#    lparen >> space? >> additive >> space? >> rparen |
-#    lvalue }
 
-  # comparators
-#  rule(:equality) { additive.as(:left) >> space? >> equal_equal.as(:op) >> space? >> expr.as(:right) }
-#  rule(:inequality) { additive.as(:left) >> space? >> bang_equal.as(:op) >> space? >> expr.as(:right) }
-#  rule(:comparison) { equality | inequality }
-
-#  rule(:oper)  { star | fslash | plus | minus | equal_equal | bang_equal }
   rule(:lvalue) { integer | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 #  rule(:arith) { lvalue.as(:left) >> space? >> oper.as(:op) >> space? >> expr.as(:right) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
-  rule(:deref) { colon >> identifier.as(:deref) }
+  rule(:deref) { colon >> identifier.as(:deref) >> space? }
 
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arglist) { expr >> (comma >> expr).repeat }

@@ -147,13 +147,13 @@ class TestCompile < BaseSpike
 
   # ! negation
   def test_negation_returns_true
-    bc, ctx = compile '! 1 == 2'
+    bc, ctx = compile '! (1 == 2)'
     ci = mkci bc, ctx
     ci.run
     assert @result
   end
   def test_negation_returns_false
-    bc, ctx = compile '! 1 == 1'
+    bc, ctx = compile '!(1 == 1)'
     ci = mkci bc, ctx
     ci.run
     assert_false  @result
