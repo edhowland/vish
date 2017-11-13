@@ -43,11 +43,16 @@ class VishParser < Parslet::Parser
   rule(:comment) { octo >> notnl >> newline.maybe }
 
   # operators and precedence
+  # Note: Only do binary operators here. The meaning of infix!
+  # TODO: Add: %, ** ... See TODO.md for precedence
   rule(:infix_oper) { infix_expression(lvalue, # integer
     [star, 3, :left], [fslash, 3, :left], 
     [plus, 2, :right], [minus, 2, :right],
     [equal_equal, 1, :left], [bang_equal, 1, :left]) }
 
+
+  # parenthesis:
+  rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | infix_oper }
 #  rule(:add_op) { plus | minus }
 #  rule(:mult_op) { star | fslash }
 #
