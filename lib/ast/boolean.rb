@@ -5,9 +5,10 @@ class Boolean < Terminal
   @h = @h || Hash.new { raise RuntimeError.new('Unknown boolean literal. Only true or false') }
   @h['true'] = true
   @h['false'] = false
-    super @h[string_slice]
+    super @h[string_slice.to_s.strip]
   end
   def emit(bc, ctx)
-    bc.codes << @value
+    bc << :pushc
+    bc << ctx.store_constant(@value)
   end
 end

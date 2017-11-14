@@ -277,5 +277,18 @@ class TestCompile < BaseSpike
 def test_raise_to_power
   bc, ctx = compile '2**2'
 end
-  
+
+  # test boolean literals: true, false
+  def test_boolean_parses_true_string
+    bc, ctx = compile 'true'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, true
+  end
+  def test_boolean_compiles_false_keyword_as_false_class
+    bc, ctx = compile 'false'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
 end

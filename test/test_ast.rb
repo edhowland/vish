@@ -23,11 +23,13 @@ class TestAst < BaseSpike
   def test_emits_correct_ruby_literal_value_for_true_w_true_class
     b = Boolean.new 'true'
     b.emit(@bc, @ctx)
-    assert_eq @bc.codes[-1], true
+  assert @ctx.constants[0]
+    assert_eq @bc.codes, [:pushc, 0]
   end
   def test_boolean_emits_false_w_given_false_string
      b = Boolean.new('false')
     b.emit(@bc, @ctx)
-    assert_eq @bc.codes[-1], false
+    assert_false @ctx.constants[0]
+    assert_eq @bc.codes, [:pushc, 0]
   end
 end

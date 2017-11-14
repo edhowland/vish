@@ -33,6 +33,10 @@ class VishParser < Parslet::Parser
 
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
+  rule(:bool_t) { str('true') >> space? }
+  rule(:bool_f) { str('false') >> space? }
+  rule(:boolean) { (bool_t | bool_f).as(:boolean) }
+
   rule(:identifier) { match(/[a-zA-Z0-9_]/).repeat(1) } # .repeat(1)
 
   # This is Whitespace, not a single space; does not include newlines. See that rule
@@ -56,7 +60,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | deref }
+  rule(:lvalue) { integer | boolean | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
