@@ -28,5 +28,7 @@ require_relative 'ast/funcall'
 require_relative 'ast/lvalue'
 require_relative 'ast/nop'
 require_relative 'ast/numeral'
+require_relative 'ast/boolean'
+
 require_relative 'ast/program_factory'
 require_relative 'ast/start'
