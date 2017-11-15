@@ -20,6 +20,10 @@ class ArithmeticFactory
       BinaryEquality
     when '!='
       BinaryInequality
+    when 'and'
+      BooleanAnd
+    when 'or'
+      BooleanOr
     else
       raise "Unknown arithmetic operation requested: '#{op}'"
     end

@@ -28,6 +28,8 @@ class VishParser < Parslet::Parser
   rule(:star_star) { str("\*\*") >> space? }
   # Logical ops
   rule(:bang) { str('!') }
+  rule(:l_and) { str('and') >> space? }
+  rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
 
@@ -50,12 +52,12 @@ class VishParser < Parslet::Parser
 
   # operators and precedence
   # Note: Only do binary operators here. The meaning of infix!
-  # TODO: Add: %, ** ... See TODO.md for precedence
   rule(:infix_oper) { infix_expression(group,
-    [star_star, 4, :left],
-    [star, 3, :left], [fslash, 3, :left], [percent, 3, :left],
-    [plus, 2, :right], [minus, 2, :right],
-    [equal_equal, 1, :left], [bang_equal, 1, :left]) }
+    [star_star, 5, :left],
+    [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
+    [plus, 3, :right], [minus, 3, :right],
+    [equal_equal, 2, :left], [bang_equal, 2, :left],
+    [l_and, 1, :left], [l_or, 1, :left]) }
 
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }

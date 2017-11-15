@@ -2,10 +2,10 @@
 
 ## Completions
 
-### Add in true, false keywords
 
-Will require creating another type of Terminal, like Numeral. Called Boolean.
+### Add and, or operators to syntax
 
+### Handle true, false keywords in vasm, vdis
 Remember to handle this thing in asm/vasm.rb, vdis.rb. Will assembly decod in vasm_grammar recognize these strings or not.
 
 ### Add randomizer, Ruby expression to testing of test/test_compiler.rb
