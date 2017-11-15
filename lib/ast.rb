@@ -6,6 +6,10 @@ require_relative 'ast/arithmetic_factory'
 
 require_relative 'ast/assign'
 require_relative 'ast/unary_negation'
+require_relative 'ast/boolean_and'
+require_relative 'ast/boolean_or'
+
+# Arithmetic non terminals
 require_relative 'ast/binary_add'
 require_relative 'ast/binary_sub'
 require_relative 'ast/binary_mult'
@@ -28,5 +32,7 @@ require_relative 'ast/funcall'
 require_relative 'ast/lvalue'
 require_relative 'ast/nop'
 require_relative 'ast/numeral'
+require_relative 'ast/boolean'
+
 require_relative 'ast/program_factory'
 require_relative 'ast/start'

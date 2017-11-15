@@ -28,11 +28,17 @@ class VishParser < Parslet::Parser
   rule(:star_star) { str("\*\*") >> space? }
   # Logical ops
   rule(:bang) { str('!') }
+  rule(:l_and) { str('and') >> space? }
+  rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
 
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
+  rule(:bool_t) { str('true') >> space? }
+  rule(:bool_f) { str('false') >> space? }
+  rule(:boolean) { (bool_t | bool_f).as(:boolean) }
+
   rule(:identifier) { match(/[a-zA-Z0-9_]/).repeat(1) } # .repeat(1)
 
   # This is Whitespace, not a single space; does not include newlines. See that rule
@@ -46,17 +52,17 @@ class VishParser < Parslet::Parser
 
   # operators and precedence
   # Note: Only do binary operators here. The meaning of infix!
-  # TODO: Add: %, ** ... See TODO.md for precedence
   rule(:infix_oper) { infix_expression(group,
-    [star_star, 4, :left],
-    [star, 3, :left], [fslash, 3, :left], [percent, 3, :left],
-    [plus, 2, :right], [minus, 2, :right],
-    [equal_equal, 1, :left], [bang_equal, 1, :left]) }
+    [star_star, 5, :left],
+    [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
+    [plus, 3, :right], [minus, 3, :right],
+    [equal_equal, 2, :left], [bang_equal, 2, :left],
+    [l_and, 1, :left], [l_or, 1, :left]) }
 
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | deref }
+  rule(:lvalue) { integer | boolean | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 

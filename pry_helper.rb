@@ -94,11 +94,11 @@ def misty ci, &blk
 end
 
 
-# nci : Makes a new ci from bc, ctx
+# mkci : Makes a new ci from bc, ctx
 # Parameters:
 # + bc: ByteCodes
 # + ctx : Context
-def nci bc, ctx
+def mkci bc, ctx
   CodeInterperter.new bc, ctx
 end
 

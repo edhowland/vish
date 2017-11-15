@@ -17,6 +17,12 @@ class TestCompile < BaseSpike
   def mkci bc, ctx
     CodeInterperter.new(bc, ctx) {|_bc, _ctx, bcodes| bcodes[:print] = ->(bc, ctx) { @result = ctx.stack.pop } }
   end
+  def interpertit string
+    bc, ctx = compile string
+    ci = mkci bc, ctx
+    ci.run
+  end
+
   def test_compile_1
     ir = @parser.parse '1'
     ast = @transform.apply ir
@@ -277,5 +283,38 @@ class TestCompile < BaseSpike
 def test_raise_to_power
   bc, ctx = compile '2**2'
 end
-  
+
+  # test boolean literals: true, false
+  def test_boolean_parses_true_string
+    bc, ctx = compile 'true'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, true
+  end
+  def test_boolean_compiles_false_keyword_as_false_class
+    bc, ctx = compile 'false'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+
+  # Test boolean and, or and true, false. Note and, or are logical operators
+  # with the lowest precedence even then ==, !=.
+  # Not to be confused with &&, || which are statement separators.
+  def test_and_simple
+    interpertit 'true and false'
+    assert_false @result
+  end
+  def test_or_simple
+    interpertit 'false or true'
+    assert @result
+  end
+end
+def test_complex_operation_w_and_equality
+  interpertit 'false and 22 == 11 * 2'
+  assert_false @result
+end
+def test_complex_or_w_inequality
+  interpertit 'false or 100 * 4 != 99'
+  assert_false @result
 end
