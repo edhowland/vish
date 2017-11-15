@@ -23,6 +23,16 @@ class TestCompile < BaseSpike
     ci.run
   end
 
+
+  # start of tests:
+  def test_can_raise_parslet_parse_failed_for_leading_digit_in_identifier
+    assert_raises Parslet::ParseFailed do
+      bc, ctx = compile '0jkl=1'
+    end
+  end
+  def test_proper_identifier_does_not_raise_parslet_parse_failed_exception
+    bc, ctx = compile '_name=1'
+  end
   def test_compile_1
     ir = @parser.parse '1'
     ast = @transform.apply ir

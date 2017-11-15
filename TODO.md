@@ -2,6 +2,12 @@
 
 ## Completions
 
+### String literals
+
+Do both single and double quoted strings.
+Remember to allow for \n, etc. in double quoted strings.
+
+
 ### true and false in vasm, vdis.rb
 
 Remember to handle this thing in asm/vasm.rb, vdis.rb. Will assembly decod in vasm_grammar recognize these strings or not.
