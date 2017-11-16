@@ -39,6 +39,18 @@ class VishParser < Parslet::Parser
   rule(:bool_f) { str('false') >> space? }
   rule(:boolean) { (bool_t | bool_f).as(:boolean) }
 
+  # string literals TODO: need to figure out string interpolation
+  # from parslet/examples/string_parser.rb
+    rule :dbl_string do
+    str('"') >> 
+    (
+      (str('\\') >> any) |
+      (str('"').absent? >> any)
+    ).repeat.as(:string) >> 
+    str('"')
+  end
+  rule(:string) { dbl_string >> space? }
+
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
   rule(:ident_tail) { match(/[a-zA-Z0-9_]/).repeat(1) }
@@ -64,7 +76,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | deref }
+  rule(:lvalue) { integer | boolean | string | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
