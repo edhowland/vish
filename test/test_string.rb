@@ -26,4 +26,10 @@ class TestString < BaseSpike
     lit  = StringLiteral.new string
     assert_eq lit.value, string
   end
+
+  # compile steps
+  def test_compile_empty_string
+    interpertit 'n1=""; :n1'
+    assert_empty @result
+  end
 end

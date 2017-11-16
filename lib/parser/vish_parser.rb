@@ -17,6 +17,8 @@ class VishParser < Parslet::Parser
   rule(:octo) { str('#') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
+  rule(:lbrace) { str('{') }
+  rule(:rbrace) { str('}') }
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
@@ -24,8 +26,12 @@ class VishParser < Parslet::Parser
   rule(:minus) { str('-') >> space? }
   rule(:star) { str('*') >> space? }
   rule(:fslash) { str('/') >> space? }
+  rule(:bslash) { str('\\') }
   rule(:percent) { str('%') >> space? }
   rule(:star_star) { str("\*\*") >> space? }
+  # some punctuation
+  rule(:dquote) { str('"') }
+  rule(:squote) { str("'") }
   # Logical ops
   rule(:bang) { str('!') }
   rule(:l_and) { str('and') >> space? }
@@ -39,6 +45,34 @@ class VishParser < Parslet::Parser
   rule(:bool_f) { str('false') >> space? }
   rule(:boolean) { (bool_t | bool_f).as(:boolean) }
 
+
+  # string interpolation stuff
+  # See: Notes.md
+  rule(:colon_lbrace) { colon >> lbrace }
+  rule(:deref_expr) { colon_lbrace >> expr >> rbrace }
+
+  # escape sequences
+  rule(:esc_newline) { bslash >> str('n') }
+  rule(:esc_tab) { bslash >> str('t') }
+
+  rule(:esc_bslash) { bslash >> bslash }
+  rule(:esc_dquote) { bslash >> dquote }
+  rule(:esc_squote) { bslash >> squote }
+  # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
+  rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote }
+
+  # string_atom is anything that is not a escape_seq or a  a deref_expr
+#  rule(:string_atom) { ((escape_seq | deref_expr | dquote).absent? >> any).repeat }
+
+  # interpolated string is any amount of string_atoms, deref_expr and escape_seq 
+  # surrounded by dquotes
+  rule(:inter_string) { dquote >> (escape_seq | string_atom).repeat >> dquote } # | deref_expr
+
+    # for debugging
+    rule(:string_particle) { dquote.absent? >> any }
+    rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_particle.as(:strtok) }
+    rule(:stringcule) { string_atom.repeat }
+    rule(:dummy) { dquote >> stringcule.as(:string) >> dquote }
   # string literals TODO: need to figure out string interpolation
   # from parslet/examples/string_parser.rb
     rule :dbl_string do

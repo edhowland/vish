@@ -19,3 +19,4 @@ rt() {
   ruby "test/test_${1}.rb"
 }
 
+alias vg='vn lib/parser/vish_parser.rb'
