@@ -7,4 +7,9 @@ class Strtok < Terminal
   def emit(bc, ctx)
     # NOP
   end
+
+  # :to_s just return @value.to_s to comply with needs of StringInterpolation
+  def to_s
+    @value.to_s
+  end
 end
