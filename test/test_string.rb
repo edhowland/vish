@@ -32,4 +32,9 @@ class TestString < BaseSpike
     interpertit 'n1=""; :n1'
     assert_empty @result
   end
+  def test_handle_escape_sequence
+    string = '"' + 'line' + [92,'n',92,92].map(&:chr).join + '"'
+    interpertit string
+    assert_eq @result, "line\n\\"
+  end
 end
