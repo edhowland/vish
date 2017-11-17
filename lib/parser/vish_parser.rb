@@ -67,7 +67,7 @@ class VishParser < Parslet::Parser
   #
     # a string atom is a string_quark and  or a deref_expr(:{ expr }) , or a an escape_seq(\n, ...)
     rule(:string_quark) { dquote.absent? >> any }
-    rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_quark.as(:strtok) }
+    rule(:string_atom) { escape_seq.as(:escape_seq) | deref_expr.as(:expr) | string_quark.as(:strtok) }
 
   # A stringcule  (string molecule)  is  any sequence of string atoms
     rule(:stringcule) { string_atom.repeat }

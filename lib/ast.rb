@@ -34,6 +34,7 @@ require_relative 'ast/nop'
 require_relative 'ast/numeral'
 require_relative 'ast/string_literal'
 require_relative 'ast/strtok'
+require_relative 'ast/escape_sequence'
 require_relative 'ast/string_interpolation'
 require_relative 'ast/boolean'
 
