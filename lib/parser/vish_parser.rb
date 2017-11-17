@@ -71,7 +71,7 @@ class VishParser < Parslet::Parser
     # for debugging
     rule(:string_quark) { dquote.absent? >> any }
     rule(:string_hadron) { string_quark.repeat }
-    rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_quark }
+    rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_quark.as(:strtok) }
     rule(:stringcule) { string_atom.repeat }
     rule(:dummy) { dquote >> stringcule.as(:string) >> dquote }
   # string literals TODO: need to figure out string interpolation
