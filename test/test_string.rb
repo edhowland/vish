@@ -11,11 +11,11 @@ class TestString < BaseSpike
   end
 
   def test_can_parse_double_cuoted_string
-    @parser.string.parse '"this is a string"'
+    @parser.parse '"this is a string"'
   end
   def test_unterminated_string_raises_parslet_parse_failed
     assert_raises Parslet::ParseFailed do
-    @parser.string.parse' "This'
+    @parser.parse' "This'
     end
 
   end
