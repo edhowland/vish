@@ -9,7 +9,7 @@ class AstTransform < Parslet::Transform
   rule(empty: simple(:empty)) { :ignore }    # Nop.new 
 
   rule(int: simple(:int)) { Numeral.new(int) }
-  rule(string: simple(:string)) { StringLiteral.new(string) }
+  rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
 
   # logical operations

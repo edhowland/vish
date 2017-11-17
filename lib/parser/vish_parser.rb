@@ -61,28 +61,28 @@ class VishParser < Parslet::Parser
   # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
   rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote }
 
-  # string_atom is anything that is not a escape_seq or a  a deref_expr
-#  rule(:string_atom) { ((escape_seq | deref_expr | dquote).absent? >> any).repeat }
 
   # interpolated string is any amount of string_atoms, deref_expr and escape_seq 
   # surrounded by dquotes
-  rule(:inter_string) { dquote >> (escape_seq | string_atom).repeat >> dquote } # | deref_expr
-
+  #
+    # a string atom is a string_quark and  or a deref_expr(:{ expr }) , or a an escape_seq(\n, ...)
     rule(:string_quark) { dquote.absent? >> any }
     rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_quark.as(:strtok) }
-    rule(:stringcule) { string_atom.repeat }
-    rule(:dummy) { dquote >> stringcule.as(:string) >> dquote }
 
-  # from parslet/examples/string_parser.rb
-    rule :dbl_string do
-    str('"') >> 
+  # A stringcule  (string molecule)  is  any sequence of string atoms
+    rule(:stringcule) { string_atom.repeat }
+    rule(:string_interpolation) { dquote >> stringcule.as(:string) >> dquote }
+
+  # from parslet/examples/string_parser.rb. But changed to single quotes "'this is a string'"
+    rule(:sq_string) do
+    str("'") >> 
     (
       (str('\\') >> any) |
-      (str('"').absent? >> any)
-    ).repeat.as(:string) >> 
-    str('"')
+      (str("'").absent? >> any)
+    ).repeat.as(:sq_string) >> 
+    str("'")
   end
-  rule(:dq_string) { dummy >> space? }  #{ dbl_string >> space? }
+  rule(:dq_string) { string_interpolation >> space? }
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
@@ -109,7 +109,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | deref }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
