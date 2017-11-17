@@ -10,6 +10,8 @@ class AstTransform < Parslet::Transform
 
   rule(int: simple(:int)) { Numeral.new(int) }
   rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
+  rule(strtok: simple(:strtok)) { String.new(strtok) }
+  rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.new(string_interpolation) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
 
   # logical operations

@@ -71,7 +71,7 @@ class VishParser < Parslet::Parser
 
   # A stringcule  (string molecule)  is  any sequence of string atoms
     rule(:stringcule) { string_atom.repeat }
-    rule(:string_interpolation) { dquote >> stringcule.as(:string) >> dquote }
+    rule(:string_interpolation) { dquote >> stringcule.as(:string_interpolation) >> dquote }
 
   # from parslet/examples/string_parser.rb. But changed to single quotes "'this is a string'"
     rule(:sq_string) do
