@@ -155,4 +155,12 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 4
   end
+
+  # thing to convert top of stack to a string, push the result as a string
+  def test_str_opcode
+    @ctx.constants = [11]
+    @bc.codes = [:cls, :pushc, 0, :str, :debug, :halt]
+    @ci.run
+    assert_eq @result, '11'
+  end
 end

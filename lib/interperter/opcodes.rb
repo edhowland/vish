@@ -63,6 +63,9 @@ def opcodes
     _jmpt: 'branch if top of stack is true to the location contained in the operand of the bytecode list.',
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
 
+    _str: 'Converts top of stack to a string, pushes the result',
+    str: ->(bc, ctx) { ctx.stack.push(ctx.stack.pop.to_s) },
+
     # environment instructions : print, . .etc
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
