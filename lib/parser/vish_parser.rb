@@ -68,13 +68,11 @@ class VishParser < Parslet::Parser
   # surrounded by dquotes
   rule(:inter_string) { dquote >> (escape_seq | string_atom).repeat >> dquote } # | deref_expr
 
-    # for debugging
     rule(:string_quark) { dquote.absent? >> any }
-    rule(:string_hadron) { string_quark.repeat }
     rule(:string_atom) { escape_seq.as(:escape) | deref_expr.as(:expr) | string_quark.as(:strtok) }
     rule(:stringcule) { string_atom.repeat }
     rule(:dummy) { dquote >> stringcule.as(:string) >> dquote }
-  # string literals TODO: need to figure out string interpolation
+
   # from parslet/examples/string_parser.rb
     rule :dbl_string do
     str('"') >> 
@@ -84,7 +82,7 @@ class VishParser < Parslet::Parser
     ).repeat.as(:string) >> 
     str('"')
   end
-  rule(:string) { dbl_string >> space? }
+  rule(:dq_string) { dummy >> space? }  #{ dbl_string >> space? }
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
@@ -111,7 +109,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | string | deref }
+  rule(:lvalue) { integer | boolean | dq_string | deref }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 

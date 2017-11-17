@@ -9,6 +9,11 @@ exponentiation
 
 In parslet lingo: the 'any' atom is equivalent to '.' in regular expressions.
 
+Need to recombine any escape_seq :escape, and :strtok (single chars) into combined strings where the escape sequence is 
+converted into appropiate characters.
+
+In Ruby, the interpolated bit: #{ expr } can be deeply nested with even more strings with interpolations with more 
+#{ expr2 }, et. al.
 Double quoted strings can contain strings, escape sequences and language expressions.
 A fully realized string processor would work in two steps:
 
