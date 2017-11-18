@@ -18,5 +18,6 @@ vt() {
 rt() {
   ruby "test/test_${1}.rb"
 }
-
+# things to make editing files easier
 alias vg='vn lib/parser/vish_parser.rb'
+alias va='vn lib/parser/ast_transform.rb'

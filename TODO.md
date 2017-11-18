@@ -4,12 +4,12 @@
 
 ### String literals
 
-Do both single and double quoted strings.
-Remember to allow for \n, etc. in double quoted strings.
 
 #### do something to strtoks to recombine back into single string atoms.
 
 Note: This is ugly because of bad recursion on these .repeats in Parslet rules.
+
+#### MUST have better handling of StringInterpolation in ctor.
 
 ### true and false in vasm, vdis.rb
 

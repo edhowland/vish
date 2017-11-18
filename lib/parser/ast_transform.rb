@@ -12,6 +12,7 @@ class AstTransform < Parslet::Transform
   rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
   rule(strtok: simple(:strtok)) { String.new(strtok) }
   rule(escape_seq: simple(:escape_seq)) { EscapeSequence.new(escape_seq) }
+  rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
   rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.new(string_interpolation) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
 

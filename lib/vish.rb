@@ -3,6 +3,7 @@
 require 'rubytree'
 require 'highline'
 
+require_relative 'api'
 require_relative 'ast'
 require_relative 'parser'
 

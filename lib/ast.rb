@@ -2,6 +2,7 @@ require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 
 require_relative 'ast/clear_stack'
+require_relative 'ast/subtree_factory'
 require_relative 'ast/arithmetic_factory'
 
 require_relative 'ast/assign'
@@ -35,6 +36,7 @@ require_relative 'ast/numeral'
 require_relative 'ast/string_literal'
 require_relative 'ast/strtok'
 require_relative 'ast/escape_sequence'
+require_relative 'ast/string_expression'
 require_relative 'ast/string_interpolation'
 require_relative 'ast/boolean'
 
