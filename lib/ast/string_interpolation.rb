@@ -9,9 +9,17 @@ class StringInterpolation < NonTerminal
     @value = @sequence.map(&:to_s).join('')
   end
   attr_accessor :sequence
+
+  def self.subtree(sequence)
+    rdp = SimpleRDP.new(array_join(sequence, :+), default: '', 
+      term_p: ->(v) { v },
+      nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
+    rdp.run
+    rdp.last
+  end
   def emit(bc, ctx)
-    pc = ctx.store_constant(@value)
+    loc = ctx.store_constant(@value)
     bc.codes << :pushc
-    bc.codes << pc
+    bc.codes << loc
   end
 end
