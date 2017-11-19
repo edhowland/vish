@@ -5,6 +5,7 @@
 # Usage: new_arr = rl_compress ['a', 'b', 'c', 12, 'c', 'd', Object.new]
 # returns: ['abc', 12, 'cd', object]
 # Depends on array_split
-def rl_compress array
-  array_split(array) {|e| ! e.instance_of? String }.map {|e| e[0].instance_of?(String) ? e.join : e[0] }
+def rl_compress array, &blk
+  blk ||= ->(e) { ! e.instance_of?(String) }
+  array_split(array, &blk).map {|e| !blk[e[0]] ? e.join : e[0] }
 end

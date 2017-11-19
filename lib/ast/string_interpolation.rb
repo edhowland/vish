@@ -11,7 +11,7 @@ class StringInterpolation < NonTerminal
   attr_accessor :sequence
 
   def self.subtree(sequence)
-    rdp = SimpleRDP.new(array_join(sequence, :+), default: '', 
+    rdp = SimpleRDP.new(array_join(rl_compress(sequence) {|e| !(e.instance_of?(String) || e.instance_of?(Strtok) || e.instance_of?(EscapeSequence)) }, :+), default: '', 
       term_p: ->(v) { v },
       nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
     rdp.run
