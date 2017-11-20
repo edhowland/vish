@@ -2,15 +2,6 @@
 
 ## Completions
 
-### String literals
-
-
-#### do something to strtoks to recombine back into single string atoms.
-
-Note: This is ugly because of bad recursion on these .repeats in Parslet rules.
-
-#### MUST have better handling of StringInterpolation in ctor.
-
 ### true and false in vasm, vdis.rb
 
 Remember to handle this thing in asm/vasm.rb, vdis.rb. Will assembly decod in vasm_grammar recognize these strings or not.

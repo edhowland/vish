@@ -45,4 +45,6 @@ class TestString < BaseSpike
     interpertit '"a1: :{5-3*6}\na2: :{12 == 3 * 4}\n"'
     assert_eq @result, "a1: -13\na2: true\n"
   end
+
+  # TODO single quoted strings here
 end
