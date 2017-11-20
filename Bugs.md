@@ -1,6 +1,14 @@
 # Bugs
 
-## Very long vish scripts scripts do not work
+## Bug: cannot set variable to itself and expression of another value including itself
+
+```
+name="hello "
+name=:name + "world"
+:name
+# Get some undefined thing
+```
+## Bug: Very long vish scripts scripts do not work
 
 See compiler/very_long_script.vsh
 Run with:

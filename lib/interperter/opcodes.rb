@@ -17,7 +17,7 @@ def opcodes
 
     # Arithmetic instructions.
     _add:  'Add - BinararyAdd - pops 2 operands and pushes the result of adding them',
-    add: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend1 + addend2) },
+    add: ->(bc, ctx) { l,r = ctx.stack.pop(2); ctx.stack.push(l + r) },
 
     _sub: 'Sub - subtracts two things off the stack and pushes the result. The larger one is normally the stack - 1',
     sub: ->(bc, ctx) { addend1 = ctx.stack.pop; addend2 = ctx.stack.pop; ctx.stack.push(addend2 - addend1) },
@@ -62,6 +62,9 @@ def opcodes
 
     _jmpt: 'branch if top of stack is true to the location contained in the operand of the bytecode list.',
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
+
+    _str: 'Converts top of stack to a string, pushes the result',
+    str: ->(bc, ctx) { ctx.stack.push(ctx.stack.pop.to_s) },
 
     # environment instructions : print, . .etc
     _print: 'Prints the top 1 item off the stack.',

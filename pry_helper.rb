@@ -102,3 +102,7 @@ def mkci bc, ctx
   CodeInterperter.new bc, ctx
 end
 
+
+def tree_rdp tokens
+  rdp = SimpleRDP.new(array_join(tokens, :+), term_p: ->(v) { StringLiteral.new(v) }, nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
+end
