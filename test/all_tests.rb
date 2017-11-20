@@ -12,3 +12,5 @@ require_relative 'test_ast'
 require_relative 'test_string'
 
 require_relative 'test_compile'
+require_relative 'test_icall'
+

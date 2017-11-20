@@ -42,3 +42,5 @@ require_relative 'ast/boolean'
 
 require_relative 'ast/program_factory'
 require_relative 'ast/start'
+require_relative 'ast/functor_node'
+

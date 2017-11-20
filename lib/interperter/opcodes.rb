@@ -63,6 +63,20 @@ def opcodes
     _jmpt: 'branch if top of stack is true to the location contained in the operand of the bytecode list.',
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
 
+  _icall: 'calls the builtin method on the top of the stack',
+  icall: ->(bc, ctx) { 
+    # get the symbol name of the builtin call
+    meth = ctx.stack.pop
+    # get the possible arg count
+    argc = ctx.stack.pop
+    argv = ctx.stack.pop(argc)
+    if Builtins.respond_to? meth
+      ctx.stack.push(Builtins.send meth, *argv)
+    else
+      raise "Unknown builtin method #{meth}"
+    end
+  },
+
     _str: 'Converts top of stack to a string, pushes the result',
     str: ->(bc, ctx) { ctx.stack.push(ctx.stack.pop.to_s) },
 

@@ -12,6 +12,9 @@ class Context
   end
   attr_accessor :stack, :constants, :vars
 
+  # store_constant value : loads the value into @constants and returns its offset
+  # TODO: Improve this by finding an exact match and returning that offset
+  # This will allow for a small optimization in file size
   def store_constant(value)
     @constants << value
     @constants.length - 1

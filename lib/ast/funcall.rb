@@ -1,15 +1,26 @@
 # funcall.rb - class  Funcall < NonTerminal
-# TODO: Remove the following note:
-# Used to test out class SimpleTransform. Rule should return one of these objects
-# Or it should be added to a tree (AST)
+# TODO: Only implements :icall opcode, at the moment.
 
+# Funcall takes the name of the function to call. Later, the arg count :argc
+# maybe added by FunctorNode
 class Funcall < NonTerminal
-  def initialize name, arglist
-    @name = name
-    @arglist = arglist
+  def initialize name
+    @name = name.to_sym
+    @argc = 0
   end
-  attr_reader :name, :arglist
+  attr_reader :name
+  attr_accessor :argc
+
+  def emit(bc, ctx)
+  loc = ctx.store_constant @argc
+  # The number of arguments currently on the stack
+  bc.codes << :pushc
+  bc.codes << loc
+    bc.codes << :pushl
+    bc.codes << @name
+    bc.codes << :icall
+  end
   def inspect
-    "#{@name} : #{@arglist.inspect}"
+    "funcall: #{@name}"
   end
 end

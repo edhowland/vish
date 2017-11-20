@@ -7,6 +7,12 @@ name="hello "
 name=:name + "world"
 :name
 # Get some undefined thing
+undefinedworld
+# But this works
+name='hello '
+var=:name + 'world'
+:var
+hello world
 ```
 ## Bug: Very long vish scripts scripts do not work
 
