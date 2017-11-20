@@ -4,6 +4,8 @@
 
 class FunctorNode
   def self.subtree(object, list=[])
+  # remove any possible nils from list, put there by VishParser
+  list.reject!(&:nil?)
   object.argc = list.length
     top = mknode(object)
     list.each do |a|

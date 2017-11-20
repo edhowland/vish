@@ -22,4 +22,7 @@ class TestIcall < BaseSpike
     interpertit 'echo(3+4)'
     assert_eq @result, "7\n"
   end
+  def test_empty_arglist
+    ir = @parser.parse 'echo( )'
+  end
 end

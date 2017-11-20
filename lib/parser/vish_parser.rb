@@ -117,7 +117,8 @@ class VishParser < Parslet::Parser
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
 
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
-  rule(:arglist) { expr >> (comma >> expr).repeat }
+  rule(:arg_atoms) { expr >> (comma >> expr).repeat }
+  rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
 
