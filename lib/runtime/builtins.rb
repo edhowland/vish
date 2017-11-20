@@ -2,7 +2,7 @@
 
 
 module Builtins
-  def self.echo
-    "\n"
+  def self.echo(*args)
+    args.map(&:to_s).join(' ') + "\n"
   end
 end

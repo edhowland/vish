@@ -65,9 +65,13 @@ def opcodes
 
   _icall: 'calls the builtin method on the top of the stack',
   icall: ->(bc, ctx) { 
+    # get the symbol name of the builtin call
     meth = ctx.stack.pop
+    # get the possible arg count
+    argc = ctx.stack.pop
+    argv = ctx.stack.pop(argc)
     if Builtins.respond_to? meth
-      ctx.stack.push(Builtins.send meth)
+      ctx.stack.push(Builtins.send meth, *argv)
     else
       raise "Unknown builtin method #{meth}"
     end
