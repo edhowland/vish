@@ -5,10 +5,16 @@
 
 class Funcall < NonTerminal
   def initialize name, arglist
-    @name = name
+    @name = name.to_sym
     @arglist = arglist
   end
   attr_reader :name, :arglist
+
+  def emit(bc, ctx)
+    bc.codes << :pushl
+    bc.codes << @name
+    bc.codes << :icall
+  end
   def inspect
     "#{@name} : #{@arglist.inspect}"
   end

@@ -6,6 +6,7 @@ require 'highline'
 require_relative 'api'
 require_relative 'ast'
 require_relative 'parser'
+require_relative 'runtime'
 
 
 require_relative 'error_state'
