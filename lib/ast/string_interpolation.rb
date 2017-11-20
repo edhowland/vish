@@ -1,6 +1,10 @@
 # string_interpolation.rb - class StringInterpolation < NonTerminal - holds
 # double quoted strings.
 
+def stringlit_or_other thing
+  String === thing ? StringLiteral.new(thing) : thing
+end
+
 class StringInterpolation < NonTerminal
   # convert the passed in array into a string or a thing that be converted
   # into a string. Like a :{ vish_expr } sequence. See StringExpr
@@ -11,8 +15,11 @@ class StringInterpolation < NonTerminal
   attr_accessor :sequence
 
   def self.subtree(sequence)
-    rdp = SimpleRDP.new(array_join(rl_compress(sequence) {|e| !(e.instance_of?(String) || e.instance_of?(Strtok) || e.instance_of?(EscapeSequence)) }, :+), default: '', 
-      term_p: ->(v) { v },
+    inter =  rl_compress(sequence) {|e| !(e.instance_of?(StringLiteral) || e.instance_of?(EscapeSequence)) }
+    inter2 = array_join(inter, :+)
+#binding.pry
+    rdp = SimpleRDP.new(inter2, default: StringLiteral.new(''), 
+      term_p: ->(v) { stringlit_or_other(v) },
       nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
     rdp.run
     rdp.last

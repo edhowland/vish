@@ -7,5 +7,5 @@
 # Depends on array_split
 def rl_compress array, &blk
   blk ||= ->(e) { ! e.instance_of?(String) }
-  array_split(array, &blk).map {|e| !blk[e[0]] ? e.join : e[0] }
+  array_split(array, &blk).map {|e| !blk[e[0]] ? e.map(&:to_s).join : e[0] }
 end

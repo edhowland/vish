@@ -9,4 +9,7 @@ class StringLiteral < Terminal
     bc.codes << :pushc
     bc << ctx.store_constant(@value)
   end
+  def to_s
+    @value.to_s
+  end
 end
