@@ -21,3 +21,5 @@ rt() {
 # things to make editing files easier
 alias vg='vn lib/parser/vish_parser.rb'
 alias va='vn lib/parser/ast_transform.rb'
+alias todo='git grep TODO | grep -v TODO.md'
+alias grep.binding='git grep binding.pry'
