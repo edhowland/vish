@@ -84,6 +84,19 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 1
   end
+  # negative branch. branch if false at top of stack
+  def test_jmpf_branches_if_top_of_stack_is_false
+    @ctx.constants = [false, 'ok']
+    @bc.codes = [:cls, :pushc, 0, :jmpf, 7, :pushl, 15, :pushc, 1, :debug, :halt]
+    @ci.run
+    assert_eq @result, 'ok'
+  end
+  def test_jmpf_does_not_branche_if_top_of_stack_is_true
+    @ctx.constants = [true, 'ok']
+    @bc.codes = [:cls, :pushc, 0, :jmpf, 9, :pushl, 15, :jmp, 11, :pushc, 1, :debug, :halt]
+    @ci.run
+    assert_eq @result, 15
+  end
 
   # comparison operators
   def test_eq

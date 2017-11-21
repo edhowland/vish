@@ -123,7 +123,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | infix_oper | deref | integer }
+  rule(:expr) { block | funcall | negation | infix_oper | deref | integer }
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (block | assign | expr | empty) }

@@ -21,4 +21,10 @@ class TestBlock < BaseSpike
     ci.run
     assert_eq @result,  3
   end
+  def test_results_of_blocks_can_be_assigned_to_variables
+    bc, ctx = compile 'vv={5*3};:vv'
+    ci=mkci bc, ctx
+    ci.run
+    assert_eq @result, 15 
+  end
 end

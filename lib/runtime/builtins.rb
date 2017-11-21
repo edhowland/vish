@@ -11,4 +11,7 @@ module Builtins
   def self.break
     raise BreakCalled.new
   end
+  def self.except(*args)
+    raise (args[0] || 'Unknown exception')
+  end
 end

@@ -62,6 +62,9 @@ def opcodes
 
     _jmpt: 'branch if top of stack is true to the location contained in the operand of the bytecode list.',
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
+    _jmpf: 'Branch if top of stack is false to position of next operand',
+        jmpf: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
+
 
   _icall: 'calls the builtin method on the top of the stack',
   icall: ->(bc, ctx) { 
