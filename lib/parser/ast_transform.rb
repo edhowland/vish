@@ -28,6 +28,10 @@ class AstTransform < Parslet::Transform
 
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
+
+  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
+  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
+
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
   rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end

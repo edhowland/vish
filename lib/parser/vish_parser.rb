@@ -38,7 +38,11 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
-
+  # Control flow
+  rule(:ampersand) { str('&') }
+  rule(:pipe) { str('|') }
+  rule(:logical_and) { ampersand >> ampersand >> space? }
+  rule(:logical_or) { pipe >> pipe >> space? }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:bool_t) { str('true') >> space? }
@@ -128,8 +132,13 @@ class VishParser < Parslet::Parser
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
-  rule(:statement_list) { statement >> (delim >> statement).repeat }
+  rule(:conditional_or_statement) { (conditional_and | conditional_or) | statement }
+  rule(:statement_list) { conditional_or_statement >> (delim >> statement).repeat }
   rule(:block) { lbrace >> statement_list >> rbrace }
+
+  # conditional flow
+  rule(:conditional_and) { statement.as(:and_left) >> logical_and >> statement.as(:and_right) }
+  rule(:conditional_or) { statement.as(:or_left) >> logical_or >> statement.as(:or_right) }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }
