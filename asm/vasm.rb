@@ -6,7 +6,7 @@ require_relative '../lib/vish'
 require_relative 'vasm_requires'
 
 
-require_relative '../compiler/store_codes'
+require_relative '../common/store_codes'
 
 require_relative 'vasm_grammar'
 require_relative 'utilities'

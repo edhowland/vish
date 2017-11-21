@@ -2,6 +2,19 @@
 
 ## Completions
 
+
+### Blocks:
+
+A block is a statement_list surrounded by curly braces. { stmnt1; stmnt2; .. }
+Each block can be executed (because a staement can be a block.
+Passed as an argument to command, user function.
+Or used as the body of a user defined function:
+
+```
+function my_fn(a1, a2, a3) {
+  echo("you passed me: :{:a1}, :{:a2} and :{:a3}")
+}
+```
 ### true and false in vasm, vdis.rb
 
 Remember to handle this thing in asm/vasm.rb, vdis.rb. Will assembly decod in vasm_grammar recognize these strings or not.

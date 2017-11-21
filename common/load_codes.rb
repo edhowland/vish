@@ -3,9 +3,9 @@
 
 
 require_relative '../lib/vish'
-#require_relative '../bytecode'
-#require_relative '../context'
-require_relative '../code_container'
+##require_relative '../bytecode'
+##require_relative '../context'
+require_relative 'code_container'
 
 
 

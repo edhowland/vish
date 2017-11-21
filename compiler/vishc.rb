@@ -4,9 +4,8 @@
 # The ByteCodes, Context after they been compiled.
 # Usage: ./vishc file.vsh file.vshc
 
-
 require_relative '../lib/vish'
-require_relative 'store_codes'
+require_relative '../common/store_codes'
 
 
 fin, fout = ARGV

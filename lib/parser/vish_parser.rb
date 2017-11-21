@@ -126,9 +126,10 @@ class VishParser < Parslet::Parser
   rule(:expr) { funcall | negation | infix_oper | deref | integer }
 
   # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (assign | expr | empty) }
+  rule(:statement) { space? >> (block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { statement >> (delim >> statement).repeat }
+  rule(:block) { lbrace >> statement_list >> rbrace }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }
