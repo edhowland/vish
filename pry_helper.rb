@@ -61,12 +61,12 @@ end
     puts failure.parse_failure_cause.ascii_tree
   end
   end
-  
+
   # temp:
   def tmps
   'name=100;vam=25*4;:name != :vam'
   end
-  
+
   
   def syntax_check string
     begin
@@ -80,6 +80,12 @@ end
 
 def pa
   return VishParser.new, AstTransform.new
+end
+
+# mkast(string) : creates an AST after parsing string.
+def mk_ast string
+  p, a = pa
+  a.apply(p.parse(string))
 end
 
 # misty: play misty for me: runs one step
@@ -104,4 +110,8 @@ end
 
 def tree_rdp tokens
   rdp = SimpleRDP.new(array_join(tokens, :+), term_p: ->(v) { StringLiteral.new(v) }, nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
+end
+# find_node ast, klass - returns AST node matching klass
+def find_node ast, klass
+  ast.find {|n| n.content.class == klass }
 end
