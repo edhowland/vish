@@ -133,12 +133,12 @@ class VishParser < Parslet::Parser
   rule(:statement) { space? >> (block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | statement }
-  rule(:statement_list) { conditional_or_statement >> (delim >> statement).repeat }
+  rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
   rule(:block) { lbrace >> statement_list >> rbrace }
 
   # conditional flow
-  rule(:conditional_and) { statement.as(:and_left) >> logical_and >> statement.as(:and_right) }
-  rule(:conditional_or) { statement.as(:or_left) >> logical_or >> statement.as(:or_right) }
+  rule(:conditional_and) { statement.as(:and_left) >> logical_and >> conditional_or_statement.as(:and_right) }
+  rule(:conditional_or) { statement.as(:or_left) >> logical_or >> conditional_or_statement.as(:or_right) }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }
