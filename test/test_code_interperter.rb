@@ -176,4 +176,17 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, '11'
   end
+
+  # :exec - performs a brand new CodeInterperter run on top of stack: which should be CodeContainer
+  def test_exec_runs_code_container_and_pushes_result
+    nbc = ByteCodes.new
+    nctx = Context.new
+    nbc.codes = [:cls, :pushl, false, :halt]
+    cc = CodeContainer.new(nbc, nctx)
+    @ctx.vars[:block] = cc
+    @bc.codes = [:cls, :pushv, :block, :exec, :debug, :halt]
+    @ci.run
+    assert_false @result
+  end
+
 end

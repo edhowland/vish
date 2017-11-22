@@ -26,6 +26,10 @@ class AstTransform < Parslet::Transform
   # dereference a variable
   rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
 
+
+  # block stuff
+  rule(block: simple(:block)) { Block.subtree([block]) }
+  rule(block: sequence(:block)) { Block.subtree(block) }
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 

@@ -87,7 +87,15 @@ def opcodes
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
 
-    # machine low-level instructions: nop, halt, jmp, error, etc.
+    # machine low-level instructions: nop, halt, error, etc.
+  _exec: 'runs the code block on the top of the stack, pushes the result',
+  exec: ->(bc, ctx) {
+    cc = ctx.stack.pop
+    ci = CodeInterperter.new(cc.bc, cc.ctx)
+    ci.run
+    ctx.stack.push cc.ctx.stack[-1]
+  },
+    
     _nop: 'Null operation.',
     nop: ->(bc, ctx) { },
 

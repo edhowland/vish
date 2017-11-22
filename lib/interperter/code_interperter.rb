@@ -40,16 +40,14 @@ class CodeInterperter
 
   # run: Runs entire @bc.codes until exhausted. Normally AST will cause this
   # to raise HaltState
-  def run
+  # If this execption(HaltState) is raised, then finalize block is run
+  # Normally, this is a NOP
+  def run finalize: ->(bc, ctx) { }
     while @bc.pc <= @bc.length
       step
-#      code = fetch
-#      instruction = decode(code)
-#      execute(instruction)
     end
-    raise ErrorState.new('ByteCodes.codes exhausted without encountering HaltState being raised')
   rescue HaltState => state
-    raise StackNotEmpty.new unless @ctx.stack.empty?
+    finalize.call(@bc, @ctx)
     return state.exit_code
   end
 
