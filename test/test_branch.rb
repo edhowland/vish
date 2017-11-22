@@ -47,4 +47,18 @@ class TestBranch < BaseSpike
     ci.run
     assert_eq @result, 99
   end
+
+  # testing and then executing
+  def test_equality_w_and_echo
+    bc, ctx = compile "var=33; :var == 33 && echo('ok')"
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, "ok\n"
+  end
+  def test_inequality_with_or_runs_final_term
+    bc, ctx = compile "var=99; :var != 99 || echo('ok')"
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, "ok\n"
+  end
 end

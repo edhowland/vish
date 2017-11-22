@@ -27,4 +27,18 @@ class TestBlock < BaseSpike
     ci.run
     assert_eq @result, 15 
   end
+
+  # tests for blocks used in conditionals
+  def test_block_can_be_called_after_and_with_2_ampersands
+    bc, ctx = compile 'twobits=100 / 4; :twobits == 25 && {true; var=false }; :var'
+    ci = mkci bc, ctx
+    ci.run
+    assert_false @result
+  end
+  def test_conditional_or_with_block_as_second_term_executes_it
+    bc, ctx = compile 'false || { var=99; name=100 }; :name == 100'
+    ci = mkci bc, ctx
+    ci.run
+    assert @result
+  end
 end

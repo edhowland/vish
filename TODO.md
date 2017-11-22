@@ -3,6 +3,14 @@
 ## Completions
 
 
+### Conditional flow
+
+Use of blocks in &&, || conditionals.
+
+```
+:var1 == 55 && { echo("it is 55"); val=:var }
+```
+
 ### Blocks:
 
 A block is a statement_list surrounded by curly braces. { stmnt1; stmnt2; .. }
@@ -10,6 +18,7 @@ Each block can be executed (because a staement can be a block.
 Passed as an argument to command, user function.
 Or used as the body of a user defined function:
 
+See Notes.md re: Use of blocks stored as values in and dereferencing them.
 ```
 function my_fn(a1, a2, a3) {
   echo("you passed me: :{:a1}, :{:a2} and :{:a3}")

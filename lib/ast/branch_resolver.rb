@@ -17,17 +17,9 @@ class BranchResolver
     # where the majik happens
   def subtree(left, right)
     top = mknode(self)
-    if left.instance_of?(Tree::TreeNode)
-      top << left
-    else
-      top << mknode(left)
-    end
+    top << node_unless(left)
     top << mknode(@source)
-    if right.instance_of?(Tree::TreeNode)
-      top << right
-    else
-      top << mknode(right)
-    end
+    top << node_unless(right)
     top << mknode(@target)
 
     top

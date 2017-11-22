@@ -4,6 +4,8 @@ require_relative 'ast/non_terminal'
 require_relative 'ast/clear_stack'
 require_relative 'ast/subtree_factory'
 require_relative 'ast/arithmetic_factory'
+require_relative 'ast/block'
+
 
 require_relative 'ast/assign'
 require_relative 'ast/unary_negation'
