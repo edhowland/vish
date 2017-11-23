@@ -25,6 +25,8 @@ class AstTransform < Parslet::Transform
 
   # dereference a variable
   rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
+  # deref a variable (or function arg) and execute it immediately
+  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
 
   # block stuff

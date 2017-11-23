@@ -46,7 +46,7 @@ end
 
 # walker: walks the AST in pre-order, using .each
 def walker(ast)
-  ast.each {|e| p e.content }
+  ast.each {|e| p e.level; p e.content }
   nil
 end
 
@@ -114,4 +114,8 @@ end
 # find_node ast, klass - returns AST node matching klass
 def find_node ast, klass
   ast.find {|n| n.content.class == klass }
+end
+
+def block_
+  mk_ast '{1};name={true};{43*99};var=22'
 end

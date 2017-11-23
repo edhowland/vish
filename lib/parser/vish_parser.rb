@@ -119,6 +119,8 @@ class VishParser < Parslet::Parser
 
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
+  # This syntax: %block will cause emitter to push CodeContainer, then :exec
+  rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
 
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
@@ -127,9 +129,9 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | funcall | negation | infix_oper | deref | integer }
+  rule(:expr) { block | funcall | negation | infix_oper | deref | deref_block | integer }
 
-  # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
+  # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }

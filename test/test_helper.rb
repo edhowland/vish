@@ -23,4 +23,8 @@ module CompileHelper
     ci = mkci bc, ctx
     ci.run
   end  
+
+def mk_ast string
+  @transform.apply(@parser.parse(string))
+end
 end

@@ -30,6 +30,8 @@ require_relative 'ast/binary_inequality'
 require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
+require_relative 'ast/deref_block'
+
 require_relative 'ast/final'
 require_relative 'ast/funcall'
 require_relative 'ast/lvalue'

@@ -19,11 +19,45 @@ Passed as an argument to command, user function.
 Or used as the body of a user defined function:
 
 See Notes.md re: Use of blocks stored as values in and dereferencing them.
+
 ```
 function my_fn(a1, a2, a3) {
   echo("you passed me: :{:a1}, :{:a2} and :{:a3}")
 }
 ```
+
+### Blocks as arguments, variables
+
+Blocks can be passed as arguments to user functions, or saved in variables
+
+Consider th following:
+
+```
+block={ true && echo('ok') }
+
+# executing the block at the top level:
+%block
+ok
+
+# passing as an argument:
+my_func(:block)
+in my_func
+ok
+
+# in my_func()
+function my_func(blk) {
+  echo('in my_func')
+%bl}
+```
+
+The variable block is dereferenced in the funcall: 
+( this behaviour currently works, if you can save a CodeContainer in named :block variable)
+Then this item on the stack is bound to the argument vairable :blk in 
+the new frame stack.
+After in the body of th function, it is dereferenced as aboove in the top level
+context.
+
+
 ### true and false in vasm, vdis.rb
 
 Remember to handle this thing in asm/vasm.rb, vdis.rb. Will assembly decod in vasm_grammar recognize these strings or not.
