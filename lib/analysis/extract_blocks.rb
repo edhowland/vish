@@ -14,10 +14,26 @@
 # make a new new StringLiteral from Block.unique name
 # attach this to right of Assign node
 # Now the assign looks in code like:
-#  name='_block_0F4ABC'
+#  name='_block_assign_X
+#
+# Modify the blocks to add in a return jmp at every exit point !!!!
 # emit_walker on all of these blocks and store in CodeContainer s.
-# Preload the root Context.vars key=this block name, value is the CodeContainer
-
+# pass these real bc, ctx to emit_walker. Run this on every block
+#  
+# Each block bc code will be saved after :halt instruction.
+# 
+# Cleanup phase
+# There may be nodes that deref_block. Each of them must be transformed
+# into new opcode :bcall.
+# :bcall will store the return location on the stack,
+# then :jmp to its target.
+# Finally, the :bret call will :jmp back to the return stop.
+# Note:
+# Provide a ctx.call_stack to stroe the return points.
+# There should be a block enty point
+# This new opcode :benter will pop the return loc and push on ctx.call_stack
+# The :bret wil pop the ctx.call_stack and :jmp retrun there.
+# This is similar to LLVM semantics
 
 # get_assign_to_blocks ast -  returns array of Assign nodes
 def get_assign_to_blocks(ast, &blk)
