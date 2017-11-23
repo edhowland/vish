@@ -57,5 +57,11 @@ def extract_assign_blocks(ast)
     parent = ast[b.content.from]
     parent << mknode(StringLiteral.new(b.content.value))
   end
+
+  # Add surround pair
+  blocks.each do |b|
+    b.add(mknode(BlockEntry.new), 0)
+    b.add(mknode(BlockExit.new))
+  end
   blocks
 end

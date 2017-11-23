@@ -1,5 +1,5 @@
 # context.rb - class  Context - scratchpad for constants, stack, vars, .etc
-
+# TODO: MOVEME to proper home for. ./interperter?
 
 # This value is stored before any assignment(s)
 Undefined = 'undefined'
@@ -9,8 +9,9 @@ class Context
     @stack = []
     @constants = []
     @vars = {}
+    @call_stack = []
   end
-  attr_accessor :stack, :constants, :vars
+  attr_accessor :stack, :constants, :vars, :call_stack
 
   # store_constant value : loads the value into @constants and returns its offset
   # TODO: Improve this by finding an exact match and returning that offset
