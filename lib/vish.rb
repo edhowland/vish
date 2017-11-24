@@ -3,9 +3,15 @@
 require 'rubytree'
 require 'highline'
 
+# common stuff
 require_relative 'api'
+
+# compiler stuff
 require_relative 'ast'
 require_relative 'parser'
+require_relative 'compiler'
+
+# Runtime only stuff
 require_relative 'runtime'
 
 

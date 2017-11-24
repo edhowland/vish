@@ -54,13 +54,14 @@ end
   def compile string, &blk
   begin
   parser = (block_given? ? (yield VishParser.new) : VishParser.new)
-    ir = parser.parse string
-    ast = AstTransform.new.apply ir
-    emit_walker ast  
+  compiler = VishCompiler.new string
+  compiler.parser = parser
+  compiler.run
+  compiler
   rescue Parslet::ParseFailed => failure
     puts failure.parse_failure_cause.ascii_tree
   end
-  end
+end
 
   # temp:
   def tmps
@@ -98,6 +99,13 @@ def misty ci, &blk
   ci.step
 end
 
+# cifrom - makes a CodeInterperter from a VishCompiler object
+# Parameters:
+# compiler : VishCompiler
+# Retrurns CodeInterperter
+def cifrom(compiler)
+  CodeInterperter.new(compiler.bc, compiler.ctx)
+end
 
 # mkci : Makes a new ci from bc, ctx
 # Parameters:

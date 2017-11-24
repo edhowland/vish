@@ -6,10 +6,10 @@ Undefined = 'undefined'
 
 class Context
   def initialize
-    @stack = []
+    @stack = LimitedStack.new(limit:1000)
     @constants = []
     @vars = {}
-    @call_stack = []
+    @call_stack = LimitedStack.new(limit:100)
   end
   attr_accessor :stack, :constants, :vars, :call_stack
 
