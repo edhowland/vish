@@ -1,12 +1,11 @@
-# deref_block.rb - class DerefBlock < Deref - emits code to execute CodeContainer
+# deref_block.rb - class DerefBlock < Deref - emits :bcall
 
 class DerefBlock < Deref
 
-  # emits the same as parent class: Deref. Then :exec. Which will run it in 
-  #  its own context.
+  # emits a :bcall which pulls name off sstack, derefs that, then goes there
   def emit(bc, ctx)
     super
-    bc.codes << :exec
+    bc.codes << :bcall
   end
 
   def inspect

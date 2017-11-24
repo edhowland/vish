@@ -177,16 +177,12 @@ class TestCodeInterperter < BaseSpike
     assert_eq @result, '11'
   end
 
-  # :exec - performs a brand new CodeInterperter run on top of stack: which should be CodeContainer
-  def test_exec_runs_code_container_and_pushes_result
-    nbc = ByteCodes.new
-    nctx = Context.new
-    nbc.codes = [:cls, :pushl, false, :halt]
-    cc = CodeContainer.new(nbc, nctx)
-    @ctx.vars[:block] = cc
-    @bc.codes = [:cls, :pushv, :block, :exec, :debug, :halt]
-    @ci.run
-    assert_false @result
-  end
+  def test_bcall_jumps_tolocation_of_variable_on_tos
+    @ctx.constants = ['_block_Assign_6', true]
+    @ctx.vars[:name] = 'block_Assign_6'
+    @ctx.vars[:_block_Assign_6] = 12
+    @bc.codes = [:cls, :pushl, :name, :pushc, 0, :assign, :cls, :pushv, :name, :bcall, :debug, :halt, :pushc, 1, :bret]
 
+    @ci.run
+  end
 end

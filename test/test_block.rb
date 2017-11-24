@@ -25,7 +25,7 @@ class TestBlock < BaseSpike
     bc, ctx = compile 'vv={5*3};:vv'
     ci=mkci bc, ctx
     ci.run
-    assert_eq @result, 15 
+    assert_eq @result, '_block_Assign_6'
   end
 
   # tests for blocks used in conditionals

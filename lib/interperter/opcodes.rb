@@ -87,14 +87,14 @@ def opcodes
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
 
+  # flow control : :bcall, :bret, etc
+   _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
+   bcall: ->(bc, ctx) { ctx.call_stack.push(bc.pc); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
+   _bret: 'pops return location off ctx.call_stack. jmps there',
+   bret: ->(bc, ctx) { loc = ctx.call_stack.pop; bc.pc = loc },
+
     # machine low-level instructions: nop, halt, error, etc.
-  _exec: 'runs the code block on the top of the stack, pushes the result',
-  exec: ->(bc, ctx) {
-    cc = ctx.stack.pop
-    ci = CodeInterperter.new(cc.bc, cc.ctx)
-    ci.run
-    ctx.stack.push cc.ctx.stack[-1]
-  },
+
     
     _nop: 'Null operation.',
     nop: ->(bc, ctx) { },
@@ -105,6 +105,8 @@ def opcodes
   _errror: 'Raises an error. ErrorState exception.',
     error: ->(bc, ctx) { raise ErrorState.new },
 
+  _breakpt: 'Break point. Raises BreakPointReached',
+  breakpt: ->(bc, ctx) { raise BreakPointReached.new },
     _spy: 'Spies on the state of bytecodes, context.',
     spy: ->(bc, ctx) { puts 'bc:', bc.inspect; puts 'ctx:', ctx.inspect }
   }

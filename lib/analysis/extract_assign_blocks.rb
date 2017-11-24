@@ -60,7 +60,7 @@ def extract_assign_blocks(ast)
 
   # Add surround pair
   blocks.each do |b|
-    b.add(mknode(BlockEntry.new), 0)
+    b.add(mknode(BlockEntry.new(b.content.value)), 0)
     b.add(mknode(BlockExit.new))
   end
   blocks

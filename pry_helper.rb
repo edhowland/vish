@@ -123,7 +123,14 @@ end
 def find_node ast, klass
   ast.find {|n| n.content.class == klass }
 end
+def save_block
+  compile 'name={true}; %name'
+end
 
-def block_
-  mk_ast '{1};name={true};{43*99};var=22'
+
+# mkcompiler : returns new VishCompiler
+# Parameters : source - source to compile
+# returns VishCompiler
+def mkcompiler source=''
+  VishCompiler.new source
 end
