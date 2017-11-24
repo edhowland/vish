@@ -11,8 +11,8 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
   end
-  attr_accessor :ast, :parser, :transform, :ir
-  attr_reader :bc, :ctx
+  attr_accessor :ast, :parser, :transform, :ir, :ctx
+  attr_reader :bc
 
   def parse string
     @ir = @parser.parse string
@@ -23,7 +23,7 @@ class VishCompiler
   end
 
   def generate ast=@ast
-    @bc, @ctx = emit_walker ast
+    @bc, @ctx = emit_walker ast, @ctx
   end
 
   def run source=@source
