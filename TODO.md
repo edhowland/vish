@@ -2,17 +2,6 @@
 
 ## Completions
 
-### Blocks executed immediately, not saved for later
-
-This only applies to variables wanting to become the value of a the result of running the block:
-
-```
-var=%{ bb=44-11; :bb*2}
-:var
-66
-```
-
-
 ### Blocks:
 
 ```
