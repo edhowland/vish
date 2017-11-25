@@ -3,9 +3,15 @@
 require 'rubytree'
 require 'highline'
 
+# common stuff
 require_relative 'api'
+
+# compiler stuff
 require_relative 'ast'
 require_relative 'parser'
+require_relative 'compiler'
+
+# Runtime only stuff
 require_relative 'runtime'
 
 
@@ -21,6 +27,10 @@ require_relative 'context'
 # AST stuff
 require_relative 'mknode'
 
+
+
+# AST analysis stuff
+require_relative 'analysis'
 
 
 # code emission stuff 

@@ -1,16 +1,17 @@
 # context.rb - class  Context - scratchpad for constants, stack, vars, .etc
-
+# TODO: MOVEME to proper home for. ./interperter?
 
 # This value is stored before any assignment(s)
 Undefined = 'undefined'
 
 class Context
   def initialize
-    @stack = []
+    @stack = LimitedStack.new(limit:1000)
     @constants = []
     @vars = {}
+    @call_stack = LimitedStack.new(limit:100)
   end
-  attr_accessor :stack, :constants, :vars
+  attr_accessor :stack, :constants, :vars, :call_stack
 
   # store_constant value : loads the value into @constants and returns its offset
   # TODO: Improve this by finding an exact match and returning that offset
@@ -36,7 +37,7 @@ class Context
   end
 
   def inspect
-    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}"
+    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect} call_stack: #{@call_stack.inspect}"
   end
   def to_h
     {stack: @stack, constants: @constants, vars: @vars }

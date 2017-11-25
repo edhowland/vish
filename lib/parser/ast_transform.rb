@@ -25,9 +25,22 @@ class AstTransform < Parslet::Transform
 
   # dereference a variable
   rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
+  # deref a variable (or function arg) and execute it immediately
+  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
+
+  # block stuff
+  rule(block: simple(:block)) { Block.subtree([block]) }
+  rule(block: sequence(:block)) { Block.subtree(block) }
+  rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
+  rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
+
+  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
+  rule(and_left: simple(:left), and_right: sequence(:right))  { BranchResolver.new(BranchIfFalse).subtree(left, Block.subtree(right)) }
+  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
+  rule(or_left: simple(:left), or_right: sequence(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, Block.subtree(right)) } 
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
   rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end

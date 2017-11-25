@@ -14,6 +14,7 @@ class VishParser < Parslet::Parser
   # single character rules
   rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
+  # The octothorpe - '#'
   rule(:octo) { str('#') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
@@ -38,7 +39,11 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
-
+  # Control flow
+  rule(:ampersand) { str('&') }
+  rule(:pipe) { str('|') }
+  rule(:logical_and) { ampersand >> ampersand >> space? }
+  rule(:logical_or) { pipe >> pipe >> space? }
 
   rule(:integer) { match('[0-9]').repeat(1).as(:int) >> space? }
   rule(:bool_t) { str('true') >> space? }
@@ -109,26 +114,37 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | deref_block | block_exec | funcall }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
+  # This syntax: %block will cause emitter to push CodeContainer, then :exec
+  rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
 
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
+  # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
+  rule(:block_exec) { str('%') >> block.as(:block_exec) }
+
 
   # Expressions, assignments, etc.
-  rule(:expr) { funcall | negation | infix_oper | deref | integer }
+  rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
 
-  # A statement is either an assignment, an expression or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (assign | expr | empty) }
+  # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
+  rule(:statement) { space? >> (block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
-  rule(:statement_list) { statement >> (delim >> statement).repeat }
+  rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
+  rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
+  rule(:block) { lbrace >> statement_list.as(:block) >> rbrace }
+
+  # conditional flow
+  rule(:conditional_and) { statement.as(:and_left) >> logical_and >> conditional_or_statement.as(:and_right) } # was: statement
+  rule(:conditional_or) { statement.as(:or_left) >> logical_or >> conditional_or_statement.as(:or_right) }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }
@@ -136,3 +152,4 @@ class VishParser < Parslet::Parser
   # The mainroot of our tree
   root(:program)
 end
+

@@ -62,6 +62,9 @@ def opcodes
 
     _jmpt: 'branch if top of stack is true to the location contained in the operand of the bytecode list.',
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
+    _jmpf: 'Branch if top of stack is false to position of next operand',
+        jmpf: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
+
 
   _icall: 'calls the builtin method on the top of the stack',
   icall: ->(bc, ctx) { 
@@ -84,7 +87,15 @@ def opcodes
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx) { value = ctx.stack.pop; $stdout.puts(value) },
 
-    # machine low-level instructions: nop, halt, jmp, error, etc.
+  # flow control : :bcall, :bret, etc
+   _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
+   bcall: ->(bc, ctx) { ctx.call_stack.push(bc.pc); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
+   _bret: 'pops return location off ctx.call_stack. jmps there',
+   bret: ->(bc, ctx) { loc = ctx.call_stack.pop; bc.pc = loc },
+
+    # machine low-level instructions: nop, halt, error, etc.
+
+    
     _nop: 'Null operation.',
     nop: ->(bc, ctx) { },
 
@@ -94,6 +105,8 @@ def opcodes
   _errror: 'Raises an error. ErrorState exception.',
     error: ->(bc, ctx) { raise ErrorState.new },
 
+  _breakpt: 'Break point. Raises BreakPointReached',
+  breakpt: ->(bc, ctx) { raise BreakPointReached.new },
     _spy: 'Spies on the state of bytecodes, context.',
     spy: ->(bc, ctx) { puts 'bc:', bc.inspect; puts 'ctx:', ctx.inspect }
   }

@@ -17,7 +17,6 @@ class StringInterpolation < NonTerminal
   def self.subtree(sequence)
     inter =  rl_compress(sequence) {|e| !(e.instance_of?(StringLiteral) || e.instance_of?(EscapeSequence)) }
     inter2 = array_join(inter, :+)
-#binding.pry
     rdp = SimpleRDP.new(inter2, default: StringLiteral.new(''), 
       term_p: ->(v) { stringlit_or_other(v) },
       nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })

@@ -84,6 +84,19 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_eq @result, 1
   end
+  # negative branch. branch if false at top of stack
+  def test_jmpf_branches_if_top_of_stack_is_false
+    @ctx.constants = [false, 'ok']
+    @bc.codes = [:cls, :pushc, 0, :jmpf, 7, :pushl, 15, :pushc, 1, :debug, :halt]
+    @ci.run
+    assert_eq @result, 'ok'
+  end
+  def test_jmpf_does_not_branche_if_top_of_stack_is_true
+    @ctx.constants = [true, 'ok']
+    @bc.codes = [:cls, :pushc, 0, :jmpf, 9, :pushl, 15, :jmp, 11, :pushc, 1, :debug, :halt]
+    @ci.run
+    assert_eq @result, 15
+  end
 
   # comparison operators
   def test_eq
@@ -162,5 +175,15 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:cls, :pushc, 0, :str, :debug, :halt]
     @ci.run
     assert_eq @result, '11'
+  end
+
+  def test_bcall_jumps_tolocation_of_variable_on_tos
+    @ctx.constants = ['_block_Assign_6', true]
+    @ctx.vars[:name] = 'block_Assign_6'
+    @ctx.vars[:_block_Assign_6] = 12
+    @bc.codes = [:cls, :pushl, :name, :pushc, 0, :assign, :cls, :pushv, :name, :bcall, :debug, :halt, :pushc, 1, :bret]
+
+    @ci.run
+    assert @result
   end
 end

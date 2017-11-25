@@ -11,9 +11,8 @@ module CompileHelper
     return VishParser.new, AstTransform.new
   end
   def compile string
-    ir = @parser.parse string
-    ast = @transform.apply ir
-    emit_walker ast
+  @compiler = VishCompiler.new string
+  @compiler.run
   end
   def mkci bc, ctx
     CodeInterperter.new(bc, ctx) {|_bc, _ctx, bcodes| bcodes[:print] = ->(bc, ctx) { @result = ctx.stack.pop } }
@@ -23,4 +22,8 @@ module CompileHelper
     ci = mkci bc, ctx
     ci.run
   end  
+
+def mk_ast string
+  @transform.apply(@parser.parse(string))
+end
 end
