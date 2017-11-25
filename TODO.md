@@ -1,64 +1,7 @@
 # TODO
 
 ## Completions
-
-
-
-### Add analyze phase to VishCompiler
-
-Should include lib/analysis/extract_... .rb
-Pulls out blocks from AST containing assignee blocks:
-
 ```
-blk={ true && 3 == 3 }
-```
-
-The above code gets pulled out and placed at end
-of bc.codes after the :halt opcode.
-
-#### The BlockEntry emit method should store the .pc + 1 variable
-
-in ctx.vars[:_block_xxxx]
-
-#### Need to implement the :bcall, :bret opcodes
-
-The :exec should be removed
-### Conditional flow
-
-Use of blocks in &&, || conditionals.
-
-```
-:var1 == 55 && { echo("it is 55"); val=:var }
-```
-
-### Blocks:
-
-A block is a statement_list surrounded by curly braces. { stmnt1; stmnt2; .. }
-Each block can be executed (because a staement can be a block.
-Passed as an argument to command, user function.
-Or used as the body of a user defined function:
-
-See Notes.md re: Use of blocks stored as values in and dereferencing them.
-
-```
-function my_fn(a1, a2, a3) {
-  echo("you passed me: :{:a1}, :{:a2} and :{:a3}")
-}
-```
-
-### Blocks as arguments, variables
-
-Blocks can be passed as arguments to user functions, or saved in variables
-
-Consider th following:
-
-```
-block={ true && echo('ok') }
-
-# executing the block at the top level:
-%block
-ok
-
 # passing as an argument:
 my_func(:block)
 in my_func

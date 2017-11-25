@@ -184,5 +184,6 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:cls, :pushl, :name, :pushc, 0, :assign, :cls, :pushv, :name, :bcall, :debug, :halt, :pushc, 1, :bret]
 
     @ci.run
+    assert @result
   end
 end

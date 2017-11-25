@@ -41,4 +41,23 @@ class TestBlock < BaseSpike
     ci.run
     assert @result
   end
+
+  # saving blocks in variables
+  def test_can_save_block_and_ten_retrieve_and_execute_it_later
+    bc, ctx = compile 'var1={5+3}; 4*3; %var1'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 8
+  end
+  def test_saved_block_can_run_in_new_context
+    bc, ctx = compile <<-EOC
+val=5
+bk={ :val + 6 }
+val=10
+%bk
+EOC
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 16
+  end
 end
