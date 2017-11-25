@@ -72,4 +72,19 @@ EOC
     ci.run
     assert_eq @result, 20
   end
+  def test_recursion_reaches_stack_limit
+    bc, ctx = compile 'bk={ %bk }; %bk'
+    ci = mkci bc, ctx
+    assert_raises StackLimitReached do
+      ci.run#
+    end
+  end
+
+  # check if can immediately execute a block and assign it
+  def test_can_assign_variable_to_result_of_running_block_inplace
+    bc, ctx = compile 'yy=%{22 * 10}; :yy'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 220
+  end
 end

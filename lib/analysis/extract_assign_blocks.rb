@@ -37,7 +37,7 @@
 
 # get_assign_to_blocks ast -  returns array of Assign nodes
 def get_assign_to_blocks(ast, &blk)
-  blocks = ast.select {|n| n.name =~ /^Block/ }
+  blocks = ast.select {|n| n.name =~ /^Block_/ }
   paths = blocks.map(&:path_as_array)
   assign_blocks = paths.select {|e| e[-2] =~ /^Assign/ }
   assigns = assign_blocks.map {|e| e[-2] }.map {|e| ast[e] }
