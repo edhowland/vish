@@ -18,6 +18,7 @@ This is really hard CS!
 
 ## Bug: cannot set variable to itself and expression of another value including itself
 
+NOTE: This only happens in ./bin/repl.rb
 ```
 name="hello "
 name=:name + "world"
@@ -31,12 +32,10 @@ var=:name + 'world'
 hello world
 ```
 
-### Hint: Undefined is assigned before code is run
+The problem is related to the bug about not being able to refer to non-existant blocks every time through the loop.
 
-Perhaps, the code to perform the assignment is not working?
-And the previous value happens?
-I think this is a semantic problem, in the case when :name is performed in:
-name=:name, The compiler does not that it was previous set.
+
+
 ## Bug: Very long vish scripts scripts do not work
 
 See compiler/very_long_script.vsh
