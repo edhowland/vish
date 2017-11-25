@@ -316,3 +316,13 @@ def test_complex_or_w_inequality
   interpertit 'false or 100 * 4 != 99'
   assert_false @result
 end
+
+  # test various things as rvalues in expressions
+  def test_additon_w_funcall
+    interpertit "'hello ' + echo('world')"
+    assert_eq @result, "hello world\n"
+  end
+  def test_subtraction_w_funcall
+        bc, ctx = compile '44 - add(2)'
+#
+  end

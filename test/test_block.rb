@@ -60,4 +60,16 @@ EOC
     ci.run
     assert_eq @result, 16
   end
+  def test_result_of_calling_block_can_be_assigned
+    bc, ctx = compile 'bk={1+3}; jj=%bk; :jj'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, 4
+  end
+  def test_block_can_call_another_block
+    bc, ctx = compile 'bk1={1+3};bk2={5*%bk1};%bk2'
+    ci=mkci bc, ctx
+    ci.run
+    assert_eq @result, 20
+  end
 end

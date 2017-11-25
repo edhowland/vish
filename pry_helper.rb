@@ -53,11 +53,11 @@ end
 
   def compile string, &blk
   begin
-  parser = (block_given? ? (yield VishParser.new) : VishParser.new)
-  compiler = VishCompiler.new string
-  compiler.parser = parser
-  compiler.run
-  compiler
+    parser = (block_given? ? (yield VishParser.new) : VishParser.new)
+    compiler = VishCompiler.new string
+    compiler.parser = parser
+    compiler.run
+    compiler
   rescue Parslet::ParseFailed => failure
     puts failure.parse_failure_cause.ascii_tree
   end

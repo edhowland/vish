@@ -32,6 +32,8 @@ class AstTransform < Parslet::Transform
   # block stuff
   rule(block: simple(:block)) { Block.subtree([block]) }
   rule(block: sequence(:block)) { Block.subtree(block) }
+  rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
+  rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 
