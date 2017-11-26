@@ -28,6 +28,8 @@ class AstTransform < Parslet::Transform
   # deref a variable (or function arg) and execute it immediately
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
+  # keyword stuff
+  rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
 
   # block stuff
   rule(block: simple(:block)) { Block.subtree([block]) }

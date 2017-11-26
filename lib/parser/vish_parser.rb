@@ -39,6 +39,12 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
+
+  # keywords
+  rule(:_break) { str('break') >> space? }
+  rule(:_exit) { str('exit') >> space? }
+  rule(:keyword) { (_break| _exit).as(:keyword) }
+
   # Control flow
   rule(:ampersand) { str('&') }
   rule(:pipe) { str('|') }
@@ -136,7 +142,7 @@ class VishParser < Parslet::Parser
   rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
   rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }

@@ -2,6 +2,9 @@ require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 
 require_relative 'ast/clear_stack'
+require_relative 'ast/exit'
+require_relative 'ast/break'
+require_relative 'ast/keyword'
 require_relative 'ast/subtree_factory'
 require_relative 'ast/arithmetic_factory'
 

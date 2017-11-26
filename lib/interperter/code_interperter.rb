@@ -24,6 +24,8 @@ class CodeInterperter
     @handlers = {}
     nbc, nctx = default_handler
     @handlers[:_default] = [nbc, nctx]
+    ebc, ectx = exit_handler
+    @handlers[:_exit] = [ebc, ectx]
   end
   attr_accessor :bc, :ctx, :last_exception, :saved_locations, :handlers
 

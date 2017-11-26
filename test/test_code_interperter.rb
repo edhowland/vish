@@ -198,4 +198,14 @@ class TestCodeInterperter < BaseSpike
     @bc.codes = [:cls, :int, :_default, :halt]
     @ci.run
   end
+  def test_error_state_works
+    @bc.codes = [:error, '']
+    assert_raises ErrorState do
+      @ci.run
+    end
+  end
+  def test_exit_handler_is_installed_by_default
+    @bc.codes = [:int, :_exit]
+    @ci.run
+  end
 end

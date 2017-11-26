@@ -15,8 +15,6 @@ require_relative 'compiler'
 require_relative 'runtime'
 
 
-require_relative 'error_state'
-require_relative 'stack_not_empty'
 require_relative 'halt_state'
 require_relative 'opcode_error'
 require_relative 'bytecodes'
