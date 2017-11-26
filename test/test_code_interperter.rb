@@ -186,4 +186,16 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert @result
   end
+
+  # interrupt handler stuff
+  def test_int_raises_runtime_error_if_no_exeception_handler_is_found
+    @bc.codes = [:cls, :int, :_xxx, :halt]
+    assert_raises RuntimeError do
+      @ci.run
+    end
+  end
+  def test_default_interpeter_is_called_and_no_exception_is_raised
+    @bc.codes = [:cls, :int, :_default, :halt]
+    @ci.run
+  end
 end

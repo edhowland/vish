@@ -2,6 +2,18 @@
 # runs until bc.codes are exhausted.
 
 class CodeInterperter
+  # new: initializes the CodeInterperter object
+  # Parameters:
+  # bc - ByteCodes object to execute
+  # ctx - Context object
+  # hook - Proc to run upon interperter initializiaton
+  #   is pased bc, ctx
+  # Attributes
+  # :bc - ByteCodes passed in
+  # :ctx - Context
+  # :last_exception - The Exception object that was last raised
+  # :saved_locations - ??? TODO: fill this in
+  # :handlers {} - key value of ByteCodes to run if :int, :_handler_name interrupt happens
   def initialize bc, ctx, &hook
     @bc = bc
     @ctx = ctx
@@ -9,8 +21,11 @@ class CodeInterperter
     hook.call(@bc, @ctx, @bcodes) if block_given?
     @saved_locations = []
     @last_exception = nil
+    @handlers = {}
+    nbc, nctx = default_handler
+    @handlers[:_default] = [nbc, nctx]
   end
-  attr_accessor :bc, :ctx, :last_exception, :saved_locations
+  attr_accessor :bc, :ctx, :last_exception, :saved_locations, :handlers
 
 
   # fetch: gets and returns the next bytecode to run.
@@ -52,6 +67,11 @@ class CodeInterperter
     while @bc.pc <= @bc.length
       step
     end
+    rescue InterruptCalled => ivalue
+      bc, ctx = handlers[ivalue.name]
+      raise "Unknown exception : #{ivalue.name}. Terminating" if bc.nil?
+      handler = self.class.new(bc, ctx)
+      handler.run
   rescue BreakPointReached => err
     puts err.message
     puts "at: #{@bc.pc}"

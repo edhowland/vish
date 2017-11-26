@@ -2,6 +2,34 @@
 
 ## Completions
 
+### Loops
+
+#### Keywords
+
+Add the following keywords:
+
+- print - emits :print
+- break - emits :bret - which should exit loop
+
+Add the following builtins
+
+- exit - raises HaltStateReached with value of its arg
+- throw - raises RuntimeError - For now
+
+Later, we will have to handle exceptions ourselves.
+
+
+Grammar should have loop construct:
+
+```
+rule(:loop) { str('loop') >> space? block.as(:loop) }
+```
+
+```
+# AstTransform:
+rule(loop: simple(:loop)) { X.subtree([loop]) }
+rule(loop: sequence(:loop)) { X.subtree(loop) }
+
 ### Blocks:
 
 ```

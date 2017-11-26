@@ -95,12 +95,15 @@ def opcodes
 
     # machine low-level instructions: nop, halt, error, etc.
 
-    
+
     _nop: 'Null operation.',
     nop: ->(bc, ctx) { },
 
     _halt: 'Halts the virtual machine.',
     halt: ->(bc, ctx) { raise HaltState.new },
+
+  _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default.',
+  int: ->(bc, ctx) { name = bc.codes[bc.pc]; raise InterruptCalled.new(name) },
 
   _errror: 'Raises an error. ErrorState exception.',
     error: ->(bc, ctx) { raise ErrorState.new },

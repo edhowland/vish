@@ -134,3 +134,8 @@ end
 def mkcompiler source=''
   VishCompiler.new source
 end
+
+def mkint bc
+  bc.codes.insert 1, :int
+  bc.codes.insert 2, :_default
+end
