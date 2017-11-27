@@ -82,10 +82,7 @@ class CodeInterperter
   # to raise HaltState
   # Parameters:
   # start: starting program counter
-  # finalize : block  to be run at end of run
-  # If this execption(HaltState) is raised, then finalize block is run
-  # Normally, this is a NOP
-  def run start=0, finalize: ->(bc, ctx) { }
+  def run start=0
     self.bc.pc = start
     while self.bc.pc <= self.bc.length
       step
@@ -103,7 +100,6 @@ class CodeInterperter
     puts "at: #{self.bc.pc}"
   @last_exception = err
   rescue HaltState => state
-    finalize.call(self.bc, self.ctx)
     @last_exception = state
     return state.exit_code
   end
