@@ -107,7 +107,7 @@ def opcodes tmpreg=nil
    _bret: 'pops return location off ctx.call_stack. jmps there',
    bret: ->(bc, ctx) { loc = ctx.call_stack.pop; bc.pc = loc },
 
-    # machine low-level instructions: nop, halt, error, etc.
+    # machine low-level instructions: nop, halt, :int,  etc.
 
 
     _nop: 'Null operation.',
@@ -119,8 +119,6 @@ def opcodes tmpreg=nil
   _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default.',
   int: ->(bc, ctx) { name = bc.codes[bc.pc]; raise InterruptCalled.new(name) },
   # TODO: REMOVEME
-#  _error: 'Raises an error. ErrorState exception.',
-#    error: ->(bc, ctx) { raise ErrorState.new bc.next },
 
   _breakpt: 'Break point. Raises BreakPointReached',
   breakpt: ->(bc, ctx) { raise BreakPointReached.new },
