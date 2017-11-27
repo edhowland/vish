@@ -14,10 +14,13 @@ class CodeInterperter
   # :last_exception - The Exception object that was last raised
   # :saved_locations - ??? TODO: fill this in
   # :handlers {} - key value of ByteCodes to run if :int, :_handler_name interrupt happens
+  # :register_a - temporary register to hold interrupt values
   def initialize bc, ctx, &hook
     @bc = bc
     @ctx = ctx
-    @bcodes = opcodes
+    @register_a = Register.new
+
+    @bcodes = opcodes(@register_a)
     hook.call(@bc, @ctx, @bcodes) if block_given?
     @saved_locations = []
     @last_exception = nil
@@ -27,7 +30,7 @@ class CodeInterperter
     ebc, ectx = exit_handler
     @handlers[:_exit] = [ebc, ectx]
   end
-  attr_accessor :bc, :ctx, :last_exception, :saved_locations, :handlers
+  attr_accessor :bc, :ctx, :last_exception, :saved_locations, :handlers, :register_a
 
 
   # fetch: gets and returns the next bytecode to run.

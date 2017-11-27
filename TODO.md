@@ -10,6 +10,18 @@ Add the following keywords:
 
 - print - emits :print
 - break - emits :bret - which should exit loop
+- exit - terminates the running program 
+
+The later 'exit'  invokes an :int, :_exit exit handler
+These can be changed before calling the CodeInterperter.run by
+setting its .handlers hash to [bc, ctx]
+
+#### 'break' MUST be changed to jump to break terminus
+
+Currently, break does :int, :_default. The default interrupt handler.
+But, the CI catches this exception and is at the exit of the loop.
+An internall begin/rescue block must be added to the run loop
+
 
 Add the following builtins
 

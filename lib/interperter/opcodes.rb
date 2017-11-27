@@ -1,7 +1,9 @@
 # opcodes.rb - Hash of lambdas representing various opcodes
 # MUST : Keep has_operand? code up-to-date when adding things here : @ end file
-
-def opcodes
+# opcodes - returns hash of opcodes
+# Parameters:
+# tmpreg - storage in temporary register
+def opcodes tmpreg=nil
   {
     _cls: ' Clear the stack. Used at start of every statement.',
     cls: ->(bc, ctx) { ctx.clear },
@@ -14,6 +16,12 @@ def opcodes
 
     _pushl: 'pushl - Pushes name of LValue on stack',
     pushl: ->(bc, ctx) { var = bc.next; ctx.stack.push(var) },
+  _pusht: 'Pushes the contents of tmpreg onto the stack.',
+  pusht: ->(bc, ctx) { ctx.stack.push(tmpreg.store) },
+    _loadt: 'Loads top of stack into tmpreg.',
+    loadt: ->(bc, ctx) { tmpreg.load(ctx.stack.pop) },
+  _dup: 'Duplicates the top of the stack and pushes the copy back there.',
+  dup: ->(bc, ctx) { ctx.stack.push(ctx.stack.peek) },
 
     # Arithmetic instructions.
     _add:  'Add - BinararyAdd - pops 2 operands and pushes the result of adding them',
@@ -64,6 +72,12 @@ def opcodes
     jmpt: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
     _jmpf: 'Branch if top of stack is false to position of next operand',
         jmpf: ->(bc, ctx) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
+
+    # call stack manipulation :unwind, :pusht
+    _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
+    unwind: ->(bc, ctx) { frame = ctx.call_stack.pop; ctx.stack.push frame },
+    
+
 
 
   _icall: 'calls the builtin method on the top of the stack',

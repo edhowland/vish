@@ -16,4 +16,8 @@ class LimitedStack < Array
     raise StackLimitReached.new if self.length >= @limit
     super
   end
+  
+  def peek
+    self[-1]
+  end
 end
