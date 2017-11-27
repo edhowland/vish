@@ -87,4 +87,13 @@ EOC
     ci.run
     assert_eq @result, 220
   end
+
+  # test that or skips over right block
+  def test_binary_or_skips_over_right_block
+    bc, ctx = compile 'name=1; true || { var=1; name=2}; :var'
+    ci = mkci bc, ctx
+    ci.run
+    assert_eq @result, Undefined
+    assert_eq ctx.vars[:name], 1
+  end
 end

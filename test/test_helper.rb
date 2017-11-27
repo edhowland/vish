@@ -27,3 +27,12 @@ def mk_ast string
   @transform.apply(@parser.parse(string))
 end
 end
+
+module InterpreterHelper
+  def set_up
+        @bc = ByteCodes.new
+    @ctx = Context.new
+    @result = nil
+    @ci = CodeInterperter.new @bc, @ctx
+  end
+end

@@ -118,9 +118,9 @@ def opcodes tmpreg=nil
 
   _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default.',
   int: ->(bc, ctx) { name = bc.codes[bc.pc]; raise InterruptCalled.new(name) },
-
-  _error: 'Raises an error. ErrorState exception.',
-    error: ->(bc, ctx) { raise ErrorState.new bc.next },
+  # TODO: REMOVEME
+#  _error: 'Raises an error. ErrorState exception.',
+#    error: ->(bc, ctx) { raise ErrorState.new bc.next },
 
   _breakpt: 'Break point. Raises BreakPointReached',
   breakpt: ->(bc, ctx) { raise BreakPointReached.new },

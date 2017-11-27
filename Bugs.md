@@ -1,5 +1,14 @@
 # Bugs
 
+## BUG: Massively misspelled interpreter
+
+Should be 
+
+interpreter
+interperter
+
+## Bugg ./bin/repl.rb is broken
+
 ## Bug: Probably not executing the final tests in test/test_compile.rb
 
 Are they outside of the class definition?
