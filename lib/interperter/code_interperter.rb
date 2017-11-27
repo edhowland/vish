@@ -94,11 +94,7 @@ class CodeInterperter
       handler = self.class.new(bc, ctx)
       handler.run
 
-  # The debugger breakpoint
-  rescue BreakPointReached => err
-    puts err.message
-    puts "at: #{self.bc.pc}"
-  @last_exception = err
+
   rescue HaltState => state
     @last_exception = state
     return state.exit_code

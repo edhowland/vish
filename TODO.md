@@ -21,11 +21,7 @@ Should leave information gathered in temporary register_a
 Pops pc counter off stack.
 ### Massively refactor CodeInterperter class
 
-- Remove break pointy stuff to installed interrupt handler
-- Remove finalize
-
-The later is only for testing. Create new way to handle  this
-in test/test_halper:CompileHelper
+Add code to pry_helper to install break point interrupt handler to do break stuff
 
 
 ### Loops

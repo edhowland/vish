@@ -7,5 +7,4 @@ require_relative 'interperter/default_handler'
 require_relative 'interperter/interrupt_called'
 require_relative 'interperter/opcodes'
 require_relative 'interperter/code_interperter'
-require_relative 'interperter/break_point_reached'
 
