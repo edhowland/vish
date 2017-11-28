@@ -4,14 +4,10 @@
 
 Should be 
 
-interpreter
-interperter
+interpreter - Good
+interperter - Bad
 
 ## Bugg ./bin/repl.rb is broken
-
-## Bug: Probably not executing the final tests in test/test_compile.rb
-
-Are they outside of the class definition?
 
 
 ## Bug: saved blocks are not retained past one time thru loop in bin/repl.rb
