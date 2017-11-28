@@ -11,4 +11,4 @@ require_relative '../lib/vish'
 file = File.open(ARGV.first, 'r')
 bc, ctx = load_codes file
 ci = CodeInterperter.new bc, ctx
-ci.run
+p ci.run
