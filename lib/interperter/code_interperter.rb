@@ -6,23 +6,19 @@ class CodeInterperter
   # Parameters:
   # bc - ByteCodes object to execute
   # ctx - Context object
-  # hook - Proc to run upon interperter initializiaton
   #   is pased bc, ctx
   # Attributes
   # :bc - ByteCodes passed in
   # :ctx - Context
   # :last_exception - The Exception object that was last raised
-  # :saved_locations - ??? TODO: fill this in
   # :handlers {} - key value of ByteCodes to run if :int, :_handler_name interrupt happens
   # :register_a - temporary register to hold interrupt values
-  def initialize bc, ctx, &hook
+  def initialize bc, ctx 
     @code_stack = LimitedStack.new(limit: 10)
     @code_stack.push [bc, ctx]
     @register_a = Register.new
 
     @bcodes = opcodes(@register_a)
-    hook.call(self.bc, self.ctx, @bcodes) if block_given?
-    @saved_locations = []
     @last_exception = nil
 
     # Setup interrupt handlers
@@ -40,7 +36,7 @@ class CodeInterperter
     bbc = break_handler
     @handlers[:_break] = [bbc, self.ctx]
   end
-  attr_accessor :last_exception, :saved_locations, :handlers, :register_a
+  attr_accessor :last_exception, :handlers, :register_a
   def bc
     @code_stack.peek[0]
   end
@@ -112,21 +108,6 @@ class CodeInterperter
     return self.ctx.stack.peek
   end
 
-  def restore_breakpt
-      self.bc.codes[self.bc.pc] = @saved_locations.pop unless @saved_locations.empty?
-  end
-
-  def continue
-  restore_breakpt
-    run self.bc.pc
-  end
-  # set_break index - sets a break point at self.bc.codes[index]
-  # saves the current opcode at that location in @saved_locations []
-  def set_break(index)
-    @saved_locations <<  self.bc.codes[index]
-    self.bc.codes[index] = :breakpt
-  end
-  # for debugging
   # peek: What the next call to step will actually run
   def peek
     self.bc.peek

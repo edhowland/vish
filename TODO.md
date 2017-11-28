@@ -2,24 +2,11 @@
 
 ## Completions
 
-Should leave information gathered in temporary register_a
 
 ### Implement :loadpc instruction
 
 Pops pc counter off stack.
 
-### Massively refactor CodeInterperter class
-
-This is mostly done.
-
-Remaining:
-
-- Remove block initialize and block call
-- remove any methods that have to do with breakpointing, resume, etc.
-- Investigate what @saved_locations was used for, and probably remove
-
-
-Add code to pry_helper to install break point interrupt handler to do break stuff
 
 
 ### Loops
