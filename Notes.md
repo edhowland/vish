@@ -1,5 +1,19 @@
 # Notes
 
+## Interrupt handlers.
+
+Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.
+The program counter jumps to a new position on the hardware firmware stack.
+When it returns fromt eh interrupt, it doesn't know from whence it came from.
+Therefore, the controlling jump: :int, must position the 
+returnning PC. by incrementing it one offset. After the context
+switch occurs and the original context is popped off the code stack,
+The original PC is ready to resume with the new next instruction after
+the :int opcode and its operand.
+
+This differs from function calls which must place an entire activation frame on the call stack.
+
+
 ## Exception handling: catch/snag
 
 catch is like try/begin. 
