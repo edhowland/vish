@@ -59,4 +59,6 @@ require_relative 'ast/branch_if_false'
 require_relative 'ast/branch_if_true'
 require_relative 'ast/branch_target'
 require_relative 'ast/branch_resolver'
+require_relative 'ast/return'
+
 

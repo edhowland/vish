@@ -11,6 +11,13 @@ class VishParser < Parslet::Parser
 
   # empty string
   rule(:empty) { str('').as(:empty) }
+
+  # This is Whitespace, not a single space; does not include newlines. See that rule
+  rule(:space) { match(/[\t ]/).repeat(1) }
+  rule(:space?) { space.maybe }
+  rule(:space_plus) { space >> space? }
+
+
   # single character rules
   rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
@@ -43,7 +50,8 @@ class VishParser < Parslet::Parser
   # keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
-  rule(:keyword) { (_break| _exit).as(:keyword) }
+  rule(:_return) { (str('return') >> space_plus >> expr).as(:return) }
+  rule(:keyword) { (_break| _exit | _return).as(:keyword) }
 
   # Control flow
   rule(:ampersand) { str('&') }
@@ -99,9 +107,7 @@ class VishParser < Parslet::Parser
   rule(:ident_head) { match(/[_a-zA-Z]/) }
   rule(:ident_tail) { match(/[a-zA-Z0-9_]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
-  # This is Whitespace, not a single space; does not include newlines. See that rule
-  rule(:space) { match(/[\t ]/).repeat(1) }
-  rule(:space?) { space.maybe }
+
 
 
   # matches anything upto a newline

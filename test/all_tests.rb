@@ -17,4 +17,6 @@ require_relative 'test_block'
 require_relative 'test_branch'
 require_relative 'test_variables'
 require_relative 'test_interrupt'
+require_relative 'test_parser'
+
 

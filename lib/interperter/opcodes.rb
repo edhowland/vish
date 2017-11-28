@@ -103,9 +103,9 @@ def opcodes tmpreg=nil
 
   # flow control : :bcall, :bret, etc
    _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-   bcall: ->(bc, ctx) { ctx.call_stack.push(bc.pc); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
+   bcall: ->(bc, ctx) { frame=BlockFrame.new; frame.return_to = bc.pc;  ctx.call_stack.push(frame); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
    _bret: 'pops return location off ctx.call_stack. jmps there',
-   bret: ->(bc, ctx) { loc = ctx.call_stack.pop; bc.pc = loc },
+   bret: ->(bc, ctx) { frame = ctx.call_stack.pop; loc = frame.return_to; bc.pc = loc },
 
     # machine low-level instructions: nop, halt, :int,  etc.
 

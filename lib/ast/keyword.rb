@@ -3,8 +3,11 @@
 # UnknownKeyword emits a :err opcode
 
 class UnknownKeyword < Terminal
+  # TODO: MUST change this to become new runtime error interrupt handler
+  # :int, :_error
   def emit(bc, ctx)
-    bc.codes << :err
+    bc.codes << :int
+    bc .codes << :_default
   end
 end
 
@@ -21,6 +24,7 @@ class Keyword < NonTerminal
   end
 
   def self.subtree(string)
+    return string if string.instance_of?(Tree::TreeNode)
     klass = class_for(string)
     mknode(klass.new)
   end

@@ -64,4 +64,12 @@ EOC
     assert_eq interpertit('name=1; true || { var=1; name=2}; :var'), Undefined
 #    assert_eq ctx.vars[:name], 1
   end
+
+  # test return statements
+  def test_return_true_actually_returns_true
+    assert interpertit('bk={ return true }; %bk')
+  end
+  def test_returns_returns_complex_expression
+    assert_eq interpertit('bk1={ return 5*5 }; %bk1'), 25
+  end
 end
