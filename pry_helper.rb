@@ -116,6 +116,11 @@ def mkci bc, ctx
 end
 
 
+# bcctx - returns ByteCodes, Context pair
+def bcctx
+  return ByteCodes.new, Context.new
+end
+
 def tree_rdp tokens
   rdp = SimpleRDP.new(array_join(tokens, :+), term_p: ->(v) { StringLiteral.new(v) }, nont_p: ->(o, l, r) { ArithmeticFactory.subtree(o, l, r) })
 end
@@ -135,7 +140,7 @@ def mkcompiler source=''
   VishCompiler.new source
 end
 
-def mkint bc
-  bc.codes.insert 1, :int
-  bc.codes.insert 2, :_default
+def inter source
+  c = compile source
+  cifrom c
 end

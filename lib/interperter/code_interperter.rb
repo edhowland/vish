@@ -18,8 +18,6 @@ class CodeInterperter
   def initialize bc, ctx, &hook
     @code_stack = LimitedStack.new(limit: 10)
     @code_stack.push [bc, ctx]
-#    @bc = bc
-#    @ctx = ctx
     @register_a = Register.new
 
     @bcodes = opcodes(@register_a)
@@ -78,6 +76,27 @@ class CodeInterperter
       execute(instruction)
   end
 
+  def interrupt_entry itype
+    bc, ctx = handlers[itype.name] || @handlers[:_default]
+    @code_stack.push [bc, ctx]
+  end
+
+  def interrupt_exit itype
+    @code_stack.pop
+  end
+
+
+  # handle_interrupt. Runs the block until possible interrupt is attempted.
+  # Dispatches to either: interrupt_entry or interrupt_exit
+  def handle_interrupt &blk
+    begin
+      yield
+    rescue InterruptInterpreter => itype
+#    binding.pry
+      self.send itype.action, itype
+    end
+  end
+
   # run: Runs entire self.bc.codes until exhausted. Normally AST will cause this
   # to raise HaltState
   # Parameters:
@@ -85,19 +104,12 @@ class CodeInterperter
   def run start=0
     self.bc.pc = start
     while self.bc.pc <= self.bc.length
-      step
+      handle_interrupt { step }
     end
-    rescue InterruptCalled => ivalue
-      bc, ctx = handlers[ivalue.name]
-      raise "Unknown exception : #{ivalue.name}. Terminating" if bc.nil?
-  # TODO: Should be our own self. Move this rescue clause inside the  above loop???
-      handler = self.class.new(bc, ctx)
-      handler.run
-
-
   rescue HaltState => state
     @last_exception = state
-    return state.exit_code
+#    return state.exit_code
+    return self.ctx.stack.peek
   end
 
   def restore_breakpt

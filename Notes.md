@@ -1,5 +1,61 @@
 # Notes
 
+## Exception handling: catch/snag
+
+catch is like try/begin. 
+... Also like catch/rescue
+Snag is like throw/raise
+
+
+The intent is to be intentional. We attempt to catch some vish.
+If we are lucky, we snag some on our net.
+
+So the metaphor is net fishing, not ball throwing. Or try/catch
+which I think is not pretty.
+
+E.g.
+
+```
+# attempt to catch some vish
+catch { s1; s2; snag 'nemo'; s3 }
+s1
+s2
+Caught: nemo!
+```
+Snags might be deeply nested. So, since they are merely interrupts,
+they must unwind the call stack.
+
+Users can install 2 additional blocks to handle
+the result. Snarkly, we can call the caught block: dinner. And the
+finally block block: dessert. :)
+But in the grammar, they are unlabelled.
+
+E.g.
+
+```
+# eat some of our catch
+catch { s1; snag 'flounder'; s2 } { echo("Yum! engjoying: :{caught}") } { echo("after dinner drinks") }
+s1
+Caught: Yum! Enjoying some flounder
+after dinner drinks
+```
+
+Because, we can never miss dessert, even if we caught nothing.
+
+### Implementation:
+
+The catch block must be :bcalled into preserving the return location
+on the call stack. The end of the catch block must :bcall into the dessert block.  
+The end of the dinner block must also :bcall into the dessert block.
+
+--- Or they merely :jmp there. ---
+
+The snag keyword, performsan :int, :_snag interrupt.
+It first must place its argument on the stack.
+The interrupt handler for :_snag unwinds the call stack until the most recent catch block .
+
+It must somehow get the compiled dinner block block address.
+???
 
 ## The REPL
 

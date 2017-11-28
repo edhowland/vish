@@ -61,7 +61,7 @@ def opcodes tmpreg=nil
 
     # assignments and dereferences
     _assign: 'assign - pop the name of the var, pop the value, store in ctx.vars.',
-    assign: ->(bc, ctx) {  value = ctx.stack.pop; var = ctx.stack.pop; ctx.vars[var] = value },
+    assign: ->(bc, ctx) { var, val = ctx.stack.pop(2); ctx.vars[var] = val },
 
 
     # branching instructions
@@ -116,8 +116,10 @@ def opcodes tmpreg=nil
     _halt: 'Halts the virtual machine.',
     halt: ->(bc, ctx) { raise HaltState.new },
 
-  _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default.',
-  int: ->(bc, ctx) { name = bc.codes[bc.pc]; raise InterruptCalled.new(name) },
+  _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default. bc.pc is incremented by one, in case an :iret is called in handler',
+  int: ->(bc, ctx) { name = bc.codes[bc.pc]; bc.pc += 1; raise InterruptCalled.new(name) },
+  _iret: 'Return from interrupt handler',
+  iret: ->(bc, ctx) { raise InterruptReturn.new },
   # TODO: REMOVEME
 
   _breakpt: 'Break point. Raises BreakPointReached',

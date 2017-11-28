@@ -2,7 +2,7 @@
 
 class Final < Terminal
   def emit(bc, ctx)
-    bc << :print  # prints out the last thing of the stack
+#    bc << :print  # prints out the last thing of the stack
     bc << :halt  # Normal termination
   end
 end

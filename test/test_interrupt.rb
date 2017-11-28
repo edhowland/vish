@@ -6,14 +6,13 @@ class TestInterrupt < BaseSpike
   include InterpreterHelper
 
   def test_default_interrupt_handler_is_called
-    @bc.codes = [:halt]
+    @bc.codes = [:int, :_default, :halt]
+    @ci.run
   end
   # interrupt handler stuff
-  def test_int_raises_runtime_error_if_no_exeception_handler_is_found
+  def test_int_w_unknown_handler_name_just_does_default
     @bc.codes = [:cls, :int, :_xxx, :halt]
-    assert_raises RuntimeError do
-      @ci.run
-    end
+    @ci.run
   end
   def test_default_interpeter_is_called_and_no_exception_is_raised
     @bc.codes = [:cls, :int, :_default, :halt]
@@ -56,5 +55,15 @@ class TestInterrupt < BaseSpike
     @ci.run
     assert_eq @ctx.call_stack.length, 0
     assert_eq @ctx.stack.peek, :thing
+  end
+
+  # test simple :irets
+  def test_simple_int_then_iret
+    @bc.codes = [:int, :_simple, :halt]
+    nbc = ByteCodes.new
+    nbc.codes = [:iret]
+    nctx = Context.new
+    @ci.handlers[:_simple] = [nbc, nctx]
+    @ci.run
   end
 end
