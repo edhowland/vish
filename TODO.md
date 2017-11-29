@@ -6,13 +6,16 @@
 
 Must be check at compile time
 
+### Check for  variables not set at compile time:
+
+```
+var=:name
+CompileError: :name is not set yet
+```
+
+do this in VishCompiler.analyze phase
+
 ## Completions
-
-
-### Implement :loadpc instruction
-
-Pops pc counter off stack.
-
 
 
 ### Loops
@@ -22,38 +25,13 @@ Pops pc counter off stack.
 Add the following keywords:
 
 - print - emits :print
-- break - emits :bret - which should exit loop
-- exit - terminates the running program 
-
-The later 'exit'  invokes an :int, :_exit exit handler
-These can be changed before calling the CodeInterperter.run by
-setting its .handlers hash to [bc, ctx]
-
-#### 'break' MUST be changed to jump to break terminus
-
-Currently, break does :int, :_default. The default interrupt handler.
-But, the CI catches this exception and is at the exit of the loop.
-An internall begin/rescue block must be added to the run loop
-
 
 Add the following builtins
 
-- exit - raises HaltStateReached with value of its arg
 - throw - raises RuntimeError - For now
 
 Later, we will have to handle exceptions ourselves.
 
-
-Grammar should have loop construct:
-
-```
-rule(:loop) { str('loop') >> space? block.as(:loop) }
-```
-
-```
-# AstTransform:
-rule(loop: simple(:loop)) { X.subtree([loop]) }
-rule(loop: sequence(:loop)) { X.subtree(loop) }
 
 ### Blocks:
 
@@ -115,7 +93,6 @@ end
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 Giving the line, col numbers and the Parslet message top line
 
-The syntax error can be logged in a logfile or in a variable in the VM ???
 
 ## Additions:
 
@@ -138,3 +115,23 @@ Eventually funcall in Mini class to change from puts(1,2) to 'puts 1 2'make ast_
 ## Use of the highline Class is HighLine
 
 This gem might not be all that useful.
+### Add -j, --generate-ast to compiler/vishc.rb as options
+
+The idea is to save the AST as JSON.
+This can be accomplished with rubytree gem: .to_jsom
+
+Add the ability to vishc.rb to also read these in from the option time and
+append the nodes to the root of the eventual bytecodes.
+
+#### Also implement the import keyword:
+
+```
+import 'vishlib'
+
+... # other statements
+```
+
+This is the same as using the ./vishc.rb to stitch various .vshc files together at compile time.
+It can be specified within the individual source files.
+
+This also helps the compiler check for unreferenced things.

@@ -81,4 +81,11 @@ end
   def test_loops_can_occur_inside_blocks
     bc, ctx = compile '{ loop { break } }'
   end
+
+  # exiting from deeply nested blocks
+  def test_can_exit_from_deeply_nested_blocks
+    bc, ctx = compile '{{{exit}}}'
+    ci = mkci bc, ctx
+    ci.run
+  end
 end
