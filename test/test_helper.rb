@@ -15,7 +15,7 @@ module CompileHelper
   @compiler.run
   end
   def mkci bc, ctx
-    CodeInterperter.new(bc, ctx) {|_bc, _ctx, bcodes| bcodes[:print] = ->(bc, ctx) { @result = ctx.stack.pop } }
+    CodeInterperter.new(bc, ctx)
   end
   def interpertit string
     bc, ctx = compile string
@@ -26,4 +26,13 @@ module CompileHelper
 def mk_ast string
   @transform.apply(@parser.parse(string))
 end
+end
+
+module InterpreterHelper
+  def set_up
+        @bc = ByteCodes.new
+    @ctx = Context.new
+    @result = nil
+    @ci = CodeInterperter.new @bc, @ctx
+  end
 end

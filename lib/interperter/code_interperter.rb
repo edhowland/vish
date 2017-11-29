@@ -2,21 +2,53 @@
 # runs until bc.codes are exhausted.
 
 class CodeInterperter
-  def initialize bc, ctx, &hook
-    @bc = bc
-    @ctx = ctx
-    @bcodes = opcodes
-    hook.call(@bc, @ctx, @bcodes) if block_given?
-    @saved_locations = []
+  # new: initializes the CodeInterperter object
+  # Parameters:
+  # bc - ByteCodes object to execute
+  # ctx - Context object
+  #   is pased bc, ctx
+  # Attributes
+  # :bc - ByteCodes passed in
+  # :ctx - Context
+  # :last_exception - The Exception object that was last raised
+  # :handlers {} - key value of ByteCodes to run if :int, :_handler_name interrupt happens
+  # :register_a - temporary register to hold interrupt values
+  def initialize bc, ctx 
+    @code_stack = LimitedStack.new(limit: 10)
+    @code_stack.push [bc, ctx]
+    @register_a = Register.new
+
+    @bcodes = opcodes(@register_a)
     @last_exception = nil
+
+    # Setup interrupt handlers
+    @handlers = {}
+    # The default handler.
+    nbc, nctx = default_handler
+    @handlers[:_default] = [nbc, nctx]
+
+    # Handle :_exit interrupt
+    ebc, ectx = exit_handler
+    @handlers[:_exit] = [ebc, ectx]
+
+    # Handle the :_break interrupt
+    # Note: We must run this in the current context to unroll the call stack
+    bbc = break_handler
+    @handlers[:_break] = [bbc, self.ctx]
   end
-  attr_accessor :bc, :ctx, :last_exception, :saved_locations
+  attr_accessor :last_exception, :handlers, :register_a
+  def bc
+    @code_stack.peek[0]
+  end
+  def ctx
+    @code_stack.peek[1]
+  end
 
 
   # fetch: gets and returns the next bytecode to run.
   # probably will pass it to decode.
   def fetch
-    @bc.next
+    self.bc.next
   end
   # decode: decodes the passed opcode, and returns the lambda to run in the
   #  execute step. Raises OpcodeError if no opcode exists
@@ -25,11 +57,11 @@ class CodeInterperter
   end
 
 
-  # execute: runs the passed lambda with the parameters @bc, @ctx.
+  # execute: runs the passed lambda with the parameters self.bc, self.ctx.
   # Parameters:
   # + instruction: The lambda to run
   def execute instruction
-    instruction.call(@bc, @ctx)
+    instruction.call(self.bc, self.ctx)
   end
 
 
@@ -40,45 +72,44 @@ class CodeInterperter
       execute(instruction)
   end
 
-  # run: Runs entire @bc.codes until exhausted. Normally AST will cause this
+  def interrupt_entry itype
+    bc, ctx = handlers[itype.name] || @handlers[:_default]
+    @code_stack.push [bc, ctx]
+  end
+
+  def interrupt_exit itype
+    @code_stack.pop
+  end
+
+
+  # handle_interrupt. Runs the block until possible interrupt is attempted.
+  # Dispatches to either: interrupt_entry or interrupt_exit
+  def handle_interrupt &blk
+    begin
+      yield
+    rescue InterruptInterpreter => itype
+#    binding.pry
+      self.send itype.action, itype
+    end
+  end
+
+  # run: Runs entire self.bc.codes until exhausted. Normally AST will cause this
   # to raise HaltState
   # Parameters:
   # start: starting program counter
-  # finalize : block  to be run at end of run
-  # If this execption(HaltState) is raised, then finalize block is run
-  # Normally, this is a NOP
-  def run start=0, finalize: ->(bc, ctx) { }
-    @bc.pc = start
-    while @bc.pc <= @bc.length
-      step
+  def run start=0
+    self.bc.pc = start
+    while self.bc.pc <= self.bc.length
+      handle_interrupt { step }
     end
-  rescue BreakPointReached => err
-    puts err.message
-    puts "at: #{@bc.pc}"
-  @last_exception = err
   rescue HaltState => state
-    finalize.call(@bc, @ctx)
     @last_exception = state
-    return state.exit_code
+#    return state.exit_code
+    return self.ctx.stack.peek
   end
 
-  def restore_breakpt
-      @bc.codes[@bc.pc] = @saved_locations.pop unless @saved_locations.empty?
-  end
-
-  def continue
-  restore_breakpt
-    run @bc.pc
-  end
-  # set_break index - sets a break point at @bc.codes[index]
-  # saves the current opcode at that location in @saved_locations []
-  def set_break(index)
-    @saved_locations <<  @bc.codes[index]
-    @bc.codes[index] = :breakpt
-  end
-  # for debugging
   # peek: What the next call to step will actually run
   def peek
-    @bc.peek
+    self.bc.peek
   end
 end

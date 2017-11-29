@@ -1,8 +1,13 @@
 # Bugs
 
-## Bug: Probably not executing the final tests in test/test_compile.rb
+## BUG: Massively misspelled interpreter
 
-Are they outside of the class definition?
+Should be 
+
+interpreter - Good
+interperter - Bad
+
+## Bugg ./bin/repl.rb is broken
 
 
 ## Bug: saved blocks are not retained past one time thru loop in bin/repl.rb

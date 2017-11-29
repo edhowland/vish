@@ -25,6 +25,8 @@ class VishCompiler
 
   def analyze ast=@ast
     @blocks = extract_assign_blocks(ast)
+    # fixup Return classes
+    fixup_returns(@blocks, BlockReturn)
     @blocks.each {|b| ast << b }
   end
 

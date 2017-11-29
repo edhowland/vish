@@ -5,6 +5,8 @@ require 'highline'
 
 # common stuff
 require_relative 'api'
+require_relative 'runtime'
+
 
 # compiler stuff
 require_relative 'ast'
@@ -12,11 +14,8 @@ require_relative 'parser'
 require_relative 'compiler'
 
 # Runtime only stuff
-require_relative 'runtime'
 
 
-require_relative 'error_state'
-require_relative 'stack_not_empty'
 require_relative 'halt_state'
 require_relative 'opcode_error'
 require_relative 'bytecodes'

@@ -11,6 +11,13 @@ class VishParser < Parslet::Parser
 
   # empty string
   rule(:empty) { str('').as(:empty) }
+
+  # This is Whitespace, not a single space; does not include newlines. See that rule
+  rule(:space) { match(/[\t ]/).repeat(1) }
+  rule(:space?) { space.maybe }
+  rule(:space_plus) { space >> space? }
+
+
   # single character rules
   rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
@@ -39,7 +46,15 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
+
+  # keywords
+  rule(:_break) { str('break') >> space? }
+  rule(:_exit) { str('exit') >> space? }
+  rule(:_return) { (str('return') >> space_plus >> expr).as(:return) }
+  rule(:keyword) { (_break| _exit | _return).as(:keyword) }
+
   # Control flow
+  rule(:loop) { str('loop') >> space_plus >> block.as(:loop) }
   rule(:ampersand) { str('&') }
   rule(:pipe) { str('|') }
   rule(:logical_and) { ampersand >> ampersand >> space? }
@@ -93,9 +108,7 @@ class VishParser < Parslet::Parser
   rule(:ident_head) { match(/[_a-zA-Z]/) }
   rule(:ident_tail) { match(/[a-zA-Z0-9_]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
-  # This is Whitespace, not a single space; does not include newlines. See that rule
-  rule(:space) { match(/[\t ]/).repeat(1) }
-  rule(:space?) { space.maybe }
+
 
 
   # matches anything upto a newline
@@ -136,11 +149,11 @@ class VishParser < Parslet::Parser
   rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
   rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
-  rule(:block) { lbrace >> statement_list.as(:block) >> rbrace }
+  rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
   # conditional flow
   rule(:conditional_and) { statement.as(:and_left) >> logical_and >> conditional_or_statement.as(:and_right) } # was: statement

@@ -37,7 +37,7 @@ class Context
   end
 
   def inspect
-    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect} call_stack: #{@call_stack.inspect}"
+    "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}\n call_stack: #{@call_stack.inspect}"
   end
   def to_h
     {stack: @stack, constants: @constants, vars: @vars }
