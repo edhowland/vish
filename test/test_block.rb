@@ -72,4 +72,13 @@ EOC
   def test_returns_returns_complex_expression
     assert_eq interpertit('bk1={ return 5*5 }; %bk1'), 25
   end
+# nested blocks
+def test_nested_blocks
+  assert interpertit('{ { true } }')
+end
+
+  # loop under block stuff
+  def test_loops_can_occur_inside_blocks
+    bc, ctx = compile '{ loop { break } }'
+  end
 end

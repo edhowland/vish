@@ -49,13 +49,7 @@ class TestInterrupt < BaseSpike
     @ci.run
     assert_eq @ctx.stack.peek, :yes
   end
-  def test_unwind_unrolls_the_call_stack_one_item_and_pushes_it_on_stack
-    @ctx.call_stack.push :thing
-    @bc.codes = [:cls, :unwind, :halt]
-    @ci.run
-    assert_eq @ctx.call_stack.length, 0
-    assert_eq @ctx.stack.peek, :thing
-  end
+
 
   # test simple :irets
   def test_simple_int_then_iret

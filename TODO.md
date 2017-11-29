@@ -1,5 +1,11 @@
 # TODO
 
+## Ensure:
+
+### break cannot be called within function body
+
+Must be check at compile time
+
 ## Completions
 
 

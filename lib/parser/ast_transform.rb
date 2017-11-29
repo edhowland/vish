@@ -33,9 +33,13 @@ class AstTransform < Parslet::Transform
   rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
   rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }
 
+  # loop stuff
+  rule(loop: simple(:loop)) { Loop.subtree(loop) }
+
   # block stuff
   rule(block: simple(:block)) { Block.subtree([block]) }
   rule(block: sequence(:block)) { Block.subtree(block) }
+
   rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
   rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }

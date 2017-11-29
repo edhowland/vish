@@ -54,6 +54,7 @@ class VishParser < Parslet::Parser
   rule(:keyword) { (_break| _exit | _return).as(:keyword) }
 
   # Control flow
+  rule(:loop) { str('loop') >> space_plus >> block.as(:loop) }
   rule(:ampersand) { str('&') }
   rule(:pipe) { str('|') }
   rule(:logical_and) { ampersand >> ampersand >> space? }
@@ -148,11 +149,11 @@ class VishParser < Parslet::Parser
   rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (keyword | block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
   rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
-  rule(:block) { lbrace >> statement_list.as(:block) >> rbrace }
+  rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
   # conditional flow
   rule(:conditional_and) { statement.as(:and_left) >> logical_and >> conditional_or_statement.as(:and_right) } # was: statement

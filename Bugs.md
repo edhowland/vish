@@ -1,5 +1,34 @@
 # Bugs
 
+## Bug: return and  executable blocks both incorrectly jump to the nearest activation frame
+
+Not the one for which they were destined. 
+the return statement currently uses the :bret opcode. It just finds the 
+nearest frame on the call_stack and returns there.
+This works inside a single external block or a loop.
+E.g.
+
+```
+loop { return true }
+
+# or
+val={ return 1 }
+%val
+```
+
+Check this Ruby example:
+
+```
+def loop_return
+loop { return ltrue }
+false
+end
+loop_return
+=> true
+```
+
+See how the inner return breaks out of the loop and the enclosing function body.
+Currently, Vish cannot do this
 ## BUG: Massively misspelled interpreter
 
 Should be 
