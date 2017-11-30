@@ -30,13 +30,26 @@ class CodeInterperter
     # Handle :_exit interrupt
     ebc, ectx = exit_handler
     @handlers[:_exit] = [ebc, ectx]
+
+    # Setup frames. Stack frame for LoopFrame, BlockFrame, MainFrame
+    # and FunctionFrame
+    @frames = LockedStack.new(limit: 1000)
+    # The MainFrame, which holds the Context, cannot be popped off this stack
+    @frames.push(MainFrame.new(ctx))
   end
   attr_accessor :last_exception, :handlers, :register_a
   def bc
     @code_stack.peek[0]
   end
+
+  # ctx - finds the current context. Probably somewhere buried in @frames
   def ctx
-    @code_stack.peek[1]
+    if @code_stack.length > 1
+      @code_stack.peek[1]
+    else
+      frame_index = @frames.rindex {|f| f.kind_of? MainFrame }
+      @frames[frame_index].ctx
+    end
   end
 
 

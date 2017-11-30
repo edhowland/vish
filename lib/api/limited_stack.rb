@@ -1,4 +1,6 @@
 # limited_stack.rb - class LimitedStack - stack that cannot grow unbounded
+# Also adds LockedStack child. - Provides ability to lock bottom
+# of stack from being popped. Can hold onto underlying MainFrame.
 
 # class  StackLimitReached - raised when LimitedStack hits overflow past its enforced limit:
 class StackLimitReached < RuntimeError
@@ -13,7 +15,6 @@ class StackUnderflow < RuntimeError
   end
 end
 # class LimitedStack - a stack with limits on push, pop
-
 class LimitedStack < Array
   # new - Creates a new stack with limit: allowed size maximum
   # returns LimitedStack
@@ -36,6 +37,19 @@ class LimitedStack < Array
   # (optional) count to pop Default: 1
   def pop(*args)
     raise StackUnderflow.new if self.length <= 0
+    super
+  end
+end
+
+class LockedStackLimitReached < RuntimeError
+  def initialize
+    super 'Internal Error:. An attempt to pop the locked framehappened.'
+  end
+end
+
+class LockedStack < LimitedStack
+  def pop(*args)
+    raise LockedStackLimitReached.new if self.length <= 1
     super
   end
 end

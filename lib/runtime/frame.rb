@@ -2,7 +2,11 @@
 
 # class Frame - base class for BlockFrame, FunctionFrame and LoopFrame
 class Frame
-  attr_accessor :return_to
+  def initialize
+    @ctx = Context.new
+    @return_to = nil
+  end
+  attr_accessor :ctx, :return_to
   def ==(other)
     other.instance_of?(self.class)
   end
@@ -11,7 +15,15 @@ end
 class BlockFrame < Frame
 end
 
-class FunctionFrame < Frame
+# The MainFrame which sits at bottom of CodeInterperter.frames
+class MainFrame < Frame
+  def initialize ctx
+    @ctx = ctx
+  end
+end
+
+# FunctionFrame - storage for user defined functions
+class FunctionFrame < MainFrame
 end
 
 class LoopFrame < Frame

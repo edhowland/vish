@@ -1,5 +1,17 @@
 # Notes
 
+## User defined functions
+
+When an user defined function is called, the CodeInterperter must perform a Context switch.
+
+Originally, the plan wa to load the new Context up on the FunctionFrame activation frame.
+But, this plan fell apart because the call_stack is contained in the Context body itself.
+
+Need to refactor to separate the call_stack from the Context itself.
+But, it is needed for the lambdas in lib/interperter/opcodes hash.
+
+
+
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.
