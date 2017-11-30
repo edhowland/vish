@@ -5,3 +5,7 @@ class HaltState < RuntimeError
     0
   end
 end
+
+
+class ExitState < HaltState
+end

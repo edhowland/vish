@@ -35,3 +35,44 @@ The files loop.vsh and loop.vshc can be found in ./compiler/
 
 The convention is to use .vsh for source files and .vshc extensions for their
 compiled brethren.
+
+## Language Syntax
+
+Vish uses 2 special sigils : ':' and '%'.
+
+- : - Dereference a variable
+- % - Execute a block or a block saved in a variable.
+
+```
+var=100
+:var
+# => 100
+
+blk={ true }
+%blk
+# => true
+```
+
+
+
+
+## Keywords
+
+Vish uses just 4 keywords at the present time:
+
+- break - breaks out of a loop
+- return expression - returns out of an executable block with an evaluated expression value
+- exit - Exits Vish
+- loop { block } - Loops over a block until break encountered, or forever.
+## Operators
+
+Vish uses the same operators as Ruby itself. See the Ruby docs for more information
+
+The difference is between 'and' and &&, and also between 'or' and ||.
+
+The later operators (&&, ||) are statement separators.
+The operators 'and' and 'or' are boolean operators in expressions.
+
+Remember, the (&&, ||) operators will shortcircuit the evaluation
+of their right-hand expressions if the first left-hand
+expression is false for &&, and true for ||.

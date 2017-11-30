@@ -3,6 +3,7 @@
 # Also exit_handler, break_handler
 
 # break_handler
+# TODO: MUST: REMOVEME - no longer needed
 # This operates in current Context, so a new one is not returned.
 # Returns - ByteCodes with code to handle :_break interrupt.
 def break_handler
@@ -15,7 +16,7 @@ end
 def exit_handler
   bc = ByteCodes.new
   ctx = Context.new
-  bc.codes = [:halt]
+  bc.codes = [:exit]
   return bc, ctx
 end
 

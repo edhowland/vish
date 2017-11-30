@@ -19,7 +19,6 @@ require_relative 'compiler'
 require_relative 'halt_state'
 require_relative 'opcode_error'
 require_relative 'bytecodes'
-require_relative 'context'
 
 # anchor nodes
 

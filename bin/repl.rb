@@ -13,13 +13,13 @@ def log(*message)
   end
 end
 
+# err(RuntimeError) - logs error message and logs first 10 lines of stackstarace
 def err(exc)
   log exc.class.name
   log exc.message
   exc.backtrace[0..10].each {|t| log t }
 end
 
-$exit_called = false
 ecode = 1
 cli = HighLine.new
 begin
@@ -33,16 +33,20 @@ interperter.handlers[:_exit] = [nbc, nctx]
 
 loop do
 string = cli.ask 'vish> '
-  break  if string[0] == 'q' || string.chomp == 'Exit'  || $exit_called
+  break  if string[0] == 'q' || string.chomp == 'Exit'  
+  ncmp = VishCompiler.new string
+  ncmp.parse; ncmp.transform; ncmp.analyze
+  ncmp.blocks = compiler.blocks + ncmp.blocks
+  ncmp.ctx = compiler.ctx.merge(ncmp.ctx)
+  compiler = ncmp
+  compiler.generate
 
-  compiler.run string
-# TODO: This next line is bogus. We should just append new compile stuff (AST)
-  interperter.bc = compiler.bc
-  interperter.ctx = compiler.ctx
-  result = interperter.run
+  interpreter = CodeInterperter.new(compiler.bc, compiler.ctx)
+  p interpreter.run
+  break if interpreter.last_exception.kind_of?(ExitState)
 end
   ecode = 0
-rescue ErrorState => err
+rescue CompileError => err
   log err.message
 rescue Parslet::ParseFailed => failure
   log failure.parse_failure_cause.ascii_tree

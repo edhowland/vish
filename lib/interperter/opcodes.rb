@@ -121,6 +121,8 @@ def opcodes tmpreg=nil
 
     _halt: 'Halts the virtual machine.',
     halt: ->(bc, ctx) { raise HaltState.new },
+    _exit: 'Early exit from program',
+    exit: ->(bc, ctx) { raise ExitState.new },
 
   _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default. bc.pc is incremented by one, in case an :iret is called in handler',
   int: ->(bc, ctx) { name = bc.codes[bc.pc]; bc.pc += 1; raise InterruptCalled.new(name) },
