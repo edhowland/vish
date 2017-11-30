@@ -95,3 +95,46 @@ The operators 'and' and 'or' are boolean operators in expressions.
 Remember, the (&&, ||) operators will shortcircuit the evaluation
 of their right-hand expressions if the first left-hand
 expression is false for &&, and true for ||.
+
+## Using the REPL
+
+Vish comes with a simple REPL (Read/Eval/Print/Loop), for interacting
+with the language and trying out expressions.
+Located in the ./bin folder, it can be invoked with either: ./repl.rb or ./vish.
+
+```
+#
+$ cd ./bin
+$ ./vish
+vish> # this is a comment
+nil
+vish> 3 + 4
+7
+vish> val=9*10
+
+vish> :val
+90
+vish> exit
+nil
+$
+$ # back in your shell.
+
+
+
+### The error log: vish.log
+
+If you encounter a problem when executing the REPL, besides writing to the screen, Vish will
+capture the output in ./vish.log in the directory you were in
+you invoked vish.
+Vish will then exit with a non-zero exit code.
+If you cannot determi where you went wrong, and need help: Please
+enter an issue on the Github issue tracker for the repository.
+[Vish issue tracker](https://github.com/edhowland/vish/issues)
+
+## Contributing
+
+Please read the file 
+CONTRIBUTING.md
+
+And thank you for helping myself and other blind or visually impaired programmers.
+

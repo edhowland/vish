@@ -3,7 +3,6 @@
 # REPL  without the L(oop)
 
 require 'highline'
-
 require_relative '../lib/vish'
 
 def log(*message)
@@ -24,16 +23,11 @@ ecode = 1
 cli = HighLine.new
 begin
   compiler = VishCompiler.new
-#binding.pry
 interperter = CodeInterperter.new(nil, nil)
-nbc = ByteCodes.new
-nctx = Context.new
-nbc.codes = [:error, 'Exit state reached',:halt]
-interperter.handlers[:_exit] = [nbc, nctx]
 
 loop do
 string = cli.ask 'vish> '
-  break  if string[0] == 'q' || string.chomp == 'Exit'  
+  break  if string[0] == 'q' # || string.chomp == 'Exit'  
   ncmp = VishCompiler.new string
   ncmp.parse; ncmp.transform; ncmp.analyze
   ncmp.blocks = compiler.blocks + ncmp.blocks
@@ -53,3 +47,4 @@ rescue Parslet::ParseFailed => failure
 rescue => exc
   err(exc)
 end
+exit(ecode)
