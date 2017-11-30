@@ -30,7 +30,6 @@ def codes_to_tuples codes
   end
 
   result.select {|c| c.opcode.to_s[0..2] == 'jmp' }.each {|c| c.extend Jumpable; t = result.find {|f| f.pc == c.operand.value }; t.extend Targetable  }
-#binding.pry
 
   result.map(&:to_a)
 end

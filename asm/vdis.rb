@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # vdis.rb - Disassembles .vshc files into .vasm source
 
-require_relative '../runtime/load_codes'
+require_relative '../common/load_codes'
 require_relative '../lib/vish'  # for has_operand? code
 require_relative 'vasm_requires'
 # Our own Target class: UnknownTarget

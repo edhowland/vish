@@ -1,5 +1,6 @@
 # lib.rb - Shared helper functions for pry_helper.rb wherever they may be found
 
+require_relative 'debug'
 
 
 

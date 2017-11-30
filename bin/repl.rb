@@ -1,36 +1,50 @@
 #!/usr/bin/env ruby
+# repl.rb - linked to ./bin/vish
 # REPL  without the L(oop)
 
-require 'pp'
-
+require 'highline'
 require_relative '../lib/vish'
 
+def log(*message)
+  $stderr.puts(*message)
+  File.open('vish.log', 'w') do |f|
+    f.puts(*message)
+  end
+end
 
-
+# err(RuntimeError) - logs error message and logs first 10 lines of stackstarace
+def err(exc)
+  log exc.class.name
+  log exc.message
+  exc.backtrace[0..10].each {|t| log t }
+end
 
 ecode = 1
 cli = HighLine.new
 begin
-#  print 'vish> '
- # string = gets.chomp
-ctx = Context.new
+  compiler = VishCompiler.new
+interperter = CodeInterperter.new(nil, nil)
+
 loop do
 string = cli.ask 'vish> '
-  break  if string[0] == 'q' || string.chomp == 'exit' 
-  ir  = VishParser.new.parse(string)
-  ast =  AstTransform.new.apply ir
+  break  if string[0] == 'q' # || string.chomp == 'Exit'  
+  ncmp = VishCompiler.new string
+  ncmp.parse; ncmp.transform; ncmp.analyze
+  ncmp.blocks = compiler.blocks + ncmp.blocks
+  ncmp.ctx = compiler.ctx.merge(ncmp.ctx)
+  compiler = ncmp
+  compiler.generate
 
-bc, ctx = emit_walker ast, ctx
-  ci = CodeInterperter.new(bc, ctx)
-  result = ci.run
-
-
-end # of loop
-  ecode = 0
-
-rescue Parslet::ParseFailed => failure
-  puts failure.parse_failure_cause.ascii_tree
-rescue => err
-  puts err.class.name
-  puts err.message
+  interpreter = CodeInterperter.new(compiler.bc, compiler.ctx)
+  p interpreter.run
+  break if interpreter.last_exception.kind_of?(ExitState)
 end
+  ecode = 0
+rescue CompileError => err
+  log err.message
+rescue Parslet::ParseFailed => failure
+  log failure.parse_failure_cause.ascii_tree
+rescue => exc
+  err(exc)
+end
+exit(ecode)
