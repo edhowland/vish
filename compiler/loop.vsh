@@ -1,4 +1,7 @@
-# loop.vsh - counter up to 10
-val=0
-loop { (:val == 10) && return true; val=:val + 1 }
-:val
+# loop.vsh
+add={ :v1 + :v2 }
+v1=1; v2=2
+acc=0
+loop { (:acc ==9) && break; acc=:acc + %add }
+:acc
+# end of file

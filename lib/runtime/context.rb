@@ -36,6 +36,13 @@ class Context
     actual
   end
 
+  def merge(other)
+    ctx = self.class.new
+    ctx.constants = @constants + other.constants
+    ctx.vars = @vars.merge(other.vars)
+    ctx
+  end
+
   def inspect
     "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}\n call_stack: #{@call_stack.inspect}"
   end
