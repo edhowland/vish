@@ -1,7 +1,6 @@
 # Main requires for Viper lib
 
 require 'rubytree'
-require 'highline'
 
 # common stuff
 require_relative 'api'

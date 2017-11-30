@@ -9,6 +9,25 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 ## Version 0.2.0
 
+## Requirements
+
+Vish requires Ruby 2.x.
+It has been tested in the following environments:
+
+- Linux : Ruby 2.2
+- MacOS - Ruby 2.4
+- Windows 10 : Ruby 2.3 (With Fall Creators Update + WSL). In Bash window.
+
+## Installation
+
+Clone this repository:
+
+```
+git clone git@github.com:edhowland/vish.git
+cd vish
+bundle
+```
+
 Example usage:
 
 ```

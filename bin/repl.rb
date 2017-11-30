@@ -2,7 +2,7 @@
 # repl.rb - linked to ./bin/vish
 # REPL  without the L(oop)
 
-require 'pp'
+require 'highline'
 
 require_relative '../lib/vish'
 
