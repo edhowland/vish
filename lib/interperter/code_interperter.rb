@@ -30,11 +30,6 @@ class CodeInterperter
     # Handle :_exit interrupt
     ebc, ectx = exit_handler
     @handlers[:_exit] = [ebc, ectx]
-
-    # Handle the :_break interrupt
-    # Note: We must run this in the current context to unroll the call stack
-    bbc = break_handler
-    @handlers[:_break] = [bbc, self.ctx]
   end
   attr_accessor :last_exception, :handlers, :register_a
   def bc
