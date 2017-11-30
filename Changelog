@@ -1,3 +1,22 @@
+Version 0.2.0
+
+Added:
+Executable blocks. Can be saved in variables and run again with '%' sigil.
+E.g. 
+bk={ 1 + 2}
+%bk
+
+Added loops.
+E.g.
+val=0; loop { val=:val + 1; (:val == 10) && break }; :val
+# => 10
+Added keywords break, exit and return [ ... expression]
+Exit invokes the exit interrupt handler. Which justcauses the :exit opcode to run.
+Like the :halt opcode, but uses a descendent class ExitState.
+This can be queried with CodeInterperter.last_exception
+
+Git tags:
+Turing.complete
 
 
 Git tags:
