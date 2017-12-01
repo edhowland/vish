@@ -37,7 +37,7 @@ class CodeInterperter
     # The MainFrame, which holds the Context, cannot be popped off this stack
     @frames.push(MainFrame.new(ctx))
   end
-  attr_accessor :last_exception, :handlers, :register_a
+  attr_accessor :last_exception, :handlers, :register_a, :frames
   def bc
     @code_stack.peek[0]
   end
@@ -69,7 +69,7 @@ class CodeInterperter
   # Parameters:
   # + instruction: The lambda to run
   def execute instruction
-    instruction.call(self.bc, self.ctx)
+    instruction.call(self.bc, self.ctx, self.frames)
   end
 
 
