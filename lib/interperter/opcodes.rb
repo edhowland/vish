@@ -74,12 +74,11 @@ def opcodes tmpreg=nil
         jmpf: ->(bc, ctx, _) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
 
     # call stack manipulation :unwind, :pusht
-    # TODO: change , _ here to , fr
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
-    unwind: ->(bc, ctx, _) do
+    unwind: ->(bc, ctx, fr) do
       ftype= bc.next
-      until (ftype == ctx.call_stack.peek) do
-        ctx.call_stack.pop 
+      until (ftype == fr.peek) do
+        fr.pop 
       end
     end,
     
@@ -108,13 +107,12 @@ def opcodes tmpreg=nil
     print: ->(bc, ctx, _) { value = ctx.stack.pop; $stdout.puts(value) },
 
     # flow control : :bcall, :bret, etc
-    # TODO: Convert , _ to , fr Change ctx.call_stack to fr
     _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    bcall: ->(bc, ctx, _) { frame=BlockFrame.new; frame.return_to = bc.pc;  ctx.call_stack.push(frame); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
-    _bret: 'pops return location off ctx.call_stack. jmps there',
-    bret: ->(bc, ctx, _) { frame = ctx.call_stack.pop; loc = frame.return_to; bc.pc = loc },
+    bcall: ->(bc, ctx, fr) { frame=BlockFrame.new; frame.return_to = bc.pc;  fr.push(frame); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
+    _bret: 'pops return location off fr. jmps there',
+    bret: ->(bc, ctx, fr) { frame = fr.pop; loc = frame.return_to; bc.pc = loc },
     _frame: 'Pushes Frame type on call stack',
-    frame: ->(bc, ctx, _) { frame = bc.next; ctx.call_stack.push frame },
+    frame: ->(bc, ctx, fr) { frame = bc.next; fr.push frame },
     # machine low-level instructions: nop, halt, :int,  etc.
 
 

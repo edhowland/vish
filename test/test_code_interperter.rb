@@ -166,6 +166,6 @@ class TestCodeInterperter < BaseSpike
     l = LoopFrame.new;
     @bc.codes = [:frame, l, :halt]
     @ci.run
-    assert_is @ctx.call_stack.peek, LoopFrame
+    assert_is @ci.frames.peek, LoopFrame
   end
 end
