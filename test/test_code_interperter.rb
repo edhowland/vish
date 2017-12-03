@@ -168,4 +168,21 @@ class TestCodeInterperter < BaseSpike
     @ci.run
     assert_is @ci.frames.peek, LoopFrame
   end
+
+  # test :swp - swaps top 2 items on stack
+  def test_swp_swaps_top_2_items_on_stack
+    @bc.codes = [:pushl, 0, :pushl, 1, :swp, :halt]
+    @ci.run
+    assert_eq @ctx.stack, [1, 0]
+  end
+  def test_stack_with_more_than_2_elements_swaps_top_2_items_leaving_rest_unchecnged
+    @bc.codes = [:pushl, 0, :pushl, 1, :pushl, 2, :swp, :halt]
+    @ci.run
+    assert_eq @ctx.stack, [0, 2, 1]
+  end
+  def test_swap_with_0_elements_does_unknown
+    @bc.codes = [:swp, :halt]
+    @ci.run
+    assert @ctx.stack.empty?
+  end
 end

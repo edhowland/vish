@@ -94,4 +94,29 @@ class TestFunctionFcall < BaseSpike
     result = @ci.run(3)
     assert_eq result, 200
   end
+
+  # test Lambda AST
+  def test_ast_emits_calls_for_no_arguments
+    parser, transform = parser_transformer
+    ir = parser.block.parse '{true}'
+    block = transform.apply(ir)
+    l = Lambda.subtree([], block)
+    @bc, @ctx = emit(loc: 4)
+    bc, ctx = emit_walker(block) # function body + :fret
+    @bc.codes += [:halt] + bc.codes
+    @ci = mkci @bc, @ctx
+    @ci.run
+  end
+  def test_lambda_adds_2_arguments_returns_result
+    parser, transform = parser_transformer
+ir = parser.block.parse '{ :v1 + :v2 }'
+block = transform.apply ir
+ast = Lambda.subtree(['v1', 'v2'], block)
+@bc, @ctx = emit(1,2, loc:9)
+bc, ctx = emit_walker(ast)
+@bc.codes += [:halt] + bc.codes
+@ci = mkci @bc, @ctx
+assert_eq @ci.run, 3
+    
+  end
 end

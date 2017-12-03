@@ -22,6 +22,8 @@ def opcodes tmpreg=nil
     loadt: ->(bc, ctx, _) { tmpreg.load(ctx.stack.pop) },
   _dup: 'Duplicates the top of the stack and pushes the copy back there.',
   dup: ->(bc, ctx, _) { ctx.stack.push(ctx.stack.peek) },
+  _swp: 'Swaps top 2 items on stack',
+  swp: ->(bc, ctx, fr) { ctx.stack.swap },
 
     # Arithmetic instructions.
     _add:  'Add - BinararyAdd - pops 2 operands and pushes the result of adding them',

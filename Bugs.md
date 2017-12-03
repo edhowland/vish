@@ -1,5 +1,21 @@
 # Bugs
 
+## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
+
+Since the current stack is inside either MainFrame or outer FunctionFrame,
+:frep trys to push the return value. It might be returning to a LoopFrame or BlockFrame.
+In that case, the frames.peek.ctx wil be nil or undefined method call.
+
+The solution would to 
+
+- Completely refactor ctx.stack to internal to CodeInterperter and removed from Context.
+- or, search backword in fr.reverse.find {|f| f.kind_of? MainFrame }
+
+The latter is or should be temporary fix to the former solution!
+
+
+
+
 ## Bug: Compiler does not check for undefined variables.
 
 ```

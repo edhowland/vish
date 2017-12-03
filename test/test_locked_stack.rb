@@ -38,4 +38,11 @@ class TestLockedStack < BaseSpike
     assert @stack.safe_pop.nil?
   end
 
+  # tests for swap
+  def test_swap_swaps_top_2_elements
+    @stack.push 1,2
+    @stack.swap
+    assert_eq @stack, [2, 1]
+  end
+
 end

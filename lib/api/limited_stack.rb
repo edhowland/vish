@@ -43,6 +43,12 @@ class LimitedStack < Array
   def safe_pop
     old_pop
   end
+  # swap - reverses top 2 items on stack
+  def swap
+    return nil if self.length < 2
+    a, b = pop(2)
+    push(b, a)
+  end
 end
 
 class LockedStackLimitReached < RuntimeError
