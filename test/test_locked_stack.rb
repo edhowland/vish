@@ -20,4 +20,22 @@ class TestLockedStack < BaseSpike
     @stack.push FunctionFrame
     @stack.pop
   end
+  # test push many things
+  def test_can_push_more_than_thing
+    @stack.push 0
+    a = [1,2,3]
+    @stack.push(*a)
+    assert_eq @stack, [0, 1, 2, 3]
+  end
+  def test_can_still_pop_0_items_off_stack_and_get_empty_array
+  @stack = LimitedStack.new limit: 10
+    result = @stack.pop(0)
+    assert_is result, Array
+    assert result.empty?
+  end
+  def test_safe_pop_does_not_raise_underflow_error_only_returns_nil
+    @stack = LimitedStack.new limit: 10
+    assert @stack.safe_pop.nil?
+  end
+
 end

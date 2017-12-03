@@ -14,7 +14,7 @@ def opcodes tmpreg=nil
     _pushv: 'pushv : Pushes value of named variable',
     pushv: ->(bc, ctx, _) { var = bc.next; ctx.stack.push(ctx.vars[var]) },
 
-    _pushl: 'pushl - Pushes name of LValue on stack',
+    _pushl: 'pushl - Pushes literal of LValue on stack',
     pushl: ->(bc, ctx, _) { var = bc.next; ctx.stack.push(var) },
   _pusht: 'Pushes the contents of tmpreg onto the stack.',
   pusht: ->(bc, ctx, _) { ctx.stack.push(tmpreg.store) },
@@ -113,6 +113,26 @@ def opcodes tmpreg=nil
     bret: ->(bc, ctx, fr) { frame = fr.pop; loc = frame.return_to; bc.pc = loc },
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr) { frame = bc.next; fr.push frame },
+    _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
+    fcall: ->(bc, ctx, fr) {
+     cx = Context.new
+     argc = ctx.stack.pop
+     argv = ctx.stack.pop(argc)
+     cx.stack.push(*argv)
+      frame = FunctionFrame.new(cx)
+      frame.return_to = bc.pc + 1
+          fr.push(frame) 
+          target = bc.next
+          bc.pc = target
+    },
+    _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
+    fret: ->(bc, ctx, fr) {
+      frame = fr.pop
+      ret_val = frame.ctx.stack.pop
+      fr.peek.ctx.stack.push ret_val
+      bc.pc = frame.return_to
+    },
+
     # machine low-level instructions: nop, halt, :int,  etc.
 
 

@@ -22,8 +22,9 @@ class LimitedStack < Array
     @limit = limit
   end
   attr_reader :limit
+  alias_method :old_pop, :pop
 
-  def push(arg)
+  def push(*arg)
     raise StackLimitReached.new if self.length >= @limit
     super
   end
@@ -36,8 +37,11 @@ class LimitedStack < Array
   # Parameters:
   # (optional) count to pop Default: 1
   def pop(*args)
-    raise StackUnderflow.new if self.length <= 0
+    raise StackUnderflow.new if self.length <= 0 && !args.first.zero?
     super
+  end
+  def safe_pop
+    old_pop
   end
 end
 
