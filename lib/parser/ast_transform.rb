@@ -42,6 +42,10 @@ class AstTransform < Parslet::Transform
 
   rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
   rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
+
+  # lambdas
+  rule(parm: simple(:parm)) { StringLiteral.new(parm) }
+  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 
