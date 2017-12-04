@@ -28,6 +28,10 @@ class VishCompiler
     # fixup Return classes
     fixup_returns(@blocks, BlockReturn)
     @blocks.each {|b| ast << b }
+
+    # add any lambdas back in after blocks (if any)
+    @lambdas = extract_lambdas(@ast)
+    @lambdas.each {|l| @ast << l }
   end
 
   def generate ast=@ast

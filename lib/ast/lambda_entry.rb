@@ -17,6 +17,7 @@ class LambdaEntry < Terminal
     end
   end
   def inspect
-    @arglist.each(&:inspect)
+    self.class.name + ': ' + '[' + 
+      @arglist.map(&:inspect).join(', ') + ']'
   end
 end
