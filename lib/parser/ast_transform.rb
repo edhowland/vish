@@ -1,4 +1,5 @@
 # ast_transform.rb - class AstTransform <  Parslet::Transform
+Dummy='dummy'
 
 #require_relative 'vish'
 
@@ -20,7 +21,10 @@ class AstTransform < Parslet::Transform
 
   # arithmetic expressions
   rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
+  # Assignment
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
+
   rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
 
   # dereference a variable
@@ -45,7 +49,10 @@ class AstTransform < Parslet::Transform
 
   # lambdas
   rule(parm: simple(:parm)) { StringLiteral.new(parm) }
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree([parmlist], _lambda) }
   rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
+
+  # Function calls, Lambda calls, etc.
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 

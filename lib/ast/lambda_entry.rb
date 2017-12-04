@@ -16,4 +16,7 @@ class LambdaEntry < Terminal
       bc.codes << :assign 
     end
   end
+  def inspect
+    @arglist.each(&:inspect)
+  end
 end
