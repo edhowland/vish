@@ -5,10 +5,13 @@ class LambdaEntry < Terminal
   def initialize arglist
     @arglist = arglist
   end
+  attr_accessor :value
+
   # emit - emits assignments of n entries on stack.
   # Must use :swp after adding variable name pushed on stack
   # because :assign expects them in that order
   def emit(bc, ctx)
+    ctx.vars[@value.to_sym] = bc.codes.length
     @arglist.each do |a|
       bc.codes << :pushl
       bc.codes << a.to_s.to_sym

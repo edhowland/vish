@@ -11,8 +11,9 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
+    @lambdas = []
   end
-  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :source
+  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :source
   attr_reader :bc
 
   def parse source=@source

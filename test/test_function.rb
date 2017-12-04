@@ -112,11 +112,11 @@ class TestFunctionFcall < BaseSpike
 ir = parser.block.parse '{ :v1 + :v2 }'
 block = transform.apply ir
 ast = Lambda.subtree(['v1', 'v2'], block)
+ast.first_child.content.value = '_unknown_lambda'
 @bc, @ctx = emit(1,2, loc:9)
 bc, ctx = emit_walker(ast)
 @bc.codes += [:halt] + bc.codes
 @ci = mkci @bc, @ctx
 assert_eq @ci.run, 3
-    
   end
 end
