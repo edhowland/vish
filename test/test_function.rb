@@ -127,4 +127,13 @@ assert_eq @ci.run, 3
     @ctx.vars[:Lambda_3] = @bc.codes.length - 1
     @ci.run
   end
+  # simulate :lcall as if we actually had a way to compile this
+  def test_pass_multiple_arguments_to_lambda_and_check_result
+    bc, ctx = compile 'lb=->(a, b) { :a + :b };lb(11,44)'
+    x= bc.codes.index :icall
+    bc.codes[x] = :lcall
+    bc.codes[x - 2] = :pushv
+    ci = mkci bc, ctx
+    assert_eq ci.run, 55
+  end
 end
