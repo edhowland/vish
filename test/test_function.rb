@@ -119,4 +119,12 @@ bc, ctx = emit_walker(ast)
 @ci = mkci @bc, @ctx
 assert_eq @ci.run, 3
   end
+
+  # Test :lcall opcode. Combines :bcall and :fcall.
+  def test_lcall_sets_redirection_to_lambda_address
+    @bc.codes = [:cls, :pushl, 0, :pushv, :bk,   :lcall, :halt, :halt]
+    @ctx.vars[:bk] = :Lambda_3
+    @ctx.vars[:Lambda_3] = @bc.codes.length - 1
+    @ci.run
+  end
 end

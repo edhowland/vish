@@ -110,7 +110,14 @@ def opcodes tmpreg=nil
 
     # flow control : :bcall, :bret, etc
     _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    bcall: ->(bc, ctx, fr) { frame=BlockFrame.new; frame.return_to = bc.pc;  fr.push(frame); var = ctx.stack.pop; loc = ctx.vars[var.to_sym]; bc.pc = loc },
+    bcall: ->(bc, ctx, fr) { 
+      frame=BlockFrame.new
+      frame.return_to = bc.pc
+      fr.push(frame)
+      var = ctx.stack.pop
+      loc = ctx.vars[var.to_sym]
+      bc.pc = loc 
+    },
     _bret: 'pops return location off fr. jmps there',
     bret: ->(bc, ctx, fr) { frame = fr.pop; loc = frame.return_to; bc.pc = loc },
     _frame: 'Pushes Frame type on call stack',
@@ -122,10 +129,26 @@ def opcodes tmpreg=nil
      argv = ctx.stack.pop(argc)
      cx.stack.push(*argv)
       frame = FunctionFrame.new(cx)
+      # The return to should be one past the the operand
       frame.return_to = bc.pc + 1
           fr.push(frame) 
           target = bc.next
           bc.pc = target
+    },
+
+  # Lambda call stuff
+  _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
+    lcall: ->(bc, ctx, fr) {
+      cx = Context.new
+      var = ctx.stack.pop
+      loc = ctx.vars[var.to_sym]
+      argc = ctx.stack.pop
+      argv = ctx.stack.pop(argc)
+      cx.stack.push(*argv)
+      frame = FunctionFrame.new(cx)
+      frame.return_to = bc.pc
+      fr.push(frame)
+      bc.pc = loc
     },
     _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
     fret: ->(bc, ctx, fr) {
