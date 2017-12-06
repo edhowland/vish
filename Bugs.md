@@ -1,10 +1,5 @@
 # Bugs
 
-## Bug: Wrong number of parameters when just one
-
-Other arg counts work ok, apparently.
-
-
 ## Bug: Try to call a lambda witha block call
 
 ```
@@ -24,24 +19,6 @@ bk={1}
 %bk()
 # => nil
 ```
-
-## Bug: Arity mismatch failure. Underproduction or overconsumption of arguments to Lambda
-
-```
-#  Underproduction/overconsumption
-two=->(a,b) { :a + :b }
-%two(1)
-#
-# Overproduction/underconsumption
-one=->(a) { :a }
-%one(1,2)
-# Not as bad, leaves dangles on stack
-```
-
-To fix: Implement a new data type: LambdaType placed in ctx.vars[:lambda_name]
-It should have the .arity method.
-The :lcall must check this against argc popped off stack
-
 
 ## Bug: still more problems with bin/repl.rb
 
