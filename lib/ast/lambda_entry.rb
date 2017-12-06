@@ -10,8 +10,11 @@ class LambdaEntry < Terminal
   # emit - emits assignments of n entries on stack.
   # Must use :swp after adding variable name pushed on stack
   # because :assign expects them in that order
+  #
+    # TODO: MUST Implement the setting of LambdaType (in @value) .target = bc.codes.length
   def emit(bc, ctx)
-    ctx.vars[@value.to_sym] = bc.codes.length
+#    ctx.vars[@value.to_sym] = bc.codes.length
+    @value.target = bc.codes.length
     @arglist.reverse.each do |a|
       bc.codes << :pushl
       bc.codes << a.to_s.to_sym
@@ -20,7 +23,7 @@ class LambdaEntry < Terminal
     end
   end
   def inspect
-    self.class.name + ': ' + '[' + 
+    self.class.name + ': value: ' + @value.inspect + ' arglist: [' + 
       @arglist.map(&:inspect).join(', ') + ']'
   end
 end

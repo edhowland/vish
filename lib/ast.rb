@@ -66,6 +66,9 @@ require_relative 'ast/return'
 require_relative 'ast/loop_entry'
 require_relative 'ast/loop_exit'
 require_relative 'ast/loop'
+
+# Lambda stuff
+require_relative 'ast/lambda_name'
 require_relative 'ast/lambda_entry'
 require_relative 'ast/lambda_exit'
 require_relative 'ast/lambda'

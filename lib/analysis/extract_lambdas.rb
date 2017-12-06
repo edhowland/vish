@@ -7,11 +7,17 @@ def extract_lambdas(ast)
 
   # destructive actions below
     lambdas.map!(&:remove_from_parent!)
-  # Add new StringLiteral of lambda's name to just extracted parent node
-  parentsof_lambdas.each {|p| p[0] << mknode(StringLiteral.new(p[1].name)) }
 
-  lambdas.each do |l|
-    l.first_child.content.value = l.name
+  # Add new LambdaName w/LambdaType to parent
+  parentsof_lambdas.each do|p|
+    ltype = LambdaType.new(p[1].name, p[1].content.arglist.length)
+    # Now set the LambdaEntry.value to this LambdaType
+    p[1].first_child.content.value = ltype
+   p[0] << mknode(LambdaName.new(ltype))
   end
+
+#  lambdas.each do |l|
+#    l.first_child.content.value = l.name
+#  end
   lambdas
 end

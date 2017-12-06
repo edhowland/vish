@@ -1,5 +1,30 @@
 # Bugs
 
+## Bug: Wrong number of parameters when just one
+
+Other arg counts work ok, apparently.
+
+
+## Bug: Try to call a lambda witha block call
+
+```
+lm=->() { true }
+%lm
+# Should have been %lm()
+# get no method error
+```
+
+
+## Bug: Call a block with lambda call
+
+Get no error, but nil is returned
+
+```
+bk={1}
+%bk()
+# => nil
+```
+
 ## Bug: Arity mismatch failure. Underproduction or overconsumption of arguments to Lambda
 
 ```
