@@ -149,4 +149,10 @@ assert_eq @ci.run, 3
     ci = CodeInterperter.new(c.bc, c.ctx)
     assert_eq ci.run, 4
   end
+
+  # test order of arguments in lambda call
+  def test_order_of_arguments_as_actual_values_in_lambda_body
+    result = interpertit 'sub=->(a, b) { :a - :b };%sub(9,3)'
+    assert_eq result, 6
+  end
 end

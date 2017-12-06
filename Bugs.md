@@ -1,5 +1,14 @@
 # Bugs
 
+## Bug: still more problems with bin/repl.rb
+
+Cannot assign a lambda and then call it in the
+next pass thru the REPL.
+
+I do not think the @lambdas are being retained like the @blocks were before.
+
+
+
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,

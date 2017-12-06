@@ -148,10 +148,11 @@ class VishParser < Parslet::Parser
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }
+  rule(:lambda_call) { str('%') >> identifier.as(:lambda_call) >> lparen >> arglist.as(:arglist) >> rparen }
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | funcall | _lambda | negation | infix_oper | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | funcall | _lambda | lambda_call | negation | infix_oper | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }
