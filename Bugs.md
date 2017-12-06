@@ -1,5 +1,23 @@
 # Bugs
 
+## Bug: Arity mismatch failure. Underproduction or overconsumption of arguments to Lambda
+
+```
+#  Underproduction/overconsumption
+two=->(a,b) { :a + :b }
+%two(1)
+#
+# Overproduction/underconsumption
+one=->(a) { :a }
+%one(1,2)
+# Not as bad, leaves dangles on stack
+```
+
+To fix: Implement a new data type: LambdaType placed in ctx.vars[:lambda_name]
+It should have the .arity method.
+The :lcall must check this against argc popped off stack
+
+
 ## Bug: still more problems with bin/repl.rb
 
 Cannot assign a lambda and then call it in the

@@ -140,6 +140,7 @@ def opcodes tmpreg=nil
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr) {
       cx = Context.new
+      cx.constants = ctx.constants
       var = ctx.stack.pop
       loc = ctx.vars[var.to_sym]
       argc = ctx.stack.pop

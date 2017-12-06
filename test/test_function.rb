@@ -155,4 +155,10 @@ assert_eq @ci.run, 3
     result = interpertit 'sub=->(a, b) { :a - :b };%sub(9,3)'
     assert_eq result, 6
   end
+
+  # correct value is being returned
+  def test_no_argument_case
+    result = interpertit 'one=->(a) { true };%one(1)'
+    assert result
+  end
 end
