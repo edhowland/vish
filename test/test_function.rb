@@ -136,4 +136,17 @@ assert_eq @ci.run, 3
     ci = mkci bc, ctx
     assert_eq ci.run, 55
   end
+
+  # Simulate with no compiler support by generating LambdaCall node by hand.
+  def test_lambda_call_with_multi_args
+    c = VishCompiler.new 'pow=->(a, b) { :a ** :b }'
+    c.parse; c.transform
+    lc = LambdaCall.new 'pow'
+    lc.argc = 2
+    fn = FunctorNode.subtree(lc, [Numeral.new(2), Numeral.new(2)])
+    c.ast.add(fn, 2)
+    c.analyze; c.generate
+    ci = CodeInterperter.new(c.bc, c.ctx)
+    assert_eq ci.run, 4
+  end
 end
