@@ -15,4 +15,8 @@ module Builtins
   def self.read(*args)
     gets.chomp
   end
+
+  def self.readi(*args)
+    read(*args).to_i
+  end
 end
