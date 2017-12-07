@@ -8,10 +8,11 @@ module Builtins
     args.map(&:to_s).join(' ') + "\n"
   end
 
-  def self.break
-    raise BreakCalled.new
-  end
   def self.except(*args)
     raise (args[0] || 'Unknown exception')
+  end
+
+  def self.read(*args)
+    gets.chomp
   end
 end
