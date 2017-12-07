@@ -31,6 +31,7 @@ string = cli.ask 'vish> '
   ncmp = VishCompiler.new string
   ncmp.parse; ncmp.transform; ncmp.analyze
   ncmp.blocks = compiler.blocks + ncmp.blocks
+  ncmp.lambdas = compiler.lambdas + ncmp.lambdas
   ncmp.ctx = compiler.ctx.merge(ncmp.ctx)
   compiler = ncmp
   compiler.generate

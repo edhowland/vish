@@ -1,17 +1,17 @@
 # Bugs
 
-## Bug: Cannot call return within a lambda
+## Bug: Parse fails  
+
+Cannot use lambda calls, (or function calls) as part of larger expression.
 
 ```
-jj=->() { return 1 }
-%jj()
-# => Get VishCompilerError Undifferentiated return type
+p=->() { 9 }
+%p() + 1
+# Get parslet failure
+
+1 + %p()
+# get same failure
 ```
-
-Need to add fixup_return to @lambdas in def analyze in VishCompiler
-Also lib/ast/return.rb FuctionReturn.emit MUST checnge to :fret
-
-
 
 ## Bug: Try to call a lambda witha block call
 
@@ -38,8 +38,11 @@ bk={1}
 Cannot assign a lambda and then call it in the
 next pass thru the REPL.
 
-I do not think the @lambdas are being retained like the @blocks were before.
-
+```
+ff=->() { 99 }
+%ff()
+# Get opcode error ????
+```
 
 
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.

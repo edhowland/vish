@@ -127,7 +127,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | deref_block | block_exec | funcall }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | lambda_call | deref_block | block_exec | funcall }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
@@ -152,7 +152,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | funcall | _lambda | lambda_call | negation | infix_oper | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }

@@ -46,4 +46,10 @@ class TestFunctionFcall < BaseSpike
     result = interpertit 'lm=->() { return 99; 2 };%lm()'
     assert_eq result, 99
   end
+
+  # test parsing lambdas used as terms in larger expression
+  def test_can_parse_add_lambda_term
+    p, = parser_transformer
+    p.parse '%p() + 1'
+  end
 end
