@@ -37,5 +37,13 @@ class TestFunctionFcall < BaseSpike
     assert_raises LambdaNotFound do
       interpertit '%bk()'
     end
+
+  end
+
+
+  # test return within lambda
+  def test_returnfrom_lambda
+    result = interpertit 'lm=->() { return 99; 2 };%lm()'
+    assert_eq result, 99
   end
 end

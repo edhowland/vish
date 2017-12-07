@@ -32,6 +32,10 @@ class VishCompiler
 
     # add any lambdas back in after blocks (if any)
     @lambdas = extract_lambdas(@ast)
+
+    # fix up any returns within lambdas
+    fixup_returns(@lambdas, FunctionReturn)
+
     @lambdas.each {|l| @ast << l }
   end
 

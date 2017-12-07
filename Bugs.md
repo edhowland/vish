@@ -1,5 +1,18 @@
 # Bugs
 
+## Bug: Cannot call return within a lambda
+
+```
+jj=->() { return 1 }
+%jj()
+# => Get VishCompilerError Undifferentiated return type
+```
+
+Need to add fixup_return to @lambdas in def analyze in VishCompiler
+Also lib/ast/return.rb FuctionReturn.emit MUST checnge to :fret
+
+
+
 ## Bug: Try to call a lambda witha block call
 
 ```
