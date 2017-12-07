@@ -1,17 +1,12 @@
 # Bugs
 
-## Bug: Parse fails  
-
-Cannot use lambda calls, (or function calls) as part of larger expression.
+## Possible Bug: infix_oper not promoted enough in Vish grammar
 
 ```
-p=->() { 9 }
-%p() + 1
-# Get parslet failure
-
-1 + %p()
-# get same failure
+# check this
+1 + { 2 }
 ```
+
 
 ## Bug: Try to call a lambda witha block call
 
