@@ -37,7 +37,11 @@ string = cli.ask 'vish> '
   compiler.generate
 
   interpreter = CodeInterperter.new(compiler.bc, compiler.ctx)
-  p interpreter.run
+  begin
+    p interpreter.run
+  rescue UnknownFunction => err
+    puts err.message
+  end
   break if interpreter.last_exception.kind_of?(ExitState)
 end
   ecode = 0

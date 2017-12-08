@@ -21,5 +21,7 @@ require_relative 'test_parser'
 require_relative 'test_locked_stack'
 
 require_relative 'test_loop'
-require_relative 'test_function'
+require_relative 'test_lambda'
+require_relative 'test_builtins'
+
 

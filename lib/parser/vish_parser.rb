@@ -141,6 +141,8 @@ class VishParser < Parslet::Parser
   rule(:parmlist) { parm_atoms | space? }
   rule(:_lambda) { str('->') >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:_lambda) }
 
+  # User defined functions: with 'defn' keyword
+  rule(:function) { str('defn') >> space? >> identifier.as(:fname) >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:block) }
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
@@ -155,7 +157,7 @@ class VishParser < Parslet::Parser
   rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
   rule(:delim) { newline | semicolon | comment }
   rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
   rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }

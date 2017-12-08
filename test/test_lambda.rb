@@ -2,7 +2,7 @@
 
 require_relative 'test_helper'
 
-class TestFunctionFcall < BaseSpike
+class TestLambda < BaseSpike
   include CompileHelper
 
   # test order of arguments in lambda call

@@ -97,7 +97,7 @@ def opcodes tmpreg=nil
     if Builtins.respond_to? meth
       ctx.stack.push(Builtins.send meth, *argv)
     else
-      raise "Unknown builtin method #{meth}"
+      raise UnknownFunction.new(meth) #   "Unknown builtin method #{meth}"
     end
   },
 

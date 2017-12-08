@@ -1,5 +1,40 @@
 # Notes
 
+## Change of filename extension : .vs, was .vsh
+
+Reason for change: Syntax differences between this version
+of Vish rather Vish version 2.x. The later has .vsh file extensions
+
+- .vs - source for Vis v3.x code
+- .vsc - Compiled .vs code
+- bin/ivs - Interactive Vish REPL shell
+- vish - Compiles and runs .vs code
+- vishc - compiles .vs code into .vsc bytecode
+- vsr - Loads and runs .vsc code
+- .vasm - Assembly code for .vsc code
+- vasm - Assembles .vasm code into .vsc code for vsr runtime
+- vdis - Disassemblies .vsc into .vasm code for inspection and fixup
+- .vson - JSON output of AST capture
+
+The latter extension can be used with either vishc compiler or ivs interactive shell.
+
+```
+$ vishc -c file.vs
+# Will compile only to file.vson
+
+$ vishc -o file.vsc -l lib1.vson -l lib2.vson file.vs
+# Will compile file.vs, linking lib1.vson, lib2.vson into final output: file.vsc
+```
+# Will 
+
+### Notes on linking up multiple source code blocks
+
+Several .vsc code blocks can be loaded together
+into a single application.
+Great for code libraries, code modules, .etc.
+
+
+
 ## User defined functions
 
 
@@ -53,6 +88,35 @@ in their UserFunction instances.
 Walk through bc.codes, replacing :fcall, 'xxxx' with :fcall, 90, ...
 
 ##### ??? Will this work with recursive application
+
+## Closures
+
+Once lambdas have been discovered, before they are extracted,
+Locate any unbound variables within.
+Exclude any local variable assignments, and parameters:
+
+```
+ff=->(a) { c=99; :a + :b + :c }
+# In the above definition, :b is unbound
+# :a is a parameter
+# :c is a local variable
+```
+
+In the AST, the Lambda node has StringLiterals inside the LambdaEntry node.
+The local variables are defined in the Block node. Look for any assignments.
+
+??? Should we Hoist any variables to the top of the function?
+Probably not.
+
+Given any unbound variables at this step, search ancestor list for any matching
+assign blocks with first_child a StringLiteral matchin this name of unbound var.
+
+Only upto and inclusive of a Function body. (Not implemented yet)
+Or if the lambda is defined  outside of a function body,
+Then all the way up to the top level.
+
+Replace any Deref blocks with Closure blocks!
+
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.

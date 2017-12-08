@@ -12,6 +12,7 @@ class VishCompiler
     @ctx = Context.new
     @blocks = []
     @lambdas = []
+    @functions = {}
   end
   attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :source
   attr_reader :bc
@@ -25,6 +26,8 @@ class VishCompiler
   end
 
   def analyze ast=@ast
+  @functions = extract_functions(ast)
+
     @blocks = extract_assign_blocks(ast)
     # fixup Return classes
     fixup_returns(@blocks, BlockReturn)
@@ -37,6 +40,9 @@ class VishCompiler
     fixup_returns(@lambdas, FunctionReturn)
 
     @lambdas.each {|l| @ast << l }
+
+  # TODO: MUST: fixup returns for @functions.values
+    @functions.values.each {|f| ast << f }
   end
 
   def generate ast=@ast
