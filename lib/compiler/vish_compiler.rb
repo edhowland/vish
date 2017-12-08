@@ -11,8 +11,9 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
+    @lambdas = []
   end
-  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :source
+  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :source
   attr_reader :bc
 
   def parse source=@source
@@ -28,6 +29,14 @@ class VishCompiler
     # fixup Return classes
     fixup_returns(@blocks, BlockReturn)
     @blocks.each {|b| ast << b }
+
+    # add any lambdas back in after blocks (if any)
+    @lambdas = extract_lambdas(@ast)
+
+    # fix up any returns within lambdas
+    fixup_returns(@lambdas, FunctionReturn)
+
+    @lambdas.each {|l| @ast << l }
   end
 
   def generate ast=@ast

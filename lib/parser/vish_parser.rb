@@ -127,7 +127,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | deref_block | block_exec | funcall }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | lambda_call | deref_block | block_exec | funcall }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
@@ -136,6 +136,11 @@ class VishParser < Parslet::Parser
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
   rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
 
+  # lambda declaration: ->(x, y) { :x + :y }
+  rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }
+  rule(:parmlist) { parm_atoms | space? }
+  rule(:_lambda) { str('->') >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:_lambda) }
+
   # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
@@ -143,10 +148,11 @@ class VishParser < Parslet::Parser
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }
+  rule(:lambda_call) { str('%') >> identifier.as(:lambda_call) >> lparen >> arglist.as(:arglist) >> rparen }
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }

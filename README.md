@@ -118,7 +118,7 @@ vish> exit
 nil
 $
 $ # back in your shell.
-
+```
 
 
 ### The error log: vish.log

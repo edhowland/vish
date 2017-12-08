@@ -1,5 +1,58 @@
 # Notes
 
+## User defined functions
+
+
+### Implementation
+
+```
+defn foo(a, b) { :a + :b }
+defn bar(n) { foo(:n, 2) + 3 }
+bar(9)
+```
+
+
+In analyze: use reduce({}) on list of UserFunction selected.
+The resulting hash should store the key,value pair as the name of the function
+and the node name (its location).
+
+
+```
+@functions[:foo] = 'UserFunction_22'
+```
+
+#### Step 2: Change Funcall s to UserFuncall s
+
+select from ast where the content type is Funcall
+If Funcall.value in @functions
+then
+  Replace with UserFuncall with reference to UserFunction object
+
+#### Step 3 : Extract all the UserFunction bodies.
+
+?? Do we have to replace them with Nop's?
+
+Note: We must memoize the actual FunCalls which actually refer to functions.
+These can be removed before bytecode emission.
+Sort of a mark & sweep algorythm.
+
+#### Step n ??? ByteCode layout:
+
+For UserFuncall emission, the name of the AST node should be laid down 
+after the :fcall opcode. I.e. UserFunction_22:
+
+```
+[:cls, :fcall, 'UserFunction_22, :halt] # ... more bytecodes
+```
+
+#### Step (Penultimate)
+
+After laying out the @function_bodies, their locations will have been stored 
+in their UserFunction instances.
+
+Walk through bc.codes, replacing :fcall, 'xxxx' with :fcall, 90, ...
+
+##### ??? Will this work with recursive application
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.

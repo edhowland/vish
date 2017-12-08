@@ -144,3 +144,20 @@ def inter source
   c = compile source
   cifrom c
 end
+def mk_lcall
+  [:cls, :pushl, 0, :pushv, :bk, :lcall, :halt]
+end
+
+def mk_lambda(ctx, name, target, lname=:Lambda_3)
+  ctx.vars[name.to_sym] = lname.to_sym
+  ctx.vars[lname.to_sym] = target
+end
+
+
+def gparse &blk
+  begin
+    yield
+  rescue Parslet::ParseFailed => failure
+    puts failure.parse_failure_cause.ascii_tree
+  end
+end
