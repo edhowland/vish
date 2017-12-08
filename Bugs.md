@@ -1,5 +1,10 @@
 # Bugs
 
+## Possible Bug: reading stdin input does not work in compiled mode
+
+But does work in interactive mode.
+
+
 ## Possible Bug: infix_oper not promoted enough in Vish grammar
 
 ```
