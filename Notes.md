@@ -25,6 +25,20 @@ $ vishc -c file.vs
 $ vishc -o file.vsc -l lib1.vson -l lib2.vson file.vs
 # Will compile file.vs, linking lib1.vson, lib2.vson into final output: file.vsc
 ```
+
+## Possible fix to repl.rb
+
+Munging source with previous code blocks, lambdas and functions is too 
+wacky. Not sure if all the target locations can be safely found in output.
+
+Better way might to just maintain a very large source string and just
+recompile it every time
+
+Tricky part is to do a semicolon append to every entered string.
+
+Alternatively, parse and transform upto the AST and just merge the ASTs before 
+doing analysis and code generation
+
 # Will 
 
 ### Notes on linking up multiple source code blocks

@@ -32,6 +32,7 @@ string = cli.ask 'vish> '
   ncmp.parse; ncmp.transform; ncmp.analyze
   ncmp.blocks = compiler.blocks + ncmp.blocks
   ncmp.lambdas = compiler.lambdas + ncmp.lambdas
+  ncmp.functions = compiler.functions.merge(ncmp.functions)
   ncmp.ctx = compiler.ctx.merge(ncmp.ctx)
   compiler = ncmp
   compiler.generate

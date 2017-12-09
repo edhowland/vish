@@ -44,6 +44,15 @@ ff=->() { 99 }
 # Get opcode error ????
 ```
 
+### Bug: Still more problems with repl.rb:
+
+Cannot define a function and then call it on next line.
+
+```
+defn foo() {1}
+foo()
+# Get Unknown function: foo
+```
 
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
