@@ -43,13 +43,15 @@ class VishCompiler
 
   # TODO: MUST: fixup returns for @functions.values
     @functions.values.each {|f| ast << f }
-    
+
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)
   end
 
   def generate ast=@ast
     @bc, @ctx = emit_walker ast, @ctx
+    @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
+    return @bc, @ctx
   end
 
   def run source=@source

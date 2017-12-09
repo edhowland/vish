@@ -125,6 +125,7 @@ def opcodes tmpreg=nil
     _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
     fcall: ->(bc, ctx, fr) {
      cx = Context.new
+     cx.constants = ctx.constants
      argc = ctx.stack.pop
      argv = ctx.stack.pop(argc)
      cx.stack.push(*argv)
