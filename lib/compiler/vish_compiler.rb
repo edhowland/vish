@@ -14,7 +14,7 @@ class VishCompiler
     @lambdas = []
     @functions = {}
   end
-  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :source
+  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :functions, :source
   attr_reader :bc
 
   def parse source=@source
@@ -43,6 +43,9 @@ class VishCompiler
 
   # TODO: MUST: fixup returns for @functions.values
     @functions.values.each {|f| ast << f }
+    
+  # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
+  differentiate_functions(@ast, @functions)
   end
 
   def generate ast=@ast
