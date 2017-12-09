@@ -42,6 +42,8 @@ class VishCompiler
     @lambdas.each {|l| @ast << l }
 
   # TODO: MUST: fixup returns for @functions.values
+    fixup_returns(@functions.values, FunctionReturn)
+
     @functions.values.each {|f| ast << f }
 
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
