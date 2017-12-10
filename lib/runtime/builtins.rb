@@ -30,10 +30,10 @@ module Builtins
   end
 
   def self.tail(*args)
-    args[0][1..(-1)]
+    args[0][1..(-1)] || []
   end
 
   def self.print(*args)
-    $stdout.puts args.inspect
+    args.each { |e| $stdout.puts(e.inspect) }
   end
 end
