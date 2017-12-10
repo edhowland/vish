@@ -1,0 +1,8 @@
+  def self.echo(*args)
+  def self.except(*args)
+  def self.read(*args)
+  def self.readi(*args)
+  def self.list(*args)
+  def self.head(*args)
+  def self.tail(*args)
+  def self.print(*args)
