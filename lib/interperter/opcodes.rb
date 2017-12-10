@@ -94,11 +94,7 @@ def opcodes tmpreg=nil
     # get the possible arg count
     argc = ctx.stack.pop
     argv = ctx.stack.pop(argc)
-    if Builtins.respond_to? meth
-      ctx.stack.push(Builtins.send meth, *argv)
-    else
-      raise UnknownFunction.new(meth) #   "Unknown builtin method #{meth}"
-    end
+    ctx.stack.push(Dispatch.delegate(meth, *argv))
   },
 
     _str: 'Converts top of stack to a string, pushes the result',
