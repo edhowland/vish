@@ -16,7 +16,24 @@ module Builtins
     gets.chomp
   end
 
+  # readi - reads and returns integer
   def self.readi(*args)
     read(*args).to_i
+  end
+
+  # Linked list stuff
+  def self.list(*args)
+    args.flatten
+  end
+  def self.head(*args)
+    args[0][0]
+  end
+
+  def self.tail(*args)
+    args[0][1..(-1)] || []
+  end
+
+  def self.print(*args)
+    args.each { |e| $stdout.puts(e.inspect) }
   end
 end

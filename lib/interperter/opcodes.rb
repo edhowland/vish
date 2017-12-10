@@ -94,11 +94,7 @@ def opcodes tmpreg=nil
     # get the possible arg count
     argc = ctx.stack.pop
     argv = ctx.stack.pop(argc)
-    if Builtins.respond_to? meth
-      ctx.stack.push(Builtins.send meth, *argv)
-    else
-      raise "Unknown builtin method #{meth}"
-    end
+    ctx.stack.push(Dispatch.delegate(meth, *argv))
   },
 
     _str: 'Converts top of stack to a string, pushes the result',
@@ -125,6 +121,7 @@ def opcodes tmpreg=nil
     _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
     fcall: ->(bc, ctx, fr) {
      cx = Context.new
+     cx.constants = ctx.constants
      argc = ctx.stack.pop
      argv = ctx.stack.pop(argc)
      cx.stack.push(*argv)

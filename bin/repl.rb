@@ -32,12 +32,17 @@ string = cli.ask 'vish> '
   ncmp.parse; ncmp.transform; ncmp.analyze
   ncmp.blocks = compiler.blocks + ncmp.blocks
   ncmp.lambdas = compiler.lambdas + ncmp.lambdas
+  ncmp.functions = compiler.functions.merge(ncmp.functions)
   ncmp.ctx = compiler.ctx.merge(ncmp.ctx)
   compiler = ncmp
   compiler.generate
 
   interpreter = CodeInterperter.new(compiler.bc, compiler.ctx)
-  p interpreter.run
+  begin
+    p interpreter.run
+  rescue UnknownFunction => err
+    puts err.message
+  end
   break if interpreter.last_exception.kind_of?(ExitState)
 end
   ecode = 0
