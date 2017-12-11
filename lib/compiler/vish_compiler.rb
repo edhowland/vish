@@ -33,18 +33,17 @@ class VishCompiler
     fixup_returns(@blocks, BlockReturn)
     @blocks.each {|b| ast << b }
 
-    # add any lambdas back in after blocks (if any)
+    fixup_returns(@functions.values, FunctionReturn)
+    # Append the actual function bodies to end of AST
+    @functions.values.each {|f| ast << f }
+
+    # Find and process any Lambdas
     @lambdas = extract_lambdas(@ast)
 
     # fix up any returns within lambdas
     fixup_returns(@lambdas, FunctionReturn)
 
     @lambdas.each {|l| @ast << l }
-
-  # TODO: MUST: fixup returns for @functions.values
-    fixup_returns(@functions.values, FunctionReturn)
-
-    @functions.values.each {|f| ast << f }
 
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)

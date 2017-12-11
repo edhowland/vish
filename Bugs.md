@@ -1,5 +1,27 @@
 # Bugs
 
+## Bug: Cannot return lambda from function
+
+```
+def foo() { ->() {1} }
+# get this:
+undefined method `target=' for nil:NilClass
+/home/vagrant/src/vish/lib/ast/lambda_entry.rb:17:in `emit'
+/home/vagrant/src/vish/lib/emit_walker.rb:7:in `block in emit_walker'
+```
+
+Hint: Locate where LambdaEntry.target is being set.
+Remember: Blocks, Lambdas are extracted from within assign blocks
+
+
+```
+# Not even this works:
+```
+defn foo() { fn=->() {1}; :fn }
+# get the same error
+```
+
+
 ## Possible Bug: reading stdin input does not work in compiled mode
 
 But does work in interactive mode.
