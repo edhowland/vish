@@ -22,4 +22,8 @@ class TestFunction < BaseSpike
     result = interpertit 'defn bar() { ->() {99} };fn=bar();%fn()'
     assert_eq result, 99
   end
+  def test_lambda_can_call_user_function
+    result = interpertit 'defn baz() { true };fn=->() { baz() };%fn()'
+    assert result
+  end
 end
