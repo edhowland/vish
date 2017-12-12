@@ -15,7 +15,7 @@ class VishParser < Parslet::Parser
   # This is Whitespace, not a single space; does not include newlines. See that rule
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
-  rule(:space_plus) { space >> space? }
+  rule(:space!) { space >> space? }
 
 
   # single character rules
@@ -50,11 +50,11 @@ class VishParser < Parslet::Parser
   # keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
-  rule(:_return) { (str('return') >> space_plus >> expr).as(:return) }
+  rule(:_return) { (str('return') >> space! >> expr).as(:return) }
   rule(:keyword) { (_break| _exit | _return).as(:keyword) }
 
   # Control flow
-  rule(:loop) { str('loop') >> space_plus >> block.as(:loop) }
+  rule(:loop) { str('loop') >> space! >> block.as(:loop) }
   rule(:ampersand) { str('&') }
   rule(:pipe) { str('|') }
   rule(:logical_and) { ampersand >> ampersand >> space? }
