@@ -8,6 +8,10 @@ module Builtins
     args.map(&:to_s).join(' ') + "\n"
   end
 
+  def self.cat(*args)
+    args[0]
+  end
+
   def self.except(*args)
     raise (args[0] || 'Unknown exception')
   end

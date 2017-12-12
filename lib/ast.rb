@@ -77,3 +77,8 @@ require_relative 'ast/function_call'
 require_relative 'ast/function_entry'
 require_relative 'ast/function_exit'
 require_relative 'ast/function'
+require_relative 'ast/pipe_call'
+require_relative 'ast/pipe_expression'
+
+
+
