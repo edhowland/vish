@@ -42,5 +42,13 @@ class TestString < BaseSpike
     assert_eq result, "a1: -13\na2: true\n"
   end
 
-  # TODO single quoted strings here
+  # Single quoted strings
+  def test_single_quote_string
+    result = interpertit "'hello'"
+    assert_eq result, 'hello'
+  end
+  def test_single_quoted_string_can_have_backslash
+    result = interpertit "'---\\---'"
+    assert_eq result, '---\\---'
+  end
 end

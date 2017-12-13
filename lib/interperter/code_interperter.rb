@@ -96,7 +96,6 @@ class CodeInterperter
     begin
       yield
     rescue InterruptInterpreter => itype
-#    binding.pry
       self.send itype.action, itype
     end
   end

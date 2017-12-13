@@ -143,7 +143,7 @@ class VishParser < Parslet::Parser
 
   # User defined functions: with 'defn' keyword
   rule(:function) { str('defn') >> space? >> identifier.as(:fname) >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:block) }
-  # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
+  # Function calls 
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
