@@ -6,6 +6,6 @@ class BranchTarget
     @target = bc.codes.length # target is right after this location
   end
   def inspect
-    self.class.name
+    self.class.name + ": target: #{target}"
   end
 end

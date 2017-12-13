@@ -64,10 +64,8 @@ class AstTransform < Parslet::Transform
   # Lambda call
   rule(lambda_call: simple(:lambda_call), arglist: simple(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
   rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
-  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
-  rule(and_left: simple(:left), and_right: sequence(:right))  { BranchResolver.new(BranchIfFalse).subtree(left, Block.subtree(right)) }
-  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
-  rule(or_left: simple(:left), or_right: sequence(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, Block.subtree(right)) } 
+
+  # The root of the IR
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
   rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end

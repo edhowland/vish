@@ -31,7 +31,6 @@ require_relative 'analysis'
 
 
 # code emission stuff 
-require_relative 'emit_walker'
 
 # bytecode interperter stuff
 require_relative 'interperter'

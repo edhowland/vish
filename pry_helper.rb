@@ -154,10 +154,25 @@ def mk_lambda(ctx, name, target, lname=:Lambda_3)
 end
 
 
+# gparse - does block within rescue block to capture Parslet errors
 def gparse &blk
   begin
     yield
   rescue Parslet::ParseFailed => failure
     puts failure.parse_failure_cause.ascii_tree
   end
+end
+#  get_statements gets actual statements from AST root. Removes them.
+# Parameters
+# ast - The AST to work on
+# count, the number of statements to extract
+def get_statement(ast, count=1)
+  result = []
+  n = -1
+  iters = Array.new(count) {|e| n += 2 }
+  iters.each do |i|
+    result << ast.children[i]
+  end
+  result.each {|n| n.remove_from_parent! }
+  result
 end

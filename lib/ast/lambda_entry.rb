@@ -11,7 +11,6 @@ class LambdaEntry < Terminal
   # Must use :swp after adding variable name pushed on stack
   # because :assign expects them in that order
   #
-    # TODO: MUST Implement the setting of LambdaType (in @value) .target = bc.codes.length
   def emit(bc, ctx)
 #    ctx.vars[@value.to_sym] = bc.codes.length
     @value.target = bc.codes.length

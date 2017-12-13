@@ -138,7 +138,6 @@ def opcodes tmpreg=nil
     lcall: ->(bc, ctx, fr) {
       cx = Context.new
       cx.constants = ctx.constants
-#      binding.pry
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
@@ -173,10 +172,8 @@ def opcodes tmpreg=nil
   int: ->(bc, ctx, _) { name = bc.codes[bc.pc]; bc.pc += 1; raise InterruptCalled.new(name) },
   _iret: 'Return from interrupt handler',
   iret: ->(bc, ctx, _) { raise InterruptReturn.new },
-  # TODO: REMOVEME
 
-  _breakpt: 'Break point. Raises BreakPointReached',
-  breakpt: ->(bc, ctx, _) { raise BreakPointReached.new },
+    # Debug opcodes
     _spy: 'Spies on the state of bytecodes, context.',
     spy: ->(bc, ctx, _) { puts 'bc:', bc.inspect; puts 'ctx:', ctx.inspect }
   }
