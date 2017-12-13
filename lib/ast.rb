@@ -56,11 +56,11 @@ require_relative 'ast/boolean'
 require_relative 'ast/program_factory'
 require_relative 'ast/start'
 require_relative 'ast/functor_node'
+
+# Branch stuff
 require_relative 'ast/branch_source'
-require_relative 'ast/branch_if_false'
-require_relative 'ast/branch_if_true'
 require_relative 'ast/branch_target'
-require_relative 'ast/branch_resolver'
+
 # Loop stuff
 require_relative 'ast/return'
 require_relative 'ast/loop_entry'
