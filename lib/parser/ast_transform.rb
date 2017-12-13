@@ -67,10 +67,12 @@ class AstTransform < Parslet::Transform
 
 #   rule(lexpr: simple(:lexpr), pipe: simple(:pipe), rexpr: simple(:rexpr)) { PipeExpression.subtree(lexpr, rexpr) }
 
-  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
-  rule(and_left: simple(:left), and_right: sequence(:right))  { BranchResolver.new(BranchIfFalse).subtree(left, Block.subtree(right)) }
-  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
-  rule(or_left: simple(:left), or_right: sequence(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, Block.subtree(right)) } 
+#  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
+#  rule(and_left: simple(:left), and_right: sequence(:right))  { BranchResolver.new(BranchIfFalse).subtree(left, Block.subtree(right)) }
+#  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
+#  rule(or_left: simple(:left), or_right: sequence(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, Block.subtree(right)) } 
+
+  # The root of the IR
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
   rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end

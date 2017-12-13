@@ -80,7 +80,3 @@ require_relative 'ast/function'
 require_relative 'ast/logical_or'
 require_relative 'ast/logical_and'
 require_relative 'ast/pipe'
-
-# TODO: REMOVE
-require_relative 'ast/pipe_call'
-require_relative 'ast/pipe_expression'

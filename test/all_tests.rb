@@ -23,4 +23,6 @@ require_relative 'test_locked_stack'
 require_relative 'test_loop'
 require_relative 'test_lambda'
 require_relative 'test_builtins'
+require_relative 'test_pipeline'
+
 require_relative 'test_function'
