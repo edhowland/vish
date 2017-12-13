@@ -158,9 +158,22 @@ class VishParser < Parslet::Parser
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
+
+
+  # pipe expressions: E.g. 99 | cat() | echo() # => "99\n"
+  rule(:infix_pipe) { infix_expression(statement,
+    [logical_and, 2, :left], [logical_or, 2, :left],
+   [pipe, 1, :left]) }
+
+  # Older pipe stuff
+#   rule(:pipe_expression) { statement.as(:lexpr) >> pipe.as(:pipe) >> statement.as(:rexpr) }
+#  rule(:pipe_or_statement) { pipe_expression | statement }
+#   rule(:pipe_list) { pipe_or_statement >> (pipe >> pipe_or_statement).repeat }
+
   rule(:delim) { newline | semicolon | comment }
-  rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
-  rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
+  rule(:conditional_or_statement) { infix_pipe | (conditional_and | conditional_or) | block | statement }
+#  rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
+  rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }
   rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
   # conditional flow

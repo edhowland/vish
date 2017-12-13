@@ -24,6 +24,12 @@ class ArithmeticFactory
       BooleanAnd
     when 'or'
       BooleanOr
+    when '&&'
+      LogicalAnd
+    when '||'
+      LogicalOr
+    when '|'
+      Pipe
     else
       raise "Unknown arithmetic operation requested: '#{op}'"
     end

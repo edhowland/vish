@@ -26,6 +26,14 @@ class VishCompiler
   end
 
   def analyze ast=@ast
+    # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
+    resolve_logical_and(ast)
+    resolve_logical_or(ast)
+
+    # resolve Pipe w/any right child nodes that respond_to? :argc
+    resolve_pipecalls(ast)
+
+    # locate and extract any defn function declarations. Move to @functions hash
   @functions = extract_functions(ast)
 
     @blocks = extract_assign_blocks(ast)
@@ -51,6 +59,11 @@ class VishCompiler
 
   def generate ast=@ast
     @bc, @ctx = emit_walker ast, @ctx
+
+    # Resolve BranchSource operands after BranchTargets have been emitted
+    visit_ast(ast, BranchSource) do |n|
+      bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
+    end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
     return @bc, @ctx
   end

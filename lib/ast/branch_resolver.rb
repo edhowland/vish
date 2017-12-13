@@ -9,7 +9,6 @@
 
 class BranchResolver
   def initialize klass
-#  binding.pry
     @source = klass.new
     @target = BranchTarget.new
   end
