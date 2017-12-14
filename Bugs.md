@@ -35,27 +35,6 @@ bk={1}
 # => nil
 ```
 
-## Bug: still more problems with bin/repl.rb
-
-Cannot assign a lambda and then call it in the
-next pass thru the REPL.
-
-```
-ff=->() { 99 }
-%ff()
-# Get opcode error ????
-```
-
-### Bug: Still more problems with repl.rb:
-
-Cannot define a function and then call it on next line.
-
-```
-defn foo() {1}
-foo()
-# Get Unknown function: foo
-```
-
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,

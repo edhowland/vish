@@ -10,4 +10,4 @@
 ## bin contents
 
 - vish - CLI tool to evaluate and run Vish scripts: *.vs
-- ivs - (Eventually) Interactive Vish REPL
+- ivs -  Interactive Vish REPL
