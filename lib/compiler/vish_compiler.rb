@@ -25,7 +25,7 @@ class VishCompiler
     @ast = @transform.apply ir
   end
 
-  def analyze ast=@ast
+  def analyze ast=@ast, lambdas:@lambdas
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
@@ -53,6 +53,8 @@ class VishCompiler
 
     @lambdas.each {|l| @ast << l }
 
+    # add in any passed other lambdas. Possibly from earlier compiles.
+    @lambdas = lambdas + @lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)
   end
