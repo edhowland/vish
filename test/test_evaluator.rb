@@ -16,4 +16,10 @@ class TestEvaluator < BaseSpike
     result = @eval.eval 'foo()'
     assert_eq result, 99
   end
+  def test_third_pass
+    @eval.eval 'defn foo() { 100 }'
+    @eval.eval 'defn bar(x) { :x / 2 }'
+    result = @eval.eval 'bar(foo())'
+    assert_eq result, 50
+  end
 end
