@@ -25,7 +25,7 @@ class VishCompiler
     @ast = @transform.apply ir
   end
 
-  def analyze ast=@ast, blocks:@blocks, lambdas:@lambdas
+  def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
@@ -47,6 +47,8 @@ class VishCompiler
     fixup_returns(@functions.values, FunctionReturn)
     # Append the actual function bodies to end of AST
     @functions.values.each {|f| ast << f }
+    # Now add back in any previously declared functions passed in here.
+    @functions = functions.merge(@functions)
 
     # Find and process any Lambdas
     @lambdas = extract_lambdas(@ast)
