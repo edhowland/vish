@@ -40,4 +40,16 @@ module Builtins
   def self.print(*args)
     args.each { |e| $stdout.puts(e.inspect) }
   end
+
+  # dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  def self.dict(*args)
+    evens = array_select(args) {|e,i| i.even? }
+    odds = array_select(args) {|e,i| i.odd? }
+    evens.zip(odds).to_h
+  end
+
+  # ix(arr, index) - should work with lists or dicts (arrays/hashes)
+  def self.ix(arr,idx)
+    arr[idx]#
+  end
 end
