@@ -57,15 +57,17 @@ class VishCompiler
   differentiate_functions(@ast, @functions)
   end
 
-  def generate ast=@ast
-    @bc, @ctx = emit_walker ast, @ctx
+  def generate ast=@ast, ctx:@ctx, bcodes:@bc
+    start = bcodes.codes.length
+    @bc, @ctx = emit_walker ast, ctx, bcodes
 
     # Resolve BranchSource operands after BranchTargets have been emitted
     visit_ast(ast, BranchSource) do |n|
       bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
     end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
-    return @bc, @ctx
+#    return @bc, @ctx
+start
   end
 
   def run source=@source
