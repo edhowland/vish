@@ -63,7 +63,7 @@ def pa
 end
 
 # misty: play misty for me: runs one step
-# + ci : The CodeInterperter
+# + ci : The CodeInterpreter
 def misty ci, &blk
   begin
   print 'stack: '; p ci.ctx.stack
@@ -84,6 +84,6 @@ end
 # + bc: ByteCodes
 # + ctx : Context
 def nci bc, ctx
-  CodeInterperter.new bc, ctx
+  CodeInterpreter.new bc, ctx
 end
 

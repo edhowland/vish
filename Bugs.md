@@ -65,13 +65,6 @@ This shoul have a default action at runtime,
 or be checked by the compiler during  analysis phase.
 
 
-## BUG: Massively misspelled interpreter
-
-Should be 
-
-interpreter - Good
-interpreter - Bad
-
 ## Bug: Should have actual Ruby objects in bytecodes, like LoopFrame objects
 
 When written out .vshc files, as marshalled Ruby objects, this is not pure.

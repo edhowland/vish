@@ -2,7 +2,7 @@
 # runs until bc.codes are exhausted.
 
 class CodeInterpreter
-  # new: initializes the CodeInterperter object
+  # new: initializes the CodeInterpreter object
   # Parameters:
   # bc - ByteCodes object to execute
   # ctx - Context object
