@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+# vish - runs Vish scripts: *.vs
+
+require_relative '../lib/vish'
+
+source = ARGF.read
+
+eval = Evaluator.new
+p eval.eval(source)

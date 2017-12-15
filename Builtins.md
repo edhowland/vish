@@ -56,3 +56,34 @@ tail(:li)
 ```
 
   def self.print(*args)
+
+Prints all of its output to stdout
+
+```
+print(1,2,3)
+# => 1
+# 2
+# 3
+```
+
+def self.dict(*args)
+
+Creates a dictionary object from key value pairs (E.g. Hash)
+
+
+```
+dict('a',1,'b',2,'c',3)
+# => {'a' => 1, 'b' => 2, 'c' => 3}
+```
+
+def self.ix(arr,ix)
+
+Indexes its first arg with its second arg. Will work with list or dict
+
+```
+arr=list(1,2,3,4)
+:arr | ix(1)
+# => 2
+```
+
+

@@ -13,6 +13,7 @@ module CompileHelper
   def compile string
   @compiler = VishCompiler.new string
   @compiler.run
+  return @compiler.bc, @compiler.ctx
   end
   def mkci bc, ctx
     CodeInterperter.new(bc, ctx)

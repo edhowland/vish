@@ -34,3 +34,5 @@ require_relative 'analysis'
 
 # bytecode interperter stuff
 require_relative 'interperter'
+require_relative 'evaluation'
+

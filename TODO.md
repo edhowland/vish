@@ -15,6 +15,13 @@ CompileError: :name is not set yet
 
 do this in VishCompiler.analyze phase
 
+### Support for evntual closure stuff.
+
+In the analyze phase, the AST can find unbound variables in subtree nodes.. If any exist in
+lambdas, it can mark them for special runtime dereferences.
+
+any other variables will be reported by the compiler.
+
 ## Completions
 
 

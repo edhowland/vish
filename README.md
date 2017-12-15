@@ -70,10 +70,11 @@ var=100
 blk={ true }
 %blk
 # => true
+
+add1=->(x) { :x + 1 }
+%add1(4)
+# => 5
 ```
-
-
-
 
 ## Keywords
 
@@ -119,16 +120,30 @@ in your Vish scripts. For a complete list, please see:
 [Builtins](Builtins.md)
 
 The above function uses recursion  to reverse a list
+
+## Pipelines
+
+Vish can chin functions or lambdas together with the '|' (pipe) operator.
+The return value of the previous method is passed as the first argument of the
+right hand method call.
+
+
+```
+defn foo() { 100 }
+defn bar(x) { :x / 2 }
+foo() | bar()
+# => 50
+```
 ## Using the REPL
 
 Vish comes with a simple REPL (Read/Eval/Print/Loop), for interacting
 with the language and trying out expressions.
-Located in the ./bin folder, it can be invoked with either: ./repl.rb or ./vish.
+Located in the ./bin folder, it can be invoked with ./bin/ivs
 
 ```
 #
 $ cd ./bin
-$ ./vish
+$ ./ivs
 vish> # this is a comment
 nil
 vish> 3 + 4
@@ -144,12 +159,6 @@ $ # back in your shell.
 ```
 
 
-### The error log: vish.log
-
-If you encounter a problem when executing the REPL, besides writing to the screen, Vish will
-capture the output in ./vish.log in the directory you were in
-you invoked vish.
-Vish will then exit with a non-zero exit code.
 If you cannot determi where you went wrong, and need help: Please
 enter an issue on the Github issue tracker for the repository.
 [Vish issue tracker](https://github.com/edhowland/vish/issues)

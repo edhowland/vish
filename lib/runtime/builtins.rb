@@ -40,4 +40,30 @@ module Builtins
   def self.print(*args)
     args.each { |e| $stdout.puts(e.inspect) }
   end
+
+  # dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  def self.dict(*args)
+    evens = array_select(args) {|e,i| i.even? }
+    odds = array_select(args) {|e,i| i.odd? }
+    evens.zip(odds).to_h
+  end
+
+  # ix(arr, index) - should work with lists or dicts (arrays/hashes)
+  def self.ix(arr,idx)
+    arr[idx]#
+  end
+
+  # eval(string) - compiles, interprets string in the current context.
+  def self.eval(string)
+    begin
+      # we need to inject current bc, ctx : How do we get from currently running interpreter?
+      comp = VishCompiler.new(string)
+      comp.run
+      # at this pointwe have new bc: bytecodes and new ctx:context
+      ci = CodeInterperter.new(comp.bc, comp.ctx)
+      ci.run
+  rescue => err
+    puts err.message
+    end
+  end
 end
