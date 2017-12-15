@@ -7,7 +7,7 @@ require_relative 'test_api'
 
 require_relative 'test_bytecodes'
 require_relative 'test_context'
-require_relative 'test_code_interperter'
+require_relative 'test_code_interpreter'
 require_relative 'test_ast'
 require_relative 'test_string'
 

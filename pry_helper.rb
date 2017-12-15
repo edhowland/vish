@@ -10,7 +10,7 @@ require_relative 'pry/lib'
 
 
 def go
-  CodeInterperter.new(*compile(''))
+  CodeInterpreter.new(*compile(''))
 end
 def dump_vars ci
   ci.ctx.vars
@@ -90,7 +90,7 @@ def mk_ast string
 end
 
 # misty: play misty for me: runs one step
-# + ci : The CodeInterperter
+# + ci : The CodeInterpreter
 def misty ci, &blk
   print 'stack: '; p ci.ctx.stack
   puts 'vars: '; p ci.ctx.vars
@@ -99,12 +99,12 @@ def misty ci, &blk
   ci.step
 end
 
-# cifrom - makes a CodeInterperter from a VishCompiler object
+# cifrom - makes a CodeInterpreter from a VishCompiler object
 # Parameters:
 # compiler : VishCompiler
-# Retrurns CodeInterperter
+# Retrurns CodeInterpreter
 def cifrom(compiler)
-  CodeInterperter.new(compiler.bc, compiler.ctx)
+  CodeInterpreter.new(compiler.bc, compiler.ctx)
 end
 
 # mkci : Makes a new ci from bc, ctx
@@ -112,7 +112,7 @@ end
 # + bc: ByteCodes
 # + ctx : Context
 def mkci bc, ctx
-  CodeInterperter.new bc, ctx
+  CodeInterpreter.new bc, ctx
 end
 
 

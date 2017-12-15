@@ -11,7 +11,7 @@ class Evaluator
     compiler.transform
     compiler.analyze functions:@compiler.functions, blocks:@compiler.blocks, lambdas:@compiler.lambdas
     start = compiler.generate ctx:@compiler.ctx, bcodes:@compiler.bc
-    interpreter = CodeInterperter.new(compiler.bc, compiler.ctx)
+    interpreter = CodeInterpreter.new(compiler.bc, compiler.ctx)
     @compiler = compiler
     interpreter.run(start)
   end

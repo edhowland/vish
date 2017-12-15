@@ -1,7 +1,7 @@
-# code_interperter.rb - class CodeInterperter - takes ByteCodes, Context and
+# code_interpreter.rb - class CodeInterpreter - takes ByteCodes, Context and
 # runs until bc.codes are exhausted.
 
-class CodeInterperter
+class CodeInterpreter
   # new: initializes the CodeInterperter object
   # Parameters:
   # bc - ByteCodes object to execute
