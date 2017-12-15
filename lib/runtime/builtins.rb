@@ -54,16 +54,16 @@ module Builtins
   end
 
   # eval(string) - compiles, interprets string in the current context.
-  def self.eval(string)
-    begin
-      # we need to inject current bc, ctx : How do we get from currently running interpreter?
-      comp = VishCompiler.new(string)
-      comp.run
-      # at this pointwe have new bc: bytecodes and new ctx:context
-      ci = CodeInterperter.new(comp.bc, comp.ctx)
-      ci.run
-  rescue => err
-    puts err.message
-    end
-  end
+#  def self.eval(string)
+#    begin
+#      # we need to inject current bc, ctx : How do we get from currently running interpreter?
+#      comp = VishCompiler.new(string)
+#      comp.run
+#      # at this pointwe have new bc: bytecodes and new ctx:context
+#      ci = CodeInterpreter.new(comp.bc, comp.ctx)
+#      ci.run
+#  rescue => err
+#    puts err.message
+#    end
+#  end
 end

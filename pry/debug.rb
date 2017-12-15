@@ -1,4 +1,4 @@
-# pry/debug.rb - methods for debugging CodeInterperter bytecodes
+# pry/debug.rb - methods for debugging CodeInterpreter bytecodes
 
 # debug_handler - returns Context (passed in) and ByteCodes
 # with codes to inspect the passed in ctx and halt, then :iret
