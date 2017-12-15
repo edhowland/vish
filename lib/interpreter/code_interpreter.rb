@@ -69,7 +69,7 @@ class CodeInterpreter
   # Parameters:
   # + instruction: The lambda to run
   def execute instruction
-    instruction.call(self.bc, self.ctx, self.frames)
+    instruction.call(self.bc, self.ctx, self.frames, self)
   end
 
 
