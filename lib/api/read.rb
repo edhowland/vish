@@ -30,13 +30,34 @@ class LineBuffer
     buffer.length
   end
 
+  def front
+    @right = buffer
+    @left = []
+  end
+  def advance
+    @left.push(@right.shift)
+  end
+  def retreat
+    @right.unshift(@left.pop)
+  end
+  def eol
+    @left = buffer
+    @right = []
+  end
   # dispach - handle input
   def dispatch(ch)
     case ch
+    # handle left arrow
+    when :left
+      retreat
+      $stdout.print @right[0]
+    # handle right arrow
+    when :right
+      advance
+      $stdout.print @right[0]
     # handle Control A
     when "\u0001"
-      @right = buffer
-      @left = []
+    front
       $stdout.print to_s
     # handle Control C
     # TODO: Must actually terminate repl iteration, and skip to nextinput
@@ -54,15 +75,17 @@ class LineBuffer
       end
     # handle Control E
     when "\u0005"
-      @left = buffer
-      @right = []
+    eol
       $stdout.print to_s
     # handle Control L
     when "\f"
       $stdout.print to_s
+    # handle CR
     when "\r"
-      push("\n")
+      eol
+      push("\n") unless buffer.last == "\n"
       raise StopIteration
+    # handle backspace
     when "\u007f"
       drop = pop
       drop = 'space' if drop == ' '
@@ -74,20 +97,22 @@ class LineBuffer
   end
 end
 
-# TODO REMOVEME
-def handle_ch(buffer, ch)
-  # handle CR : translate to NL
-  if ch == "\r"
-    buffer << "\n"
-  # handle backspace
-  elsif ch == "\u007f"
-    drop = buffer[-1]
-    drop = 'space' if drop == ' '
-    buffer = buffer[0..-2]
-    $stdout.print "delete #{drop}"
-  else
-    buffer << ch
+
+# consume - consumes input
+# returns actual character or symbol for special charas
+# :left, :right, :up, :down
+def consume
+  ch = $stdin.getch
+  if ch == "\u001b"
+    sec = $stdin.getch
+    third = $stdin.getch
+    if sec == "\u005b" && third == "\u0044"
+      return :left
+    elsif sec == "\u005b" && third == "\u0043"
+      return :right
+    end
   end
+  return ch
 end
 
 # read - reads a line from stdin tty.
@@ -98,7 +123,7 @@ def read
   buffer =LineBuffer.new
   ch = ''
   loop do
-    ch = $stdin.getch
+    ch = consume
     buffer.dispatch(ch)
   end
   buffer.to_s

@@ -1,5 +1,15 @@
 # Notes
 
+## Notes about VM construction from YouTube channel: Jephthai
+
+Should the opcodes always return the next ByteCode pc to go to?
+Is this simpler?
+
+If actually was a real bytecode list of opcodes actually 1 byte in length,
+unused interies in the table could point to nop function which will just
+to next instruction.
+
+
 ## Change of filename extension : .vs, was .vsh
 
 Reason for change: Syntax differences between this version
