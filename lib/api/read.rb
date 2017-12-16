@@ -97,6 +97,18 @@ class LineBuffer
   end
 end
 
+class History
+  def initialize
+    @lines = [LineBuffer.new]
+  end
+  attr_accessor :lines
+  def dispatch(ch)
+    @lines.last.dispatch(ch)
+  end
+end
+
+
+
 
 # consume - consumes input
 # returns actual character or symbol for special charas
@@ -110,6 +122,12 @@ def consume
       return :left
     elsif sec == "\u005b" && third == "\u0043"
       return :right
+    elsif sec == "\u005b" && third == "\u0041"
+#      $stdin.getch
+      return :up
+    elsif sec == "\u005b" && third == "\u0042"
+#      $stdin.getch
+      return :down
     end
   end
   return ch
@@ -119,12 +137,11 @@ end
 # handles backspace, control chars, etc.
 # returns complete string input with trailing newline
 # Sample usage: read.chomp
-def read
-  buffer =LineBuffer.new
+def read(history=History.new)
   ch = ''
   loop do
     ch = consume
-    buffer.dispatch(ch)
+    history.dispatch(ch)
   end
-  buffer.to_s
+  history.lines.last.to_s
 end
