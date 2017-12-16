@@ -6,34 +6,37 @@ require 'io/console'
 # LineBuffer - handles storage of line contents, keyboard interaction
 class LineBuffer
   def initialize string=''
-    @buffer = string.chars
+    @left = string.chars
+    @right = []
   end
-  attr_accessor :buffer
+  def buffer
+    @left + @right
+  end
   def pop
-    @buffer.pop
+    @left.pop
   end
   def push(ch)
-    @buffer.push(ch)
+    @left.push(ch)
   end
   alias_method :<<, :push
   def to_s
-    @buffer.join
+    buffer.join
   end
   def length
-    @buffer.length
+    buffer.length
   end
 
   # dispach - handle input
   def dispatch(ch)
     case ch
     when "\r"
-      @buffer.push("\n")
+      push("\n")
     when "\u007f"
-      drop = @buffer.pop
+      drop = pop
       drop = 'space' if drop == ' '
       $stdout.print "delete #{drop}"
     else
-      @buffer.push(ch)
+      push(ch)
       $stdout.print ch
     end
   end
