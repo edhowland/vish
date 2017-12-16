@@ -3,6 +3,10 @@
 require 'io/console'
 
 
+def bell
+  $stdout.print 7.chr
+end
+
 # LineBuffer - handles storage of line contents, keyboard interaction
 class LineBuffer
   def initialize string=''
@@ -29,8 +33,36 @@ class LineBuffer
   # dispach - handle input
   def dispatch(ch)
     case ch
+    # handle Control A
+    when "\u0001"
+      @right = buffer
+      @left = []
+      $stdout.print to_s
+    # handle Control C
+    # TODO: Must actually terminate repl iteration, and skip to nextinput
+    when "\u0003"
+      @left.clear
+      @right.clear
+      raise StopIteration
+    # handle Control D
+    # TODO: This must do a EOF and return from REPL
+    when "\u0004"
+      if buffer.empty?
+        raise StopIteration
+      else
+        bell
+      end
+    # handle Control E
+    when "\u0005"
+      @left = buffer
+      @right = []
+      $stdout.print to_s
+    # handle Control L
+    when "\f"
+      $stdout.print to_s
     when "\r"
       push("\n")
+      raise StopIteration
     when "\u007f"
       drop = pop
       drop = 'space' if drop == ' '
@@ -65,7 +97,7 @@ end
 def read
   buffer =LineBuffer.new
   ch = ''
-  while ch != "\r"
+  loop do
     ch = $stdin.getch
     buffer.dispatch(ch)
   end
