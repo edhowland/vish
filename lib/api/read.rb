@@ -99,11 +99,29 @@ end
 
 class History
   def initialize
-    @lines = [LineBuffer.new]
+    @lines = []
   end
   attr_accessor :lines
+  def start
+    @lines << LineBuffer.new
+  end
   def dispatch(ch)
-    @lines.last.dispatch(ch)
+    case ch
+    when :up
+      @lines.rotate!(-1)
+      $stdout.print @lines.last.to_s
+    when :down
+      @lines.rotate!
+      $stdout.print @lines.last.to_s
+    else
+      @lines.last.dispatch(ch)
+    end
+  end
+  def show
+    @lines.map(&:to_s)
+  end
+  def length
+    @lines.length
   end
 end
 
@@ -139,6 +157,7 @@ end
 # Sample usage: read.chomp
 def read(history=History.new)
   ch = ''
+  history.start
   loop do
     ch = consume
     history.dispatch(ch)
