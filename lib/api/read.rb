@@ -35,9 +35,17 @@ class LineBuffer
     @left = []
   end
   def advance
+  if @right.empty?
+    bell
+    return
+  end
     @left.push(@right.shift)
   end
   def retreat
+  if @left.empty?
+    bell
+    return
+  end
     @right.unshift(@left.pop)
   end
   def eol
@@ -109,9 +117,13 @@ class History
     case ch
     when :up
       @lines.rotate!(-1)
+      @lines.last.eol
       $stdout.print @lines.last.to_s
+      @lines.last.retreat if @lines.last.buffer.last == "\n"
     when :down
       @lines.rotate!
+      @lines.last.eol
+      @lines.last.retreat if @lines.last.buffer.last == "\n"
       $stdout.print @lines.last.to_s
     else
       @lines.last.dispatch(ch)
