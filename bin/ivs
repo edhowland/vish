@@ -19,9 +19,11 @@ loop do
   rescue SigInt
   # nop
 rescue Parslet::ParseFailed => err
-#  rescue Parslet::ParsFailed => err
     puts "Syntax Error: #{err.message}"
-    puts err.class.name
+  rescue VishRuntimeError => err
+    puts "Runtime error: #{err.message}"
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
   end
 end
 
