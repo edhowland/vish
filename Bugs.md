@@ -43,7 +43,7 @@ In that case, the frames.peek.ctx wil be nil or undefined method call.
 
 The solution would to 
 
-- Completely refactor ctx.stack to internal to CodeInterperter and removed from Context.
+- Completely refactor ctx.stack to internal to CodeInterpreter and removed from Context.
 - or, search backword in fr.reverse.find {|f| f.kind_of? MainFrame }
 
 The latter is or should be temporary fix to the former solution!
@@ -64,13 +64,6 @@ Via the variable :blk.
 This shoul have a default action at runtime,
 or be checked by the compiler during  analysis phase.
 
-
-## BUG: Massively misspelled interpreter
-
-Should be 
-
-interpreter - Good
-interperter - Bad
 
 ## Bug: Should have actual Ruby objects in bytecodes, like LoopFrame objects
 

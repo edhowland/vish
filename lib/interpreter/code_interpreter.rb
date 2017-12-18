@@ -1,8 +1,8 @@
-# code_interperter.rb - class CodeInterperter - takes ByteCodes, Context and
+# code_interpreter.rb - class CodeInterpreter - takes ByteCodes, Context and
 # runs until bc.codes are exhausted.
 
-class CodeInterperter
-  # new: initializes the CodeInterperter object
+class CodeInterpreter
+  # new: initializes the CodeInterpreter object
   # Parameters:
   # bc - ByteCodes object to execute
   # ctx - Context object
@@ -69,7 +69,7 @@ class CodeInterperter
   # Parameters:
   # + instruction: The lambda to run
   def execute instruction
-    instruction.call(self.bc, self.ctx, self.frames)
+    instruction.call(self.bc, self.ctx, self.frames, self)
   end
 
 

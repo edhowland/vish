@@ -1,13 +1,13 @@
-# test_code_interperter.rb - class TestCodeInterperter < BaseSpike
+# test_code_interpreter.rb - class TestCodeInterpreter < BaseSpike
 
 require_relative 'test_helper'
 
-class TestCodeInterperter < BaseSpike
+class TestCodeInterpreter < BaseSpike
   def set_up
     @bc = ByteCodes.new
     @ctx = Context.new
     @result = nil
-    @ci = CodeInterperter.new(@bc, @ctx)
+    @ci = CodeInterpreter.new(@bc, @ctx)
   end
 
   def test_decode_raises_opcode_error_when_given_gibberish

@@ -15,7 +15,7 @@ end
 class BlockFrame < Frame
 end
 
-# The MainFrame which sits at bottom of CodeInterperter.frames
+# The MainFrame which sits at bottom of CodeInterpreter.frames
 class MainFrame < Frame
   def initialize ctx
     @ctx = ctx

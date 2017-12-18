@@ -1,5 +1,5 @@
 # load_codes.rb - method load_codes filename - reads JSON from file, returns
-# bc, ctx = ByteCodes, Context. Suitable for input to CodeInterperter
+# bc, ctx = ByteCodes, Context. Suitable for input to CodeInterpreter
 
 
 require_relative '../lib/vish'

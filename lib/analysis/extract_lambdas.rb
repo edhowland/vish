@@ -16,8 +16,5 @@ def extract_lambdas(ast)
    p[0] << mknode(LambdaName.new(ltype))
   end
 
-#  lambdas.each do |l|
-#    l.first_child.content.value = l.name
-#  end
   lambdas
 end

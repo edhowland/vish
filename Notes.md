@@ -1,5 +1,15 @@
 # Notes
 
+## Notes about VM construction from YouTube channel: Jephthai
+
+Should the opcodes always return the next ByteCode pc to go to?
+Is this simpler?
+
+If actually was a real bytecode list of opcodes actually 1 byte in length,
+unused interies in the table could point to nop function which will just
+to next instruction.
+
+
 ## Change of filename extension : .vs, was .vsh
 
 Reason for change: Syntax differences between this version
@@ -105,6 +115,39 @@ Walk through bc.codes, replacing :fcall, 'xxxx' with :fcall, 90, ...
 
 ## Closures
 
+### How Ruby scopes them:
+
+```
+def f(x)
+  def g(y)
+    ->() { y + 2 }
+  end
+  g(x + 2)
+end
+z = f(1)
+# => Proc ...
+z.call
+# => 5 ... 3 + 2
+```
+
+Now lets look at function boundaries
+
+```
+def f(x)
+  def()
+    ->() { x + 2 }
+  end
+  g()
+end
+z = f(1)
+# => Proc
+z.call
+# Get unreference error on unknown x
+```
+
+This implies that the dereference is broken at run time.
+In the working example above, the 'y' variable is captured in the closure object
+when it was run: g(x + 2)
 Once lambdas have been discovered, before they are extracted,
 Locate any unbound variables within.
 Exclude any local variable assignments, and parameters:

@@ -9,7 +9,7 @@ class InterruptInterpreter < RuntimeError
   attr_reader :action
 end
 
-# Is raised in the case of CodeInterperter encountering an :int, :_name... opcode
+# Is raised in the case of CodeInterpreter encountering an :int, :_name... opcode
 class InterruptCalled < InterruptInterpreter
   def initialize name
     @name = name

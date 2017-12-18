@@ -97,6 +97,13 @@ ci = mkci bc, ctx
 end
 ```
 
+
+### REPL: Handle control characters
+
+Using lib/api/read.rb
+There is an internal loop in read(history)
+Control c, d output StopIteration
+Need to exit of inner loop, and for ctrl-d, out of outer loop and the ivs REPL itself
 ### REPL should consume any parser syntax exceptions and just say "Syntax Error"
 Giving the line, col numbers and the Parslet message top line
 

@@ -32,7 +32,7 @@ require_relative 'analysis'
 
 # code emission stuff 
 
-# bytecode interperter stuff
-require_relative 'interperter'
+# bytecode interpreter stuff
+require_relative 'interpreter'
 require_relative 'evaluation'
 
