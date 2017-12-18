@@ -158,6 +158,30 @@ $
 $ # back in your shell.
 ```
 
+The ivs REPL allows for line editing similar to the pry interactive Ruby shell.
+It has  a command buffer history.
+
+Left/right arrows can be used to move the cursor.
+Control A/Control E can be used to move to front/end of line.
+Up/Down arrows move to previous/next lines int the command buffer history.
+Control -C/Control D work as expected.
+
+Any illegal commands will beep the bell.
+
+
+
+### The 'read()' builtin function
+
+Read uses the
+line editor but does not have any history.
+
+
+### Caveats with the REPL
+
+Ivs does not allow for forward function references. You can define 2 functions
+that refer to each other, but if foo() calls bar(), but 
+defines bar() after foo(), and you call foo(),
+you will get a UnknownFunction runtime error.
 
 If you cannot determi where you went wrong, and need help: Please
 enter an issue on the Github issue tracker for the repository.
