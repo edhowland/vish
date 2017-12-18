@@ -12,8 +12,9 @@ module Builtins
     args[0]
   end
 
-  def self.except(*args)
-    raise (args[0] || 'Unknown exception')
+  # throw VishRuntimeError with message or default
+  def self.throw(*args)
+    raise (VishRuntimeError.new(args[0]) || VishRuntimeError.new('Unknown exception'))
   end
 
   def self.read(*args)
