@@ -8,13 +8,23 @@ require_relative '../lib/vish'
 
 
 eval = Evaluator.new
+history = History.new
+begin
 loop do
   begin
     print 'vish> '
-    source = gets.chomp
+    source = read(history).chomp
     break if source =~ /break|exit|quit/#
     p eval.eval source
-  rescue => err
+  rescue SigInt
+  # nop
+rescue Parslet::ParseFailed => err
+#  rescue Parslet::ParsFailed => err
     puts "Syntax Error: #{err.message}"
+    puts err.class.name
   end
+end
+
+rescue EndOfFile
+  # nop
 end

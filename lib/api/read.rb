@@ -1,7 +1,27 @@
 # read.rb - read a line of input in raw mode
+# Handle everything, including control chars.
+# Control A - Move to beginning of line
+# Control - C Clear line and raise SigInt exception
+# Control D - Raise EOF if line is empty, else beep bell
+# Control E - Move to end of line
+# Control L - echo contents of line
+#
+# Cursor movement
+# Maintains line history if passed in extermal History instance.
+# Otherwise, only a single line is edited.
+# Left - Moves the cursor one character to the left.
+# Right - Moves the cursor one character to right 
+# The above actions will beep if the end of their respective detants.
+# History
+# Up - Moves one line back in the history.
+# Down - Moves one line forward in the history.
+# The above actions will rotate the history buffer if reached some detent.
+# TODO: Provide a way to save and restore history.
 
 require 'io/console'
 
+class SigInt < RuntimeError; end
+class EndOfFile < RuntimeError; end
 
 def bell
   $stdout.print 7.chr
@@ -72,12 +92,11 @@ class LineBuffer
     when "\u0003"
       @left.clear
       @right.clear
-      raise StopIteration
+      raise SigInt
     # handle Control D
-    # TODO: This must do a EOF and return from REPL
     when "\u0004"
       if buffer.empty?
-        raise StopIteration
+        raise EndOfFile
       else
         bell
       end
