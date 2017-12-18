@@ -1,4 +1,4 @@
-# read.rb - read a line of input in raw mode
+# readline.rb - read a line of input in raw mode
 # Handle everything, including control chars.
 # Control A - Move to beginning of line
 # Control - C Clear line and raise SigInt exception
@@ -124,6 +124,11 @@ class LineBuffer
   end
 end
 
+# TODO: Should not really rotate the @lines buffers.
+# There should be some kind of position. Do a Bell when reached of list at eithere end
+# History - maintian list of LineBuffer s.
+# Handle up/down arrows
+# otherwise pass delegation through to current LineBuffer.
 class History
   def initialize
     @lines = []
@@ -186,7 +191,7 @@ end
 # handles backspace, control chars, etc.
 # returns complete string input with trailing newline
 # Sample usage: read.chomp
-def read(history=History.new)
+def readline(history=History.new)
   ch = ''
   history.start
   loop do

@@ -17,7 +17,7 @@ module Builtins
   end
 
   def self.read(*args)
-    gets.chomp
+    readline.chomp
   end
 
   # readi - reads and returns integer

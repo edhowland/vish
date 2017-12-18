@@ -13,7 +13,7 @@ begin
 loop do
   begin
     print 'vish> '
-    source = read(history).chomp
+    source = readline(history).chomp
     break if source =~ /break|exit|quit/#
     p eval.eval source
   rescue SigInt
