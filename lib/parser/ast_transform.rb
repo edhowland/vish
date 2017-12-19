@@ -7,7 +7,7 @@ class AstTransform < Parslet::Transform
   # debugging
 
   # handle the empty input case
-  rule(empty: simple(:empty)) { :ignore }    # Nop.new 
+  rule(empty: simple(:empty)) { Ignore.new }
 
   rule(int: simple(:int)) { Numeral.new(int) }
   rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }

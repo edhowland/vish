@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-# vasm.rb - assembles .vasm files into .vshc bytecode files
+# vasm.rb - assembles .vasm files into .vsc bytecode files
 
 require_relative '../lib/vish'
 
@@ -24,6 +24,7 @@ parser = VasmGrammar.new
 
 
 input = File.read(fin)
+exit_status = 1
 begin
   ir =  parser.parse(input)
   tr = VasmTransform.new
@@ -48,6 +49,7 @@ begin
     puts "Hmmm. We assembled your code into #{fout}, but we noticed some unconnected labels. Here they are"
     labels.select(&:unconnected?).each {|l| puts l.inspect }
   end
+  exit_status = 0
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree  
 rescue => err
@@ -55,3 +57,6 @@ rescue => err
   # normally comment this out
 #  puts err.backtrace
 end
+
+
+exit(exit_status)

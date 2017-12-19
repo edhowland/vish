@@ -6,7 +6,9 @@ echo('hello', 'world')
 ```
 
 
-  def self.except(*args)
+  def self.throw(*args)
+
+Throws VishRuntimeError with message or default message.
 
   def self.read(*args)
 
