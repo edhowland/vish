@@ -13,16 +13,21 @@ fin = File.open(fin, 'r')
 source = fin.read
 fin.close
 
+exit_status = 1
 begin
   compiler = VishCompiler.new source
   compiler.run
 
-# now write it out to file.vshc
+  # now write it out to file.vshc
 io = File.open(fout, 'w')
-store_codes(compiler.bc, compiler.ctx, io)
+  store_codes(compiler.bc, compiler.ctx, io)
+  exit_status = 0
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree
 rescue => err
   puts err.class.name
   puts err.message
   end
+
+
+exit(exit_status)
