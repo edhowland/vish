@@ -183,6 +183,13 @@ that refer to each other, but if foo() calls bar(), but
 defines bar() after foo(), and you call foo(),
 you will get a UnknownFunction runtime error.
 
+### Notes regarding screen reader users and visual users of the REPL
+
+The 'ivs' REPL will explicitly emit 'delete c' when the backspace is
+entered. Future versions will make this a a config option.
+
+## Debugging
+
 If you cannot determi where you went wrong, and need help: Please
 enter an issue on the Github issue tracker for the repository.
 [Vish issue tracker](https://github.com/edhowland/vish/issues)
