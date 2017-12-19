@@ -3,16 +3,18 @@
 require 'rake/clean'
 CLEAN.include('*.vsc')
 
-FileList['*.vs'].each do |src|
-  file "#{src}c" => src
+src_files = FileList['*.vs']
+
+src_files.each do |src|
+  file src.ext('vsc') => src
 end
 
 rule /.*\.vsc/ => '.vs' do |t|
   sh "./vishc.rb #{t.source} #{t.name}"
 end
 
-src_files = FileList['*.vs']
 
-task :default => src_files.ext('vsc') do
-  puts 'compiled .vs into .vsc'
-end
+desc 'compile : compiles .vs files into .vsc files'
+task :compile => src_files.ext('vsc')
+
+task :default => :compile
