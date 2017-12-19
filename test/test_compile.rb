@@ -154,7 +154,7 @@ class TestCompile < BaseSpike
   def test_just_whitspace_can_compile
     bc, ctx = compile '         ' # many spaces
   end
-  def test_empty_returns_only_program_start_finish_in_ast
+  def test_empty_returns_only_program_start_and_ignore_and_then_finish_in_ast
     ir = @parser.parse ''
     ast = @transform.apply ir
     assert_eq ast.length, 2
