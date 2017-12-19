@@ -11,10 +11,8 @@ rule /.*\.vsc/ => '.vs' do |t|
   sh "./vishc.rb #{t.source} #{t.name}"
 end
 
-#file 'add.vsc' => 'add.vs' do |t|
-#  sh "./vishc.rb #{t.prerequisites[0]} #{t.name}"   # .prerequisites}"
-#end
+src_files = FileList['*.vs']
 
-task :default => 'add.vsc' do
+task :default => src_files.ext('vsc') do
   puts 'compiled .vs into .vsc'
 end
