@@ -26,3 +26,6 @@ alias grep.binding='git grep binding.pry'
 alias ivs='./bin/ivs'
 alias vishc='./compiler/vishc.rb'
 alias vsr='./runtime/vre.rb'
+filepart() {
+  echo ${1%.*}
+}
