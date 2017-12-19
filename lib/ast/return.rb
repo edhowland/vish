@@ -25,7 +25,7 @@ end
 class FunctionReturn < Return
   def emit(bc, ctx)
     bc.codes << :unwind
-    bc.codes << FunctionFrame.new
-    bc.codes << :bret  # TODO: Change this to really deactivate FunctionFrame at top of ctx.call_stack
+    bc.codes << FunctionFrame.new(Context.new)
+    bc.codes << :fret  # TODO: Change this to really deactivate FunctionFrame at top of ctx.call_stack
   end
 end

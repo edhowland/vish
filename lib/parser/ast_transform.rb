@@ -1,4 +1,5 @@
 # ast_transform.rb - class AstTransform <  Parslet::Transform
+Dummy='dummy'
 
 #require_relative 'vish'
 
@@ -6,7 +7,7 @@ class AstTransform < Parslet::Transform
   # debugging
 
   # handle the empty input case
-  rule(empty: simple(:empty)) { :ignore }    # Nop.new 
+  rule(empty: simple(:empty)) { Ignore.new }
 
   rule(int: simple(:int)) { Numeral.new(int) }
   rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
@@ -20,7 +21,10 @@ class AstTransform < Parslet::Transform
 
   # arithmetic expressions
   rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
+  # Assignment
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
+
   rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
 
   # dereference a variable
@@ -42,13 +46,26 @@ class AstTransform < Parslet::Transform
 
   rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
   rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
+
+  # lambdas
+  rule(parm: simple(:parm)) { StringLiteral.new(parm) }
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree([parmlist], _lambda) }
+  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
+
+  # Functions
+  rule(fname: simple(:fname), parmlist: simple(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, [parmlist]) } 
+  rule(fname: simple(:fname), parmlist: sequence(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, parmlist) } 
+
+
+  # Function calls, Lambda calls, etc.
   rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 
-  rule(and_left: simple(:left), and_right: simple(:right)) { BranchResolver.new(BranchIfFalse).subtree(left, right) }
-  rule(and_left: simple(:left), and_right: sequence(:right))  { BranchResolver.new(BranchIfFalse).subtree(left, Block.subtree(right)) }
-  rule(or_left: simple(:left), or_right: simple(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, right) }
-  rule(or_left: simple(:left), or_right: sequence(:right)) { BranchResolver.new(BranchIfTrue).subtree(left, Block.subtree(right)) } 
+  # Lambda call
+  rule(lambda_call: simple(:lambda_call), arglist: simple(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
+  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
+
+  # The root of the IR
   rule(program: simple(:program)) { ProgramFactory.tree(program) }
   rule(program: sequence(:program)) { ProgramFactory.tree(*program) }
 end

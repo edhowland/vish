@@ -1,0 +1,21 @@
+# Rakefile - assemble .vasm files into .vsc files
+
+require 'rake/clean'
+CLEAN.include('*.vsc')
+
+src_files = FileList['*.vasm']
+
+src_files.each do |f|
+  file f.ext('vsc') => f
+end
+
+
+rule /.*\.vsc/ => '.vasm' do |t|
+  sh "./vasm.rb #{t.source} #{t.name}"
+end
+
+
+desc 'assemble : assembles all .vasm files into .vsc files'
+task :assemble => src_files.ext('vsc')
+
+task :default => :assemble

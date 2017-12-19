@@ -13,9 +13,10 @@ module CompileHelper
   def compile string
   @compiler = VishCompiler.new string
   @compiler.run
+  return @compiler.bc, @compiler.ctx
   end
   def mkci bc, ctx
-    CodeInterperter.new(bc, ctx)
+    CodeInterpreter.new(bc, ctx)
   end
   def interpertit string
     bc, ctx = compile string
@@ -33,6 +34,6 @@ module InterpreterHelper
         @bc = ByteCodes.new
     @ctx = Context.new
     @result = nil
-    @ci = CodeInterperter.new @bc, @ctx
+    @ci = CodeInterpreter.new @bc, @ctx
   end
 end

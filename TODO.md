@@ -15,6 +15,13 @@ CompileError: :name is not set yet
 
 do this in VishCompiler.analyze phase
 
+### Support for evntual closure stuff.
+
+In the analyze phase, the AST can find unbound variables in subtree nodes.. If any exist in
+lambdas, it can mark them for special runtime dereferences.
+
+any other variables will be reported by the compiler.
+
 ## Completions
 
 
@@ -28,7 +35,6 @@ Add the following keywords:
 
 Add the following builtins
 
-- throw - raises RuntimeError - For now
 
 Later, we will have to handle exceptions ourselves.
 
@@ -90,31 +96,7 @@ ci = mkci bc, ctx
 end
 ```
 
-### REPL should consume any parser syntax exceptions and just say "Syntax Error"
-Giving the line, col numbers and the Parslet message top line
 
-
-## Additions:
-
-Add in the thor gem from Yehuda. This
-will provide a nice wrapper around various things you can do here
-
-- asm : assemble bytecode
-- dis : disassembly of bytecode
--  parse : parse a string, checking for expected output
-- transfrom : transform a Parslet IR Hash into AST
-- walk - Walk the compiled AST
-- compile : full compile into bytecode
-- gen : generate assembly for bytecode
-- emit : Walks the AST emitting bytecode
-- interpret : load a bytecode from stdin or file and run it
-
-Eventually funcall in Mini class to change from puts(1,2) to 'puts 1 2'make ast_transform.rb in
-
-
-## Use of the highline Class is HighLine
-
-This gem might not be all that useful.
 ### Add -j, --generate-ast to compiler/vishc.rb as options
 
 The idea is to save the AST as JSON.

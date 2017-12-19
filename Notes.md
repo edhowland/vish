@@ -1,5 +1,179 @@
 # Notes
 
+## Notes about VM construction from YouTube channel: Jephthai
+
+Should the opcodes always return the next ByteCode pc to go to?
+Is this simpler?
+
+If actually was a real bytecode list of opcodes actually 1 byte in length,
+unused interies in the table could point to nop function which will just
+to next instruction.
+
+
+## Change of filename extension : .vs, was .vsh
+
+Reason for change: Syntax differences between this version
+of Vish rather Vish version 2.x. The later has .vsh file extensions
+
+- .vs - source for Vis v3.x code
+- .vsc - Compiled .vs code
+- bin/ivs - Interactive Vish REPL shell
+- vish - Compiles and runs .vs code
+- vishc - compiles .vs code into .vsc bytecode
+- vsr - Loads and runs .vsc code
+- .vasm - Assembly code for .vsc code
+- vasm - Assembles .vasm code into .vsc code for vsr runtime
+- vdis - Disassemblies .vsc into .vasm code for inspection and fixup
+- .vson - JSON output of AST capture
+
+The latter extension can be used with either vishc compiler or ivs interactive shell.
+
+```
+$ vishc -c file.vs
+# Will compile only to file.vson
+
+$ vishc -o file.vsc -l lib1.vson -l lib2.vson file.vs
+# Will compile file.vs, linking lib1.vson, lib2.vson into final output: file.vsc
+```
+
+## Possible fix to repl.rb
+
+Munging source with previous code blocks, lambdas and functions is too 
+wacky. Not sure if all the target locations can be safely found in output.
+
+Better way might to just maintain a very large source string and just
+recompile it every time
+
+Tricky part is to do a semicolon append to every entered string.
+
+Alternatively, parse and transform upto the AST and just merge the ASTs before 
+doing analysis and code generation
+
+# Will 
+
+### Notes on linking up multiple source code blocks
+
+Several .vsc code blocks can be loaded together
+into a single application.
+Great for code libraries, code modules, .etc.
+
+
+
+## User defined functions
+
+
+### Implementation
+
+```
+defn foo(a, b) { :a + :b }
+defn bar(n) { foo(:n, 2) + 3 }
+bar(9)
+```
+
+
+In analyze: use reduce({}) on list of UserFunction selected.
+The resulting hash should store the key,value pair as the name of the function
+and the node name (its location).
+
+
+```
+@functions[:foo] = 'UserFunction_22'
+```
+
+#### Step 2: Change Funcall s to UserFuncall s
+
+select from ast where the content type is Funcall
+If Funcall.value in @functions
+then
+  Replace with UserFuncall with reference to UserFunction object
+
+#### Step 3 : Extract all the UserFunction bodies.
+
+?? Do we have to replace them with Nop's?
+
+Note: We must memoize the actual FunCalls which actually refer to functions.
+These can be removed before bytecode emission.
+Sort of a mark & sweep algorythm.
+
+#### Step n ??? ByteCode layout:
+
+For UserFuncall emission, the name of the AST node should be laid down 
+after the :fcall opcode. I.e. UserFunction_22:
+
+```
+[:cls, :fcall, 'UserFunction_22, :halt] # ... more bytecodes
+```
+
+#### Step (Penultimate)
+
+After laying out the @function_bodies, their locations will have been stored 
+in their UserFunction instances.
+
+Walk through bc.codes, replacing :fcall, 'xxxx' with :fcall, 90, ...
+
+##### ??? Will this work with recursive application
+
+## Closures
+
+### How Ruby scopes them:
+
+```
+def f(x)
+  def g(y)
+    ->() { y + 2 }
+  end
+  g(x + 2)
+end
+z = f(1)
+# => Proc ...
+z.call
+# => 5 ... 3 + 2
+```
+
+Now lets look at function boundaries
+
+```
+def f(x)
+  def()
+    ->() { x + 2 }
+  end
+  g()
+end
+z = f(1)
+# => Proc
+z.call
+# Get unreference error on unknown x
+```
+
+This implies that the dereference is broken at run time.
+In the working example above, the 'y' variable is captured in the closure object
+when it was run: g(x + 2)
+Once lambdas have been discovered, before they are extracted,
+Locate any unbound variables within.
+Exclude any local variable assignments, and parameters:
+
+```
+ff=->(a) { c=99; :a + :b + :c }
+# In the above definition, :b is unbound
+# :a is a parameter
+# :c is a local variable
+```
+
+In the AST, the Lambda node has StringLiterals inside the LambdaEntry node.
+The local variables are defined in the Block node. Look for any assignments.
+
+??? Should we Hoist any variables to the top of the function?
+Probably not.
+
+Given any unbound variables at this step, search ancestor list for any matching
+assign blocks with first_child a StringLiteral matchin this name of unbound var.
+
+Only upto and inclusive of a Function body. (Not implemented yet)
+Or if the lambda is defined  outside of a function body,
+Then all the way up to the top level.
+
+Replace any Deref blocks with Closure blocks!
+
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.

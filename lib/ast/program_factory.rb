@@ -3,7 +3,7 @@
 class ProgramFactory
   def self.tree(*args)
       pgm = mknode(Start.new, 'program')
-  args.reject {|a| a == :ignore }.each do |a|
+  args.reject {|a| a.class == Ignore }.each do |a|
     # Add this node before every statement. Start with a clean/clear stack
     pgm << mknode(ClearStack.new)
     if !a.instance_of? Tree::TreeNode

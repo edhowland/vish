@@ -1,6 +1,9 @@
+# ast.rb - requires for ast/
+
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 
+require_relative 'ast/ignore'
 require_relative 'ast/clear_stack'
 require_relative 'ast/exit'
 require_relative 'ast/break'
@@ -54,13 +57,27 @@ require_relative 'ast/boolean'
 require_relative 'ast/program_factory'
 require_relative 'ast/start'
 require_relative 'ast/functor_node'
+
+# Branch stuff
 require_relative 'ast/branch_source'
-require_relative 'ast/branch_if_false'
-require_relative 'ast/branch_if_true'
 require_relative 'ast/branch_target'
-require_relative 'ast/branch_resolver'
+
 # Loop stuff
 require_relative 'ast/return'
 require_relative 'ast/loop_entry'
 require_relative 'ast/loop_exit'
 require_relative 'ast/loop'
+
+# Lambda stuff
+require_relative 'ast/lambda_name'
+require_relative 'ast/lambda_entry'
+require_relative 'ast/lambda_exit'
+require_relative 'ast/lambda'
+require_relative 'ast/lambda_call'
+require_relative 'ast/function_call'
+require_relative 'ast/function_entry'
+require_relative 'ast/function_exit'
+require_relative 'ast/function'
+require_relative 'ast/logical_or'
+require_relative 'ast/logical_and'
+require_relative 'ast/pipe'

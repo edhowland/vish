@@ -10,7 +10,7 @@ require_relative 'pry/lib'
 
 
 def go
-  CodeInterperter.new(*compile(''))
+  CodeInterpreter.new(*compile(''))
 end
 def dump_vars ci
   ci.ctx.vars
@@ -90,7 +90,7 @@ def mk_ast string
 end
 
 # misty: play misty for me: runs one step
-# + ci : The CodeInterperter
+# + ci : The CodeInterpreter
 def misty ci, &blk
   print 'stack: '; p ci.ctx.stack
   puts 'vars: '; p ci.ctx.vars
@@ -99,12 +99,12 @@ def misty ci, &blk
   ci.step
 end
 
-# cifrom - makes a CodeInterperter from a VishCompiler object
+# cifrom - makes a CodeInterpreter from a VishCompiler object
 # Parameters:
 # compiler : VishCompiler
-# Retrurns CodeInterperter
+# Retrurns CodeInterpreter
 def cifrom(compiler)
-  CodeInterperter.new(compiler.bc, compiler.ctx)
+  CodeInterpreter.new(compiler.bc, compiler.ctx)
 end
 
 # mkci : Makes a new ci from bc, ctx
@@ -112,7 +112,7 @@ end
 # + bc: ByteCodes
 # + ctx : Context
 def mkci bc, ctx
-  CodeInterperter.new bc, ctx
+  CodeInterpreter.new bc, ctx
 end
 
 
@@ -143,4 +143,36 @@ end
 def inter source
   c = compile source
   cifrom c
+end
+def mk_lcall
+  [:cls, :pushl, 0, :pushv, :bk, :lcall, :halt]
+end
+
+def mk_lambda(ctx, name, target, lname=:Lambda_3)
+  ctx.vars[name.to_sym] = lname.to_sym
+  ctx.vars[lname.to_sym] = target
+end
+
+
+# gparse - does block within rescue block to capture Parslet errors
+def gparse &blk
+  begin
+    yield
+  rescue Parslet::ParseFailed => failure
+    puts failure.parse_failure_cause.ascii_tree
+  end
+end
+#  get_statements gets actual statements from AST root. Removes them.
+# Parameters
+# ast - The AST to work on
+# count, the number of statements to extract
+def get_statement(ast, count=1)
+  result = []
+  n = -1
+  iters = Array.new(count) {|e| n += 2 }
+  iters.each do |i|
+    result << ast.children[i]
+  end
+  result.each {|n| n.remove_from_parent! }
+  result
 end

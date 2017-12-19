@@ -15,7 +15,7 @@ class VishParser < Parslet::Parser
   # This is Whitespace, not a single space; does not include newlines. See that rule
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
-  rule(:space_plus) { space >> space? }
+  rule(:space!) { space >> space? }
 
 
   # single character rules
@@ -50,11 +50,11 @@ class VishParser < Parslet::Parser
   # keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
-  rule(:_return) { (str('return') >> space_plus >> expr).as(:return) }
+  rule(:_return) { (str('return') >> space! >> expr).as(:return) }
   rule(:keyword) { (_break| _exit | _return).as(:keyword) }
 
   # Control flow
-  rule(:loop) { str('loop') >> space_plus >> block.as(:loop) }
+  rule(:loop) { str('loop') >> space! >> block.as(:loop) }
   rule(:ampersand) { str('&') }
   rule(:pipe) { str('|') }
   rule(:logical_and) { ampersand >> ampersand >> space? }
@@ -127,7 +127,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | deref_block | block_exec | funcall }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | lambda_call | deref_block | block_exec | funcall }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
@@ -136,28 +136,44 @@ class VishParser < Parslet::Parser
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
   rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
 
-  # Function calls TODO: change to fn arg1 arg2 arg3 ... argn
+  # lambda declaration: ->(x, y) { :x + :y }
+  rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }
+  rule(:parmlist) { parm_atoms | space? }
+  rule(:_lambda) { str('->') >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:_lambda) }
+
+  # User defined functions: with 'defn' keyword
+  rule(:function) { str('defn') >> space? >> identifier.as(:fname) >> lparen >> parmlist.as(:parmlist) >> rparen >> space? >> block.as(:block) }
+  # Function calls 
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }
+  rule(:lambda_call) { str('%') >> identifier.as(:lambda_call) >> lparen >> arglist.as(:arglist) >> rparen }
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | funcall | negation | infix_oper | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (keyword | loop | block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
+
+
+  # pipe expressions: E.g. 99 | cat() | echo() # => "99\n"
+  rule(:infix_pipe) { infix_expression(statement,
+    [logical_and, 2, :left], [logical_or, 2, :left],
+   [pipe, 1, :left]) }
+
+  # Older pipe stuff
+#   rule(:pipe_expression) { statement.as(:lexpr) >> pipe.as(:pipe) >> statement.as(:rexpr) }
+#  rule(:pipe_or_statement) { pipe_expression | statement }
+#   rule(:pipe_list) { pipe_or_statement >> (pipe >> pipe_or_statement).repeat }
+
   rule(:delim) { newline | semicolon | comment }
-  rule(:conditional_or_statement) { (conditional_and | conditional_or) | block | statement }
-  rule(:statement_list) { conditional_or_statement >> (delim >> conditional_or_statement).repeat }
+  rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }
   rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
-  # conditional flow
-  rule(:conditional_and) { statement.as(:and_left) >> logical_and >> conditional_or_statement.as(:and_right) } # was: statement
-  rule(:conditional_or) { statement.as(:or_left) >> logical_or >> conditional_or_statement.as(:or_right) }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }

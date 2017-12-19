@@ -7,17 +7,17 @@ class TestParser < BaseSpike
     @parser, @transform = parser_transformer
   end
   def test_can_parse_one_space
-    @parser.space_plus.parse ' '
+    @parser.space!.parse ' '
   end
   def test_can_parse_2_spaces
-    @parser.space_plus.parse '  '
+    @parser.space!.parse '  '
   end
   def test_can_parse_more_than_2_spaces
-    @parser.space_plus.parse ' ' * 8
+    @parser.space!.parse ' ' * 8
   end
   def test_does_not_parse_less_than_1_space
       assert_raises Parslet::ParseFailed do
-      @parser.space_plus.parse ''
+      @parser.space!.parse ''
     end
   end
 end
