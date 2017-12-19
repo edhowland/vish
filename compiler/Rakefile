@@ -1,4 +1,8 @@
 # Rakefile - rakefile for Vish compiler/ example.vs files
+
+require 'rake/clean'
+CLEAN.include('*.vsc')
+
 FileList['*.vs'].each do |src|
   file "#{src}c" => src
 end
@@ -13,10 +17,4 @@ end
 
 task :default => 'add.vsc' do
   puts 'compiled .vs into .vsc'
-end
-
-task :clean do
-  FileList['*.vsc'].each do |f|
-    rm f
-  end
 end
