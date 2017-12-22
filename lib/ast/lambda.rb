@@ -22,6 +22,11 @@ class Lambda < NonTerminal
     vars = select_class(_body, Deref)
     vars.reject! {|v| argsyms.member? v.content.value.to_sym }
     # TODO: MUST: find any locals instantiated herein. Not just parameters
+    # Locate any assignments
+    assigns = select_class(body, Assign)
+    assigns.map!(&:first_child)
+    assigns.map! {|a| a.content.value.to_sym }
+    vars.reject! {|v| assigns.member?(v.content.value.to_sym) }
     # create tuples of the StoreClosure and original Deref
     closures = vars.map {|v| scl = StoreClosure.new(Closure.create_id); scl.value = v.content.value.to_sym; [v, scl] }
     closures.each {|v,scl| v.content = DerefClosure.new(scl.closure_id) }

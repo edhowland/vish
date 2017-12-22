@@ -24,9 +24,15 @@ class TestClosure < BaseSpike
   end
 
   # test for actual unbound variables that do not have matching closures
-  def test_unbound_variables_raise_undefined_variable_error
-    assert_raises UndefinedVariable do
-      interpertit 'fn=->() { :p }; %fn()'
-    end
+#  def test_unbound_variables_raise_undefined_variable_error
+#    assert_raises UndefinedVariable do
+#      interpertit 'fn=->() { :p }; %fn()'
+#    end
+#  end
+
+  # test mix of closures, parameters and local variables
+  def test_mix_of_closures_locals_and_parameters
+    result = interpertit 'y=10;fn=->(x) { z=4; :x * :y + :z };%fn(3)'
+    assert_eq result, 34
   end
 end
