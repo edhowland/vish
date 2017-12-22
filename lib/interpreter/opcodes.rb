@@ -38,8 +38,14 @@ def opcodes tmpreg=nil
     _pushcl: 'Pushes value of Closure stored on heap with opearand: id on to top of stack',
     # TODO: MUST implement error handling here
     pushcl: ->(bc, ctx, fr, intp) {
+      vname = bc.next
       fp = ctx.vars[:_frame_ptr]
-    ctx.stack.push(intp.heap[fp][bc.next].value)
+      hp = intp.heap[fp]
+      raise UndefinedVariable.new(vname) if hp.nil?
+      value = hp[vname]
+            raise UndefinedVariable.new(vname) if value.nil?
+
+    ctx.stack.push(value.value)
     },
 
     _loadt: 'Loads top of stack into tmpreg (temporary register).',

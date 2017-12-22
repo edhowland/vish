@@ -3,8 +3,9 @@
 class Evaluator
   def initialize
     @compiler = VishCompiler.new
+    @saved_heap = {}
   end
-  attr_reader :compiler
+  attr_reader :compiler, :saved_heap
   def eval(string)
     compiler = VishCompiler.new string
     compiler.parse
@@ -12,6 +13,7 @@ class Evaluator
     compiler.analyze functions:@compiler.functions, blocks:@compiler.blocks, lambdas:@compiler.lambdas
     start = compiler.generate ctx:@compiler.ctx, bcodes:@compiler.bc
     interpreter = CodeInterpreter.new(compiler.bc, compiler.ctx)
+    interpreter.heap = @saved_heap
     @compiler = compiler
     interpreter.run(start)
   end

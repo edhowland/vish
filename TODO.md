@@ -1,5 +1,24 @@
 # TODO
 
+## Pipelines can be used with parameterized placement in arg list
+
+Like in JavaScript ES8, use of the ? parameter to place the top of 
+the stack in positional placement:
+
+```
+# Normal pipeline
+defn foo(x, y) { :y * :x }
+4 | foo(2)
+# => 8
+defn bar(x, y, z) { :x * :y + :z }
+10 | bar(3, ?, 4)
+# => 34
+```
+
+
+## Closures must not be created for local variables within lambda body
+
+
 ## Ensure:
 
 ### break cannot be called within function body
@@ -48,9 +67,9 @@ in my_func
 ok
 
 # in my_func()
-function my_func(blk) {
-  echo('in my_func')
-%bl}
+defn my_func(blk) {
+  print('in my_func')
+%blk}
 ```
 
 The variable block is dereferenced in the funcall: 

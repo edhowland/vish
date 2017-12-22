@@ -18,4 +18,15 @@ class TestClosure < BaseSpike
     result = interpertit 'defn bar(f) { ->() { :f + 1 } };add1=bar(9);add2=bar(4);%add1() * %add2()'
     assert_eq result, 50
   end
+  def test_internal_lambda_vars_are_not_unbound
+    result = interpertit 'lm=->() { y=10; :y };%lm()'
+    assert_eq result, 10
+  end
+
+  # test for actual unbound variables that do not have matching closures
+  def test_unbound_variables_raise_undefined_variable_error
+    assert_raises UndefinedVariable do
+      interpertit 'fn=->() { :p }; %fn()'
+    end
+  end
 end
