@@ -5,6 +5,10 @@ require_relative 'analysis/visit_ast'
 require_relative 'analysis/resolve_logical_or'
 require_relative 'analysis/resolve_logical_and'
 
+# closure stuff
+require_relative 'analysis/insert_closures'
+
+
 require_relative 'analysis/match_subtree'
 require_relative 'analysis/extract_assign_blocks'
 require_relative 'analysis/extract_lambdas'

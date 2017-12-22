@@ -20,6 +20,9 @@ class MainFrame < Frame
   def initialize ctx
     @ctx = ctx
   end
+  def frame_id
+    "#{self.class.name}_#{self.object_id.to_s}".to_sym
+  end
 end
 
 # FunctionFrame - storage for user defined functions

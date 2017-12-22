@@ -26,4 +26,6 @@ require_relative 'test_builtins'
 require_relative 'test_pipeline'
 
 require_relative 'test_function'
+require_relative 'test_closure'
+
 require_relative 'test_evaluator'

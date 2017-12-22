@@ -5,5 +5,13 @@ require_relative '../lib/vish'
 
 source = ARGF.read
 
-eval = Evaluator.new
-p eval.eval(source)
+exit_status = 1
+begin
+  eval = Evaluator.new
+  p eval.eval(source)
+exit_status = 0
+rescue Parslet::ParseFailed => err
+  puts "Syntax Error: #{err.message}"
+end
+
+exit(exit_status)
