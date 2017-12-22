@@ -1,6 +1,8 @@
 # Main requires for Viper lib
 
 require 'rubytree'
+require_relative 'vish/version'
+
 
 # common stuff
 require_relative 'api'
