@@ -18,7 +18,37 @@ def opcodes tmpreg=nil
     pushl: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(var) },
   _pusht: 'Pushes the contents of tmpreg onto the stack.',
   pusht: ->(bc, ctx, _, intp) { ctx.stack.push(tmpreg.store) },
-    _loadt: 'Loads top of stack into tmpreg.',
+    # Closure stuff
+    # :clone - prepares a new instance of probably LambdaType on top of stack
+    _clone: 'Clones the top of stack and pushes back on stack',
+    clone: ->(bc, ctx, fr, intp) { ctx.stack.push(ctx.stack.pop.clone) },
+    _savefp: 'Saves the current frame pointer on item on top of stack',
+    savefp: ->(bc, ctx, fr, intp) {
+      frame = fr.reverse.find {|f| f.kind_of? MainFrame }
+      # TODO: MUST: Implement error checking
+      ctx.stack.peek.frame_ptr = frame.frame_id
+    },
+    _storecl: 'Creates new Closure object with variable name and frames.peek and stores in heap using key as second operand',
+    storecl: ->(bc, ctx, fr, intp) {
+      var = bc.next
+      id = bc.next
+      intp.heap[fr.peek.frame_id] ||= {}
+      intp.heap[fr.peek.frame_id][id] = Closure.new(var, fr.peek)
+    },
+    _pushcl: 'Pushes value of Closure stored on heap with opearand: id on to top of stack',
+    # TODO: MUST implement error handling here
+    pushcl: ->(bc, ctx, fr, intp) {
+      vname = bc.next
+      fp = ctx.vars[:_frame_ptr]
+      hp = intp.heap[fp]
+      raise UndefinedVariable.new(vname) if hp.nil?
+      value = hp[vname]
+            raise UndefinedVariable.new(vname) if value.nil?
+
+    ctx.stack.push(value.value)
+    },
+
+    _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },
   _dup: 'Duplicates the top of the stack and pushes the copy back there.',
   dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
@@ -146,6 +176,7 @@ def opcodes tmpreg=nil
       cx.stack.push(*argv)
       frame = FunctionFrame.new(cx)
       frame.return_to = bc.pc
+      frame.ctx.vars[:_frame_ptr] = ltype.frame_ptr
       fr.push(frame)
       bc.pc = ltype.target
     },

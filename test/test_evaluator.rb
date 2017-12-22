@@ -22,4 +22,12 @@ class TestEvaluator < BaseSpike
     result = @eval.eval 'bar(foo())'
     assert_eq result, 50
   end
+
+  # test that closures maintain their state on new pass
+  def test_closure_maintains_state
+    @eval.eval 'y=10; fn=->() { :y * 10 }'
+    assert_eq 100, @eval.eval('%fn()')
+    @eval.eval 'y=4'
+    assert_eq @eval.eval('%fn()'), 40
+  end
 end

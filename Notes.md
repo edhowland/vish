@@ -174,6 +174,20 @@ Then all the way up to the top level.
 
 Replace any Deref blocks with Closure blocks!
 
+#### The heap:
+
+The heap is maintained by the CodeInterpreter instance. Opcode :pushi
+will grab its its operand (which is a reference to a Closure object on the heap.
+
+Note: MUST make sure this is avaliable tothe Evaluation object,
+esp. in bin/ivs REPL else, it will get overwritten upon every new line entered
+and then compiled.
+
+## Debugging
+
+Must implement some kind of capture of the stack frame in case of an unrecoverable error.
+working on the assumption that this will be an exception handler.
+
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.
@@ -186,6 +200,44 @@ The original PC is ready to resume with the new next instruction after
 the :int opcode and its operand.
 
 This differs from function calls which must place an entire activation frame on the call stack.
+
+
+### Change this mechanism to :int0, :int1, ... :int9.
+
+This removes the operand, and allows for breakpoint insertion at any pointw/o
+messing any jmp targets. 
+
+### INT codes
+
+- :int0 : The default int handler
+- :int1 : Reserved for break points
+- :int2 : unused, 
+- :int3 : Unused
+- :int4 : Unused
+- :int5 : Unused
+- :int6 : Unused
+- :int7 : Unused
+- :int8 : Unused
+- :int9 : at_exit lambda chain
+
+The latter :int9 allows for the following syntax:
+
+```
+at_exit(->() { return 1 })
+# ...
+at_exit(->() { print("exiting...") })
+# upon exit of the script:
+# Exiting
+# $? == 1  # the exit status of the script
+```
+
+The internal 'at_exit()' function should store the lambda references in an exit lambda list: []
+stored in the heap.
+
+Note: This will require that :icall will have to pass the heap to any internal functions. (Via the heap: keyword?)
+
+### The exit status:
+
 
 
 ## Exception handling: catch/snag

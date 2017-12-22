@@ -6,10 +6,11 @@ class LambdaType
     @name = name
     @arity = arity
     @target = 0
+    @frame_ptr = :unknown
   end
   attr_reader :name, :arity
-  attr_accessor :target
+  attr_accessor :target, :frame_ptr
   def inspect
-    "LambdaType: name: #{name}, arity: #{@arity}, target: #{@target}"
+    "LambdaType: name: #{name}, arity: #{@arity}, target: #{@target} frame_ptr: #{@frame_ptr}"
   end
 end

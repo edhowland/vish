@@ -36,8 +36,12 @@ class CodeInterpreter
     @frames = LockedStack.new(limit: 1000)
     # The MainFrame, which holds the Context, cannot be popped off this stack
     @frames.push(MainFrame.new(ctx))
+
+    # Storage for the Heap
+    @heap = {}
   end
-  attr_accessor :last_exception, :handlers, :register_a, :frames
+  attr_accessor :last_exception, :handlers, :register_a, :frames, :heap
+
   def bc
     @code_stack.peek[0]
   end

@@ -9,13 +9,22 @@ require_relative '../lib/vish'
 
 eval = Evaluator.new
 history = History.new
+
+# start up stuff
+startup =<<-EOS
+version='#{Vish::VERSION}'
+prompt='vish> '
+EOS
+
 begin
+  eval.eval startup
 loop do
   begin
-    print 'vish> '
+  prompt = eval.eval(':prompt')
+    print prompt
     source = readline(history).chomp
     break if source =~ /break|exit|quit/#
-    p eval.eval source
+    p eval.eval(source) unless source.strip.empty?
   rescue SigInt
   # nop
 rescue Parslet::ParseFailed => err

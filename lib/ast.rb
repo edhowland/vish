@@ -68,6 +68,12 @@ require_relative 'ast/loop_entry'
 require_relative 'ast/loop_exit'
 require_relative 'ast/loop'
 
+# closure stuff
+require_relative 'ast/store_closure'
+require_relative 'ast/deref_closure'
+
+
+
 # Lambda stuff
 require_relative 'ast/lambda_name'
 require_relative 'ast/lambda_entry'
