@@ -1,5 +1,19 @@
 # Notes
 
+## Closure implementation:
+
+1. Lambdas are closures. A single structure containg the arity, the body bytecode offset and the current frame
+2. This actual object is stored on the heap.
+3. Nost Importantly: When executing the lambda, instead of
+creating a new FunctionFrame, the saved frame object is pushed on the VM's frame stack.
+
+The advantage is any variables created within the body
+share the same environment as theprevious exectution environment.
+
+Any new variables are not seen outside the lambda body because
+there is no reference to them
+
+
 ## Notes about VM construction from YouTube channel: Jephthai
 
 Should the opcodes always return the next ByteCode pc to go to?

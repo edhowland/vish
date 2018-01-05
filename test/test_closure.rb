@@ -35,4 +35,23 @@ class TestClosure < BaseSpike
     result = interpertit 'y=10;fn=->(x) { z=4; :x * :y + :z };%fn(3)'
     assert_eq result, 34
   end
+
+  # test closures over inner lambda from outer lambda
+  def test_closures_work_from_within_another_closure
+    result = interpertit 'm=->(x) { ->() { :x + 1 } };y=%m(2);%y()'
+    assert_eq result, 3
+  end
+  def test_inner_lambda_closes_over_outer_lambda
+    source =<<-EOC
+defn ml(x) {
+  ->(y) {
+    ->() { :x + :y }
+  }
+}
+l1=ml(2); l2=%l1(3)
+%l2()
+EOC
+    result = interpertit source
+    assert_eq result, 5
+  end
 end
