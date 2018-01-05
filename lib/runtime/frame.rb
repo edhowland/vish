@@ -10,6 +10,10 @@ class Frame
   def ==(other)
     other.instance_of?(self.class)
   end
+
+  def inspect
+    "#{self.class.name}:  ctx: #{@ctx.inspect} return_to: #{@return_to}"
+  end
 end
 
 class BlockFrame < Frame

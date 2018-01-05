@@ -11,7 +11,7 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
-    @lambdas = []
+    @lambdas = {}
     @functions = {}
   end
   attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :functions, :source
@@ -27,7 +27,8 @@ class VishCompiler
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
     # Pull out any detected closures and add them into back as uncles of lambdas
-    insert_closures(ast)
+    # TODO: remove me
+#    insert_closures(ast)
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
@@ -56,12 +57,14 @@ class VishCompiler
     @lambdas = extract_lambdas(@ast)
 
     # fix up any returns within lambdas
-    fixup_returns(@lambdas, FunctionReturn)
+    # TODO MUST Fix this
+#    fixup_returns(@lambdas, FunctionReturn)
 
-    @lambdas.each {|l| @ast << l }
+#    @lambdas.each {|l| @ast << l }
+append_lambdas(ast, @lambdas)
 
     # add in any passed other lambdas. Possibly from earlier compiles.
-    @lambdas = lambdas + @lambdas
+    @lambdas.merge!  lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)
   end
@@ -76,6 +79,9 @@ class VishCompiler
     end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
 #    return @bc, @ctx
+
+# resolve any lambdas to their matching LambdaName.LambdaType.target
+resolve_lambdas_locations(@lambdas)
 start
   end
 

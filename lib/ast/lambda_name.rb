@@ -3,11 +3,22 @@
 class LambdaName < Terminal
   # get the LambdaType from the ctx.constants, push it, clone it, save the
   # frame_id into frame_ptr
+  # TODO: MUST change this to just be the actual Lambda object, not the LambdaType
+  # The reason is this  is only known to Builtins.mklambda
   def emit(bc, ctx)
-    bc.codes << :pushc
-    bc.codes << ctx.store_constant(@value)
-    bc.codes << :clone
+    bc.codes << :pushl
+    bc.codes << @value.name
+    bc.codes << :pushl
+    bc.codes << @value.arity
+    bc.codes << :pushl
+    bc.codes << @value.target
+    bc.codes << :pushl
+    bc.codes << 3
+    bc.codes << :pushl
+    bc.codes << :mklambda
+    bc.codes << :icall
     bc.codes << :savefp
+    bc.codes << :alloc
   end
 
   def inspect
