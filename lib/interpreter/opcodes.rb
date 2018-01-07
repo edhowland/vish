@@ -163,7 +163,6 @@ def opcodes tmpreg=nil
   # Lambda call stuff
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
-    # TODO clean me
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
