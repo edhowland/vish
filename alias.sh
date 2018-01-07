@@ -29,3 +29,4 @@ alias vsr='./runtime/vre.rb'
 filepart() {
   echo ${1%.*}
 }
+alias ra='ruby test/all_tests.rb'

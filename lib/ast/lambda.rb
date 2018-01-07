@@ -2,10 +2,10 @@
 class Lambda < NonTerminal
   def initialize arglist=[]
     @arglist = arglist
-    @closures = []
+#    @closures = []
   end
   attr_reader :arglist
-  attr_accessor :closures
+#  attr_accessor :closures
   
   # subtree - constructs a subtree of nodes: LambdaEntry, Block, LambdaExit
   # Parameters:
@@ -19,18 +19,18 @@ class Lambda < NonTerminal
     top << mknode(LambdaEntry.new(arglist))
     # locate unbound derefs
     _body = node_unless(body)
-    vars = select_class(_body, Deref)
-    vars.reject! {|v| argsyms.member? v.content.value.to_sym }
+#    vars = select_class(_body, Deref)
+#    vars.reject! {|v| argsyms.member? v.content.value.to_sym }
     # TODO: MUST: find any locals instantiated herein. Not just parameters
     # Locate any assignments
-    assigns = select_class(body, Assign)
-    assigns.map!(&:first_child)
-    assigns.map! {|a| a.content.value.to_sym }
-    vars.reject! {|v| assigns.member?(v.content.value.to_sym) }
+#    assigns = select_class(body, Assign)
+#    assigns.map!(&:first_child)
+#    assigns.map! {|a| a.content.value.to_sym }
+#    vars.reject! {|v| assigns.member?(v.content.value.to_sym) }
     # create tuples of the StoreClosure and original Deref
-    closures = vars.map {|v| scl = StoreClosure.new(Closure.create_id); scl.value = v.content.value.to_sym; [v, scl] }
-    closures.each {|v,scl| v.content = DerefClosure.new(scl.closure_id) }
-    this.closures = closures.map {|v, scl| scl }
+#    closures = vars.map {|v| scl = StoreClosure.new(Closure.create_id); scl.value = v.content.value.to_sym; [v, scl] }
+#    closures.each {|v,scl| v.content = DerefClosure.new(scl.closure_id) }
+#    this.closures = closures.map {|v, scl| scl }
 
 
     top <<  _body
@@ -44,6 +44,6 @@ class Lambda < NonTerminal
   end
 
   def inspect
-    "#{self.class.name}: arglist: #{@arglist.map(&:inspect)}: closures: #{@closures.map(&:inspect)}"
+    "#{self.class.name}: arglist: #{@arglist.map(&:inspect)}"
   end
 end

@@ -6,7 +6,7 @@ require_relative 'analysis/resolve_logical_or'
 require_relative 'analysis/resolve_logical_and'
 
 # closure stuff
-require_relative 'analysis/insert_closures'
+#require_relative 'analysis/insert_closures'
 
 
 require_relative 'analysis/match_subtree'

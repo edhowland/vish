@@ -86,8 +86,8 @@ class TestApi < BaseSpike
     assert_eq result.length, 4
   end
   def test_genid_w_object_and_other_class
-    result = genid(Object.new, klass:Closure)
+    result = genid(Object.new, klass:MainFrame)
     result = result.to_s.split('_')[0]
-    assert_eq result, 'Closure'
+    assert_eq result, 'MainFrame'
   end
 end

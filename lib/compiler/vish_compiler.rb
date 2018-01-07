@@ -26,9 +26,6 @@ class VishCompiler
   end
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
-    # Pull out any detected closures and add them into back as uncles of lambdas
-    # TODO: remove me
-#    insert_closures(ast)
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
