@@ -1,6 +1,7 @@
 # lambda_name.rb - class LambdaName  < Terminal - holds LambdaType
 
 class LambdaName < Terminal
+
   # get the LambdaType from the ctx.constants, push it, clone it, save the
   # frame_id into frame_ptr
   # TODO: MUST change this to just be the actual Lambda object, not the LambdaType
@@ -11,7 +12,8 @@ class LambdaName < Terminal
     bc.codes << :pushl
     bc.codes << @value.arity
     bc.codes << :pushl
-    bc.codes << @value.target
+    jmp_t = BulletinBoard.get(@value.name) || JumpTarget.new(@value.name)
+    bc.codes << jmp_t # @value.target
     bc.codes << :pushl
     bc.codes << 3
     bc.codes << :pushl

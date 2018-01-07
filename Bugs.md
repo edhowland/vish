@@ -1,5 +1,12 @@
 # Bugs
 
+## Bug: .target of LambdaType is not being set.
+
+Choice of UNKNOWN target as -1 causes bc.pc to be set
+to the end of the bc.codes list. This is usually a :fret function return. The stack might be
+empty, causing a StackUnderflow exception
+
+
 ## Bug: missing error check on unbound variables w/o stored closures
 
 

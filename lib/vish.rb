@@ -33,6 +33,8 @@ require_relative 'analysis'
 
 
 # code emission stuff 
+require_relative 'generation'
+
 
 # bytecode interpreter stuff
 require_relative 'interpreter'

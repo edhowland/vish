@@ -181,18 +181,15 @@ def opcodes tmpreg=nil
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
     # TODO clean me
-#      cx = Context.new
-#      cx.constants = ctx.constants
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
       raise ArgumentError.new("Wrong number of parameters: #{argc} for #{ltype.arity}") if argc != ltype.arity
       argv = ctx.stack.pop(argc)
-      cx.stack.push(*argv)
-#      frame = FunctionFrame.new(cx)
 frame = ltype.frame
+frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
-#      frame.ctx.vars[:_frame_ptr] = ltype.frame_ptr
+
       fr.push(frame)
       bc.pc = ltype.target
     },

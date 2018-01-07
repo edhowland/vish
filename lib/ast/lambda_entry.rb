@@ -16,9 +16,10 @@ class LambdaEntry < Terminal
   # Sets the offset for later exfiltration in analyze of compiler
   # which adds to matching LambdaName.LambdaType.target
   def emit(bc, ctx)
-#    ctx.vars[@value.to_sym] = bc.codes.length
-#    @value.target = bc.codes.length
 @offset = bc.codes.length
+    jmp_t = BulletinBoard.get(@value.name.to_sym) || JumpTarget.new(@value.name)
+jmp_t.target = bc.codes.length
+BulletinBoard.put(jmp_t)
 
 
     @arglist.reverse.each do |a|

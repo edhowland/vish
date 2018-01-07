@@ -63,6 +63,9 @@ class VishCompiler
 #    @lambdas.each {|l| @ast << l }
 append_lambdas(ast, @lambdas)
 
+# fix up lambda name reference to lambda types into lambda entries
+fixup_lambda_entries(@lambdas)
+
     # add in any passed other lambdas. Possibly from earlier compiles.
     @lambdas.merge!  lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
@@ -71,6 +74,7 @@ append_lambdas(ast, @lambdas)
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
     start = bcodes.codes.length
+
     @bc, @ctx = emit_walker ast, ctx, bcodes
 
     # Resolve BranchSource operands after BranchTargets have been emitted
@@ -78,10 +82,10 @@ append_lambdas(ast, @lambdas)
       bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
     end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
-#    return @bc, @ctx
 
-# resolve any lambdas to their matching LambdaName.LambdaType.target
-resolve_lambdas_locations(@lambdas)
+    # resolve jump targets
+    resolve_lambda_locations(@bc)
+
 start
   end
 

@@ -38,6 +38,15 @@ end
 # resolve_lambdas_locations
 # After generation, returns the generated offset for each lambda
 # to its LambdaName.LambdaType
-def resolve_lambdas_locations(lambdas_h)
+def _resolve_lambdas_locations(lambdas_h)
   lambdas_h.values.map {|l, n| [l.first_child.content, n.content] }.each {|l, n| n.value.target = l.offset }
+end
+
+
+# fixup_lambda_entries lambdas_h - adds LambdaType reference into LambdaEntry
+# from LambdaName in tuple
+def fixup_lambda_entries lambdas_h
+  lambdas_h.values.each do |l, n|
+    l.first_child.content.value = n.content.value
+  end
 end
