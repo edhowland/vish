@@ -122,8 +122,9 @@ def opcodes tmpreg=nil
     # call stack manipulation :unwind, :pusht
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
     unwind: ->(bc, ctx, fr, intp) do
+#    binding.pry
       ftype= bc.next
-      until (ftype == fr.peek) do
+      until (ftype === fr.peek) do
         fr.pop 
       end
     end,

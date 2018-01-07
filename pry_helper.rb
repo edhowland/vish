@@ -183,3 +183,7 @@ end
 def lstr1
   'm=->() {1};%m()'
 end
+
+def lret
+  'm=->() { return 2 };%m()'
+end

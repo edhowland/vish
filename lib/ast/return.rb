@@ -17,7 +17,7 @@ end
 class BlockReturn < Return
   def emit(bc, ctx)
     bc.codes << :unwind
-    bc.codes << BlockFrame.new
+    bc.codes << BlockFrame
     bc.codes << :bret
   end
 end
@@ -25,7 +25,17 @@ end
 class FunctionReturn < Return
   def emit(bc, ctx)
     bc.codes << :unwind
-    bc.codes << FunctionFrame.new(Context.new)
-    bc.codes << :fret  # TODO: Change this to really deactivate FunctionFrame at top of ctx.call_stack
+    bc.codes << FunctionFrame
+    bc.codes << :fret
+  end
+end
+
+# LambdaReturn - emits :unwind, UnionFrame
+# which checks for either MainFrame or FunctionFrame
+class LambdaReturn < Return
+  def emit(bc, ctx)
+       bc.codes << :unwind
+    bc.codes << UnionFrame
+    bc.codes << :fret
   end
 end

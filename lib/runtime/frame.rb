@@ -35,3 +35,12 @@ end
 
 class LoopFrame < Frame
 end
+
+
+# class UnionFrame For type match of either FunctionFrame or MainFrame
+# Used in :unwind call emitted by LambdaReturn
+class UnionFrame
+  def self.===(that)
+    that.kind_of?(FunctionFrame) || that.kind_of?(MainFrame)
+  end
+end

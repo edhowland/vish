@@ -58,7 +58,7 @@ class VishCompiler
 
     # fix up any returns within lambdas
     # TODO MUST Fix this
-#    fixup_returns(@lambdas, FunctionReturn)
+    fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
 
 #    @lambdas.each {|l| @ast << l }
 append_lambdas(ast, @lambdas)
