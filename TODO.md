@@ -21,10 +21,6 @@ defn bar(x, y, z) { :x * :y + :z }
 
 ## Ensure:
 
-### break cannot be called within function body
-
-Must be check at compile time
-
 ### Check for  variables not set at compile time:
 
 ```
