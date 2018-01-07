@@ -26,4 +26,8 @@ class JumpTarget
   end
   attr_reader :name, :reference_count
   attr_accessor :target
+
+  def inspect
+    "#{self.class.name}: name: #{@name} target: #{@target} reference_count: #{@reference_count}"
+  end
 end
