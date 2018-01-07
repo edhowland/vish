@@ -19,8 +19,11 @@ class LambdaCall < NonTerminal
     loc = ctx.store_constant(@argc)
     bc.codes << :pushc
     bc.codes << loc
+    # TODO: Think this is wrong
     bc.codes << :pushv
     bc.codes << @name
+    # Get the item off the heap and push on stack
+    bc.codes << :pusha
     bc.codes << :lcall
   end
 

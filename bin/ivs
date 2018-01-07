@@ -23,7 +23,7 @@ loop do
   prompt = eval.eval(':prompt')
     print prompt
     source = readline(history).chomp
-    break if source =~ /break|exit|quit/#
+    break if source =~ /exit|quit/#
     p eval.eval(source) unless source.strip.empty?
   rescue SigInt
   # nop

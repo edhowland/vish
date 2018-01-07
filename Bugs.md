@@ -1,7 +1,5 @@
 # Bugs
 
-## Bug: missing error check on unbound variables w/o stored closures
-
 
 
 ## Possible Bug: reading stdin input does not work in compiled mode

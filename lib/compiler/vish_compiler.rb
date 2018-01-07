@@ -11,7 +11,7 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
-    @lambdas = []
+    @lambdas = {}
     @functions = {}
   end
   attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :functions, :source
@@ -26,8 +26,6 @@ class VishCompiler
   end
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
-    # Pull out any detected closures and add them into back as uncles of lambdas
-    insert_closures(ast)
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
@@ -56,18 +54,23 @@ class VishCompiler
     @lambdas = extract_lambdas(@ast)
 
     # fix up any returns within lambdas
-    fixup_returns(@lambdas, FunctionReturn)
+    fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
 
-    @lambdas.each {|l| @ast << l }
+#    @lambdas.each {|l| @ast << l }
+append_lambdas(ast, @lambdas)
+
+# fix up lambda name reference to lambda types into lambda entries
+fixup_lambda_entries(@lambdas)
 
     # add in any passed other lambdas. Possibly from earlier compiles.
-    @lambdas = lambdas + @lambdas
+    @lambdas.merge!  lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
     start = bcodes.codes.length
+
     @bc, @ctx = emit_walker ast, ctx, bcodes
 
     # Resolve BranchSource operands after BranchTargets have been emitted
@@ -75,7 +78,10 @@ class VishCompiler
       bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
     end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
-#    return @bc, @ctx
+
+    # resolve jump targets
+    resolve_lambda_locations(@bc)
+
 start
   end
 

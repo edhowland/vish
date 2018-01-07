@@ -67,4 +67,10 @@ module Builtins
 #    puts err.message
 #    end
 #  end
+
+  def self.mklambda(name, arity, target)
+    l = LambdaType.new(name, arity)
+    l.target = target
+    l
+  end
 end

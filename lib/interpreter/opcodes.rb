@@ -1,5 +1,5 @@
 # opcodes.rb - Hash of lambdas representing various opcodes
-# MUST : Keep has_operand? code up-to-date when adding things here : @ end file
+# Must : Keep has_operand? code up-to-date when adding things here : @ end file
 # opcodes - returns hash of opcodes
 # Parameters:
 # tmpreg - storage in temporary register
@@ -18,35 +18,32 @@ def opcodes tmpreg=nil
     pushl: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(var) },
   _pusht: 'Pushes the contents of tmpreg onto the stack.',
   pusht: ->(bc, ctx, _, intp) { ctx.stack.push(tmpreg.store) },
+
+    # LambdaType stuff
+    _alloc: 'Allocates top of stack, places it on heap, pushes its genid back on stack',
+    alloc: ->(bc, ctx, fr, intp) {
+      value = ctx.stack.pop
+      id = genid(value)
+      intp.heap[id] = value
+      ctx.stack.push id
+    },
+    _pusha: 'Uses top of stack as pointer to value on heap, pushes value back on stack',
+    pusha: ->(bc, ctx, fr, intp) {
+      id = ctx.stack.pop
+      value = intp.heap[id]
+      ctx.stack.push value
+    },
+
     # Closure stuff
     # :clone - prepares a new instance of probably LambdaType on top of stack
     _clone: 'Clones the top of stack and pushes back on stack',
     clone: ->(bc, ctx, fr, intp) { ctx.stack.push(ctx.stack.pop.clone) },
-    _savefp: 'Saves the current frame pointer on item on top of stack',
+    _savefp: 'Finds the nearest UnionFrame on the call stack and saves it on LambdaType on top of data stack',
     savefp: ->(bc, ctx, fr, intp) {
-      frame = fr.reverse.find {|f| f.kind_of? MainFrame }
-      # TODO: MUST: Implement error checking
-      ctx.stack.peek.frame_ptr = frame.frame_id
-    },
-    _storecl: 'Creates new Closure object with variable name and frames.peek and stores in heap using key as second operand',
-    storecl: ->(bc, ctx, fr, intp) {
-      var = bc.next
-      id = bc.next
-      intp.heap[fr.peek.frame_id] ||= {}
-      intp.heap[fr.peek.frame_id][id] = Closure.new(var, fr.peek)
-    },
-    _pushcl: 'Pushes value of Closure stored on heap with opearand: id on to top of stack',
-    # TODO: MUST implement error handling here
-    pushcl: ->(bc, ctx, fr, intp) {
-      vname = bc.next
-      fp = ctx.vars[:_frame_ptr]
-      hp = intp.heap[fp]
-      raise UndefinedVariable.new(vname) if hp.nil?
-      value = hp[vname]
-            raise UndefinedVariable.new(vname) if value.nil?
+    frame = fr.reverse.find {|f| UnionFrame === f}
+      ctx.stack.peek.frame= frame
+        },
 
-    ctx.stack.push(value.value)
-    },
 
     _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },
@@ -109,7 +106,7 @@ def opcodes tmpreg=nil
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
     unwind: ->(bc, ctx, fr, intp) do
       ftype= bc.next
-      until (ftype == fr.peek) do
+      until (ftype === fr.peek) do
         fr.pop 
       end
     end,
@@ -166,17 +163,15 @@ def opcodes tmpreg=nil
   # Lambda call stuff
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
-      cx = Context.new
-      cx.constants = ctx.constants
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
       raise ArgumentError.new("Wrong number of parameters: #{argc} for #{ltype.arity}") if argc != ltype.arity
       argv = ctx.stack.pop(argc)
-      cx.stack.push(*argv)
-      frame = FunctionFrame.new(cx)
+frame = ltype.frame
+frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
-      frame.ctx.vars[:_frame_ptr] = ltype.frame_ptr
+
       fr.push(frame)
       bc.pc = ltype.target
     },

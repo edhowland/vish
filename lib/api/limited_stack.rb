@@ -37,7 +37,7 @@ class LimitedStack < Array
   # Parameters:
   # (optional) count to pop Default: 1
   def pop(*args)
-    raise StackUnderflow.new if self.length <= 0 && !args.first.zero?
+    raise StackUnderflow.new if self.length <= 0 && !(args.length > 0 && args.first.zero?)
     super
   end
   def safe_pop
