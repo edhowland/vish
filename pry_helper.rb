@@ -187,3 +187,7 @@ end
 def lret
   'm=->() { return 2 };%m()'
 end
+
+def lbrk
+  'defn foo(fn) {%fn()};loop {foo(->() {break}) }'
+end

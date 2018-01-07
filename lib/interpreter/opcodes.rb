@@ -38,9 +38,10 @@ def opcodes tmpreg=nil
     # :clone - prepares a new instance of probably LambdaType on top of stack
     _clone: 'Clones the top of stack and pushes back on stack',
     clone: ->(bc, ctx, fr, intp) { ctx.stack.push(ctx.stack.pop.clone) },
-    _savefp: 'Saves the current frame pointer on item on top of stack',
+    _savefp: 'Finds the nearest UnionFrame on the call stack and saves it on LambdaType on top of data stack',
     savefp: ->(bc, ctx, fr, intp) {
-      ctx.stack.peek.frame= fr.peek
+    frame = fr.reverse.find {|f| UnionFrame === f}
+      ctx.stack.peek.frame= frame
     },
     _storecl: 'Creates new Closure object with variable name and frames.peek and stores in heap using key as second operand',
     storecl: ->(bc, ctx, fr, intp) {
