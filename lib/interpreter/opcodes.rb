@@ -1,5 +1,5 @@
 # opcodes.rb - Hash of lambdas representing various opcodes
-# MUST : Keep has_operand? code up-to-date when adding things here : @ end file
+# Must : Keep has_operand? code up-to-date when adding things here : @ end file
 # opcodes - returns hash of opcodes
 # Parameters:
 # tmpreg - storage in temporary register
@@ -42,26 +42,8 @@ def opcodes tmpreg=nil
     savefp: ->(bc, ctx, fr, intp) {
     frame = fr.reverse.find {|f| UnionFrame === f}
       ctx.stack.peek.frame= frame
-    },
-    _storecl: 'Creates new Closure object with variable name and frames.peek and stores in heap using key as second operand',
-    storecl: ->(bc, ctx, fr, intp) {
-      var = bc.next
-      id = bc.next
-      intp.heap[fr.peek.frame_id] ||= {}
-      intp.heap[fr.peek.frame_id][id] = Closure.new(var, fr.peek)
-    },
-    _pushcl: 'Pushes value of Closure stored on heap with opearand: id on to top of stack',
-    # TODO: MUST implement error handling here
-    pushcl: ->(bc, ctx, fr, intp) {
-      vname = bc.next
-      fp = ctx.vars[:_frame_ptr]
-      hp = intp.heap[fp]
-      raise UndefinedVariable.new(vname) if hp.nil?
-      value = hp[vname]
-            raise UndefinedVariable.new(vname) if value.nil?
+        },
 
-    ctx.stack.push(value.value)
-    },
 
     _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },

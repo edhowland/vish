@@ -2,10 +2,13 @@
 
 class LambdaName < Terminal
 
-  # get the LambdaType from the ctx.constants, push it, clone it, save the
-  # frame_id into frame_ptr
-  # TODO: MUST change this to just be the actual Lambda object, not the LambdaType
-  # The reason is this  is only known to Builtins.mklambda
+  #Use Builtin.mklambda(name, arity, target)
+  #  This is all just setup for the runtime call to this method which returns
+  # the actual lambda
+  # We also create a JumpTarget and store it in the BulletinBoard and emit it here.
+  # Then we save the appro frame on the call stack into the LambdaType
+  # Then we allocate space for it on heap
+  # Finnaly, the heap pointer is returned
   def emit(bc, ctx)
     bc.codes << :pushl
     bc.codes << @value.name

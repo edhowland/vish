@@ -1,5 +1,22 @@
 # TODO
 
+##  Refactor function entries and function calls to use BulletinBoards
+
+Currently, the way function targets are specifed is w/target_p, whcih 
+returns a closure. Since we use BulletinBoard to resolve
+lambda targets via/JumpTarget, this is a better method.
+
+
+## Make block instances become inline, wherever possible
+
+Currently, blocks exist outside of the main code instance.
+There stored in the VishCompiler.blocks array.
+This should become a Hash like .functions/.lambdas.
+
+
+
+
+
 ## Pipelines can be used with parameterized placement in arg list
 
 Like in JavaScript ES8, use of the ? parameter to place the top of 

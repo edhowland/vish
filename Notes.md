@@ -193,7 +193,7 @@ Replace any Deref blocks with Closure blocks!
 The heap is maintained by the CodeInterpreter instance. Opcode :pushi
 will grab its its operand (which is a reference to a Closure object on the heap.
 
-Note: MUST make sure this is avaliable tothe Evaluation object,
+Note: Must make sure this is avaliable tothe Evaluation object,
 esp. in bin/ivs REPL else, it will get overwritten upon every new line entered
 and then compiled.
 
