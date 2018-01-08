@@ -1,4 +1,4 @@
-# test_function.rb - tests for functions, lambdas.
+# test_lambda.rb - tests for  lambdas.
 
 require_relative 'test_helper'
 

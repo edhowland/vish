@@ -8,4 +8,12 @@ class TestList < BaseSpike
     result = interpertit '[]'
     assert_eq result, []
   end
+  def test_list_with_one_value
+    result=interpertit '[9]'
+    assert_eq result, [9]
+  end
+  def test_list_with_many_elements_can_be_assigned
+    result = interpertit 'lt=[0,1,2,3,4,5];:lt'
+    assert_eq result, [0,1,2,3,4,5]
+  end
 end

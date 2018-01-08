@@ -50,7 +50,7 @@ class VishParser < Parslet::Parser
   rule(:bang_equal) { str('!=') >> space? }
 
   # data types
-  rule(:list) { (lbracket >> rbracket).as(:list) }
+  rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
 
   # keywords
   rule(:_break) { str('break') >> space? }

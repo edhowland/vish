@@ -30,4 +30,6 @@ require_relative 'test_closure'
 
 require_relative 'test_evaluator'
 require_relative 'test_list'
+require_relative 'test_object'
+
 

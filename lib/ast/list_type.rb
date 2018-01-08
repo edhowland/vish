@@ -4,11 +4,19 @@
 
 
 class ListType < Terminal
+def initialize
+  @argc = 0
+end
+attr_accessor :argc
   def emit(bc, ctx)
   bc.codes << :pushl
-  bc.codes << 0
+  bc.codes << @argc
     bc.codes << :pushl
     bc.codes << :list
     bc.codes << :icall
+  end
+
+  def inspect
+    "#{self.class.name}: argc: #{@argc}"
   end
 end
