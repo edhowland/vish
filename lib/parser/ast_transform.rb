@@ -16,7 +16,8 @@ class AstTransform < Parslet::Transform
   rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
   rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
-
+  rule(list: simple(:list)) { mknode(ListType.new) }
+  
   # logical operations
 
   # arithmetic expressions
