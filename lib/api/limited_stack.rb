@@ -40,8 +40,13 @@ class LimitedStack < Array
     raise StackUnderflow.new if self.length <= 0 && !(args.length > 0 && args.first.zero?)
     super
   end
-  def safe_pop
-    old_pop
+  def safe_pop(*args)
+#    old_pop
+if self.empty?
+  nil
+else
+  pop(*args)
+end
   end
   # swap - reverses top 2 items on stack
   def swap

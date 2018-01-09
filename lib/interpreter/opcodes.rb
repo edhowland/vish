@@ -178,7 +178,7 @@ frame.ctx.stack.push(*argv)
     _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
     fret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
-      ret_val = frame.ctx.stack.pop
+      ret_val = frame.ctx.stack.safe_pop
       fr.peek.ctx.stack.push ret_val
       bc.pc = frame.return_to
     },
