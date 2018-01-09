@@ -54,4 +54,10 @@ EOC
     result = interpertit source
     assert_eq result, 5
   end
+
+  # test for setting closed over external variables
+  def test_lambda_can_set_closed_over_term
+    result = interpertit 'x=9;m=->() { x=10 };%m();:x'
+    assert_eq result, 10
+  end
 end

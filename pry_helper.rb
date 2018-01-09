@@ -191,3 +191,7 @@ end
 def lbrk
   'defn foo(fn) {%fn()};loop {foo(->() {break}) }'
 end
+
+def vc source=''
+  VishCompiler.new source
+end

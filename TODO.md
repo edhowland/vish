@@ -1,5 +1,21 @@
 # TODO
 
+## Todo: figure some way to handle nils
+
+See kotlin language for advice on how to do this.
+
+Also, in a stack-based VM, any assign returns nil because the stack is popped
+and nothing is there. Should we push the assignment ther?
+
+```
+x=9
+# gets nil
+
+# after change?
+x=9
+# gets 9
+```
+
 ##  Refactor function entries and function calls to use BulletinBoards
 
 Currently, the way function targets are specifed is w/target_p, whcih 

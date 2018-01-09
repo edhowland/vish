@@ -54,6 +54,11 @@ module Builtins
     arr[idx]#
   end
 
+  # ax(ar,ix,val) - assigns a value to array or diction
+  def self.ax(ar, ix, val)
+    ar[ix] = val
+  end
+
   # eval(string) - compiles, interprets string in the current context.
 #  def self.eval(string)
 #    begin
@@ -72,5 +77,9 @@ module Builtins
     l = LambdaType.new(name, arity)
     l.target = target
     l
+  end
+
+  def self.xmit(obj, meth, *args)
+    obj.send(meth, *args)
   end
 end

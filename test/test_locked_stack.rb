@@ -67,4 +67,16 @@ class TestLockedStack < BaseSpike
     stack.push 1
     stack.pop(1)
   end
+
+  # test for LimitedStack.safe_pop
+  def test_limited_stack_can_safe_pop_1_existing_element
+    stack = LimitedStack.new limit:10
+    stack.push 9
+    assert_eq stack.safe_pop, 9
+  end
+  def test_limited_stack_safe_pop_w_empty_is_nil_and_does_not_raise_stack_underflow
+    stack = LimitedStack.new limit:10
+    assert stack.safe_pop.nil?
+
+  end
 end

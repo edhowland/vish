@@ -27,6 +27,8 @@ class VishParser < Parslet::Parser
   rule(:rparen)     { str(')') >> space? }
   rule(:lbrace) { str('{') }
   rule(:rbrace) { str('}') }
+  rule(:lbracket) { str('[') }
+  rule(:rbracket) { str(']') }
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
@@ -46,6 +48,10 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
+
+  # data types
+  rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
+  rule(:list_index) { deref >> lbracket.as(:list_index) >> integer.as(:index) >> rbracket }
 
   # keywords
   rule(:_break) { str('break') >> space? }
@@ -127,7 +133,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | lambda_call | deref_block | block_exec | funcall }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | deref | lambda_call | deref_block | block_exec | funcall | list }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
