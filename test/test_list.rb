@@ -22,4 +22,8 @@ class TestList < BaseSpike
     result = interpertit 'a=[99,98,97];:a[1]'
     assert_eq result, 98
   end
+  def test_list_index_can_be_assigned
+    result = interpertit 'm=[33,4,55];x=:m[1];:x'
+    assert_eq result, 4
+  end
 end
