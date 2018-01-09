@@ -18,6 +18,7 @@ class AstTransform < Parslet::Transform
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
   rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(ListType.new, [arg]) }
   rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(ListType.new, arg) }
+  rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
 
   
   # logical operations

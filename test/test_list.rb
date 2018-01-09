@@ -16,4 +16,10 @@ class TestList < BaseSpike
     result = interpertit 'lt=[0,1,2,3,4,5];:lt'
     assert_eq result, [0,1,2,3,4,5]
   end
+
+  # test list index
+  def test_list_index_of_simple_list
+    result = interpertit 'a=[99,98,97];:a[1]'
+    assert_eq result, 98
+  end
 end
