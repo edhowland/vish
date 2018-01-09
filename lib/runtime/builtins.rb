@@ -73,4 +73,8 @@ module Builtins
     l.target = target
     l
   end
+
+  def self.xmit(obj, meth, *args)
+    obj.send(meth, *args)
+  end
 end

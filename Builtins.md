@@ -89,3 +89,13 @@ arr=list(1,2,3,4)
 ```
 
 
+
+
+- def self.mklambda(name,arity,target)
+
+Used internally to create an object of class LambdaType w/those 3 args.
+
+- def self.xmit(obj,'method', *args)
+
+Used for debugging. Can send any message to a Ruby object
+dereferenced. See Notes.md for an example

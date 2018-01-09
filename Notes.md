@@ -1,5 +1,18 @@
 # Notes
 
+## The xmit builtin
+
+Mostly for debugging, a wrapper around the object.send method.
+Use a string for the method argument:
+
+```
+# get the length of a list
+list=[0,1,2,3]
+xmit(:list,'length')
+# => 4
+```
+
+
 ## Closure implementation:
 
 1. Lambdas are closures. A single structure containg the arity, the body bytecode offset and the current frame
