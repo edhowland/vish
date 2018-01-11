@@ -27,8 +27,64 @@ to a function.
   - Single quoted strings: E.g. 'hello world'
   - Double quoted strings - E.g. "This is a double quoted string"
 - lambdas - Anonymous functions : ->(arg) { :arg + 1 }
+- Blocks - small contained units of program statements.
+
+Double quoted strings are also possible interpolated strings.
+
+## Sigils
+
+Vish uses several sigils (single ASCII characters) to represent different type 
+of expressions:
+
+- colon ':' - Used to dereference a variable or parameter.
+
+## Program
+
+A program in Vish is 0 or more statements or comments delimited by new lines or semicolons.
+
+```
+# This is a comment to the end of this line
+# below are statements. All are equivelant:
+x=2+3
+y=:x + 4
+x=3 + 2;y=:x + 4
+```
+
+## Statements
+
+A statement is:
+
+- Any valid expression
+- An assignment. The rvalue of an assignment can be any valid expression
+- A block which contains more expressions/statements.
+- A function declaration
+- A function call. (Either a builtin or user defined function)
+- A lambda call.
+- A block execution. This differs from a a inline block.
+
+## Expressions
+
+Any valid expression can be executed as a statement or assigned to a variable
+or passed to a function/lambda as a a parameter.
+
+Expressions can be infix operators with lvalues and rvalues. Lvalues
+can be literals or variable dereferences. Rvalues can be any valid literal or
+other valid expression.
+
+Here are some valid expressions:
+
+```
+1+2
+3*10+4
+:x/:y+2
+:li[2] - 14
+sum(:li)
+# result of calling a lambda: with result of calling a function
+%lm(foo(:x))
+```
 
 ## Collections
+
 
 Vish has 1 collection type: List
 
@@ -104,4 +160,58 @@ Although not recommended, a function or lambda can return early from a function 
 defn baz(x) { :x == 10 && return false; :x + 1 }
 ```
 
+### Passing lambdas to functions
 
+A lambda can be passed as a parameter to any other
+function or lambda.
+
+Here is some code that implements the map higher order function from other languages:
+
+``
+# map.vs - implements map method over list applying fn for each item, returning
+# new list with each element doubled.
+defn map(li, fn) { 
+  (:li == []) && return []
+  list(%fn(:li[0]), map(tail(:li), :fn))
+}
+map([1,2,3,4], ->(x) { :x * 2 })
+
+```
+
+
+
+## Blocks
+
+In Vish, blocks are first class citizens. They can be executed inline, saved in 
+variables or passed to functions.
+
+Blocks are delimted by curly braces
+
+### Inline blocks:
+
+```
+# this is a simple block
+{ hello='hello'; world='world';print(hello + ' ' + world)}
+```
+
+### Block expressions
+
+As rvalues blocks can be assigned to variables or passed to functions/lambdas
+as parameters:
+
+```
+# saving a block to a variable:
+blk={4+3}
+# Calling it:
+6*%blk
+# => 42
+```
+
+### Blocks as parameters
+
+```
+blk={:x/2}
+defn foo(x,bk) { %bk }
+foo(100)
+# => 50
+```
