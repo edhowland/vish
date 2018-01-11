@@ -88,4 +88,14 @@ end
     ci = mkci bc, ctx
     ci.run
   end
+
+  # found bugs:
+  def test_can_pass_blocks_to_functions
+    result=interpertit <<EOD
+# bk.vs - test out block
+bk={:x / 2}
+defn foo(x,b) { %b }
+foo(100,:bk)
+EOD
+  end
 end
