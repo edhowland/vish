@@ -37,12 +37,16 @@ class VishCompiler
   @functions = extract_functions(ast)
 
     # find and extract any blocks from their assignees.
-    @blocks = extract_assign_blocks(ast)
+    # @blocks = extract_assign_blocks(ast)
+
+    # convert assigned blocks to lambdas w/0 parameters
+    convert_assigned_blocks_to_lambdas(ast)
+
     # fixup Return classes
-    fixup_returns(@blocks, BlockReturn)
-    @blocks.each {|b| ast << b }
+    # fixup_returns(@blocks, BlockReturn)
+    # @blocks.each {|b| ast << b }
     # Now add back in any previously declared blocks
-    @blocks = blocks + @blocks
+    # @blocks = blocks + @blocks
 
     fixup_returns(@functions.values, FunctionReturn)
     # Append the actual function bodies to end of AST

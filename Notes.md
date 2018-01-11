@@ -1,5 +1,11 @@
 # Notes
 
+## Blocks are 0 parameter Lambdas
+
+1. Turn extract_blocks to create VishCompiler.lambdas hash.
+2. As is done in extract_lambdas: Replace '%blk' with LambdaName
+
+
 ## The xmit builtin
 
 Mostly for debugging, a wrapper around the object.send method.

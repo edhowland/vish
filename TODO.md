@@ -16,6 +16,17 @@ x=9
 # gets 9
 ```
 
+Note: This works in Ruby:
+
+```
+def mk_x
+  x = 9
+end
+y=mk_x
+p y
+# => 9
+```
+
 ##  Refactor function entries and function calls to use BulletinBoards
 
 Currently, the way function targets are specifed is w/target_p, whcih 

@@ -2,6 +2,7 @@
 
 require_relative 'analysis/visit_ast'
 
+require_relative 'analysis/convert_assigned_blocks_to_lambdas'
 require_relative 'analysis/resolve_logical_or'
 require_relative 'analysis/resolve_logical_and'
 

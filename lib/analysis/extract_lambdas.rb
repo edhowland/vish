@@ -1,7 +1,6 @@
 # extract_lambdas.rb - method extract_lambdas ast - returns detached Lambdas
 
 def extract_lambdas(ast)
-#  lambdas = ast.select {|n| n.content.class == Lambda }
 lambdas = select_class(ast, Lambda)
   # get parents - returns list of tuples of parent, lambda
 #  parentsof_lambdas = lambdas.map {|l| [l.parent, l] }
