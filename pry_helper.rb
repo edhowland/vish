@@ -195,3 +195,7 @@ end
 def vc source=''
   VishCompiler.new source
 end
+
+def block_another
+        'bk1={1+3};bk2={5*%bk1};%bk2' # , 20
+end
