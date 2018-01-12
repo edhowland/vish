@@ -35,8 +35,8 @@ class Frame
   end
 end
 
-class BlockFrame < Frame
-end
+#class BlockFrame < Frame
+#end
 
 # The MainFrame which sits at bottom of CodeInterpreter.frames
 class MainFrame < Frame

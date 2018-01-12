@@ -152,7 +152,7 @@ class TestCodeInterpreter < BaseSpike
     assert_eq @ci.run, '11'
   end
 
-  def test_bcall_jumps_tolocation_of_variable_on_tos
+  def _test_bcall_jumps_tolocation_of_variable_on_tos
     @ctx.constants = ['_block_Assign_6', true]
     @ctx.vars[:name] = 'block_Assign_6'
     @ctx.vars[:_block_Assign_6] = 11

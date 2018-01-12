@@ -133,7 +133,7 @@ def opcodes tmpreg=nil
 
     # flow control : :bcall, :bret, etc
     _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    bcall: ->(bc, ctx, fr, intp) { 
+    __bcall: ->(bc, ctx, fr, intp) { 
       frame=BlockFrame.new
       frame.return_to = bc.pc
       fr.push(frame)
@@ -142,7 +142,11 @@ def opcodes tmpreg=nil
       bc.pc = loc 
     },
     _bret: 'pops return location off fr. jmps there',
-    bret: ->(bc, ctx, fr, intp) { frame = fr.pop; loc = frame.return_to; bc.pc = loc },
+    bret: ->(bc, ctx, fr, intp) {
+      frame = fr.pop
+      loc = frame.return_to
+      bc.pc = loc 
+    },
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
     _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
