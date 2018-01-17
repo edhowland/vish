@@ -1,31 +1,5 @@
 # Bugs
 
-## Bug: passing block to function does not seem to work.
-
-In the case of a inline block. E.g.:
-
-```
-# this does not work correctly
-defn foo(fn) { :fn }
-foo({4*3})
-# => 12
-# Should be: :LambdaType_xxxxx
-#
-# gets worse:
-defn bar(x) { %x }
-bar({2})
-# G
-
-et Ruby syntx error
- opcodes': Lambda not found: unknown (LambdaNotFound)
-  from /home/vagrant/src/vish/lib/interpreter/code_interpreter.rb:76:in `c
-```
-
-This is caused by the previous bug where the block: {1} is evaluated before being passed to
-the bar(x) and x is bound to the result: 1.
-Then %x tries to find the lambda for that.
-
-This should happen at the compiler / AST level.
 ## Possible Bug: reading stdin input does not work in compiled mode
 
 But does work in interactive mode.
