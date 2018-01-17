@@ -182,6 +182,8 @@ map([1,2,3,4], ->(x) { :x * 2 })
 
 ## Blocks
 
+
+
 In Vish, blocks are first class citizens. They can be executed inline, saved in 
 variables or passed to functions.
 

@@ -14,17 +14,20 @@ history = History.new
 startup =<<-EOS
 version='#{Vish::VERSION}'
 prompt='vish> '
+_=0
 EOS
 
 begin
   eval.eval startup
+_=0
 loop do
   begin
   prompt = eval.eval(':prompt')
     print prompt
     source = readline(history).chomp
     break if source =~ /exit|quit/#
-    p eval.eval(source) unless source.strip.empty?
+    _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
+p _
   rescue SigInt
   # nop
 rescue Parslet::ParseFailed => err

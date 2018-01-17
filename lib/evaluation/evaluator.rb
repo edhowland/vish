@@ -6,7 +6,7 @@ class Evaluator
     @saved_heap = {}
   end
   attr_reader :compiler, :saved_heap
-  def eval(string)
+  def eval(string, &blk)
     compiler = VishCompiler.new string
     compiler.parse
     compiler.transform
@@ -14,6 +14,7 @@ class Evaluator
     start = compiler.generate ctx:@compiler.ctx, bcodes:@compiler.bc
     interpreter = CodeInterpreter.new(compiler.bc, compiler.ctx)
     interpreter.heap = @saved_heap
+    yield interpreter if block_given?
     @compiler = compiler
     interpreter.run(start)
   end

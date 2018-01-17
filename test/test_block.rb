@@ -100,4 +100,10 @@ defn foo(x,b) { %b }
 foo(100,:bk)
 EOD
   end
+
+  # passing blocks to functions
+  def test_can_pass_block_to_function
+    result = interpertit 'defn foo(bk) { %bk };foo({1})'
+    assert_eq result, 1
+  end
 end
