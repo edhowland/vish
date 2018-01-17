@@ -106,4 +106,16 @@ EOD
     result = interpertit 'defn foo(bk) { %bk };foo({1})'
     assert_eq result, 1
   end
+  def test_can_pass_mix_of_blocks_lambdas_and_ints_to_funcall
+    result = interpertit 'defn bar(l1,n2,b3,n4,b5) { %l1 + :n2 + %b3 + :n4 + %b5 };bar(->() {1},2,{3},4,{5})'
+    assert_eq result, 15
+  end
+  def test_blocks_become_closures_when_passed_as_parameters
+    result = interpertit 'defn baz(b) { %b + 1 };cl=9;baz({:cl})'
+    assert_eq result, 10
+  end
+  def test_blocks_become_closures_when_assigned_to_a_variable
+    result = interpertit 'xl=4;bk={:xl + 10};%bk'
+    assert_eq result, 14
+  end
 end
