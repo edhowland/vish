@@ -1,11 +1,72 @@
 # TODO
 
+## Todo: Make the return statement allow to convert blocks to lambdas.
+
+Normally, you can not return a block from a function. It just gets executes
+in place as an inline block.
+
+But by preceeding it with a return keyword, it can be promoted a lambda.
+
+E.g.
+
+```
+defn mkblock() {
+  n=6;m=7
+  { :n * :m }
+}
+y=mkblock()
+# => 42, not a LambdaType
+#
+# After the improvement
+defn mkblock() {
+  n=6;m=7
+  return {:n * :m}
+}
+y=mkblock()
+# => LambdaType_xxxx
+%y
+# => 42
+```
+
+
+## Todo:  Allow named functions to be higher order function values:
+
+If you dereference a function symbol, it should return a FunctionType. These
+types can be passed to other functions/lambdas as parameters Or saved in a variable.
+
+```
+# simple case
+defn foo() {'hello'}
+fn=:foo
+# now execute it:
+%fn
+# => 'hello'
+#
+# Now pass as a parameter
+defn bar(fn) { %fn + ' world'}
+bar(:foo)
+# => 'hello world'
+```
+
+### Question: Can these be closures?
+
+```
+# this should work
+defn mkfoo(x) {
+  defn foo() { :x + 2 }
+}
+mkfoo(5)
+foo()
+# Should  be 7
+```
 ## Todo: figure some way to handle nils
 
 See kotlin language for advice on how to do this.
 
 Also, in a stack-based VM, any assign returns nil because the stack is popped
 and nothing is there. Should we push the assignment ther?
+
+This works in Scheme and in Ruby.
 
 ```
 x=9
