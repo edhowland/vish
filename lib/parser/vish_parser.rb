@@ -140,7 +140,7 @@ class VishParser < Parslet::Parser
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
-  rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
+  rule(:deref_block) { percent >> identifier.as(:lambda_call) >> space? }
 
   # lambda declaration: ->(x, y) { :x + :y }
   rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }

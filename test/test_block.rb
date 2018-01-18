@@ -15,8 +15,10 @@ class TestBlock < BaseSpike
   def test_block_can_be_1_statement_of_many
     assert_eq interpertit( '{var=1+2};:var'), 3
   end
-  def test_results_of_blocks_can_be_assigned_to_variables
-    assert_eq interpertit( 'vv={5*3};:vv'),'_block_Assign_6'
+  def _test_results_of_blocks_can_be_assigned_to_variables
+    result = interpertit('vv={5*3};:vv')
+    result = result.to_s
+    assert_eq result[0..9], 'LambdaType'
   end
 
   # tests for blocks used in conditionals
@@ -90,12 +92,36 @@ end
   end
 
   # found bugs:
-  def test_can_pass_blocks_to_functions
+  def _test_can_pass_blocks_to_functions
     result=interpertit <<EOD
 # bk.vs - test out block
 bk={:x / 2}
 defn foo(x,b) { %b }
 foo(100,:bk)
 EOD
+  end
+
+  # passing blocks to functions
+  def test_can_pass_block_to_function
+    result = interpertit 'defn foo(bk) { %bk };foo({1})'
+    assert_eq result, 1
+  end
+  def test_can_pass_mix_of_blocks_lambdas_and_ints_to_funcall
+    result = interpertit 'defn bar(l1,n2,b3,n4,b5) { %l1 + :n2 + %b3 + :n4 + %b5 };bar(->() {1},2,{3},4,{5})'
+    assert_eq result, 15
+  end
+  def test_blocks_become_closures_when_passed_as_parameters
+    result = interpertit 'defn baz(b) { %b + 1 };cl=9;baz({:cl})'
+    assert_eq result, 10
+  end
+  def test_blocks_become_closures_when_assigned_to_a_variable
+    result = interpertit 'xl=4;bk={:xl + 10};%bk'
+    assert_eq result, 14
+  end
+
+  # test for passing blocks to lambdas
+  def test_can_pass_blocks_to_lambdas
+    result = interpertit 'm=->(b) { %b };%m({1})'
+    assert_eq result, 1
   end
 end

@@ -14,8 +14,6 @@ require_relative 'ast/subtree_factory'
 require_relative 'ast/arithmetic_factory'
 
 # blocks, and stuff
-require_relative 'ast/block_entry'
-require_relative 'ast/block_exit'
 require_relative 'ast/block'
 require_relative 'ast/block_exec'
 
@@ -42,7 +40,7 @@ require_relative 'ast/binary_inequality'
 require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
-require_relative 'ast/deref_block'
+#require_relative 'ast/deref_block'
 
 require_relative 'ast/final'
 require_relative 'ast/funcall'

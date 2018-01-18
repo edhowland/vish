@@ -1,5 +1,10 @@
 # Vish Language syntax
 
+# TODO: Incomplete documentation:
+
+- Operators
+- Keywords
+- Control statements
 ## Abstract
 
 Vish is a simple language. It tries for a simple
@@ -185,7 +190,15 @@ map([1,2,3,4], ->(x) { :x * 2 })
 In Vish, blocks are first class citizens. They can be executed inline, saved in 
 variables or passed to functions.
 
-Blocks are delimted by curly braces
+Blocks are delimted by curly braces and contain statements or expressions
+delimited by newlines or semicolons. Like in functions or lambdas, the last
+statement or expression evaluated is returned as the value of the block overall.
+
+Blocks can be written as one of 3 forms:
+
+- Inline blocks
+- Block expressions
+- Immediate block as result
 
 ### Inline blocks:
 
@@ -210,8 +223,52 @@ blk={4+3}
 ### Blocks as parameters
 
 ```
-blk={:x/2}
-defn foo(x,bk) { %bk }
-foo(100)
-# => 50
+defn baz(n, blk) { :n + %blk }
+baz(4, {3 ** 2})
+# => 13
 ```
+
+#### Block expressions as lambda closures
+
+Anytime a block is either assigned to a variable or passed as a parametr, it is
+promoted to a lambda. You can  think of these kind of blocks as lambda
+expressions that take 0 parameters themselves.
+
+Note: As these type of blocks are actually promoted to lambdas, like lambdas,
+they close over variables defined in their current context. Thus they are
+actually closures themselves.
+
+```
+# A block expression as a closure
+n=100
+b={ :n + 10 }
+# ... some other code
+%b + 1
+# => 111
+```
+
+
+#### Caveat:  A block cannot be returned from a function.
+
+To do return a block from a function body as a block expression,
+preceed it with '->() '. This turns it into a proper lambda.
+
+Note: A future release will allow the return keyword to return a block
+as a block expression by first promoting it into a lambda.
+
+### Immediate block execution
+
+A block can be immediately executed in place. It is not first promoted into
+a lambda first. But it still has the same effect.
+
+```
+val=%{5*2/5}
+:val
+# => 2
+# pass to a function:
+defn bar(v) { :v * 2 }
+bar(%{2})
+# => 4
+```
+
+

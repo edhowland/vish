@@ -1,11 +1,5 @@
 # Bugs
 
-## Bug: passing block to function does not seem to work.
-
-See : bk.vs in top level dir
-
-
-
 ## Possible Bug: reading stdin input does not work in compiled mode
 
 But does work in interactive mode.
