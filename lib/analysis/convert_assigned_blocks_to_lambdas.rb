@@ -20,8 +20,8 @@ end
 
 
 # convert_block_parameters_to_lambdas
-def convert_block_parameters_to_lambdas(ast)
-  funcalls = select_class(ast, Funcall).
+def convert_block_parameters_to_lambdas(ast, klass=Funcall)
+  funcalls = select_class(ast, klass).
     select {|f| f.children.any? {|c| c.content.class == Block } }
     funcalls.each do |f|
       f.children.each_with_index do |p, i|

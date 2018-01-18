@@ -118,4 +118,10 @@ EOD
     result = interpertit 'xl=4;bk={:xl + 10};%bk'
     assert_eq result, 14
   end
+
+  # test for passing blocks to lambdas
+  def test_can_pass_blocks_to_lambdas
+    result = interpertit 'm=->(b) { %b };%m({1})'
+    assert_eq result, 1
+  end
 end
