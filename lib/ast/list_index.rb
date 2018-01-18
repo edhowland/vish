@@ -2,11 +2,15 @@
 # a=[0,1,2,3]; :m[2] => 2
 
 class ListIndex < Terminal
-def initialize deref, index
-  @deref = deref
-  @index = index
-end
-attr_accessor :deref, :index
+  def initialize deref, index
+    @deref = deref
+    if index.kind_of?(Tree::TreeNode)
+      @index = index.content
+    else
+      @index = index
+    end
+  end
+  attr_accessor :deref, :index
 
   def self.leaf(deref, index)
     mknode(self.new(deref, index))
@@ -20,10 +24,11 @@ attr_accessor :deref, :index
   # :icall
   def emit(bc, ctx)
   @deref.emit(bc, ctx)
-  
-    con = ctx.store_constant(@index.to_i)
-    bc.codes << :pushc
-    bc.codes << con
+  @index.emit(bc, ctx)
+
+#    con = ctx.store_constant(@index.to_i)
+#    bc.codes << :pushc
+#    bc.codes << con
     bc.codes << :pushl
     bc.codes << 2
     bc.codes << :pushl

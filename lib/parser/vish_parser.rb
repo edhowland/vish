@@ -52,7 +52,7 @@ class VishParser < Parslet::Parser
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
-  rule(:list_index) { deref >> lbracket.as(:list_index) >> integer.as(:index) >> rbracket }
+  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref).as(:index) >> rbracket }
 
   # keywords
   rule(:_break) { str('break') >> space? }

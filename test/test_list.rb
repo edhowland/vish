@@ -42,4 +42,8 @@ class TestList < BaseSpike
     result = interpertit 'l=list([1],[2,3],[4,5,6],[7,8,9,10]);:l'
     assert_eq result, [1,2,3,4,5,6,7,8,9,10]
   end
+  def test_index_can_be_referenced_variable
+    result=interpret 'a=[9];y=0;:a[:y]'
+    assert_eq result, 9
+  end
 end
