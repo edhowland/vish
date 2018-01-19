@@ -46,4 +46,11 @@ class TestList < BaseSpike
     result=interpret 'a=[9];y=0;:a[:y]'
     assert_eq result, 9
   end
+
+  # test for able to execute lambdas within list index
+  # a=[->() {33}];%a[0]
+  def test_can_call_indexed_lambda_from_list
+    result = interpret 'z=[->() {44}];%z[0]'
+    assert_eq result, 44
+  end
 end

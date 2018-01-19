@@ -31,6 +31,7 @@ to a function.
 - Strings - strings can be quoted 2 ways
   - Single quoted strings: E.g. 'hello world'
   - Double quoted strings - E.g. "This is a double quoted string"
+- Symbols - identifiers with a trailing colon, like keys in JSON strings
 - lambdas - Anonymous functions : ->(arg) { :arg + 1 }
 - Blocks - small contained units of program statements.
 
@@ -42,6 +43,7 @@ Vish uses several sigils (single ASCII characters) to represent different type
 of expressions:
 
 - colon ':' - Used to dereference a variable or parameter.
+- Percent - '%' - Used to execute a block or lambda
 
 ## Program
 
@@ -91,7 +93,7 @@ sum(:li)
 ## Collections
 
 
-Vish has 1 collection type: List
+Vish has 2 collection types: List and objects (dictionary or Hash)
 
 ### Lists
 
@@ -113,7 +115,49 @@ l=list(:l,[4,5,6])
 # => nil
 :l
 # => [0,1,2,3,4,5,6]
+
+# index via a variable:
+idx=4
+:l[:idx]
+# => 4
 ```
+
+### Objects
+
+A Object in vish is like a dictionary or Hash/HashMap in other languages.
+They can be created with the builtin function: dict by passing key/value pairs.
+
+```
+obj=dict(name:,'James',email:, 'james@example.com')
+:obj[email:]
+# => 'james@example.com'
+```
+
+Objects can also contain lambdas (See Lambdas below) as values. This can
+approximate a kind of object-orientation with with state and behaviour
+in the same object.
+
+#### Caveat: No current way to reference internal key variables in the same object.
+
+This will be fixed in a future version by automatically passing the hidden
+variable :this to the  in the environament of the lambda/closure.
+
+Example:
+
+```
+# save behavour in object
+user=dict(name:,->() {'Sue'},age:,32)
+v=:user[:name:]
+name=%v
+:name
+# => 'Sue'
+age=:user[age:]
+:age
+# => 32
+```
+
+#### Note: Future versions will allow for direct execution, without the
+need to first pull out the lambda and then execute.
 
 ## Functions
 

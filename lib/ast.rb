@@ -7,6 +7,8 @@ require_relative 'ast/list_type'
 require_relative 'ast/symbol_type'
 
 require_relative 'ast/list_index'
+require_relative 'ast/execute_index'
+
 
 require_relative 'ast/ignore'
 require_relative 'ast/clear_stack'
