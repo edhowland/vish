@@ -38,11 +38,21 @@ fin.close
 
 if options[:check]
   compiler = VishCompiler.new source
-  compiler.parse
-  compiler.transform
-  compiler.analyze
-  puts 'Syntax OK'
-  exit(0)
+  exit_status = 0
+  begin
+    compiler.parse
+    compiler.transform
+    compiler.analyze
+    puts 'Syntax OK'
+rescue Parslet::ParseFailed => failure
+    puts "Syntax Error: #{failure.message}"
+  puts failure.parse_failure_cause.ascii_tree
+  exit_status = 1
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
+  exit_status = 2
+  end
+  exit(exit_status)
 end
 
 exit_status = 1
