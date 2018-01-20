@@ -17,4 +17,14 @@ class TestObject < BaseSpike
     result = interpret 'obj=dict(foo:, ->() {66*10});%obj[foo:]'
     assert_eq result, 660
   end
+
+  # can deref dict element be first term in expression?
+  def test_can_deref_element_in_dict_be_first_term_in_expression
+    result = interpret 'd=dict(foo:,99);:d[foo:] + 1'
+    assert_eq result, 100
+  end
+  def test_can_execute_lambda_value_as_first_term_in_expression
+    result = interpret 'd=dict(bar:,->() {3});%d[bar:] + 4'
+    assert_eq result, 7
+  end
 end

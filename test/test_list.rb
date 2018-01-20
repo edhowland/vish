@@ -53,4 +53,12 @@ class TestList < BaseSpike
     result = interpret 'z=[->() {44}];%z[0]'
     assert_eq result, 44
   end
+  # can deref of list index be a first term in expression?
+  def test_can_deref_list_index_be_first_term_in_expression
+    result = interpret 'l=[1];:l[0] + 2'
+    assert_eq result, 3
+  end
+  def test_can_execute_lambda_element_in_list_as_first_term_in_expression
+    result = interpret 'l=[->() {2}];%l[0] + 2'
+  end
 end

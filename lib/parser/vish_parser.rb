@@ -25,10 +25,10 @@ class VishParser < Parslet::Parser
   rule(:octo) { str('#') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
-  rule(:lbrace) { str('{') }
-  rule(:rbrace) { str('}') }
-  rule(:lbracket) { str('[') }
-  rule(:rbracket) { str(']') }
+  rule(:lbrace) { str('{') >> space? }
+  rule(:rbrace) { str('}') >> space? }
+  rule(:lbracket) { str('[') >> space? }
+  rule(:rbracket) { str(']') >> space? }
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
@@ -162,7 +162,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }

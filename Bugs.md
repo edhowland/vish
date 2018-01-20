@@ -1,5 +1,15 @@
 # Bugs
 
+## Bug incorrect behaviour when passing more arguments than are specified.
+
+
+```
+defn takes2(a,b) { :a + :b }
+takes(1,2,3,4,5,6)
+# => 11, because 5 + 6 is 11
+```
+
+
 ## Possible Bug: reading stdin input does not work in compiled mode
 
 But does work in interactive mode.
