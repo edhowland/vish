@@ -108,7 +108,7 @@ class VishParser < Parslet::Parser
       (str('\\') >> any) |
       (str("'").absent? >> any)
     ).repeat.as(:sq_string) >> 
-    str("'")
+    str("'") >> space?
   end
   rule(:dq_string) { string_interpolation >> space? }
 
@@ -172,11 +172,6 @@ class VishParser < Parslet::Parser
   rule(:infix_pipe) { infix_expression(statement,
     [logical_and, 2, :left], [logical_or, 2, :left],
    [pipe, 1, :left]) }
-
-  # Older pipe stuff
-#   rule(:pipe_expression) { statement.as(:lexpr) >> pipe.as(:pipe) >> statement.as(:rexpr) }
-#  rule(:pipe_or_statement) { pipe_expression | statement }
-#   rule(:pipe_list) { pipe_or_statement >> (pipe >> pipe_or_statement).repeat }
 
   rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }

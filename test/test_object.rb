@@ -27,4 +27,8 @@ class TestObject < BaseSpike
     result = interpret 'd=dict(bar:,->() {3});%d[bar:] + 4'
     assert_eq result, 7
   end
+  def test_canhave_expression_with_2_dict_derefs
+    result = interpret 'd=dict(one:,1,two:,2);:d[one:] + :d[two:]'
+    assert_eq result, 3
+  end
 end
