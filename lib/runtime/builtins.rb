@@ -87,6 +87,12 @@ module Builtins
 #    end
 #  end
 
+
+  # mkpair(symbol, lambda) - creates PairType
+  def self.mkpair(*args)
+    PairType.new(args)
+  end
+  # mklambda - creates LambdaType 
   def self.mklambda(name, arity, target)
     l = LambdaType.new(name, arity)
     l.target = target

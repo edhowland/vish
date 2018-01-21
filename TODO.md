@@ -7,6 +7,10 @@
 %obj[foo:](1,2)
 ```
 
+## TODO: Rename lib/ast/ListType to ListNode
+
+Should have all types in lib/runtime/xxxxx_type.rb derived from Type
+
 ## Todo: Make the return statement allow to convert blocks to lambdas.
 
 Normally, you can not return a block from a function. It just gets executes
