@@ -6,6 +6,8 @@ class ListIndex < Terminal
     @deref = deref
     if index.kind_of?(Tree::TreeNode)
       @index = index.content
+    elsif index.kind_of?(Parslet::Slice)
+      @index = SymbolType.new(index)
     else
       @index = index
     end

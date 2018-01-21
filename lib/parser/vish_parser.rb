@@ -42,6 +42,7 @@ class VishParser < Parslet::Parser
   # some punctuation
   rule(:dquote) { str('"') }
   rule(:squote) { str("'") }
+  rule(:period) { str('.') }
   # Logical ops
   rule(:bang) { str('!') }
   rule(:l_and) { str('and') >> space? }
@@ -114,7 +115,7 @@ class VishParser < Parslet::Parser
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
-  rule(:ident_tail) { match(/[a-zA-Z0-9_]/).repeat(1) }
+  rule(:ident_tail) { match(/[a-zA-Z0-9_\?]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
 
 
@@ -135,7 +136,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | deref | lambda_call | deref_block | block_exec | funcall | symbol | list }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | deref | lambda_call | deref_block | block_exec | funcall | symbol | list }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
@@ -155,6 +156,7 @@ class VishParser < Parslet::Parser
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
+  rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }

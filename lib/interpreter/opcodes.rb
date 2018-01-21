@@ -24,6 +24,7 @@ def opcodes tmpreg=nil
     alloc: ->(bc, ctx, fr, intp) {
       value = ctx.stack.pop
       id = genid(value)
+#      id.extend(LambdaFunction)
       intp.heap[id] = value
       ctx.stack.push id
     },

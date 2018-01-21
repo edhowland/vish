@@ -4,6 +4,20 @@
 class BreakCalled < RuntimeError; end
 
 module Builtins
+  # dup - just dups it input to its output (via the stack)
+  def self.dup(arg)
+    arg
+  end
+
+  # typeof?(obj) - gives the class/??? of the obj
+  def self.typeof?(obj)
+    if obj.respond_to?(:type)
+      obj.send(:type)
+    else
+    obj.send(:class)
+    end
+  end
+
   def self.echo(*args)
     args.map(&:to_s).join(' ') + "\n"
   end

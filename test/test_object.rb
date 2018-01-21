@@ -31,4 +31,10 @@ class TestObject < BaseSpike
     result = interpret 'd=dict(one:,1,two:,2);:d[one:] + :d[two:]'
     assert_eq result, 3
   end
+
+  # test method calls
+  def test_can_call_method_w_dot_syntax
+    result = interpret 'm=dict(foo:,->() {66});%m.foo'
+    assert_eq result, 66
+  end
 end
