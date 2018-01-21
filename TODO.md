@@ -1,5 +1,12 @@
 # TODO
 
+## TODO: MUST allow parameters on execute_index calls:
+
+```
+# if foo: is a lambda taking 2 args in object obj:
+%obj[foo:](1,2)
+```
+
 ## Todo: Make the return statement allow to convert blocks to lambdas.
 
 Normally, you can not return a block from a function. It just gets executes

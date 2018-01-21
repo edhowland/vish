@@ -24,16 +24,17 @@ in the language.
 ## Atoms
 
 Vish has just a few atoms which are the result of computing an expression.
-Atoms can stand-alone, be assigned to a variable or passed as a parameter
+Atoms can stand-alone, be assigned to a variable or passed as a parameters
 to a function.
 
+- Booleans - 'true' and 'false'
 - Integers - integer literals like 0,1,22,999 .etc
 - Strings - strings can be quoted 2 ways
   - Single quoted strings: E.g. 'hello world'
   - Double quoted strings - E.g. "This is a double quoted string"
-- Symbols - identifiers with a trailing colon, like keys in JSON strings
+- Symbols - identifiers with a trailing colon, like keys in JSON strings. Symbols can be used as keys to objects.
 - lambdas - Anonymous functions : ->(arg) { :arg + 1 }
-- Blocks - small contained units of program statements.
+- Blocks - small contained units of program statements. Blocks as atoms are lambdas with 0 parameters.
 
 Double quoted strings are also possible interpolated strings.
 
@@ -43,6 +44,7 @@ Vish uses several sigils (single ASCII characters) to represent different type
 of expressions:
 
 - colon ':' - Used to dereference a variable or parameter.
+- Trailing colon - identifier + ':'. Used to refer to symbol.
 - Percent - '%' - Used to execute a block or lambda
 
 ## Program
@@ -137,18 +139,12 @@ Objects can also contain lambdas (See Lambdas below) as values. This can
 approximate a kind of object-orientation with with state and behaviour
 in the same object.
 
-#### Caveat: No current way to reference internal key variables in the same object.
-
-This will be fixed in a future version by automatically passing the hidden
-variable :this to the  in the environament of the lambda/closure.
-
 Example:
 
 ```
 # save behavour in object
 user=dict(name:,->() {'Sue'},age:,32)
-v=:user[:name:]
-name=%v
+name=%user[name:]
 :name
 # => 'Sue'
 age=:user[age:]
@@ -156,8 +152,26 @@ age=:user[age:]
 # => 32
 ```
 
-#### Note: Future versions will allow for direct execution, without the
-need to first pull out the lambda and then execute.
+
+### Constructors
+
+In Vish, object constructors can be accomplished with functions that return
+objects, possibly with lambda values. See functions for a complete description
+of function declaration and executation.
+
+However, here is a sample object constructor. The convention is to use upper/camel
+case for the function names.
+
+```
+# Define a citywith behaviour
+defn City(name, state, country) {
+  dict(name:,:name,state:,:state,country:,:country,
+    pop: ->() { get_pop() },
+temp:, ->() { get_temp() })
+}
+kalamazoo=City('Kalamazoo',Michigan','U.S.A.')
+print("Right now in :{:kalamazoo[name:]}, :{:kalamazoo[state:]}, it is :{%kalamazoo[temp:]} for its :{%kalamazoo[pop]} citizens.")
+```
 
 ## Functions
 
