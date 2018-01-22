@@ -4,6 +4,8 @@ require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 require_relative 'ast/list_type'
 require_relative 'ast/pair_node'
+require_relative 'ast/object_node'
+
 require_relative 'ast/symbol_type'
 
 require_relative 'ast/list_index'

@@ -70,4 +70,10 @@ class TestObject < BaseSpike
       interpret 'mkobject(1, 2)'
     end
   end
+
+  # test can create objects with ~{} syntax
+  def test_can_create_object_type_with_tilde_syntax
+    otype = interpret '~{}'
+    assert_is otype, ObjectType
+  end
 end
