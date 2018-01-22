@@ -8,6 +8,7 @@
 ```
 
 ## TODO: Rename lib/ast/ListType to ListNode
+## TODO: Rename ast/ SymbolType to SymbolNode
 
 Should have all types in lib/runtime/xxxxx_type.rb derived from Type
 

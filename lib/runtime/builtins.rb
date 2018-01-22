@@ -9,13 +9,18 @@ module Builtins
     arg
   end
 
-  # typeof?(obj) - gives the class/??? of the obj
-  def self.typeof?(obj)
+  # typeof(obj) - gives the class/??? of the obj
+  def self.typeof(obj)
     if obj.respond_to?(:type)
       obj.send(:type)
     else
     obj.send(:class)
     end
+  end
+
+  # inspect runs inspect on its arguments
+  def self.inspect(*args)
+    args.inspect
   end
 
   def self.echo(*args)
@@ -63,6 +68,16 @@ module Builtins
     evens.zip(odds).to_h
   end
 
+  # mkpair(k, v) - given two values returns PairType
+  def self.mkpair(key, value)
+    PairType.new(key:key, value:value)
+  end
+
+  # mkobject(pairs=[]) - create instance of type ObjectType
+  def self.mkobject(*args)
+    ObjectFactory.build(args)
+  end
+
   # ix(arr, index) - should work with lists or dicts (arrays/hashes)
   def self.ix(arr,idx)
     arr[idx]#
@@ -88,10 +103,7 @@ module Builtins
 #  end
 
 
-  # mkpair(symbol, lambda) - creates PairType
-  def self.mkpair(*args)
-    PairType.new(args)
-  end
+
   # mklambda - creates LambdaType 
   def self.mklambda(name, arity, target)
     l = LambdaType.new(name, arity)

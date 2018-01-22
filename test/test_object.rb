@@ -37,4 +37,37 @@ class TestObject < BaseSpike
     result = interpret 'm=dict(foo:,->() {66});%m.foo'
     assert_eq result, 66
   end
+
+  # test PairType
+  def test_can_make_pair
+    result = interpret 'foo: 2'
+    assert_is result, PairType
+  end
+  def test_pair_type_has_key
+    ptype = interpret 'bar: 3'
+    assert_eq ptype.key, :bar
+  end
+  def test_pair_type_has_value
+    ptype = interpret 'baz: 4'
+    assert_eq ptype.value, 4
+  end
+
+  # test mkobject builtin
+  def test_mkobject_can_be_created
+    otype = interpret 'mkobject()'
+    assert_is otype, ObjectType
+  end
+  def test_mkobject_can_take_1_pair_type
+    otype = interpret 'mkobject(foo: 2)'
+    assert_eq otype, {:foo => 2}
+  end
+  def test_mkobject_can_take_multiple_pair_types
+    otype = interpret 'mkobject(foo: 1, bar: 2, baz: 3)'
+    assert_eq otype, {:foo => 1, :bar => 2, :baz => 3}
+  end
+  def test_mkobject_raises_pair_illegal_argument_when_not_given_pair_types
+    assert_raises  PairInvalidArgumentType do
+      interpret 'mkobject(1, 2)'
+    end
+  end
 end

@@ -1,14 +1,15 @@
 # pair_type.rb - class PairType - tuple of SymbolType and lambda or expression
 
-class PairLengthError < VishRuntimeError
+class PairInvalidArgumentType < VishRuntimeError
 end
 
-class PairType < Array
+class PairType
   include Type
-  def initialize _array=[nil, nil]
-    raise PairLengthError if _array.length != 2
-    super(2)
-    self.send :[]=,0,_array[0]
-    self.send :[]=,1,_array[1]
+  def initialize key:, value:
+    @key, @value = key, value
+  end
+  attr_reader :key, :value
+  def inspect
+    "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
   end
 end

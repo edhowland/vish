@@ -1,9 +1,19 @@
 # object_type.rb - class ObjectType < Hash
 
-class ObjectType < Hash
+module ObjectType
   include Type
-  def initialize _hash={}
-    super()
-    self.merge(_hash)
+  def type
+    ObjectType
+  end
+end
+
+
+# Constructs a Hash extended with ObjectType out of array of PairTypes
+class ObjectFactory
+  def self.build pairs=[]
+    raise PairInvalidArgumentType.new unless pairs.all? {|e| e.respond_to?(:type) && e.type == PairType }
+    this = {}
+    this.extend(ObjectType)
+    pairs.each_with_object(this) { |e, o| o[e.key] = e.value }
   end
 end

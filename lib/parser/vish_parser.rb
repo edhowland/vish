@@ -55,6 +55,7 @@ class VishParser < Parslet::Parser
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
   rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol).as(:index) >> rbracket }
   rule(:execute_index) { deref_block >> lbracket.as(:execute_index) >>(integer | deref | symbol).as(:index) >> rbracket } 
+  rule(:pair) { symbol >> space? >> expr.as(:expr) }
 
   # keywords
   rule(:_break) { str('break') >> space? }
@@ -136,7 +137,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | deref | lambda_call | deref_block | block_exec | funcall | symbol | list }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
