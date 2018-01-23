@@ -5,6 +5,9 @@ module ObjectType
   def type
     ObjectType
   end
+  def +(that)
+    self.merge(that)
+  end
 end
 
 

@@ -2,6 +2,7 @@
 
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
+Also, shoud perfom some kind of arity check for fn invocation.
 
 ```
 defn takes2(a,b) { :a + :b }

@@ -76,4 +76,14 @@ class TestObject < BaseSpike
     otype = interpret '~{}'
     assert_is otype, ObjectType
   end
+
+  # test objects in expressions
+  def test_can_add_2_objects
+    result = interpret '~{foo: 1,bar: 2} + ~{baz: 3, qxy: 4}'
+    assert_eq result, {:foo => 1, :bar => 2, :baz => 3, :qxy => 4}
+  end
+  def test_can_construct_object_with_single_pair
+    result = interpret '~{foo: 1}'
+    assert_eq result, {:foo => 1 }
+  end
 end

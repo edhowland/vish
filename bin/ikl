@@ -1,0 +1,55 @@
+#!/usr/bin/env ruby
+
+require 'tty-reader'
+# ivs.rb - New and improved interactive Vish shell
+# This is an outer REPL.
+# An inner REPL would use the loop { read() | eval() | print() }  implementation
+# as an interactive .vs script.
+
+require_relative '../lib/vish'
+
+
+eval = Evaluator.new
+history = History.new
+
+# start up stuff
+startup =<<-EOS
+version='#{Vish::VERSION}'
+prompt='vish> '
+_=0
+EOS
+
+begin
+  eval.eval startup
+_=0
+loop do
+  begin
+  prompt = eval.eval(':prompt')
+#    print prompt
+#    source = readline(history).chomp
+reader = TTY::Reader.new(track_history: true)
+
+# reader.read_multiline keeps reading all lines into an array of one line per element
+# until a Ctrl-d is entered. Up/Down lets editing of lines entered.
+# reader.read_line returns after each return
+source = reader.read_line(prompt).chomp 
+
+# uncomment this to use read_multiline
+#source = source.join
+    break if source =~ /exit|quit/#
+    _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
+p _
+  rescue TTY::Reader::InputInterrupt # SigInt
+  # nop
+rescue Parslet::ParseFailed => err
+    puts "Syntax Error: #{err.message}"
+  rescue VishRuntimeError => err
+    puts "Runtime error: #{err.message}"
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
+  end
+end
+
+rescue EndOfFile
+  # nop
+end

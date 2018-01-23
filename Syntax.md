@@ -127,10 +127,46 @@ idx=4
 ### Objects
 
 A Object in vish is like a dictionary or Hash/HashMap in other languages.
-They can be created with the builtin function: dict by passing key/value pairs.
+They are constructed with the '~{ ... }' syntax.
+
+You must use a key value pair to construct them like with JSON syntax
+
+#### Key/Value pairs
+
+A key in a key/value pair is a Vish symbol. An identifier with an immediate trailing colon. E.g. 'id:'
+This is followd by any legal Vish expression for the value in the pair.
+The expression is first evaluated and then added to the value portion of the pair.
 
 ```
-obj=dict(name:,'James',email:, 'james@example.com')
+pair=foo: 3*9
+:pair
+# =>  :pairPairType: key: :foo value: 27
+typeof(:pair)
+# => PairType
+```
+
+##### Extracting the key or value from a PairType
+
+You can use the builtin 'xmit' function to get the individual elements of the PairType.
+This is usually not needed, which is why their is no syntactic sugar language construect for it.
+
+Example:
+
+```
+pair=baz: 99
+xmit(:pair,key:)
+# => :baz
+xmit(pair:, value:)
+# => 99
+```
+
+#### Object creation
+
+By combining the '~{ ... }' object method with a list of key/values, 
+you can populate the object:
+
+```
+obj=~{name: 'James',email:  'james@example.com'}
 :obj[email:]
 # => 'james@example.com'
 ```
@@ -143,7 +179,7 @@ Example:
 
 ```
 # save behavour in object
-user=dict(name:,->() {'Sue'},age:,32)
+user=~{name: ->() {'Sue'},age: 32}
 name=%user[name:]
 :name
 # => 'Sue'
@@ -171,6 +207,18 @@ temp:, ->() { get_temp() })
 }
 kalamazoo=City('Kalamazoo',Michigan','U.S.A.')
 print("Right now in :{:kalamazoo[name:]}, :{:kalamazoo[state:]}, it is :{%kalamazoo[temp:]} for its :{%kalamazoo[pop]} citizens.")
+```
+
+###  Builtin object operations
+
+Beside using the above constructs to pull out object members,
+you can also perform addition on 2 objects.
+
+```
+obj=~{carrier: 'Verizon'}
+plan=:carrier + ~{plan: 'Unlimited'}
+:plan
+#=> {:carrier => 'Verizon', :plan => 'Unlimited'}
 ```
 
 ## Functions
