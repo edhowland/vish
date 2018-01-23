@@ -28,7 +28,8 @@ loop do
 #    print prompt
 #    source = readline(history).chomp
 reader = TTY::Reader.new(track_history: true)
-
+#reader.on(:keydown) {|key| puts 'keydown pressed'; p key; puts }
+reader.on(:keyctrl_d) {|k| exit(0) }
 # reader.read_multiline keeps reading all lines into an array of one line per element
 # until a Ctrl-d is entered. Up/Down lets editing of lines entered.
 # reader.read_line returns after each return
