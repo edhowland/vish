@@ -1,11 +1,9 @@
 #!/usr/bin/env ruby
-
-require 'tty-reader'
 # ivs.rb - New and improved interactive Vish shell
 # This is an outer REPL.
 # An inner REPL would use the loop { read() | eval() | print() }  implementation
 # as an interactive .vs script.
-
+require_relative 'reader'
 require_relative '../lib/vish'
 
 
@@ -27,13 +25,10 @@ loop do
   prompt = eval.eval(':prompt')
 #    print prompt
 #    source = readline(history).chomp
-reader = TTY::Reader.new(track_history: true)
-#reader.on(:keydown) {|key| puts 'keydown pressed'; p key; puts }
-reader.on(:keyctrl_d) {|k| exit(0) }
 # reader.read_multiline keeps reading all lines into an array of one line per element
 # until a Ctrl-d is entered. Up/Down lets editing of lines entered.
 # reader.read_line returns after each return
-source = reader.read_line(prompt).chomp 
+source = reader(prompt)
 
 # uncomment this to use read_multiline
 #source = source.join
