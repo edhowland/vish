@@ -23,15 +23,8 @@ _=0
 loop do
   begin
   prompt = eval.eval(':prompt')
-#    print prompt
-#    source = readline(history).chomp
-# reader.read_multiline keeps reading all lines into an array of one line per element
-# until a Ctrl-d is entered. Up/Down lets editing of lines entered.
-# reader.read_line returns after each return
-source = reader(prompt)
+source = reader
 
-# uncomment this to use read_multiline
-#source = source.join
     break if source =~ /exit|quit/#
     _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
 p _

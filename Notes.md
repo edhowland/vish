@@ -1,5 +1,48 @@
 # Notes
 
+## Let binding
+
+### The loop over closure problem
+
+If you create a loop and then save a bunch of closures over some internal changing state
+and then later execute these lambdas, they will all have the same state that existed
+at the time the loop exited.
+
+See this example:
+... compiler/missing_let.vs
+
+At the end, we try to execute each closure in :set. But they all the same environment pointer.
+It has the last saved value in the :i variable. So, they all print the same value.
+
+### Possible solution
+
+Was known for a long time in Lisp/Scheme language designers.
+So, they introduced the 'let' binding.
+
+```
+# possible Vish implementation of let:
+set=list()
+let(a, b, c) {
+  cons(->() { :a + :b + :c }, :set)
+}
+# now execute the closures.
+map(->(x) { %x }, :set)
+```
+
+'let' here introduces a new binding for the variables on the frame_stack. It is sort like a
+function call, but one that is executed in situ.
+
+If this existed in a loop body, then it would look like the function was being invoked anew
+everytime. Therefore, each lambda created on the heap would point a new Frame.
+
+### In Scheme/Racket: can set variables in let binding.
+
+```
+(let ((a 2, (b 3) (c 4)) 
+  # some code
+)
+```
+
 ## Variadic method signatures
 
 Function calls already take a variable number of parameters. But at runtime,
