@@ -7,11 +7,11 @@ $reader = TTY::Reader.new
 $reader.on(:keyctrl_d) {|k| exit(0) }
 eval = Evaluator.new
 
-def vish_eval(evaluator , &blk)
+def vish_eval(evaluator , _=nil, &blk)
   begin
-    s = yield if block_given?
-    # eval(s)
-    s
+    source = yield if block_given?
+    _ = evaluator.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
+    _ 
   rescue TTY::Reader::InputInterrupt # SigInt
     # clear the input buffer
   rescue Parslet::ParseFailed => err
@@ -29,9 +29,11 @@ def reader(prompt='vish> ')
 end
 
 def readit(ev)
+  seed=nil
 4.times do
-  result =vish_eval(ev) { reader }
-  puts result
+  result =vish_eval(ev, seed) { reader }
+  p result
+  seed = result
   end
 end
 
