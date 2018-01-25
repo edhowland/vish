@@ -7,7 +7,9 @@ def initialize argc=0
 end
   attr_reader :argc
   def self.subtree(pairs=[])
+    pairs.reject!(&:nil?)
     top = mknode(self.new(pairs.length))
+
     pairs.each do |p|
       top << node_unless(p)
     end

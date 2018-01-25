@@ -28,13 +28,15 @@ def reader(prompt='vish> ')
   s.chomp
 end
 
-def readit(ev)
+def repl(ev)
   seed=nil
-4.times do
+loop do
   result =vish_eval(ev, seed) { reader }
   p result
   seed = result
   end
 end
 
-readit(eval) if ARGV.length >= 1
+
+
+repl(eval)

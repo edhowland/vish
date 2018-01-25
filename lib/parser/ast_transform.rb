@@ -19,7 +19,7 @@ class AstTransform < Parslet::Transform
   rule(symbol: simple(:symbol)) { SymbolType.new(symbol) }
   rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(ListType.new, [arg]) }
   rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(ListType.new, arg) }
-  rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([]) }
+  rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
   rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
   rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolType.new(symbol),expr) }
   rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
