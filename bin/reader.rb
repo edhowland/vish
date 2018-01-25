@@ -10,7 +10,8 @@ eval = Evaluator.new
 def vish_eval(evaluator , &blk)
   begin
     s = yield if block_given?
-    s.chomp!
+    # eval(s)
+    s
   rescue TTY::Reader::InputInterrupt # SigInt
     # clear the input buffer
   rescue Parslet::ParseFailed => err
