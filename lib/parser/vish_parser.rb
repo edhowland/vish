@@ -139,7 +139,7 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list | object }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | object_deref | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list | object }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
@@ -160,6 +160,7 @@ class VishParser < Parslet::Parser
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
   rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) }
+  rule(:object_deref) { deref >> period.as(:list_index) >> identifier.as(:index) }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }
@@ -167,7 +168,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer | list_index }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | object | deref | deref_block | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }

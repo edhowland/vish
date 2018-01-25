@@ -1,5 +1,8 @@
 # TODO
 
+## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
+
+
 ## TODO: MUST allow parameters on execute_index calls:
 
 ```
