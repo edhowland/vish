@@ -33,6 +33,7 @@ def repl(ev)
 loop do
   result =vish_eval(ev, seed) { reader }
   p result
+  break if ev.interpreter.last_exception.class == ExitState
   seed = result
   end
 end
