@@ -86,4 +86,10 @@ class TestObject < BaseSpike
     result = interpret '~{foo: 1}'
     assert_eq result, {:foo => 1 }
   end
+
+  # test can expose instance var via dotted method:
+  def test_can_access_internal_value_via_dotted_method
+    result = interpret 'foo=~{var: 66};:foo.var'
+    assert_eq result, 66
+  end
 end
