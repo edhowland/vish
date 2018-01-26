@@ -159,7 +159,7 @@ class VishParser < Parslet::Parser
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
-  rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) }
+  rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) >> (lparen >> arglist.as(:arglist) >> rparen).maybe }
   rule(:object_deref) { deref >> period.as(:list_index) >> identifier.as(:index) }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11

@@ -9,13 +9,8 @@ class FunctorNode
   object.argc = list.length
     top = mknode(object)
     list.each do |a|
-      if a.instance_of?(Tree::TreeNode)
-        top << a
-      else
-        top << mknode(a)
-      end
+      top << node_unless(a)
     end
           top
-
   end
 end

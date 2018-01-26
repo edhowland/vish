@@ -23,9 +23,11 @@ class AstTransform < Parslet::Transform
   rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
   rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolType.new(symbol),expr) }
   rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
+  # method call
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) {ExecuteIndex.leaf(Deref.new(lambda_call), index) } 
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {ExecuteIndex.leaf(Deref.new(lambda_call), index) } 
   rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
 
-  
   # logical operations
 
   # arithmetic expressions

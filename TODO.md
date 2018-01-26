@@ -7,7 +7,8 @@
 
 ```
 # if foo: is a lambda taking 2 args in object obj:
-%obj[foo:](1,2)
+# using the dotted method call:
+%obj.foo(1,2)
 ```
 
 ## TODO: Rename lib/ast/ListType to ListNode
@@ -252,3 +253,33 @@ This is the same as using the ./vishc.rb to stitch various .vshc files together 
 It can be specified within the individual source files.
 
 This also helps the compiler check for unreferenced things.
+
+## Todo: Create   a type mechanism
+
+Types tag their objects with the type parameter
+
+Should some Ruby metaprogramming to dynamically create from a string/symbol.
+
+### Types are syntax sugar for creating constructors out of objects.
+
+```
+# define a type:
+deftype MyType(a, b)
+# => Type::MyType
+# use the type:
+myt=MyType(1,2)
+typeof(:myt)
+# => Type::MyType
+typeof(MyType)
+# => FunctionType
+%myt.a
+# => 1
+%myt.b
+# => 2
+```
+Internally, the AST gets expanded to create an  function with the name of the type name.
+Internally, it will have an ObjectNode with  with lambdas for getting/setting each parameters
+of the type definition.
+
+
+

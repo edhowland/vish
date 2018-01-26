@@ -46,6 +46,7 @@ of expressions:
 - colon ':' - Used to dereference a variable or parameter.
 - Trailing colon - identifier + ':'. Used to refer to symbol.
 - Percent - '%' - Used to execute a block or lambda
+- Tilde - '~' - Used to create an object/dictionary
 
 ## Program
 
@@ -220,6 +221,39 @@ plan=:carrier + ~{plan: 'Unlimited'}
 :plan
 #=> {:carrier => 'Verizon', :plan => 'Unlimited'}
 ```
+
+### Inheritance
+
+In Vish, there is no direct mechansim to achieve inheritance. But, this can 
+be accomplished with the addition above. 
+
+```
+defn Base(a, b) { ~{a: :a, b: :b} }
+defn Sub(a, b, c) { Base(:a, :b) + ~{c: :c}}
+sub=Sub(1, 2, 3)
+:sub
+```
+
+### Dotted attributes and methods
+
+Vish objects can be referenced via using the dot operator: '.'
+This is similar to other languages. Use the ':' or '%' to achieve
+access to either the attribute or the lambda to execute.
+
+```
+defn Baz(x) {
+  ~{x: :x,
+  add1: ->() { :x = :x + 1}
+}
+baz=Baz(4)
+:baz.a
+# => 4
+%baz.add1
+:baz.a
+# => 5
+```
+
+
 
 ## Functions
 
