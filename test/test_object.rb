@@ -92,4 +92,18 @@ class TestObject < BaseSpike
     result = interpret 'foo=~{var: 66};:foo.var'
     assert_eq result, 66
   end
+
+  # test can send various argument lists to lambda in object
+  def test_can_send_0_args_to_method_call
+    result = interpret 'm=~{foo: ->() { 99 }};%m.foo()'
+    assert_eq result, 99
+  end
+  def test_can_send_1_argument_to_method
+    result=interpret 'o=~{add1: ->(x) { :x + 1 }};%o.add1(4)'
+    assert_eq result, 5
+  end
+  def test_can_send_multiple_args_to_method
+    result=interpret 'l=~{many: ->(a, b, c) { :a * :c + :b }};%l.many(1,2,3)'
+    assert_eq result, 5
+  end
 end
