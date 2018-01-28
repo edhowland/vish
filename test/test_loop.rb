@@ -21,4 +21,7 @@ class TestLoop < BaseSpike
   def test_lambda_can_break_out_of_enclosing_loop
     interpertit 'm=->() {break};loop { %m() }'
   end
+  def test_can_really_break_out_of_loop_from_lambda_function_within_function
+    interpret 'defn foo(bk) { %bk }; loop { foo(->() { break }) }'
+  end
 end

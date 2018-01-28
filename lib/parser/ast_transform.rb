@@ -16,11 +16,18 @@ class AstTransform < Parslet::Transform
   rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
   rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
+  rule(symbol: simple(:symbol)) { SymbolType.new(symbol) }
   rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(ListType.new, [arg]) }
   rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(ListType.new, arg) }
+  rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
+  rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
+  rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolType.new(symbol),expr) }
   rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
+  # method call
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), [arglist]) }
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), arglist) }
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
 
-  
   # logical operations
 
   # arithmetic expressions

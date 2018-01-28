@@ -24,15 +24,17 @@ in the language.
 ## Atoms
 
 Vish has just a few atoms which are the result of computing an expression.
-Atoms can stand-alone, be assigned to a variable or passed as a parameter
+Atoms can stand-alone, be assigned to a variable or passed as a parameters
 to a function.
 
+- Booleans - 'true' and 'false'
 - Integers - integer literals like 0,1,22,999 .etc
 - Strings - strings can be quoted 2 ways
   - Single quoted strings: E.g. 'hello world'
   - Double quoted strings - E.g. "This is a double quoted string"
+- Symbols - identifiers with a trailing colon, like keys in JSON strings. Symbols can be used as keys to objects.
 - lambdas - Anonymous functions : ->(arg) { :arg + 1 }
-- Blocks - small contained units of program statements.
+- Blocks - small contained units of program statements. Blocks as atoms are lambdas with 0 parameters.
 
 Double quoted strings are also possible interpolated strings.
 
@@ -42,6 +44,9 @@ Vish uses several sigils (single ASCII characters) to represent different type
 of expressions:
 
 - colon ':' - Used to dereference a variable or parameter.
+- Trailing colon - identifier + ':'. Used to refer to symbol.
+- Percent - '%' - Used to execute a block or lambda
+- Tilde - '~' - Used to create an object/dictionary
 
 ## Program
 
@@ -91,7 +96,7 @@ sum(:li)
 ## Collections
 
 
-Vish has 1 collection type: List
+Vish has 2 collection types: List and objects (dictionary or Hash)
 
 ### Lists
 
@@ -113,6 +118,187 @@ l=list(:l,[4,5,6])
 # => nil
 :l
 # => [0,1,2,3,4,5,6]
+
+# index via a variable:
+idx=4
+:l[:idx]
+# => 4
+```
+
+### Objects
+
+A Object in vish is like a dictionary or Hash/HashMap in other languages.
+They are constructed with the '~{ ... }' syntax.
+
+You must use a key value pair to construct them like with JSON syntax
+
+#### Key/Value pairs
+
+A key in a key/value pair is a Vish symbol. An identifier with an immediate trailing colon. E.g. 'id:'
+This is followd by any legal Vish expression for the value in the pair.
+The expression is first evaluated and then added to the value portion of the pair.
+
+```
+pair=foo: 3*9
+:pair
+# =>  :pairPairType: key: :foo value: 27
+typeof(:pair)
+# => PairType
+```
+
+##### Extracting the key or value from a PairType
+
+You can use the builtin 'xmit' function to get the individual elements of the PairType.
+This is usually not needed, which is why their is no syntactic sugar language construect for it.
+
+Example:
+
+```
+pair=baz: 99
+xmit(:pair,key:)
+# => :baz
+xmit(pair:, value:)
+# => 99
+```
+
+#### Object creation
+
+By combining the '~{ ... }' object method with a list of key/values, 
+you can populate the object:
+
+```
+obj=~{name: 'James',email:  'james@example.com'}
+:obj[email:]
+# => 'james@example.com'
+```
+
+Objects can also contain lambdas (See Lambdas below) as values. This can
+approximate a kind of object-orientation with with state and behaviour
+in the same object.
+
+Example:
+
+```
+# save behavour in object
+user=~{name: ->() {'Sue'},age: 32}
+name=%user[name:]
+:name
+# => 'Sue'
+age=:user[age:]
+:age
+# => 32
+```
+
+
+### Constructors
+
+In Vish, object constructors can be accomplished with functions that return
+objects, possibly with lambda values. See functions for a complete description
+of function declaration and executation.
+
+However, here is a sample object constructor. The convention is to use upper/camel case
+for the function names.
+
+```
+# Define a citywith behaviour
+defn City(name, state, country) {
+  dict(name:,:name,state:,:state,country:,:country,
+    pop: ->() { get_pop() },
+temp:, ->() { get_temp() })
+}
+kalamazoo=City('Kalamazoo',Michigan','U.S.A.')
+print("Right now in :{:kalamazoo[name:]}, :{:kalamazoo[state:]}, it is :{%kalamazoo[temp:]} for its :{%kalamazoo[pop]} citizens.")
+```
+
+###  Builtin object operations
+
+Beside using the above constructs to pull out object members,
+you can also perform addition on 2 objects.
+
+```
+obj=~{carrier: 'Verizon'}
+plan=:carrier + ~{plan: 'Unlimited'}
+:plan
+#=> {:carrier => 'Verizon', :plan => 'Unlimited'}
+```
+
+### Inheritance
+
+In Vish, there is no direct mechansim to achieve inheritance. But, this can 
+be accomplished with the addition above. 
+
+```
+defn Base(a, b) { ~{a: :a, b: :b} }
+defn Sub(a, b, c) { Base(:a, :b) + ~{c: :c}}
+sub=Sub(1, 2, 3)
+:sub
+```
+
+### Dotted attributes and methods
+
+Vish objects can be referenced via using the dot operator: '.'
+This is similar to other languages. Use the ':' or '%' to achieve
+access to either the attribute or the lambda to execute.
+
+```
+defn Baz(x) {
+  ~{x: ->() {:x },
+  add1: ->() { :x= :x + 1}
+}
+baz=Baz(4)
+%baz.a
+# => 4
+%baz.add1
+%baz.a
+# => 5
+```
+
+#### Setter and Getter methods
+
+Objects in Vish must use explicit setters and getters as lambda functions.
+As seen abobe in the prior example,  they can only have effect when executed with the '%' sigil.
+The reason for this is because each instance variable is saved in a closure.
+
+Consider this example where we try to use just accessor a dereference  method:
+
+```
+defn Getter(x) {
+  ~{x: :x,
+  set_x: ->(b) { x=:b; :x }
+}
+
+g=Getter(1)
+:g.x
+# => 1
+%g.set_x(4)
+# => 4
+:g.x
+# => 1
+%g.set_x(5)
+# => 5
+```
+
+The internal state of the value attached of the key x: is evaluated. It can never
+be modified via the set_x: lambda. set_x: will always change the state of the closure'sx.
+They are two distinct objects.
+
+#### The mkattr() Vish Standard Library function
+
+To make this easy, Vish comes with a number of standard libray functions.
+One of these is 'mkattr()'. This takes a symbol  and a value and returns an 
+object. The first parameter, the symbol name also creates a setter method:
+'set_key:', where key: is the intial symbol.
+
+E.g.
+
+```
+obj=mkattr(foo:, 2)
+%obj.foo
+# => 1
+%obj.set_foo(4)
+# => 4
+%obj.foo
+#  => 4
 ```
 
 ## Functions

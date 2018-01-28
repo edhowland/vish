@@ -1,5 +1,17 @@
 # TODO
 
+## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
+
+Problem: gem: tty-reader does not output an entered '['
+
+### Todo: Once the above is done: move internal builtin read() to use this gem
+
+## TODO: Rename lib/ast/ListType to ListNode
+
+## TODO: Rename ast/ SymbolType to SymbolNode
+
+Should have all types in lib/runtime/xxxxx_type.rb derived from Type
+
 ## Todo: Make the return statement allow to convert blocks to lambdas.
 
 Normally, you can not return a block from a function. It just gets executes
@@ -237,3 +249,33 @@ This is the same as using the ./vishc.rb to stitch various .vshc files together 
 It can be specified within the individual source files.
 
 This also helps the compiler check for unreferenced things.
+
+## Todo: Create   a type mechanism
+
+Types tag their objects with the type parameter
+
+Should some Ruby metaprogramming to dynamically create from a string/symbol.
+
+### Types are syntax sugar for creating constructors out of objects.
+
+```
+# define a type:
+deftype MyType(a, b)
+# => Type::MyType
+# use the type:
+myt=MyType(1,2)
+typeof(:myt)
+# => Type::MyType
+typeof(MyType)
+# => FunctionType
+%myt.a
+# => 1
+%myt.b
+# => 2
+```
+Internally, the AST gets expanded to create an  function with the name of the type name.
+Internally, it will have an ObjectNode with  with lambdas for getting/setting each parameters
+of the type definition.
+
+
+

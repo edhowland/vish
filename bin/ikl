@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+# ivs.rb - New and improved interactive Vish shell
+# This is an outer REPL.
+# An inner REPL would use the loop { read() | eval() | print() }  implementation
+# as an interactive .vs script.
+require_relative 'reader'
+require_relative '../lib/vish'
+
+
+eval = Evaluator.new
+history = History.new
+
+# start up stuff
+startup =<<-EOS
+version='#{Vish::VERSION}'
+prompt='vish> '
+_=0
+EOS
+
+begin
+  eval.eval startup
+_=0
+loop do
+  begin
+  prompt = eval.eval(':prompt')
+source = reader
+
+    break if source =~ /exit|quit/#
+    _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
+p _
+  rescue TTY::Reader::InputInterrupt # SigInt
+  # nop
+rescue Parslet::ParseFailed => err
+    puts "Syntax Error: #{err.message}"
+  rescue VishRuntimeError => err
+    puts "Runtime error: #{err.message}"
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
+  end
+end
+
+rescue EndOfFile
+  # nop
+end

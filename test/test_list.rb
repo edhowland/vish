@@ -42,4 +42,27 @@ class TestList < BaseSpike
     result = interpertit 'l=list([1],[2,3],[4,5,6],[7,8,9,10]);:l'
     assert_eq result, [1,2,3,4,5,6,7,8,9,10]
   end
+  def test_index_can_be_referenced_variable
+    result=interpret 'a=[9];y=0;:a[:y]'
+    assert_eq result, 9
+  end
+
+  # test for able to execute lambdas within list index
+  # a=[->() {33}];%a[0]
+  def test_can_call_indexed_lambda_from_list
+    result = interpret 'z=[->() {44}];%z[0]'
+    assert_eq result, 44
+  end
+  # can deref of list index be a first term in expression?
+  def test_can_deref_list_index_be_first_term_in_expression
+    result = interpret 'l=[1];:l[0] + 2'
+    assert_eq result, 3
+  end
+  def test_can_execute_lambda_element_in_list_as_first_term_in_expression
+    result = interpret 'l=[->() {2}];%l[0] + 2'
+  end
+  def test_can_have_2_list_indexes_in_expressions
+    result = interpret 'l=[ 3 , 5 ];:l[0] + :l[1]'
+    assert_eq result, 8
+  end
 end
