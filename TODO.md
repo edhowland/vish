@@ -3,14 +3,6 @@
 ## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
 
 
-## TODO: MUST allow parameters on execute_index calls:
-
-```
-# if foo: is a lambda taking 2 args in object obj:
-# using the dotted method call:
-%obj.foo(1,2)
-```
-
 ## TODO: Rename lib/ast/ListType to ListNode
 ## TODO: Rename ast/ SymbolType to SymbolNode
 

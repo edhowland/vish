@@ -4,7 +4,7 @@ class Evaluator
   def initialize
     @compiler = VishCompiler.new
     @saved_heap = {}
-    @interpreter = nil
+    @interpreter = CodeInterpreter.new(ByteCodes.new, Context.new)
   end
   attr_reader :compiler, :saved_heap, :interpreter
   def eval(string, &blk)

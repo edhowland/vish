@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 # reader.rb - wraper on TTY::Reader from tty-reader gem
 
 require 'tty-reader'
@@ -6,6 +7,7 @@ require_relative '../lib/vish'
 $reader = TTY::Reader.new
 $reader.on(:keyctrl_d) {|k| exit(0) }
 eval = Evaluator.new
+eval.eval(File.read(stdlib))
 
 def vish_eval(evaluator , _=nil, &blk)
   begin
@@ -33,6 +35,7 @@ def repl(ev)
 loop do
   result =vish_eval(ev, seed) { reader }
   p result
+#binding.pry
   break if ev.interpreter.last_exception.class == ExitState
   seed = result
   end

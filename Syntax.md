@@ -196,8 +196,8 @@ In Vish, object constructors can be accomplished with functions that return
 objects, possibly with lambda values. See functions for a complete description
 of function declaration and executation.
 
-However, here is a sample object constructor. The convention is to use upper/camel
-case for the function names.
+However, here is a sample object constructor. The convention is to use upper/camel case
+for the function names.
 
 ```
 # Define a citywith behaviour
@@ -242,18 +242,64 @@ access to either the attribute or the lambda to execute.
 
 ```
 defn Baz(x) {
-  ~{x: :x,
-  add1: ->() { :x = :x + 1}
+  ~{x: ->() {:x },
+  add1: ->() { :x= :x + 1}
 }
 baz=Baz(4)
-:baz.a
+%baz.a
 # => 4
 %baz.add1
-:baz.a
+%baz.a
 # => 5
 ```
 
+#### Setter and Getter methods
 
+Objects in Vish must use explicit setters and getters as lambda functions.
+As seen abobe in the prior example,  they can only have effect when executed with the '%' sigil.
+The reason for this is because each instance variable is saved in a closure.
+
+Consider this example where we try to use just accessor a dereference  method:
+
+```
+defn Getter(x) {
+  ~{x: :x,
+  set_x: ->(b) { x=:b; :x }
+}
+
+g=Getter(1)
+:g.x
+# => 1
+%g.set_x(4)
+# => 4
+:g.x
+# => 1
+%g.set_x(5)
+# => 5
+```
+
+The internal state of the value attached of the key x: is evaluated. It can never
+be modified via the set_x: lambda. set_x: will always change the state of the closure'sx.
+They are two distinct objects.
+
+#### The mkattr() Vish Standard Library function
+
+To make this easy, Vish comes with a number of standard libray functions.
+One of these is 'mkattr()'. This takes a symbol  and a value and returns an 
+object. The first parameter, the symbol name also creates a setter method:
+'set_key:', where key: is the intial symbol.
+
+E.g.
+
+```
+obj=mkattr(foo:, 2)
+%obj.foo
+# => 1
+%obj.set_foo(4)
+# => 4
+%obj.foo
+#  => 4
+```
 
 ## Functions
 

@@ -68,6 +68,11 @@ module Builtins
     evens.zip(odds).to_h
   end
 
+  # mksym(string_or_sym) - returns Symbol
+  def self.mksym(v)
+    v.to_sym
+  end
+
   # mkpair(k, v) - given two values returns PairType
   def self.mkpair(key, value)
     PairType.new(key:key, value:value)
