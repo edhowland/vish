@@ -2,8 +2,12 @@
 
 ## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
 
+Problem: gem: tty-reader does not output an entered '['
+
+### Todo: Once the above is done: move internal builtin read() to use this gem
 
 ## TODO: Rename lib/ast/ListType to ListNode
+
 ## TODO: Rename ast/ SymbolType to SymbolNode
 
 Should have all types in lib/runtime/xxxxx_type.rb derived from Type
