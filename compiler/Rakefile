@@ -10,7 +10,7 @@ src_files.each do |src|
 end
 
 rule /.*\.vsc/ => '.vs' do |t|
-  sh "./vishc.rb #{t.source} #{t.name}"
+  sh "./vishc.rb -o #{t.name} #{t.source} "
 end
 
 
