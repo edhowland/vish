@@ -57,11 +57,11 @@ compiled brethren.
 
 ## Language Syntax
 
-Vish uses 2 special sigils : ':' and '%'.
+Vish uses 2 special sigils : ':' and '%' and '~'.
 
 - : - Dereference a variable
 - % - Execute a block or a block saved in a variable.
-
+- Tilde '~' Used to create an object/Dictionary
 ```
 var=100
 :var
