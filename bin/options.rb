@@ -2,9 +2,9 @@
 
 require 'optparse'
 
-def get_options
+def get_options(pgm='ivs', desc="REPL for Vish runtime")
 OptionParser.new do |o|
-  o.banner = 'ivs - REPL for Vish runtime'
+  o.banner = "#{pgm}  - #{desc}"
   o.separator  ''
   o.on('-h', '--help', 'Display this help') do
     puts o
