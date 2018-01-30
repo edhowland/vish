@@ -8,25 +8,24 @@ require 'optparse'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
 
-options = {
+@options = {
   check: false,
   compile: false,
   stdlib: true,
   ofile: 'v.out.vsc'
 }
-
 opt = OptionParser.new do |o|
 o.banner = 'Vish compiler'
 o.separator ''
   o.on('-c', '--check', 'Check syntax') do
-    options[:check] = true
+    @options[:check] = true
   end
   o.on('--no-stdlib', 'Do not preload Vish standard lib first') do
-    options[:stdlib] = false
+    @options[:stdlib] = false
   end
   o.on('-o file', '--output file', String, 'Output to file') do |file|
-    options[:ofile] = file
-    options[:compile] = true
+    @options[:ofile] = file
+    @options[:compile] = true
   end
   o.separator ''
   o.on('-h', '--help', 'Display this help') do |op|
@@ -38,18 +37,19 @@ o.separator ''
     exit(0)
   end
 end
-#binding.pry
 opt.parse!
 
-source = ARGF.read
-#fin = File.open(fin, 'r')
-#source = fin.read
-#fin.close
+def compose(source, opts=@options)
+  if opts[:stdlib]
+    source = File.read(stdlib) + "\n" + source
+  end
+  source
+end
+
+#source = ARGF.read
 
 # Possibly add in Vish StdLib stuff
-if options[:stdlib]
-  source = File.read(stdlib) + "\n" + source
-end
+
 
 def check(source)
     compiler = VishCompiler.new source
@@ -69,7 +69,7 @@ rescue Parslet::ParseFailed => failure
   end
 end
 
-if options[:check]
+if @options[:check]
   exit(check(source))
 end
 
@@ -95,7 +95,6 @@ exit(exit_status)
 
 end
 
-if options[:compile]
-  compile(source, options[:ofile])
+if @options[:compile]
+  compile(compose(ARGF.read), @options[:ofile])
 end
-
