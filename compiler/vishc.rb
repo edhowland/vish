@@ -74,7 +74,7 @@ if @options[:check]
 end
 
 def compile(source, ofile)
-exit_status = 1
+  result = false
 begin
   compiler = VishCompiler.new source
   compiler.run
@@ -82,19 +82,17 @@ begin
   # now write it out to file.vshc
 io = File.open(ofile, 'w')
   store_codes(compiler.bc, compiler.ctx, io)
-  exit_status = 0
+  result = true
 rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree
 rescue => err
   puts err.class.name
   puts err.message
   end
-
-
-exit(exit_status)
-
+  result
 end
 
 if @options[:compile]
-  compile(compose(ARGF.read), @options[:ofile])
+  result = compile(compose(ARGF.read), @options[:ofile])
+  exit([true,false].index(result))
 end
