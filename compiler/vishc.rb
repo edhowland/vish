@@ -70,7 +70,7 @@ rescue Parslet::ParseFailed => failure
 end
 
 if @options[:check]
-  exit(check(source))
+  exit(check(compose(ARGF.read)))
 end
 
 def compile(source, ofile)

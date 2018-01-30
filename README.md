@@ -1,4 +1,4 @@
-# Vish : Shell like command language
+# Vish : A simple programming language
 
 ## Abstrack
 
@@ -59,8 +59,8 @@ compiled brethren.
 
 Vish uses 2 special sigils : ':' and '%' and '~'.
 
-- : - Dereference a variable
-- % - Execute a block or a block saved in a variable.
+- Colon - ':'  Dereference a variable
+- Percent - '%' Execute a block or a block or lambda saved in a variable.
 - Tilde '~' Used to create an object/Dictionary
 ```
 var=100

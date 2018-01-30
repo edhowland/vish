@@ -6,3 +6,5 @@ defn mkattr(k,v) {
   mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v }))
 }
 
+# set up some variables
+version='0.3.0'
