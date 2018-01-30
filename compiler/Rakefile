@@ -3,8 +3,8 @@
 require 'rake/clean'
 CLEAN.include('*.vsc')
 
-#require_relative '../lib/vish'
 require_relative 'vishc'
+
 src_files = FileList['*.vs']
 
 src_files.each do |src|
