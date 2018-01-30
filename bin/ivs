@@ -4,7 +4,10 @@
 # An inner REPL would use the loop { read() | eval() | print() }  implementation
 # as an interactive .vs script.
 
+require_relative 'options'
+
 require_relative '../lib/vish'
+get_options.parse!
 
 
 eval = Evaluator.new

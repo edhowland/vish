@@ -1,8 +1,11 @@
 #!/usr/bin/env ruby
-# reader.rb - wraper on TTY::Reader from tty-reader gem
+# repl.rb - better REPL for vish. - Experimental
 
 require 'tty-reader'
+require_relative 'options'
 require_relative '../lib/vish'
+
+get_options.parse!
 
 $reader = TTY::Reader.new
 $reader.on(:keyctrl_d) {|k| exit(0) }

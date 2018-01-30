@@ -7,7 +7,7 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 [Viper](https://github.com/edhowland/viper)
 
-## Version 0.3.0
+## Version 0.4.0
 
 ## Requirements
 
