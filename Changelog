@@ -45,7 +45,7 @@ Can use these file I/O routines:
 fexist?(filename)
 fread(filename)
 fwrite(filename)
-
+frm(filename) - removes file
 
 Version 0.2.0
 Added:

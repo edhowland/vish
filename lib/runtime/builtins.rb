@@ -51,6 +51,11 @@ module Builtins
     File.exist?(name)
   end
 
+  # frm(filename) - removes (unlinks) file if it exists
+  def self.frm(name)
+    fexist?(name) && File.unlink(name)
+  end
+
   # fread(filename) - reads input file
   def self.fread(name)
     File.read(name)

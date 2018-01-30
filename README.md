@@ -134,6 +134,27 @@ defn bar(x) { :x / 2 }
 foo() | bar()
 # => 50
 ```
+
+## File operations
+
+Their are 3 builtin file I/O functions:
+
+- fexist?(filename) - true if filename exists on disk.
+- fread(filename) - returns contents of filename on disk
+- fwrite(contents, filename) - Writes out contents to filename on disk.
+
+For instance, you could create a file copy function like this:
+
+```
+# define a file copy - fcp
+defn fcp(in, out) {
+  fexist?(in) || return false
+  fread(:in) | frwite(:out)
+}
+fcp('myfile.old', 'myfile.new')
+fexist?('myfile.new')
+# => true
+```
 ## Using the REPL
 
 Vish comes with a simple REPL (Read/Eval/Print/Loop), for interacting
