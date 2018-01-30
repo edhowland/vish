@@ -3,6 +3,8 @@
 require 'rake/clean'
 CLEAN.include('*.vsc')
 
+require_relative 'vishc'
+
 src_files = FileList['*.vs']
 
 src_files.each do |src|
@@ -10,7 +12,8 @@ src_files.each do |src|
 end
 
 rule /.*\.vsc/ => '.vs' do |t|
-  sh "./vishc.rb #{t.source} #{t.name}"
+  result = compile(compose(File.read(t.source)), t.name)
+    abort("Failed to compile #{t.source}") unless result
 end
 
 

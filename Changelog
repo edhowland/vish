@@ -1,5 +1,13 @@
-Version 0.2.0
+Version 0.4.0
 
+Breaking change: runtime/vre.rb changed to runtime/vsr.rb
+
+Breaking change: compiler/vishc.rb must have -o outputfile to
+  actually perform the file.
+  This is represented in compile/Rakefile for rule. Now uses the internal
+  compile and compose methods.
+
+Version 0.2.0
 Added:
 Executable blocks. Can be saved in variables and run again with '%' sigil.
 E.g. 
