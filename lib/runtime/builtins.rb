@@ -45,6 +45,22 @@ module Builtins
     read(*args).to_i
   end
 
+  # File I/O
+  # fexist?(filename) - true if filename exists on disk
+  def self.fexist?(name)
+    File.exist?(name)
+  end
+
+  # fread(filename) - reads input file
+  def self.fread(name)
+    File.read(name)
+  end
+
+  # fwrite('contents, filename) - writes input to filename on disk
+  def self.fwrite(contents, name)
+    File.write(name, contents)
+  end
+
   # Linked list stuff
   def self.list(*args)
     args.flatten
@@ -76,6 +92,16 @@ module Builtins
   # mkpair(k, v) - given two values returns PairType
   def self.mkpair(key, value)
     PairType.new(key:key, value:value)
+  end
+
+  # key(pair) - returns .key member from PairType
+  def self.key(pair)
+    pair.key
+  end
+
+  # value(pair) - returns the value member from PairType
+  def self.value(pair)
+    pair.value
   end
 
   # mkobject(pairs=[]) - create instance of type ObjectType

@@ -23,6 +23,29 @@ to create a key/value pair in the JSON-like syntax:
 pair=foo: 100
 typeof(:pair)
 # => PairType
+You can get the individual members of the PairType with the key()/value() functions
+key(:pair)
+# =>  :foo
+value(:pair)
+# => 100
+These pairs can be used to create objects by combining them with the object
+syntax.
+obj=~{foo: 1, bar: 2, baz: 3}
+:obj.foo
+# => 1
+:obj.bar
+# => 2
+:obj.baz
+# => 3
+You can also use the [key] syntax as well
+obj[foo]
+# => 1
+... .etc
+Can use these file I/O routines:
+fexist?(filename)
+fread(filename)
+fwrite(filename)
+
 
 Version 0.2.0
 Added:
