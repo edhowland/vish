@@ -1,101 +1,39 @@
-  def self.echo(*args)
+# Builtin functions
 
-```
-echo('hello', 'world')
-# => "hello world\n"
-```
+- output the version of the runtime
+- dup - just dups it input to its output (via the stack)
+- typeof(obj) - gives the class/??? of the obj
+- inspect runs inspect on its arguments
+- echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
+- cat(args) - concats its arguments and returns them
+- throw VishRuntimeError with message or default
+- read() - reads from stdin, chomping any trailing newlines.
+- readi - reads and returns integer
 
+## File I/O
 
-  def self.throw(*args)
+- pwd - the current directory
+- dir?(path) - true if path is a directory
+- fexist?(filename) - true if filename exists on disk
+- frm(filename) - removes (unlinks) file if it exists
+- fread(filename) - reads input file
+- fwrite('contents, filename) - writes input to filename on disk
 
-Throws VishRuntimeError with message or default message.
+## Linked list stuff
 
-  def self.read(*args)
+- list(args) - returns all args in a list
+- head(list) - returns the first item on a list.
+- tail(list) returns the remaining elements on a list after the head.
 
-Reads a string from input: chomps the possible trailing newline.
+## Misc.
 
-```
-name=read(); print("Hello :{:name}\n")
-```
-
-  def self.readi(*args)
-
-Reads an integer from stdin.
-
-```
-i=readi();:i * 4
-# enters: 4
-# => 16
-```
-
-  def self.list(*args)
-
-Creates a list (Ruby array) from its number of arguments
-
-```
-x = list(1,2,3); :x != list() && print('false')
-# => 'false'
-```
-
-  def self.head(*args)
-
-Returns the head element of the list.
-
-```
-li=list(1,2,3,4)
-head(:li)
-# => 1
-```
-
-  def self.tail(*args)
-
-Returns the tail of a list:
-
-```
-li=list(0,1,2,3,4)
-tail(:li)
-# => [1,2,3,4]
-```
-
-  def self.print(*args)
-
-Prints all of its output to stdout
-
-```
-print(1,2,3)
-# => 1
-# 2
-# 3
-```
-
-def self.dict(*args)
-
-Creates a dictionary object from key value pairs (E.g. Hash)
-
-
-```
-dict('a',1,'b',2,'c',3)
-# => {'a' => 1, 'b' => 2, 'c' => 3}
-```
-
-def self.ix(arr,ix)
-
-Indexes its first arg with its second arg. Will work with list or dict
-
-```
-arr=list(1,2,3,4)
-:arr | ix(1)
-# => 2
-```
-
-
-
-
-- def self.mklambda(name,arity,target)
-
-Used internally to create an object of class LambdaType w/those 3 args.
-
-- def self.xmit(obj,'method', *args)
-
-Used for debugging. Can send any message to a Ruby object
-dereferenced. See Notes.md for an example
+- print(args) - outputs all its args to stdout.
+- mksym(string_or_sym) - returns Symbol
+- mkpair(k, v) - given two values returns PairType
+- key(pair) - returns .key member from PairType
+- value(pair) - returns the value member from PairType
+- mkobject(pairs=[]) - create instance of type ObjectType
+- ix(arr, index) - should work with lists or dicts (arrays/hashes)
+- ax(ar,ix,val) - assigns a value to array or diction
+- mklambda - creates LambdaType 
+- xmit(object, message) - sends Ruby message to object and returns its result.

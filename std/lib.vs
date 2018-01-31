@@ -10,3 +10,5 @@ defn values(obj) { xmit(:obj, values:) }
 
 # set up some variables
 version=version()
+# Can check the current dir with %pwd
+pwd=->() { pwd() }

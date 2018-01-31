@@ -1,4 +1,6 @@
 # builtins.rb - module Builtins - builtin methods
+require 'fileutils'
+
 
 
 class BreakCalled < RuntimeError; end
@@ -28,12 +30,15 @@ module Builtins
     args.inspect
   end
 
+  # echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
+  # Outputs a trailing newline.
   def self.echo(*args)
     args.map(&:to_s).join(' ') + "\n"
   end
 
+  # cat(args) - concats its arguments and returns them
   def self.cat(*args)
-    args[0]
+    args.join
   end
 
   # throw VishRuntimeError with message or default
@@ -41,6 +46,7 @@ module Builtins
     raise (VishRuntimeError.new(args[0]) || VishRuntimeError.new('Unknown exception'))
   end
 
+  # read() - reads from stdin, chomping any trailing newlines.
   def self.read(*args)
     readline.chomp
   end
@@ -51,6 +57,16 @@ module Builtins
   end
 
   # File I/O
+
+  # pwd - the current directory
+  def self.pwd()
+    FileUtils.pwd
+  end
+
+  # dir?(path) - true if path is a directory
+  def self.dir?(path)
+    File.directory?(path)
+  end
   # fexist?(filename) - true if filename exists on disk
   def self.fexist?(name)
     File.exist?(name)
@@ -72,17 +88,22 @@ module Builtins
   end
 
   # Linked list stuff
+  
+  # list(args) - returns all args in a list
   def self.list(*args)
     args.flatten
   end
+
+  # head(list) - returns the first item on a list.
   def self.head(*args)
     args[0][0]
   end
-
+  # tail(list) returns the remaining elements on a list after the head.
   def self.tail(*args)
     args[0][1..(-1)] || []
   end
 
+  # print(args) - outputs all its args to stdout.
   def self.print(*args)
     args.each { |e| $stdout.puts(e.inspect) }
   end
@@ -152,6 +173,7 @@ module Builtins
     l
   end
 
+  # xmit(object, message) - sends Ruby message to object and returns its result.
   def self.xmit(obj, meth, *args)
     obj.send(meth, *args)
   end

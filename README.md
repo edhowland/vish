@@ -57,7 +57,7 @@ compiled brethren.
 
 ## Language Syntax
 
-Vish uses 2 special sigils : ':' and '%' and '~'.
+Vish uses 3 special sigils : ':' and '%' and '~'.
 
 - Colon - ':'  Dereference a variable
 - Percent - '%' Execute a block or a block or lambda saved in a variable.
@@ -137,11 +137,19 @@ foo() | bar()
 
 ## File operations
 
-Their are 3 builtin file I/O functions:
+Their are several builtin file I/O functions:
 
 - fexist?(filename) - true if filename exists on disk.
+- dir?(path) - true if path is a directory
 - fread(filename) - returns contents of filename on disk
 - fwrite(contents, filename) - Writes out contents to filename on disk.
+- frm(path) - removes path if it exists
+- pwd() - returns the present working directory
+
+### The pwd lambda:
+
+You can also check the pwd with '%pwd'.
+This depends on ./std/lib.vs being loaded, by default, it is.
 
 For instance, you could create a file copy function like this:
 
@@ -208,6 +216,32 @@ you will get a UnknownFunction runtime error.
 
 The 'ivs' REPL will explicitly emit 'delete c' when the backspace is
 entered. Future versions will make this a a config option.
+
+#### The experimental REPL. 
+
+You can try out the experimental REPL in ./bin/repl.rb which does have this problem.
+However, it has a bug with entering a '[' character. It will not
+be echoed to the screen until after another character has been entered.
+
+Suspect this is a problem in the tty-reader gem or its usage on my part.
+
+## Executables:
+
+Vish ships with several command line programs.
+These are all in the ./bin folder.
+
+- vish - Runs all .vs scripts passed to it
+- vishc - Compiles .vs files to .vsc runtime files. Can also  check syntax w/ -c
+- vsr - Runs compiled .vsc files.
+- ivs - Interactive REPL for trying out Vish expressions.
+
+All these programs respond to flags. See the complete list with the --help flag.
+
+### The --no-stdlib flag.
+
+By default, all of these programs will preload the file ./std/lib.vs before
+compiling and running your program.
+This can be disabled with the '--no-stdlib' flag.
 
 ## Debugging
 
