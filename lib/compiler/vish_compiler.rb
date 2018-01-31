@@ -11,7 +11,7 @@ class VishCompiler
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
-    @lambdas = []
+    @lambdas = {}
     @functions = {}
   end
   attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :functions, :source
@@ -36,13 +36,19 @@ class VishCompiler
     # locate and extract any defn function declarations. Move to @functions hash
   @functions = extract_functions(ast)
 
-    # find and extract any blocks from their assignees.
-    @blocks = extract_assign_blocks(ast)
+    # convert assigned blocks to lambdas w/0 parameters
+    convert_assigned_blocks_to_lambdas(ast)
+    # convert any function call parameters that are blocks to lambdas
+    convert_block_parameters_to_lambdas(ast, Funcall)
+# Convert any block parameters to lambda clalls to lambdas
+    convert_block_parameters_to_lambdas(ast, LambdaCall)
+
+
     # fixup Return classes
-    fixup_returns(@blocks, BlockReturn)
-    @blocks.each {|b| ast << b }
+    # fixup_returns(@blocks, BlockReturn)
+    # @blocks.each {|b| ast << b }
     # Now add back in any previously declared blocks
-    @blocks = blocks + @blocks
+    # @blocks = blocks + @blocks
 
     fixup_returns(@functions.values, FunctionReturn)
     # Append the actual function bodies to end of AST
@@ -54,18 +60,23 @@ class VishCompiler
     @lambdas = extract_lambdas(@ast)
 
     # fix up any returns within lambdas
-    fixup_returns(@lambdas, FunctionReturn)
+    fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
 
-    @lambdas.each {|l| @ast << l }
+#    @lambdas.each {|l| @ast << l }
+append_lambdas(ast, @lambdas)
+
+# fix up lambda name reference to lambda types into lambda entries
+fixup_lambda_entries(@lambdas)
 
     # add in any passed other lambdas. Possibly from earlier compiles.
-    @lambdas = lambdas + @lambdas
+    @lambdas.merge!  lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
   differentiate_functions(@ast, @functions)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
     start = bcodes.codes.length
+
     @bc, @ctx = emit_walker ast, ctx, bcodes
 
     # Resolve BranchSource operands after BranchTargets have been emitted
@@ -73,7 +84,10 @@ class VishCompiler
       bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
     end
     @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
-#    return @bc, @ctx
+
+    # resolve jump targets
+    resolve_lambda_locations(@bc)
+
 start
   end
 

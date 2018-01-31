@@ -66,4 +66,28 @@ class TestApi < BaseSpike
   def test_rl_compress_compacts_string_and_leaves_other_things_unchanges
     assert_eq rl_compress([1, 'a', 'b', 2]), [1, 'ab', 2]
   end
+
+  # tests for genid(object) - returns symbol
+  def test_genid_w_object_returns_symbol
+    result = genid(Object.new)
+    assert_is result, Symbol
+  end
+  class Xyzzy; end
+
+  def test_genid_returns_symbol_w_class_name
+    result = genid(Xyzzy.new)
+    result = result.to_s
+    part = result.split('_')[0]
+    assert_eq part, Xyzzy.name
+  end
+  def test_genid_has_object_id_afterclass_name
+    result = genid(Object.new)
+    result = result.to_s.split('_')[1]
+    assert_eq result.length, 4
+  end
+  def test_genid_w_object_and_other_class
+    result = genid(Object.new, klass:MainFrame)
+    result = result.to_s.split('_')[0]
+    assert_eq result, 'MainFrame'
+  end
 end

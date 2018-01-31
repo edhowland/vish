@@ -88,7 +88,6 @@ class LineBuffer
     front
       $stdout.print to_s
     # handle Control C
-    # TODO: Must actually terminate repl iteration, and skip to nextinput
     when "\u0003"
       @left.clear
       @right.clear

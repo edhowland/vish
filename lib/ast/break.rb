@@ -3,7 +3,7 @@
 class Break < Terminal
   def emit(bc, ctx)
     bc.codes << :unwind
-    bc.codes << LoopFrame.new
-    bc.codes << :bret # TODO: For now.  Eventually disambiguate this from block returns
+    bc.codes << LoopFrame
+    bc.codes << :bret
   end
 end

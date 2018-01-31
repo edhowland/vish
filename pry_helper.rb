@@ -176,3 +176,26 @@ def get_statement(ast, count=1)
   result.each {|n| n.remove_from_parent! }
   result
 end
+
+def lstr
+  "print('b4 lambda assign');m=->() {print('in lambda');1};print('after lambda assign');x=%m();print('at end')"
+end
+def lstr1
+  'm=->() {1};%m()'
+end
+
+def lret
+  'm=->() { return 2 };%m()'
+end
+
+def lbrk
+  'defn foo(fn) {%fn()};loop {foo(->() {break}) }'
+end
+
+def vc source=''
+  VishCompiler.new source
+end
+
+def block_another
+        'bk1={1+3};bk2={5*%bk1};%bk2' # , 20
+end

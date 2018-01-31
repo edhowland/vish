@@ -1,5 +1,5 @@
 # opcodes.rb - Hash of lambdas representing various opcodes
-# MUST : Keep has_operand? code up-to-date when adding things here : @ end file
+# Must : Keep has_operand? code up-to-date when adding things here : @ end file
 # opcodes - returns hash of opcodes
 # Parameters:
 # tmpreg - storage in temporary register
@@ -18,7 +18,35 @@ def opcodes tmpreg=nil
     pushl: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(var) },
   _pusht: 'Pushes the contents of tmpreg onto the stack.',
   pusht: ->(bc, ctx, _, intp) { ctx.stack.push(tmpreg.store) },
-    _loadt: 'Loads top of stack into tmpreg.',
+
+    # LambdaType stuff
+    _alloc: 'Allocates top of stack, places it on heap, pushes its genid back on stack',
+    alloc: ->(bc, ctx, fr, intp) {
+      value = ctx.stack.pop
+      id = genid(value)
+#      id.extend(LambdaFunction)
+      intp.heap[id] = value
+      ctx.stack.push id
+    },
+    _pusha: 'Uses top of stack as pointer to value on heap, pushes value back on stack',
+    pusha: ->(bc, ctx, fr, intp) {
+      id = ctx.stack.pop
+      value = intp.heap[id]
+      ctx.stack.push value
+    },
+
+    # Closure stuff
+    # :clone - prepares a new instance of probably LambdaType on top of stack
+    _clone: 'Clones the top of stack and pushes back on stack',
+    clone: ->(bc, ctx, fr, intp) { ctx.stack.push(ctx.stack.pop.clone) },
+    _savefp: 'Finds the nearest UnionFrame on the call stack and saves it on LambdaType on top of data stack',
+    savefp: ->(bc, ctx, fr, intp) {
+    frame = fr.reverse.find {|f| UnionFrame === f}
+      ctx.stack.peek.frame= frame
+        },
+
+
+    _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },
   _dup: 'Duplicates the top of the stack and pushes the copy back there.',
   dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
@@ -79,7 +107,7 @@ def opcodes tmpreg=nil
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
     unwind: ->(bc, ctx, fr, intp) do
       ftype= bc.next
-      until (ftype == fr.peek) do
+      until (ftype === fr.peek) do
         fr.pop 
       end
     end,
@@ -106,7 +134,7 @@ def opcodes tmpreg=nil
 
     # flow control : :bcall, :bret, etc
     _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    bcall: ->(bc, ctx, fr, intp) { 
+    __bcall: ->(bc, ctx, fr, intp) { 
       frame=BlockFrame.new
       frame.return_to = bc.pc
       fr.push(frame)
@@ -115,7 +143,11 @@ def opcodes tmpreg=nil
       bc.pc = loc 
     },
     _bret: 'pops return location off fr. jmps there',
-    bret: ->(bc, ctx, fr, intp) { frame = fr.pop; loc = frame.return_to; bc.pc = loc },
+    bret: ->(bc, ctx, fr, intp) {
+      frame = fr.pop
+      loc = frame.return_to
+      bc.pc = loc 
+    },
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
     _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
@@ -136,25 +168,26 @@ def opcodes tmpreg=nil
   # Lambda call stuff
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
-      cx = Context.new
-      cx.constants = ctx.constants
       ltype = ctx.stack.pop
+#      binding.pry
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
       raise ArgumentError.new("Wrong number of parameters: #{argc} for #{ltype.arity}") if argc != ltype.arity
       argv = ctx.stack.pop(argc)
-      cx.stack.push(*argv)
-      frame = FunctionFrame.new(cx)
+frame = ltype.frame
+frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
+
       fr.push(frame)
       bc.pc = ltype.target
     },
     _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
     fret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
-      ret_val = frame.ctx.stack.pop
+      ret_val = frame.ctx.stack.safe_pop
       fr.peek.ctx.stack.push ret_val
       bc.pc = frame.return_to
+      frame.pop_retto
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.

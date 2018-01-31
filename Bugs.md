@@ -1,5 +1,14 @@
 # Bugs
 
+## Bug incorrect behaviour when passing more arguments than are specified.
+
+Also, shoud perfom some kind of arity check for fn invocation.
+
+```
+defn takes2(a,b) { :a + :b }
+takes(1,2,3,4,5,6)
+# => 11, because 5 + 6 is 11
+```
 
 
 ## Possible Bug: reading stdin input does not work in compiled mode
@@ -15,25 +24,6 @@ But does work in interactive mode.
 ```
 
 
-## Bug: Try to call a lambda witha block call
-
-```
-lm=->() { true }
-%lm
-# Should have been %lm()
-# get no method error
-```
-
-
-## Bug: Call a block with lambda call
-
-Get no error, but nil is returned
-
-```
-bk={1}
-%bk()
-# => nil
-```
 
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
@@ -47,8 +37,6 @@ The solution would to
 - or, search backword in fr.reverse.find {|f| f.kind_of? MainFrame }
 
 The latter is or should be temporary fix to the former solution!
-
-
 
 
 ## Bug: Compiler does not check for undefined variables.
@@ -71,23 +59,3 @@ When written out .vshc files, as marshalled Ruby objects, this is not pure.
 
 Not sure what to do about it, tho.
 
-## Bug break within block but called within loop construct gets opcode error
-
-```
-bk={ break }
-loop { %bk }
-# output in vish.log:
-
-```
-
-
-## Bug: Very long vish scripts scripts do not work
-
-See compiler/very_long_script.vsh
-Run with:
-
-```
-cd compiler
-./vishc.rb very_long_script.{vsh,vshc}
-# Get Parslet failure
-```

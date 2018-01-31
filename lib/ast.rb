@@ -2,6 +2,15 @@
 
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
+require_relative 'ast/list_type'
+require_relative 'ast/pair_node'
+require_relative 'ast/object_node'
+
+require_relative 'ast/symbol_type'
+
+require_relative 'ast/list_index'
+require_relative 'ast/execute_index'
+
 
 require_relative 'ast/ignore'
 require_relative 'ast/clear_stack'
@@ -12,8 +21,6 @@ require_relative 'ast/subtree_factory'
 require_relative 'ast/arithmetic_factory'
 
 # blocks, and stuff
-require_relative 'ast/block_entry'
-require_relative 'ast/block_exit'
 require_relative 'ast/block'
 require_relative 'ast/block_exec'
 
@@ -40,7 +47,7 @@ require_relative 'ast/binary_inequality'
 require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
-require_relative 'ast/deref_block'
+#require_relative 'ast/deref_block'
 
 require_relative 'ast/final'
 require_relative 'ast/funcall'
@@ -67,6 +74,9 @@ require_relative 'ast/return'
 require_relative 'ast/loop_entry'
 require_relative 'ast/loop_exit'
 require_relative 'ast/loop'
+
+
+
 
 # Lambda stuff
 require_relative 'ast/lambda_name'

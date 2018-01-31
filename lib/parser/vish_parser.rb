@@ -25,8 +25,10 @@ class VishParser < Parslet::Parser
   rule(:octo) { str('#') }
   rule(:lparen)     { str('(') >> space? }
   rule(:rparen)     { str(')') >> space? }
-  rule(:lbrace) { str('{') }
-  rule(:rbrace) { str('}') }
+  rule(:lbrace) { str('{') >> space? }
+  rule(:rbrace) { str('}') >> space? }
+  rule(:lbracket) { str('[') >> space? }
+  rule(:rbracket) { str(']') >> space? }
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
@@ -40,12 +42,22 @@ class VishParser < Parslet::Parser
   # some punctuation
   rule(:dquote) { str('"') }
   rule(:squote) { str("'") }
+  rule(:period) { str('.') }
+  rule(:tilde) { str('~') }
   # Logical ops
   rule(:bang) { str('!') }
   rule(:l_and) { str('and') >> space? }
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
+
+  # data types
+  rule(:symbol) { identifier.as(:symbol) >> colon }
+  rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
+  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol).as(:index) >> rbracket }
+  rule(:execute_index) { deref_block >> lbracket.as(:execute_index) >>(integer | deref | symbol).as(:index) >> rbracket } 
+  rule(:pair) { symbol >> space? >> expr.as(:expr) }
+  rule(:object) { tilde >> lbrace.as(:object) >> arglist.as(:arglist) >> rbrace }
 
   # keywords
   rule(:_break) { str('break') >> space? }
@@ -100,13 +112,13 @@ class VishParser < Parslet::Parser
       (str('\\') >> any) |
       (str("'").absent? >> any)
     ).repeat.as(:sq_string) >> 
-    str("'")
+    str("'") >> space?
   end
   rule(:dq_string) { string_interpolation >> space? }
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
-  rule(:ident_tail) { match(/[a-zA-Z0-9_]/).repeat(1) }
+  rule(:ident_tail) { match(/[a-zA-Z0-9_\?]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
 
 
@@ -127,14 +139,14 @@ class VishParser < Parslet::Parser
   # parenthesis:
   rule(:group) { lparen >> space? >> infix_oper >> space? >> rparen | lvalue }
 
-  rule(:lvalue) { integer | boolean | dq_string | sq_string | deref | lambda_call | deref_block | block_exec | funcall }
+  rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | object_deref | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list | object }
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
-  rule(:deref_block) { percent >> identifier.as(:deref_block) >> space? }
+  rule(:deref_block) { percent >> identifier.as(:lambda_call) >> space? }
 
   # lambda declaration: ->(x, y) { :x + :y }
   rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }
@@ -147,6 +159,8 @@ class VishParser < Parslet::Parser
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
+  rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) >> (lparen >> arglist.as(:arglist) >> rparen).maybe }
+  rule(:object_deref) { deref >> period.as(:list_index) >> identifier.as(:index) }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }
@@ -154,7 +168,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | deref | deref_block | integer }
+  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | object | deref | deref_block | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
@@ -164,11 +178,6 @@ class VishParser < Parslet::Parser
   rule(:infix_pipe) { infix_expression(statement,
     [logical_and, 2, :left], [logical_or, 2, :left],
    [pipe, 1, :left]) }
-
-  # Older pipe stuff
-#   rule(:pipe_expression) { statement.as(:lexpr) >> pipe.as(:pipe) >> statement.as(:rexpr) }
-#  rule(:pipe_or_statement) { pipe_expression | statement }
-#   rule(:pipe_list) { pipe_or_statement >> (pipe >> pipe_or_statement).repeat }
 
   rule(:delim) { newline | semicolon | comment }
   rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }

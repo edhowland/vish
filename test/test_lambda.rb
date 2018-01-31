@@ -1,4 +1,4 @@
-# test_function.rb - tests for functions, lambdas.
+# test_lambda.rb - tests for  lambdas.
 
 require_relative 'test_helper'
 
@@ -51,5 +51,17 @@ class TestLambda < BaseSpike
   def test_can_parse_add_lambda_term
     p, = parser_transformer
     p.parse '%p() + 1'
+  end
+
+  # test lambda and blocks interchangeability
+  def test_4_mix_of_lambdas_and_blocks_can_call_each_other
+    result = interpertit <<EOC
+l1=->() {1}
+b1={%l1()}
+l2=->() {%b1}
+m2={%l2}
+%m2
+EOC
+    assert_eq result, 1
   end
 end

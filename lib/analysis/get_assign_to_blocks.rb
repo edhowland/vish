@@ -43,25 +43,3 @@ def get_assign_to_blocks(ast, &blk)
   assigns = assign_blocks.map {|e| e[-2] }.map {|e| ast[e] }
 
 end
-
-# extract_assign_blocks ast - removes blocks from get_assign_blocks assign
-# parents. Returns self-same blocks.
-def extract_assign_blocks(ast)
-  assigns = get_assign_to_blocks(ast)
-  blocks = assigns.map(&:last_child)
-  blocks.each {|b| b.content.value = "_block_#{b.parent.name}"; b.content.from = b.parent.name }
-
-  # Destructors here below!
-  blocks.map!(&:remove_from_parent!)
-  blocks.each do |b|
-    parent = ast[b.content.from]
-    parent << mknode(StringLiteral.new(b.content.value))
-  end
-
-  # Add surround pair
-  blocks.each do |b|
-    b.add(mknode(BlockEntry.new(b.content.value)), 0)
-    b.add(mknode(BlockExit.new))
-  end
-  blocks
-end

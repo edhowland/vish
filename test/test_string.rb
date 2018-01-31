@@ -51,4 +51,22 @@ class TestString < BaseSpike
     result = interpertit "'---\\---'"
     assert_eq result, '---\\---'
   end
+
+  # can concatenate strings
+  def test_can_concat_sq_strings
+    result = interpret "'x' + 'x'"
+    assert_eq result, 'xx'
+  end
+  def test_can_concat_dq_strings
+    result = interpret '"y" + "y"'
+    assert_eq result, 'yy'
+  end
+  def test_can_concat_sq_w_dq_string
+    result = interpret '"x" + \'y\''
+    assert_eq result, 'xy'
+  end
+  def test_can_concat_sq_and_dq_strings
+    result = interpret '\'x\' + "y"'
+    assert_eq result, 'xy'
+  end
 end

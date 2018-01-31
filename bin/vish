@@ -2,8 +2,22 @@
 # vish - runs Vish scripts: *.vs
 
 require_relative '../lib/vish'
+require_relative 'options'
+require_relative 'startup'
 
-source = ARGF.read
+options = { stdlib: true }
+opt=get_options('vish', 'Compile and run Vish source file file.vs') { options }
+opt.parse!
 
-eval = Evaluator.new
-p eval.eval(source)
+source = startup(options) + "\n" + ARGF.read
+
+exit_status = 1
+begin
+  eval = Evaluator.new
+  p eval.eval(source)
+exit_status = 0
+rescue Parslet::ParseFailed => err
+  puts "Syntax Error: #{err.message}"
+end
+
+exit(exit_status)

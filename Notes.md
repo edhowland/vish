@@ -1,5 +1,98 @@
 # Notes
 
+## Let binding
+
+### The loop over closure problem
+
+If you create a loop and then save a bunch of closures over some internal changing state
+and then later execute these lambdas, they will all have the same state that existed
+at the time the loop exited.
+
+See this example:
+... compiler/missing_let.vs
+
+At the end, we try to execute each closure in :set. But they all the same environment pointer.
+It has the last saved value in the :i variable. So, they all print the same value.
+
+### Possible solution
+
+Was known for a long time in Lisp/Scheme language designers.
+So, they introduced the 'let' binding.
+
+```
+# possible Vish implementation of let:
+set=list()
+let(a, b, c) {
+  cons(->() { :a + :b + :c }, :set)
+}
+# now execute the closures.
+map(->(x) { %x }, :set)
+```
+
+'let' here introduces a new binding for the variables on the frame_stack. It is sort like a
+function call, but one that is executed in situ.
+
+If this existed in a loop body, then it would look like the function was being invoked anew
+everytime. Therefore, each lambda created on the heap would point a new Frame.
+
+### In Scheme/Racket: can set variables in let binding.
+
+```
+(let ((a 2, (b 3) (c 4)) 
+  # some code
+)
+```
+
+## Variadic method signatures
+
+Function calls already take a variable number of parameters. But at runtime,
+they only consume the arity of their signatures on the stack from the top down.
+
+```
+defn takes2(a,b) { :a + :b }
+takes(1,2,3,4,5,6)
+# => 11, because 5 + 6 is 11
+```
+
+This is a failure of not doing enough compile time checking.
+
+What should happen is in the function_entry thing, to collect all the remaining 
+arguments into a :_rest variable in the current frame as a list.
+
+
+## Blocks are 0 parameter Lambdas
+
+1. Turn extract_blocks to create VishCompiler.lambdas hash.
+2. As is done in extract_lambdas: Replace '%blk' with LambdaName
+
+
+## The xmit builtin - Transmit method
+
+Mostly for debugging, a wrapper around the object.send method.
+Use a string for the method argument:
+
+```
+# get the length of a list
+list=[0,1,2,3]
+xmit(:list,'length')
+# => 4
+```
+
+
+## Closure implementation:
+
+1. Lambdas are closures. A single structure containg the arity, the body bytecode offset and the current frame
+2. This actual object is stored on the heap.
+3. Nost Importantly: When executing the lambda, instead of
+creating a new FunctionFrame, the saved frame object is pushed on the VM's frame stack.
+
+The advantage is any variables created within the body
+share the same environment as theprevious exectution environment.
+
+Any new variables are not seen outside the lambda body because
+there is no reference to them
+
+
 ## Notes about VM construction from YouTube channel: Jephthai
 
 Should the opcodes always return the next ByteCode pc to go to?
@@ -174,6 +267,20 @@ Then all the way up to the top level.
 
 Replace any Deref blocks with Closure blocks!
 
+#### The heap:
+
+The heap is maintained by the CodeInterpreter instance. Opcode :pushi
+will grab its its operand (which is a reference to a Closure object on the heap.
+
+Note: Must make sure this is avaliable tothe Evaluation object,
+esp. in bin/ivs REPL else, it will get overwritten upon every new line entered
+and then compiled.
+
+## Debugging
+
+Must implement some kind of capture of the stack frame in case of an unrecoverable error.
+working on the assumption that this will be an exception handler.
+
 ## Interrupt handlers.
 
 Since when an interrupt occurs, there is a hardware level (virtually, at least) context switch.
@@ -186,6 +293,44 @@ The original PC is ready to resume with the new next instruction after
 the :int opcode and its operand.
 
 This differs from function calls which must place an entire activation frame on the call stack.
+
+
+### Change this mechanism to :int0, :int1, ... :int9.
+
+This removes the operand, and allows for breakpoint insertion at any pointw/o
+messing any jmp targets. 
+
+### INT codes
+
+- :int0 : The default int handler
+- :int1 : Reserved for break points
+- :int2 : unused, 
+- :int3 : Unused
+- :int4 : Unused
+- :int5 : Unused
+- :int6 : Unused
+- :int7 : Unused
+- :int8 : Unused
+- :int9 : at_exit lambda chain
+
+The latter :int9 allows for the following syntax:
+
+```
+at_exit(->() { return 1 })
+# ...
+at_exit(->() { print("exiting...") })
+# upon exit of the script:
+# Exiting
+# $? == 1  # the exit status of the script
+```
+
+The internal 'at_exit()' function should store the lambda references in an exit lambda list: []
+stored in the heap.
+
+Note: This will require that :icall will have to pass the heap to any internal functions. (Via the heap: keyword?)
+
+### The exit status:
+
 
 
 ## Exception handling: catch/snag

@@ -1,5 +1,4 @@
 # funcall.rb - class  Funcall < NonTerminal
-# TODO: Only implements :icall opcode, at the moment.
 
 # Funcall takes the name of the function to call. Later, the arg count :argc
 # maybe added by FunctorNode

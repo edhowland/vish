@@ -1,0 +1,460 @@
+# Vish Language syntax
+
+# TODO: Incomplete documentation:
+
+- Operators
+- Keywords
+- Control statements
+## Abstract
+
+Vish is a simple language. It tries for a simple
+syntax and get out your way. Since it drives the Viper editor for blind and
+and visually impaired programmers, it attempts to make most things work on
+a single line expression.  Users of screen readers often need to concentrate
+a single line of text. So writing short, expressive functions and expressions
+work to make life simpler and easier to compose small atoms of code into
+larger levels of abstraction.
+
+
+This documents is a place to encapture the details of the syntax of the
+language and provide some aspects of the semantics or behaviour of terms
+in the language.
+
+
+## Atoms
+
+Vish has just a few atoms which are the result of computing an expression.
+Atoms can stand-alone, be assigned to a variable or passed as a parameters
+to a function.
+
+- Booleans - 'true' and 'false'
+- Integers - integer literals like 0,1,22,999 .etc
+- Strings - strings can be quoted 2 ways
+  - Single quoted strings: E.g. 'hello world'
+  - Double quoted strings - E.g. "This is a double quoted string"
+- Symbols - identifiers with a trailing colon, like keys in JSON strings. Symbols can be used as keys to objects.
+- lambdas - Anonymous functions : ->(arg) { :arg + 1 }
+- Blocks - small contained units of program statements. Blocks as atoms are lambdas with 0 parameters.
+
+Double quoted strings are also possible interpolated strings.
+
+## Sigils
+
+Vish uses several sigils (single ASCII characters) to represent different type 
+of expressions:
+
+- colon ':' - Used to dereference a variable or parameter.
+- Trailing colon - identifier + ':'. Used to refer to symbol.
+- Percent - '%' - Used to execute a block or lambda
+- Tilde - '~' - Used to create an object/dictionary
+
+## Program
+
+A program in Vish is 0 or more statements or comments delimited by new lines or semicolons.
+
+```
+# This is a comment to the end of this line
+# below are statements. All are equivelant:
+x=2+3
+y=:x + 4
+x=3 + 2;y=:x + 4
+```
+
+## Statements
+
+A statement is:
+
+- Any valid expression
+- An assignment. The rvalue of an assignment can be any valid expression
+- A block which contains more expressions/statements.
+- A function declaration
+- A function call. (Either a builtin or user defined function)
+- A lambda call.
+- A block execution. This differs from a a inline block.
+
+## Expressions
+
+Any valid expression can be executed as a statement or assigned to a variable
+or passed to a function/lambda as a a parameter.
+
+Expressions can be infix operators with lvalues and rvalues. Lvalues
+can be literals or variable dereferences. Rvalues can be any valid literal or
+other valid expression.
+
+Here are some valid expressions:
+
+```
+1+2
+3*10+4
+:x/:y+2
+:li[2] - 14
+sum(:li)
+# result of calling a lambda: with result of calling a function
+%lm(foo(:x))
+```
+
+## Collections
+
+
+Vish has 2 collection types: List and objects (dictionary or Hash)
+
+### Lists
+
+Lists work like lists in Lisp. They can be created, recursived over, extracted,
+and be combined into larger lists.
+
+```
+# a simple list
+l=[0,1,2,3]
+:l
+# => [0,1,2,3]
+:l[2]
+# => 2
+head(:l)
+# => 0
+tail(:l)
+# => [1,2,3]
+l=list(:l,[4,5,6])
+# => nil
+:l
+# => [0,1,2,3,4,5,6]
+
+# index via a variable:
+idx=4
+:l[:idx]
+# => 4
+```
+
+### Objects
+
+A Object in vish is like a dictionary or Hash/HashMap in other languages.
+They are constructed with the '~{ ... }' syntax.
+
+You must use a key value pair to construct them like with JSON syntax
+
+#### Key/Value pairs
+
+A key in a key/value pair is a Vish symbol. An identifier with an immediate trailing colon. E.g. 'id:'
+This is followd by any legal Vish expression for the value in the pair.
+The expression is first evaluated and then added to the value portion of the pair.
+
+```
+pair=foo: 3*9
+:pair
+# =>  :pairPairType: key: :foo value: 27
+typeof(:pair)
+# => PairType
+```
+
+##### Extracting the key or value from a PairType
+
+You can use the builtin 'xmit' function to get the individual elements of the PairType.
+This is usually not needed, which is why their is no syntactic sugar language construect for it.
+
+Example:
+
+```
+pair=baz: 99
+xmit(:pair,key:)
+# => :baz
+xmit(pair:, value:)
+# => 99
+```
+
+#### Object creation
+
+By combining the '~{ ... }' object method with a list of key/values, 
+you can populate the object:
+
+```
+obj=~{name: 'James',email:  'james@example.com'}
+:obj[email:]
+# => 'james@example.com'
+```
+
+Objects can also contain lambdas (See Lambdas below) as values. This can
+approximate a kind of object-orientation with with state and behaviour
+in the same object.
+
+Example:
+
+```
+# save behavour in object
+user=~{name: ->() {'Sue'},age: 32}
+name=%user[name:]
+:name
+# => 'Sue'
+age=:user[age:]
+:age
+# => 32
+```
+
+
+### Constructors
+
+In Vish, object constructors can be accomplished with functions that return
+objects, possibly with lambda values. See functions for a complete description
+of function declaration and executation.
+
+However, here is a sample object constructor. The convention is to use upper/camel case
+for the function names.
+
+```
+# Define a citywith behaviour
+defn City(name, state, country) {
+  dict(name:,:name,state:,:state,country:,:country,
+    pop: ->() { get_pop() },
+temp:, ->() { get_temp() })
+}
+kalamazoo=City('Kalamazoo',Michigan','U.S.A.')
+print("Right now in :{:kalamazoo[name:]}, :{:kalamazoo[state:]}, it is :{%kalamazoo[temp:]} for its :{%kalamazoo[pop]} citizens.")
+```
+
+###  Builtin object operations
+
+Beside using the above constructs to pull out object members,
+you can also perform addition on 2 objects.
+
+```
+obj=~{carrier: 'Verizon'}
+plan=:carrier + ~{plan: 'Unlimited'}
+:plan
+#=> {:carrier => 'Verizon', :plan => 'Unlimited'}
+```
+
+### Inheritance
+
+In Vish, there is no direct mechansim to achieve inheritance. But, this can 
+be accomplished with the addition above. 
+
+```
+defn Base(a, b) { ~{a: :a, b: :b} }
+defn Sub(a, b, c) { Base(:a, :b) + ~{c: :c}}
+sub=Sub(1, 2, 3)
+:sub
+```
+
+### Dotted attributes and methods
+
+Vish objects can be referenced via using the dot operator: '.'
+This is similar to other languages. Use the ':' or '%' to achieve
+access to either the attribute or the lambda to execute.
+
+```
+defn Baz(x) {
+  ~{x: ->() {:x },
+  add1: ->() { :x= :x + 1}
+}
+baz=Baz(4)
+%baz.a
+# => 4
+%baz.add1
+%baz.a
+# => 5
+```
+
+#### Setter and Getter methods
+
+Objects in Vish must use explicit setters and getters as lambda functions.
+As seen abobe in the prior example,  they can only have effect when executed with the '%' sigil.
+The reason for this is because each instance variable is saved in a closure.
+
+Consider this example where we try to use just accessor a dereference  method:
+
+```
+defn Getter(x) {
+  ~{x: :x,
+  set_x: ->(b) { x=:b; :x }
+}
+
+g=Getter(1)
+:g.x
+# => 1
+%g.set_x(4)
+# => 4
+:g.x
+# => 1
+%g.set_x(5)
+# => 5
+```
+
+The internal state of the value attached of the key x: is evaluated. It can never
+be modified via the set_x: lambda. set_x: will always change the state of the closure'sx.
+They are two distinct objects.
+
+#### The mkattr() Vish Standard Library function
+
+To make this easy, Vish comes with a number of standard libray functions.
+One of these is 'mkattr()'. This takes a symbol  and a value and returns an 
+object. The first parameter, the symbol name also creates a setter method:
+'set_key:', where key: is the intial symbol.
+
+E.g.
+
+```
+obj=mkattr(foo:, 2)
+%obj.foo
+# => 1
+%obj.set_foo(4)
+# => 4
+%obj.foo
+#  => 4
+```
+
+## Functions
+
+Vish has named and anonymous functions or lambdas.
+Functions can take parameters and return the last expression evaluated.
+
+Functions are created via the 'defn' keyword. Followed by an identifier, 
+an optional list of parameters surrounded by parenthesis and then a block of
+code surrounded by curly braces:
+
+```
+# a very simple expression to add three parameters
+defn foo(x,y,z) { :x + :y + :z }
+#
+# A slightly more complex, but absurd function
+defn bar(n,l) {
+  tmp=:l[:n]
+  [:tmp]
+}
+# now lets call it:
+l2=['hello'];bar(0,:l2)
+# => ['hello']. It is unchanged!
+```
+
+## Lambdas
+
+Lambdas are anonymous functions. They can be saved in a variable or  passed as 
+a parameter to a another function. They can also be returned from a function.
+
+A lambda is construction like a named function but using the '->' prefix.
+
+A lambda can be called via use of the '%' sigil prefix on the named variable or
+or parameter. If lm is a lambda expression, %lm() will call it.
+
+```
+# a simple subtracter
+sub=->(i,j) { :i - :j }
+# Now call it
+%sub(9,3)
+# => 6
+```
+
+### The return keywor
+
+Although not recommended, a function or lambda can return early from a function via the return keyword:
+
+```
+# Returning early from function
+defn baz(x) { :x == 10 && return false; :x + 1 }
+```
+
+### Passing lambdas to functions
+
+A lambda can be passed as a parameter to any other
+function or lambda.
+
+Here is some code that implements the map higher order function from other languages:
+
+``
+# map.vs - implements map method over list applying fn for each item, returning
+# new list with each element doubled.
+defn map(li, fn) { 
+  (:li == []) && return []
+  list(%fn(:li[0]), map(tail(:li), :fn))
+}
+map([1,2,3,4], ->(x) { :x * 2 })
+
+```
+
+
+
+## Blocks
+
+In Vish, blocks are first class citizens. They can be executed inline, saved in 
+variables or passed to functions.
+
+Blocks are delimted by curly braces and contain statements or expressions
+delimited by newlines or semicolons. Like in functions or lambdas, the last
+statement or expression evaluated is returned as the value of the block overall.
+
+Blocks can be written as one of 3 forms:
+
+- Inline blocks
+- Block expressions
+- Immediate block as result
+
+### Inline blocks:
+
+```
+# this is a simple block
+{ hello='hello'; world='world';print(hello + ' ' + world)}
+```
+
+### Block expressions
+
+As rvalues blocks can be assigned to variables or passed to functions/lambdas
+as parameters:
+
+```
+# saving a block to a variable:
+blk={4+3}
+# Calling it:
+6*%blk
+# => 42
+```
+
+### Blocks as parameters
+
+```
+defn baz(n, blk) { :n + %blk }
+baz(4, {3 ** 2})
+# => 13
+```
+
+#### Block expressions as lambda closures
+
+Anytime a block is either assigned to a variable or passed as a parametr, it is
+promoted to a lambda. You can  think of these kind of blocks as lambda
+expressions that take 0 parameters themselves.
+
+Note: As these type of blocks are actually promoted to lambdas, like lambdas,
+they close over variables defined in their current context. Thus they are
+actually closures themselves.
+
+```
+# A block expression as a closure
+n=100
+b={ :n + 10 }
+# ... some other code
+%b + 1
+# => 111
+```
+
+
+#### Caveat:  A block cannot be returned from a function.
+
+To do return a block from a function body as a block expression,
+preceed it with '->() '. This turns it into a proper lambda.
+
+Note: A future release will allow the return keyword to return a block
+as a block expression by first promoting it into a lambda.
+
+### Immediate block execution
+
+A block can be immediately executed in place. It is not first promoted into
+a lambda first. But it still has the same effect.
+
+```
+val=%{5*2/5}
+:val
+# => 2
+# pass to a function:
+defn bar(v) { :v * 2 }
+bar(%{2})
+# => 4
+```
+
+
