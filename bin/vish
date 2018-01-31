@@ -2,8 +2,14 @@
 # vish - runs Vish scripts: *.vs
 
 require_relative '../lib/vish'
+require_relative 'options'
+require_relative 'startup'
 
-source = ARGF.read
+options = { stdlib: true }
+opt=get_options('vish', 'Compile and run Vish source file file.vs') { options }
+opt.parse!
+
+source = startup(options) + "\n" + ARGF.read
 
 exit_status = 1
 begin

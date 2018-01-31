@@ -41,7 +41,7 @@ opt.parse!
 
 def compose(source, opts=@options)
   if opts[:stdlib]
-    source = File.read(stdlib) + "\n" + source
+    source = File.read(stdlib) + "\nversion='#{Vish::VERSION}'\n" + source
   end
   source
 end
@@ -60,11 +60,11 @@ def check(source)
     puts 'Syntax OK'
     0
 rescue Parslet::ParseFailed => failure
-    puts "Syntax Error: #{failure.message}"
-  puts failure.parse_failure_cause.ascii_tree
+    $stderr.puts "Syntax Error: #{failure.message}"
+  $stderr.puts failure.parse_failure_cause.ascii_tree
   1
   rescue CompileError => err
-  puts "Compile error: #{err.message}"
+  $stderr.puts "Compile error: #{err.message}"
     2
   end
 end
@@ -84,10 +84,10 @@ io = File.open(ofile, 'w')
   store_codes(compiler.bc, compiler.ctx, io)
   result = true
 rescue Parslet::ParseFailed => failure
-  puts failure.parse_failure_cause.ascii_tree
+  $stderr.puts failure.parse_failure_cause.ascii_tree
 rescue => err
-  puts err.class.name
-  puts err.message
+  $stderr.puts err.class.name
+  $stderr.puts err.message
   end
   result
 end
