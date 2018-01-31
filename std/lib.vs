@@ -5,6 +5,8 @@ defn mkattr(k,v) {
   s=mksym("set_:{:k}")
   mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v }))
 }
+defn keys(obj) { xmit(:obj, keys:) }
+defn values(obj) { xmit(:obj, values:) }
 
 # set up some variables
-version='0.4.0'
+version=version()

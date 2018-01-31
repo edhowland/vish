@@ -1,11 +1,15 @@
 #!/usr/bin/env ruby
 # repl.rb - better REPL for vish. - Experimental
+# TODO: Update this to use proper startup stuff
 
 require 'tty-reader'
 require_relative 'options'
-require_relative '../lib/vish'
+require_relative 'startup'
 
-get_options.parse!
+require_relative '../lib/vish'
+options = { stdlib: true }
+opt = get_options { options }
+opt.parse!
 
 $reader = TTY::Reader.new
 $reader.on(:keyctrl_d) {|k| exit(0) }

@@ -4,6 +4,11 @@
 class BreakCalled < RuntimeError; end
 
 module Builtins
+  # output the version of the runtime
+  def self.version()
+    Vish::VERSION
+  end
+
   # dup - just dups it input to its output (via the stack)
   def self.dup(arg)
     arg

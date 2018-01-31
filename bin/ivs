@@ -7,21 +7,23 @@
 require_relative 'options'
 
 require_relative '../lib/vish'
-get_options.parse!
 
+options = { stdlib: true }
+opt = get_options { options }
+opt.parse!
 
 eval = Evaluator.new
 history = History.new
 
 # start up stuff
-startup =<<-EOS
-version='#{Vish::VERSION}'
-prompt='vish> '
-_=0
-EOS
+require_relative 'startup'
+ivsrc = File.expand_path '~/.ivsrc'
+ivsrc_src = ''
+ivsrc_src = File.read(ivsrc) if File.exist?(ivsrc)
+startup_code = startup(options) { "prompt='vish> '; _=0" + ivsrc_src }
 
 begin
-  eval.eval startup
+  eval.eval startup_code
 _=0
 loop do
   begin
