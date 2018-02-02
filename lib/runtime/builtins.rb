@@ -177,4 +177,9 @@ module Builtins
   def self.xmit(obj, meth, *args)
     obj.send(meth, *args)
   end
+
+  ## housekeeping/debugging
+  def self.inspect
+    self.name
+  end
 end
