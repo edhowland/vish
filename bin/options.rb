@@ -15,7 +15,7 @@ OptionParser.new do |o|
       options[:ifiles] << file
     end
     o.on('-r file', '--require file', String, 'Require extra file before starting') do |file|
-      require_relative file
+      require file
     end
   o.separator  ''
 
