@@ -1,3 +1,8 @@
+Version 0.4.1
+
+Corrected problem with passing output of method_call to pipe/and/or expressions
+Added ability to append additional dispatchable modules to runtime, via the -r
+require flag.. See README.md for details
 Version 0.4.0
 
 Breaking change: runtime/vre.rb changed to runtime/vsr.rb

@@ -1,11 +1,11 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    json (1.8.6)
+    json (2.1.0)
     parslet (1.8.1)
-    rubytree (0.9.7)
-      json (~> 1.8)
-      structured_warnings (~> 0.2)
+    rubytree (1.0.0)
+      json (~> 2.1)
+      structured_warnings (~> 0.3)
     structured_warnings (0.3.0)
     tty-cursor (0.5.0)
     tty-reader (0.2.0)

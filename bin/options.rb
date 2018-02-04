@@ -10,6 +10,13 @@ OptionParser.new do |o|
     o.on('--no-stdlib', 'Do not preload standard library functions') do
       options[:stdlib] = false
     end
+    o.on('-l file', '--load file', String, 'Load additional files before starting REPL') do |file|
+      options[:ifiles] ||= []
+      options[:ifiles] << file
+    end
+    o.on('-r file', '--require file', String, 'Require extra file before starting') do |file|
+      require file
+    end
   o.separator  ''
 
   o.on('-h', '--help', 'Display this help') do

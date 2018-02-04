@@ -7,7 +7,7 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 [Viper](https://github.com/edhowland/viper)
 
-## Version 0.4.0
+## Version 0.4.1
 
 ## Requirements
 
@@ -212,11 +212,6 @@ that refer to each other, but if foo() calls bar(), but
 defines bar() after foo(), and you call foo(),
 you will get a UnknownFunction runtime error.
 
-### Notes regarding screen reader users and visual users of the REPL
-
-The 'ivs' REPL will explicitly emit 'delete c' when the backspace is
-entered. Future versions will make this a a config option.
-
 #### The experimental REPL. 
 
 You can try out the experimental REPL in ./bin/repl.rb which does have this problem.
@@ -242,6 +237,33 @@ All these programs respond to flags. See the complete list with the --help flag.
 By default, all of these programs will preload the file ./std/lib.vs before
 compiling and running your program.
 This can be disabled with the '--no-stdlib' flag.
+
+## Extending the language with more builtin functions.
+
+All of the executables, except for the compiler,  take the -r, --require file.rb
+flag. If you supply a module with singleton functions that any number of
+arguments, and return any value, it can be added at runtime.
+
+Then, add it to the Dispatch module at the end of your required file:
+
+```
+# myfuncs.rb
+module MyFuncs
+  class << self
+    def thing(arg1, arg2)
+      arg1 - arg2
+    end
+  end
+end
+
+# now add it to the runtime:
+Dispatch << MyFuncs
+#
+# Back in your shell:
+$ ivs -r my_funcs.rb
+vish> thing(4,3)
+# => 1
+```
 
 ## Debugging
 

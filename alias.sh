@@ -25,7 +25,7 @@ alias todo='git grep TODO | grep -v TODO.md'
 alias grep.binding='git grep binding.pry'
 alias ivs='./bin/ivs'
 alias vishc='./compiler/vishc.rb'
-alias vsr='./runtime/vre.rb'
+alias vsr='./runtime/sr.rb'
 filepart() {
   echo ${1%.*}
 }

@@ -55,6 +55,10 @@ module Builtins
   def self.readi(*args)
     read(*args).to_i
   end
+  # readc - read a single character, do not wait for return
+  def self.readc()
+    consume
+  end
 
   # File I/O
 
@@ -176,5 +180,10 @@ module Builtins
   # xmit(object, message) - sends Ruby message to object and returns its result.
   def self.xmit(obj, meth, *args)
     obj.send(meth, *args)
+  end
+
+  ## housekeeping/debugging
+  def self.inspect
+    self.name
   end
 end

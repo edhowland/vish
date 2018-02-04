@@ -8,8 +8,13 @@ require_relative 'options'
 
 require_relative '../lib/vish'
 
-options = { stdlib: true }
+options = { 
+stdlib: true,
+ifiles: []
+}
 opt = get_options { options }
+
+
 opt.parse!
 
 eval = Evaluator.new
@@ -20,7 +25,7 @@ require_relative 'startup'
 ivsrc = File.expand_path '~/.ivsrc'
 ivsrc_src = ''
 ivsrc_src = File.read(ivsrc) if File.exist?(ivsrc)
-startup_code = startup(options) { "prompt='vish> '; _=0" + ivsrc_src }
+startup_code = startup(options) { "prompt='vish> '; _=0" + ivsrc_src + "\n" + options[:ifiles].map {|n| File.read(n) }.join() }
 
 begin
   eval.eval startup_code

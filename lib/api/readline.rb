@@ -115,7 +115,15 @@ class LineBuffer
     when "\u007f"
       drop = pop
       drop = 'space' if drop == ' '
-      $stdout.print "delete #{drop}"
+      # This outputs the backspace, some weird ANSI escape sequence that causes
+      # The terminal emulator to delete the previous character.
+      # This also works to cause the screen reader (VoiceOver) to output 
+      # 'delete <char>'. Where char is the key deleted.
+      #
+      # However, it stills does not echo more characters until it reaches
+      # past the last backspaced over character.
+      $stdout.print("\b\e[1X")
+#      $stdout.print "delete #{drop}"
     else
       push(ch)
       $stdout.print ch

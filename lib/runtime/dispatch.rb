@@ -1,7 +1,14 @@
 # dispatch.rb - class Dispatch - determins the internal method to call
 
 module Dispatch
-  def self.locate(meth, klasses=[Builtins])
+  @@klasses = [Builtins]
+  def self.klasses
+    @@klasses
+  end
+  def self.<<(klass)
+    @@klasses << klass
+  end
+  def self.locate(meth, klasses=@@klasses)
     klasses.find {|k| k.respond_to? meth }
   end
 

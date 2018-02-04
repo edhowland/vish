@@ -5,11 +5,13 @@ require_relative '../lib/vish'
 require_relative 'options'
 require_relative 'startup'
 
-options = { stdlib: true }
+options = { stdlib: true,
+  ifiles: []
+}
 opt=get_options('vish', 'Compile and run Vish source file file.vs') { options }
 opt.parse!
 
-source = startup(options) + "\n" + ARGF.read
+source = startup(options) { options[:ifiles].map {|n| File.read(n) }.join("\n") } + "\n" + ARGF.read
 
 exit_status = 1
 begin
@@ -17,7 +19,11 @@ begin
   p eval.eval(source)
 exit_status = 0
 rescue Parslet::ParseFailed => err
-  puts "Syntax Error: #{err.message}"
+    puts "Syntax Error: #{err.message}"
+  rescue VishRuntimeError => err
+    puts "Runtime error: #{err.message}"
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
 end
 
 exit(exit_status)
