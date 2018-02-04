@@ -4,6 +4,9 @@ require_relative 'test_helper'
 
 class TestObject < BaseSpike
   include CompileHelper
+  def set_up
+    @lib = 'defn mkattr(k,v) {  s=mksym("set_:{:k}");  mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v })) };'
+  end
   def test_simple_object_ctor_with_2_attr_readers
     result = interpret 'defn ctor(x,y) { [->() { :x },->() { :y }] };obj=ctor(7,8);mx=ix(:obj,0);my=ix(:obj,1);%mx() + %my()'
     assert_eq result, 15
@@ -105,5 +108,27 @@ class TestObject < BaseSpike
   def test_can_send_multiple_args_to_method
     result=interpret 'l=~{many: ->(a, b, c) { :a * :c + :b }};%l.many(1,2,3)'
     assert_eq result, 5
+  end
+
+  # test piping of output to another fn
+  def test_can_pipe_output_to_another_fn
+    result = interpret @lib + 'x=mkattr(foo:, 2); %x.foo | dup()'
+    assert_eq result, 2
+  end
+  def test_can_pipe_method_dispatch_to_fn
+    result = interpret 'x=~{foo: 2};:x.foo | dup()'
+    assert_eq result, 2
+  end
+  def test_can_accept_input_from_another_fn_over_a_pipe
+    result = interpret @lib + 'x=mkattr(foo:, 1); 3 | %x.set_foo; %x.foo'
+    assert_eq result, 3
+  end
+  def test_can_use_method_call_in_logical_and_expression
+    result = interpret @lib + 'x=mkattr(foo:, true); %x.foo && true'
+    assert result
+  end
+  def test_can_use_method_dereference_in_logical_or
+    result = interpret 'x=~{foo: false};:x.foo || true'
+    assert result
   end
 end
