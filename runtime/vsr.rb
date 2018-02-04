@@ -9,6 +9,11 @@ require_relative '../lib/vish'
 opt=OptionParser.new do |o|
   o.banner = "vsr - Runtime for compiled Vish symcode files: *.vsc\nUsage: vsr myfile.vsc"
   o.separator ''
+  o.on('-r file', '--require file', String, 'Require file before executing runtime') do |file|
+    require file
+  end
+  o.separator ''
+
   o.on('-h', '--help', 'Display this help') do
     puts o
     exit(0)
@@ -18,6 +23,7 @@ opt=OptionParser.new do |o|
     exit(0)
   end
 end
+
 opt.parse!
 file = File.open(ARGV.first, 'r')
 bc, ctx = load_codes file
