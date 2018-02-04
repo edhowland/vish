@@ -1,12 +1,5 @@
 # Bugs
 
-## Bug: cannot pipe output of method call to another function
-
-```
-%r.buffers | map(:fn)
-# get syntax error
-```
-
 
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
