@@ -55,6 +55,10 @@ module Builtins
   def self.readi(*args)
     read(*args).to_i
   end
+  # readc - read a single character, do not wait for return
+  def self.readc()
+    consume
+  end
 
   # File I/O
 
