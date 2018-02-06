@@ -119,7 +119,7 @@ class VishParser < Parslet::Parser
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
-  rule(:ident_tail) { match(/[a-zA-Z0-9_\?]/).repeat(1) }
+  rule(:ident_tail) { match(/[a-zA-Z0-9_\?!]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
 
 

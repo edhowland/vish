@@ -67,6 +67,7 @@ The following postfix sigils are proposed:
 - ':' - Symbol. Currently in use.
 - '%' - Variable, function or function parameter is expected to be a lambda.
 - '~' - variable or function or one of its parameters is expected to be an object/dictionary.
+- '`' - The variable is expected to be a list/array.
 - '#' - Fixnum (Integer)
 - '$' - String
 - '?' - Boolean (Boolean expression or true/false literals)
@@ -83,8 +84,134 @@ yourself.
 
 There already is a convention for functions to use '?' as a trailing indicator 
 hat it will return either true or false. So, you get that type checking for free.
+There also a convention to use '!' as some signal to other programmers, that
+this function will either change something one of its parameters that point to
+something. It can also be ued to signal that the underlying Ruby runtime might or actually return a 'nil'
+Used for type checking purposes, it can signal it should not be assigned or returned from a function.
+
+```
+# Assume, we implement a dispatch to Ruby's 'puts' method.
+defn prnt!(msg) { puts(:msg) }
+result=prnt('bad juju')
+# During type check, this will trigger an error
+# Or:
+defn add1#(expr#) { :expr + 1; prnt!("debug: :{:expr}") }
+# a check time type error is raised, because you told the compiler the add1 function is returning a Fixnum.
+# It can be fixed by reversing the order of the two statements in the body of the add1 function
+```
+
+## Postfix sigil stripping
+
+The actual postifx sigils are stripped from the variables, and function or parameters at compile.
+So, in your source code you can use the functions and variables as if they were never there.
+If you do not use strict type checking while compiling or,
+the type checking will default to runtime checking only. This might lead to crashing of your programs.
+
+#### Predicate/Imperative sigils are not stripped
+
+The exception to the above is that functions, variables and parameters with with '?' or '!'
+are part of the identifer's literal name. Thus, they are preserved in the runtime
+and are significant.
+
+```
+# these two names are distinct:
+ok?=%is_ok?()
+ok=%is_ok()
+```
+
+You might then want to consider using the postfix sigils liberally in your 
+function libraries. An attempt to create a kind of type metadata for use
+in importing your client programs. It can also be useful for use in testing
+as you can force the type checking to be doen at compile time via the further
+proposed 'pragma' directive.
+
+### Type hint combinations
+
+You can combine these postfix type hints to be more explicit in certain cercumstances.
+For instance, lets say you expect a function parameter to be a lambda that
+returns an integer, you can combine bothe of these sigils.
+
+```
+# define a function that takes a lambda returning an int.
+defn get_int(fn%#) { %fn + 1 }
+# ...
+f=->#() { 9 }
+result=get_int(:f)
+# Works! => 10
+# Now, let's break it.
+s=->()$ { "thing" }
+get_int(:s)
+# Throws VishTypeCheckFailure
+# But, will still compile, and expect to break at runtime.
+```
+
+## Some examples
+
+```
+# fully qualified function declaration
+defn foo?(anum#, str$, list`, obj~, bool?) { ...; true }
+var=->(q?)$ { "ok :{:q}" }
+foo(:var)
+#
+# lambda that takes an int, some imperative, and returns an int.
+
+fn=->(n#, phi%!) { ...; 0 }
+x=%fn(2, bar!)
+y=%fn(3, baz)
+# Note: Both of the above work. : because foo! is bothe that name
+# of the function and the type hint.
+# The y=  example also works, the lambda might change its world, or it might not.
+# It will have no affect on the executation of the body of fn.
+```
+
+Note: The imperative example expects a possible imperative phi! parameter.
+If compiled with the strict flag or strict pragma keyword, it will fail if given
+any other type hinted, or the default UnknownType.
+
+# The Any type sigil - '*'
+
+The '*' sigil can be used to signify any type.
+
+```
+# add/or concat 2 things
+defn combine*(a*, b*) { :a + :b }
+combine(2, 3)
+# => 5
+combine('hello ', 'world')
+# => "hello world"
+# But:!!!
+combine(12, ' days to go')
+# throws a VishTypeError at runtime
+# and will not be caught at compile time.
 
 
+## Future Directions
+
+### Pattern matching
+
+Explicit type signals open an path for polymorphic dynamic dispatch. 
+
+Consider the following sum_all function:
+
+```
+defn sum_all#([]) { 0 }
+defn sum_all#(...args`) { head(args) + sum_all(tail(args)) }
+#
+result=sum_all(4, 5, 6, 5, 99, 32)
+```
+So, in addition to the explicit postfix sigil type hints, unnamed variables, or named variables with the
+following type hints are allowed:
+
+- '[]' - defn foo(list[]) { ... }
+- '(int)' - Known integer constants: defn bar#(1) { 1 }
+
+This could be extended to symbols, booleans or strings.
+
+```
+defn quote('') { ...  }
+defn fubar?(false) { ... }
+defn symbolic:(unknown:) { ... }
 
 
-
+The '`' hint for args is superfullous, since the '...' ellipsis always signifies
+the named arg is an array of the remaining arguments.
