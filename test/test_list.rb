@@ -65,4 +65,14 @@ class TestList < BaseSpike
     result = interpret 'l=[ 3 , 5 ];:l[0] + :l[1]'
     assert_eq result, 8
   end
+
+  # test if can index into list with output from fn call
+  def test_can_index_list_w_result_of_fn_call
+    result = interpret 'a=[1,2]; defn id() { 0 }; :a[id()]'
+    assert_eq result, 1
+  end
+def test_can_call_with_index_w_lambda_call_return
+  result = interpret 'a=[1,2]; y=->() {0}; :a[%y]'
+  assert_eq result, 1
+end
 end

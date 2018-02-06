@@ -1,4 +1,5 @@
 # lib/ast/list_index.rb - class ListIndex < Terminal - Indexes a list element
+# TODO: MUST REMOVE this
 # a=[0,1,2,3]; :m[2] => 2
 
 class ListIndex < Terminal

@@ -23,10 +23,9 @@ alias vg='vn lib/parser/vish_parser.rb'
 alias va='vn lib/parser/ast_transform.rb'
 alias todo='git grep TODO | grep -v TODO.md'
 alias grep.binding='git grep binding.pry'
-alias ivs='./bin/ivs'
-alias vishc='./compiler/vishc.rb'
-alias vsr='./runtime/sr.rb'
 filepart() {
   echo ${1%.*}
 }
 alias ra='ruby test/all_tests.rb'
+export PATH=$PATH:$PWD/bin
+

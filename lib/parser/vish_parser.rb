@@ -54,7 +54,8 @@ class VishParser < Parslet::Parser
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
-  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol).as(:index) >> rbracket }
+#  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol | funcall | lambda_call).as(:index) >> rbracket }
+  rule(:list_index) { deref >> list }
   rule(:execute_index) { deref_block >> lbracket.as(:execute_index) >>(integer | deref | symbol).as(:index) >> rbracket } 
   rule(:pair) { symbol >> space? >> expr.as(:expr) }
   rule(:object) { tilde >> lbrace.as(:object) >> arglist.as(:arglist) >> rbrace }
@@ -160,7 +161,7 @@ class VishParser < Parslet::Parser
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
   rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) >> (lparen >> arglist.as(:arglist) >> rparen).maybe >> space? }
-  rule(:object_deref) { deref >> period.as(:list_index) >> identifier.as(:index) >> space? }
+  rule(:object_deref) { deref >> period.as(:list) >> identifier.as(:symbol) >> space? }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }

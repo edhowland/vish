@@ -1,5 +1,29 @@
 # Bugs
 
+## Bug: ListIndex, ExecutionIndex should not include values internal
+
+This breaks certain types of expressions.
+
+```
+a=[1,2]
+defn id() {0}
+:a[id()]
+# get function: id not found error at runtime.
+```
+
+This is because the index portion of the AST is held within ListIndex (as well as the deref)
+Need to fix this in the ctor and AstTransform
+
+### Possible other result
+
+Lambda calls might not be able to take functions/blocks as parameters.
+
+```
+y=~{foo: ->(fn) { %fn } }
+%y.foo({9})
+# Get unknown lambda
+```
+
 
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
