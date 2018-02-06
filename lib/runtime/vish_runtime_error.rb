@@ -4,3 +4,7 @@
 class VishRuntimeError < RuntimeError
   #
 end
+
+class VishTypeError < VishRuntimeError
+  #
+end
