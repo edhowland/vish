@@ -54,7 +54,6 @@ class VishParser < Parslet::Parser
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
-#  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol | funcall | lambda_call).as(:index) >> rbracket }
   rule(:list_index) { deref >> list }
   rule(:execute_index) { deref_block >> lbracket.as(:execute_index) >>(integer | deref | symbol).as(:index) >> rbracket } 
   rule(:pair) { symbol >> space? >> expr.as(:expr) }
