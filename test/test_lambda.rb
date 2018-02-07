@@ -64,4 +64,14 @@ m2={%l2}
 EOC
     assert_eq result, 1
   end
+
+  # test that can execute lambda in list that indexed via function return
+  def test_can_call_lambda_in_list_indexed_w_fn_return
+    result = interpret 'defn foo() {0}; a=[->() {9}]; %a[foo()]'
+    assert_eq result, 9
+  end
+  def test_can_call_lambda_indexed_with_lambda_call_return
+    result = interpret 'fn=->() {0};a=[->() {9}];%a[%fn]'
+    assert_eq result, 9
+  end
 end

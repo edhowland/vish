@@ -73,7 +73,7 @@ The following postfix sigils are proposed:
 - '?' - Boolean (Boolean expression or true/false literals)
 - '!' Implication that function will change the state of one of its  parameters
 - '*' - Any  type or some unkown type.
-
+- '<' - User defined type w/type name. defn foo(t<Person) { ... }
 ### Unused postifx sigil
 
 - '@' - These get expanded at at compile time, so they cannot (yet?) be 
@@ -215,3 +215,248 @@ defn symbolic:(unknown:) { ... }
 
 The '`' hint for args is superfullous, since the '...' ellipsis always signifies
 the named arg is an array of the remaining arguments.
+
+
+## Note about global scope or the lack thereof.
+
+Vish does not have any notion of global scope. For example '$global' in Ruby.
+However, any programs at the outer scope (before entering any functions),
+all variables behave as if they were in some main function which is invisible
+to the programmer.  While you cannot access these outer scopes within a named
+function body, there available to lambda bodies as lexical closures. You can alter their 
+values whenever the lambda is executed. Therefore, it is recommended that you
+append an '!' imperative  sigil to hint
+at the meaning and you are going to change it.
+
+You can, in this case, add this to the name of the variable defineing
+the lambda:
+
+```
+x=10
+changr!=->() { x=:x - 1 }
+loop {
+  (:x == 0) && break
+  %changr!
+}
+:x
+# =>  0
+```
+
+## User Defined Types
+
+No type description would be complete without the ability for programmers
+being able to define their own types. A proper language allows for it to be
+extended  in more ways than just making new functions.
+
+### Use of the '<' sigil
+
+The '<' sigil is actually meant to bea compound type hint. Let's see some
+examples:
+
+```
+# Assume we have two types defined already: Foo and Bar, and a third type: Baz
+# let's make a function that takes these Foo and Bar and returns Baz
+defn foo_bar_baz<Baz(f<Foo, b<Bar) { %f.apply(:b) }
+# Assuming Foo.apply(b<Bar) returns a type of Baz:
+foo=Foo()
+bar=Bar()
+typeof(foo_bar_baz(:foo, :bar))
+# => Baz
+```
+
+The simularity of the '<' sigil to Ruby's super class inheritance operator
+is entirely intentional. Consiere the following Ruby code:
+
+``
+class Base; end
+# ...
+class Concrete < Base; end
+```
+
+The '<' operator can be read here as:
+
+class Concrete is a subclass of class Base.
+
+Likewise, in Vish, the '<' sigil can be read as :
+
+```
+fn=-><Baz() { Baz() }
+val=%fn
+typeof(:val)
+# => Baz
+```
+
+The type of the lambda is a typeof the Baz type.
+
+### Defining the types.
+
+There are 2 possible options for defining types.
+
+#### Option 1: Implicit convention
+
+In Vish, it is the convention to uppercase the first (at least) of an object
+constructor function. If any '<' sigils are encountered during type checking,
+the current crop of defined functions can be searched.
+
+Note: This would also work for any regular function. This would provide for
+a kind of type alias mechanism
+
+```
+# a type constructor, really, just a an object constructor
+defn Foo() { ~{bar: 2, baz: 3} }
+# ...
+defn client(foo<Foo) { ... }
+```
+
+#### Option 2: Explicit type definition
+
+The philosophy of Vish is meant to be more explicit than other languages, like 
+Ruby, JavaScript and/or Python or Perl.
+
+Consider the following Ruby code:
+
+```
+#!/usr/bin/env ruby
+class Person; end
+
+def Person
+  2
+end
+
+# ... time passes
+bob = Person
+# what is Bob?
+# It is the Person class
+# To get the method:, we must be explicit:
+x=Person()
+```
+
+
+The reason for the use of all the sigils in in Vish is to be very explicit
+as far as intentionality. Note, you can never use a bare identifier, it must be preceeded
+with either a variable dereference, or a function execution.
+
+```
+# OK:
+var=2
+y=:var
+fn=->() { ... }
+%fn
+# or 
+:fn
+# => LambdaType_9999
+#
+# bad
+val=foo
+# this is a syntax error. Did you mean:
+val=foo() # ?
+```
+
+As a blind programmer, I rely on screenreaders to edit my code. When examining a
+line of code,, I can hear the intent of the Vish sigils at the point
+of their occurance, I have no need tojump around in the source deck to find the
+thing that identifier
+
+##### The 'deftype' declaration
+
+The 'deftype' declaration does 2 things simultaneously:
+
+1. Creates an object constructor
+2. Defines a type that can be used in a a type hint context.
+
+since the object constructor is just a function, it is just typed with the 
+FunctionType type. Their would be a need for more type distinction.
+
+Examples:
+
+```
+deftype Foo(a,b) { mkattr(a:, :a) + mkattr(b:, :b) }
+#
+foo=Foo(2,3)
+%foo.a
+# => 2
+%foo.set_b(4)
+%foo.b
+# => 4
+# 
+# Use in another parameter
+defn bar#(f<Foo, c#) { %f.a + %f.b + :c }
+x=bar(foo(2,3), 4)
+:x
+# => 9
+```
+
+##### Super Types and SubTypes
+
+With option #2, we can define subtypes of parent types:
+
+```
+deftype Base() { ... }
+deftype Sub<Base() { ... }
+# ... later:
+defn baz(x<Base) { ... }
+b=Base()
+c=Sub()
+baz(:b)
+# ... or:
+baz(:s)
+# Both work
+```
+
+This subtype hierarchy is just a kind of syntax sugar for the type checker.
+There is no actuall effect on the runtime of Vish programs. Under the hood, all
+deftupes just get converted to defn's, but their AST nodes are tagged with
+this additional type information.
+
+```
+defn Foo() { ... }
+deftype Bar() { .... }
+#
+typeof(:Foo)
+# => FunctionType
+typeof(:Bar)
+# => Bar
+```
+
+## Vish extension libraries
+
+Vish is just meant to be a (relatively) thin wrapper over some API functions in
+your  application, their needs to be some approach to exposing these type
+definitions to Vish's type checker. Since, Vish is hosted in Ruby and that is
+dynamically typed, this can be a real challenge.
+
+### Predicate and imperative methods in Ruby.
+
+Ruby already has the '?' and '!' postfix notational convention, you
+can take immediate advantage of thes fact forcalls made into your API, where they
+occur.
+
+Other types are not known by external Ruby methods.
+
+Some methods around this fact:
+
+1. Write Vish wrapper functions around your Ruby methods. (Non-performant)
+2. The Vish type checker can also check the  included classes in your extension.
+
+```
+# internal Ruby method that returns a Person class:
+# in Vish:
+bob=mkperson()
+defn use_person(p<Person) { ... }
+# ...
+use_person(:bob)
+```
+
+Vish'es type checker can at least check if a Person class exists when provided
+to the extension library at  type check time.
+
+3. Provide metadata about type information when importing
+the extension library:
+
+```
+# Get the method signatures and type declarations:
+import 'person_type.rb'
+
+bob=mkperson('Bob', 'Jones')
+# ...
+```
