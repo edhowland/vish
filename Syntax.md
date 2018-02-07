@@ -48,6 +48,18 @@ of expressions:
 - Percent - '%' - Used to execute a block or lambda
 - Tilde - '~' - Used to create an object/dictionary
 
+### Future reserved sigils
+
+The following sigils are reserved for a future implementation of the Vish compiler.
+They are mostly syntatic sugar for more explicit method calls.
+
+- '^' - The key member of a PairType variable.
+- '&' The value member of a PairType.
+- '@' - Expand a macro definition in place. (Not really a runtime component)
+
+The latter '@' sigil is used during compile time. You can think of   it
+as an inlined function call. 
+
 ## Program
 
 A program in Vish is 0 or more statements or comments delimited by new lines or semicolons.

@@ -28,6 +28,8 @@ As a review, here are the currently implemented prefix sigils, and one not yet i
 
 - ':' - Dereference a variable or parameter.
 - '%' - Execute a lambda function pointed at via that variable.
+'^' - Get the key value of a PairType
+- '&' - Get the value member of a PairType. (Like ^abc:&22. '&' is conjunction/and operator'
 - '~' - Create a object literal.
 
 These very few prefix characters are only used to point out the compile that some
@@ -66,6 +68,7 @@ The following postfix sigils are proposed:
 
 - ':' - Symbol. Currently in use.
 - '%' - Variable, function or function parameter is expected to be a lambda.
+- '^' - The function, parameter or the variable is expected to be a PairType
 - '~' - variable or function or one of its parameters is expected to be an object/dictionary.
 - '`' - The variable is expected to be a list/array.
 - '#' - Fixnum (Integer)
