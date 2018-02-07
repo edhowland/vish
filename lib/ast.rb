@@ -11,8 +11,8 @@ require_relative 'ast/symbol_type'
 # deref list:  - :a[0], :a[id()], :a[0,2,3], :a[%y(2)]
 require_relative 'ast/deref_list'
 
-#require_relative 'ast/list_index'
-#require_relative 'ast/execute_index'
+require_relative 'ast/list_index'
+require_relative 'ast/execute_index'
 
 
 require_relative 'ast/ignore'

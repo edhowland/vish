@@ -29,13 +29,13 @@ class AstTransform < Parslet::Transform
   # deref a list w/index
   rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { DerefList.subtree(Deref.new(deref), arglist) }
 #  rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
-
-  # method call
-  # TODO: Change the block to use new class?
+  # IList indexed lambda call: %a[0] TODO: Add backin parens and args
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist)) }
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), [arglist]) }
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), arglist) }
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
+
+  # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), [arglist]) }
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), arglist) }
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
 
   # logical operations
 
