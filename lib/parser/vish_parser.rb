@@ -60,10 +60,15 @@ class VishParser < Parslet::Parser
   rule(:object) { tilde >> lbrace.as(:object) >> arglist.as(:arglist) >> rbrace }
 
   # keywords
+  # Compile time keywords
+  rule(:pragma) { str('pragma') >> space! >> sq_string.as(:pragma) }
+  rule(:import) { str('import') >> space! >> sq_string.as(:import) }
+
+  # Runtime keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
-  rule(:keyword) { (_break| _exit | _return).as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import).as(:keyword) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }

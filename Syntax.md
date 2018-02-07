@@ -5,6 +5,7 @@
 - Operators
 - Keywords
 - Control statements
+
 ## Abstract
 
 Vish is a simple language. It tries for a simple
@@ -20,6 +21,24 @@ This documents is a place to encapture the details of the syntax of the
 language and provide some aspects of the semantics or behaviour of terms
 in the language.
 
+## Reserved Keywords
+
+The following keywords have speacial meaning to Vish and cannot be used as identifiers or
+function names:
+
+- loop - Sets a loop that infinitely runs its block argument.
+- break - Breaks out the innermost loop it is encountered within.
+- return - Used only a function or lambda body to exit early with some value.
+- exit - Exits out of the program from whether it is encountered.
+
+### Reserved keywords for future use:
+
+The following keywords are reserved at the present time, but will throw a
+unknown  keyword at: compile time. (but will parse ok internally.)
+
+- pragma - Expects a string that will be passed to the compiler or runtime. (TBD.)
+- import - Expects a single quoted string that represents a   module to be loaded.
+- pragma
 
 ## Atoms
 
