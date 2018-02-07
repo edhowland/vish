@@ -6,7 +6,7 @@ class DerefList < NonTerminal
     top = mknode(self.new)
     top << node_unless(deref)
     top << node_unless(idx)
-    
+
     top
   end
 
