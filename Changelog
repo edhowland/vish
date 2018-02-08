@@ -1,3 +1,11 @@
+Version 0.4.2
+Corrected argument passing failures on derefed lambda calls from a list index.
+%p[0] .. %p[foo:]() .. %p[%lm(2)](1) .. %p[0](1,2,3)
+Also:
+%p.foo .. %p.foo() .. %p.foo(1) .. %p.foo(1,2)
+
+Also refactored the latter type of lambda calls to be just syntax sugar for the [] version.
+
 Version 0.4.1
 
 Corrected problem with passing output of method_call to pipe/and/or expressions
