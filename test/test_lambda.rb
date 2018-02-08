@@ -92,4 +92,35 @@ EOC
     result = interpret 'a=[->(x, y) { :x + :y }];%a[0](1,2)'
     assert_eq result, 3
   end
+
+  # can we pass a lambda to an indexed lambda in a list, or an object vis
+  # thedotted  call method?
+  def test_can_pass_a_lambda_to_lambda_indexed_in_a_list
+    result = interpret <<-EOC
+a=~{callme: ->(fn) { %fn }}
+%a[callme:](->() {4})
+EOC
+      assert_eq result, 4
+  end
+  def test_can_pass_lambda_via_dotted_method_call
+    result = interpret <<-EOC
+a=~{frak: ->(fn) { %fn }}
+%a.frak(->() {5})
+EOC
+    assert_eq result, 5
+  end
+  def test_can_pass_argument_to_lambda_passed_to_lambda_indexed_in_list
+    result = interpret <<-EOC
+a=~{foo: ->(fn) { %fn(4) }}
+%a[foo:](->(x) { :x + 2 })
+EOC
+    assert_eq result, 6
+  end
+  def test_can_pass_arg_to_lambda_passed_to_lambda_indexed_in_object_w_dotted_method_call
+    result = interpret <<-EOC
+a=~{bar: ->(fn) { %fn(10) }}
+%a.bar(->(x) { :x - 1})
+EOC
+    assert_eq result, 9
+  end
 end
