@@ -7,11 +7,14 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 [Viper](https://github.com/edhowland/viper)
 
-## Version 0.4.1
+## Version 0.4.2
 
 ## Requirements
 
-Vish requires Ruby 2.x.
+Vish requires Ruby 2.2+
+
+### Note: Ruby version 2.2.0 and are only supported with the dependant rubytree/1.0.0 gem.
+
 It has been tested in the following environments:
 
 - Linux : Ruby 2.2

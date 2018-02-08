@@ -54,16 +54,23 @@ class VishParser < Parslet::Parser
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
-  rule(:list_index) { deref >> lbracket.as(:list_index) >> (integer | deref | symbol).as(:index) >> rbracket }
-  rule(:execute_index) { deref_block >> lbracket.as(:execute_index) >>(integer | deref | symbol).as(:index) >> rbracket } 
+  rule(:list_index) { deref >> list }
+  rule(:execute_index) { deref_block >> list >> (lparen >> arglist.as(:lambda_args) >> rparen).maybe >> space? }
+
+  # Pair data type: Key/value store
   rule(:pair) { symbol >> space? >> expr.as(:expr) }
   rule(:object) { tilde >> lbrace.as(:object) >> arglist.as(:arglist) >> rbrace }
 
   # keywords
+  # Compile time keywords
+  rule(:pragma) { str('pragma') >> space! >> sq_string.as(:pragma) }
+  rule(:import) { str('import') >> space! >> sq_string.as(:import) }
+
+  # Runtime keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
-  rule(:keyword) { (_break| _exit | _return).as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import).as(:keyword) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }
@@ -118,7 +125,7 @@ class VishParser < Parslet::Parser
 
   # An identifier is an ident_head (_a-zA-Z) followed by 0 or more of ident_tail, which ident_head + digits
   rule(:ident_head) { match(/[_a-zA-Z]/) }
-  rule(:ident_tail) { match(/[a-zA-Z0-9_\?]/).repeat(1) }
+  rule(:ident_tail) { match(/[a-zA-Z0-9_\?!]/).repeat(1) }
   rule(:identifier) { ident_head >> ident_tail.maybe }
 
 
@@ -159,8 +166,9 @@ class VishParser < Parslet::Parser
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
+
   rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) >> (lparen >> arglist.as(:arglist) >> rparen).maybe >> space? }
-  rule(:object_deref) { deref >> period.as(:list_index) >> identifier.as(:index) >> space? }
+  rule(:object_deref) { deref >> period.as(:list) >> identifier.as(:symbol) >> space? }
 
   # immediately execute a block E.g.: bk=%{ 5 + 6 }; :bk ... => 11
   rule(:block_exec) { str('%') >> block.as(:block_exec) }

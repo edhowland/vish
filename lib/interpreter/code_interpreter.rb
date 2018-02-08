@@ -113,6 +113,9 @@ class CodeInterpreter
     while self.bc.pc <= self.bc.length
       handle_interrupt { step }
     end
+
+  rescue TypeError => err
+    raise VishTypeError.new(err.message)
   rescue HaltState => state
     @last_exception = state
 #    return state.exit_code

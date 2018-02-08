@@ -172,7 +172,7 @@ def opcodes tmpreg=nil
 #      binding.pry
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
-      raise ArgumentError.new("Wrong number of parameters: #{argc} for #{ltype.arity}") if argc != ltype.arity
+      raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
       argv = ctx.stack.pop(argc)
 frame = ltype.frame
 frame.ctx.stack.push(*argv)

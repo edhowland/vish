@@ -131,4 +131,10 @@ class TestObject < BaseSpike
     result = interpret 'x=~{foo: false};:x.foo || true'
     assert result
   end
+
+  # test method calls can take function parameters
+  def test_method_calls_can_take_and_execute_fn_parm
+    result = interpret 'a=~{foo: ->(fn) { %fn }};%a.foo(->() {4})'
+    assert_eq result, 4
+  end
 end

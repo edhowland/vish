@@ -22,11 +22,24 @@ class AstTransform < Parslet::Transform
   rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
   rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
   rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolType.new(symbol),expr) }
-  rule(deref: simple(:deref), list_index: simple(:list_index), index: simple(:index)) { ListIndex.leaf(Deref.new(deref), index) }
-  # method call
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), [arglist]) }
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), arglist) }
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
+
+  # deref an object with dotted method
+  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { DerefList.subtree(Deref.new(deref), SymbolType.new(symbol)) }
+
+  # deref a list w/index
+  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { DerefList.subtree(Deref.new(deref), arglist) }
+
+  # IList indexed lambda call: %a[0] TODO: Add backin parens and args
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), lambda_args) }
+
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist)) }
+
+  # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), []) } 
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), [arglist]) } 
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), arglist) }
+
 
   # logical operations
 
