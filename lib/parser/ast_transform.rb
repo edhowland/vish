@@ -37,11 +37,14 @@ class AstTransform < Parslet::Transform
 
   # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
   # CHANGE here
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), []) } 
+
   rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), [arglist]) } 
+  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolType.new(index)), arglist) }
+
   # TODO: Implement the 0, n arg variety of dotted method calls
   #FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), [arglist]) }
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) {FunctorNode.subtree(ExecuteIndex.leaf(Deref.new(lambda_call), index), arglist) }
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
+#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { ExecuteIndex.leaf(Deref.new(lambda_call), index) }
 
   # logical operations
 

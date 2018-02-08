@@ -10,6 +10,7 @@ class LambdaCallList < NonTerminal
     @argc = argc
     super()
   end
+  attr_accessor :argc
 
   def self.subtree(functor, lambda_args=[])
     lambda_args.reject!(&:nil?)
