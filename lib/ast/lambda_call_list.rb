@@ -6,18 +6,28 @@
 # But emits different bytecode because LambdaType pointer to heap of closure
 # is already on the top of the stack
 class LambdaCallList < NonTerminal
-  def self.subtree(functor)
-    top = mknode(self.new)
+  def initialize argc=0
+    @argc = argc
+    super()
+  end
+
+  def self.subtree(functor, lambda_args=[])
+    lambda_args.reject!(&:nil?)
+    top = mknode(self.new(lambda_args.length))
+    lambda_args.each do |arg|
+      top << node_unless(arg)
+    end
     top << node_unless(functor)
 
     top
   end
 
   def emit(bc, ctx)
+    # Should have any evaluated arguments to this function ahead of the deref'ed list
     # Already should have :Lambda_type_XXXX on top of stack
-    # ??? what to do about additional args
-    bc.codes <<  :pushl
-    bc.codes << 0
+    argc = ctx.store_constant(@argc)
+    bc.codes <<  :pushc
+    bc.codes << argc
     # need to swap the top args to get in the right order
     bc.codes << :swp
     bc.codes << :pusha
@@ -25,6 +35,6 @@ class LambdaCallList < NonTerminal
   end
 
   def inspect
-    "#{self.class.name}"
+    "#{self.class.name}: argc: #{@argc}"
   end
 end

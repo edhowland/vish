@@ -8,3 +8,9 @@ end
 class VishTypeError < VishRuntimeError
   #
 end
+
+class VishArgumentError < VishRuntimeError
+  def initialize arity=0, got=0
+    super "Wrong number of arguments: expected: #{arity}, got #{got}" 
+  end
+end

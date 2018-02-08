@@ -19,7 +19,7 @@ class TestLambda < BaseSpike
 
   # overconsumption/underproduction of arguments to function
   def test_under_production_over_consumption_of_arguments
-    assert_raises ArgumentError do
+    assert_raises VishArgumentError do
       result = interpertit 'low=->(f, g) { 1 };%low()'
     end
   end
@@ -73,5 +73,23 @@ EOC
   def test_can_call_lambda_indexed_with_lambda_call_return
     result = interpret 'fn=->() {0};a=[->() {9}];%a[%fn]'
     assert_eq result, 9
+  end
+  # test object dereference. From test_object, but with list[symbol:]
+  def test_can_call_lambda_w_symbol_derefed_in_object
+    result = interpret 'a=~{foo: ->() {9}};%a[foo:]'
+    assert_eq result, 9
+  end
+  # try passing 0, 1, 2 args to indexed lambda_call in list:
+  def test_can_pass_0_args_to_indexed_lambda
+    result = interpret 'a=[->() {9}];%a[0]()'
+    assert_eq result, 9
+  end
+  def test_can_pass_1_arg_to_lambda_deref_from_list_index
+    result = interpret 'a=[->(x) {:x}];%a[0](9)'
+    assert_eq result, 9
+  end
+  def test_can_pass_2_args_to_lambda_derefed_from_list_index
+    result = interpret 'a=[->(x, y) { :x + :y }];%a[0](1,2)'
+    assert_eq result, 3
   end
 end
