@@ -166,6 +166,7 @@ class VishParser < Parslet::Parser
   rule(:arg_atoms) { expr >> (comma >> expr).repeat }
   rule(:arglist) { arg_atoms |  space?   }
   rule(:funcall) { identifier.as(:funcall) >> lparen >> arglist.as(:arglist) >> rparen }
+  # TODO: CHANGE here
   rule(:method_call) { deref_block >> period.as(:execute_index) >> identifier.as(:index) >> (lparen >> arglist.as(:arglist) >> rparen).maybe >> space? }
   rule(:object_deref) { deref >> period.as(:list) >> identifier.as(:symbol) >> space? }
 
