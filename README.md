@@ -3,7 +3,7 @@
 ## Abstrack
 
 Vish is a simple DSL for expressing  statements for underlying
-program API. It derives from  The Viper code editor for screenreader users version 2.x.
+program API. It derives from  The Viper code editor for screenreader users version 3.x.
 
 [Viper](https://github.com/edhowland/viper)
 
