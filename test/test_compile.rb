@@ -290,15 +290,15 @@ end
   assert ci.run
   end
 def test_complex_operation_w_and_equality
-  assert_false interpertit 'false and 22 == 11 * 2'
+  assert_false interpret 'false and 22 == 11 * 2'
 end
 def test_complex_or_w_inequality
-  assert interpertit 'false or 100 * 4 != 99'
+  assert interpret 'false or 100 * 4 != 99'
 end
 
   # test various things as rvalues in expressions
   def test_additon_w_funcall
-#    assert_eq "helloworld\n", interpertit("'hello' + echo('world')")
+#    assert_eq "helloworld\n", interpret("'hello' + echo('world')")
   end
   def  test_expression_can_have_funcall_as_rvalue
         bc, ctx = compile '44 - add(2)'

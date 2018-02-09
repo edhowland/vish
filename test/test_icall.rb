@@ -19,7 +19,7 @@ class TestIcall < BaseSpike
 
   # compile stuff
   def test_try_echo_with_one_arg
-    result = interpertit 'echo(3+4)'
+    result = interpret 'echo(3+4)'
     assert_eq result, "7\n"
   end
   def test_empty_arglist
