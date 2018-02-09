@@ -19,16 +19,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Also refactored the latter type of lambda calls to be just syntax sugar for the [] version.
 
-##  0.4.1
+## 0.4.1 - 2018-02-04
 
-Corrected problem with passing output of method_call to pipe/and/or expressions
-Added ability to append additional dispatchable modules to runtime, via the -r
-require flag.. See README.md for details
-Added -l, --load file.vs flag to compiler/ivs/vish runtime to preload files/lib
-Added --no-stdlib for ivs/vishc/vish programs to prevent preloading ./std/lib.vs.
-This file has the 'mkattr(sym:, value)' function.
+- Corrected problem with passing output of method_call to pipe/and/or expressions
+- Added ability to append additional dispatchable modules to runtime, via the -r
+- require flag.. See README.md for details
+- Added -l, --load file.vs flag to compiler/ivs/vish runtime to preload files/lib
+- Added --no-stdlib for ivs/vishc/vish programs to prevent preloading ./std/lib.vs.
+- This file has the 'mkattr(sym:, value)' function.
 Used in object constructor functions.
-Adds :%var.symbol, and %var.set_symbol(value) methods.
+- Adds :%var.symbol, and %var.set_symbol(value) methods.
 
 Version 0.4.0
 
