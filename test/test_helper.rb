@@ -18,14 +18,11 @@ module CompileHelper
   def mkci bc, ctx
     CodeInterpreter.new(bc, ctx)
   end
-  def interpertit string
+  def interpret(string)
     bc, ctx = compile string
     ci = mkci bc, ctx
     ci.run
   end  
-  def interpret(string)
-    interpertit(string)
-  end
 
 def mk_ast string
   @transform.apply(@parser.parse(string))
