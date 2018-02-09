@@ -1,5 +1,22 @@
 # Notes
 
+## Version 0.5.0
+
+Changes the semantics of named function declarations to use lambda assignments
+instead.
+
+E.g.
+
+```
+# This:
+defn foo(a, b) { :a + :b }
+#  becomes:
+foo=->(a, b) { :a + :b }
+# But, this still works:
+foo(2,3)
+# => 5
+```
+
 ## Let binding
 
 ### The loop over closure problem
