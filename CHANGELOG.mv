@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.4.3 - 2018-02-09
+
+-  Updated this file: CHANGELOG.md) to format of keepachangelog.com. (See link above)
+- Corrected spelling mistakes in test/test_*.rb
+
 ## [0.4.2] - 2018-02-08
 
 - Corrected argument passing failures on derefed lambda calls from a list index.
