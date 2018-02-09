@@ -1,12 +1,25 @@
-Version 0.4.2
-Corrected argument passing failures on derefed lambda calls from a list index.
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.4.2] - 2018-02-08
+
+- Corrected argument passing failures on derefed lambda calls from a list index.
+
+```
 %p[0] .. %p[foo:]() .. %p[%lm(2)](1) .. %p[0](1,2,3)
-Also:
+
+# Also:
 %p.foo .. %p.foo() .. %p.foo(1) .. %p.foo(1,2)
+```
 
-Also refactored the latter type of lambda calls to be just syntax sugar for the [] version.
+- Also refactored the latter type of lambda calls to be just syntax sugar for the [] version.
 
-Version 0.4.1
+##  0.4.1
 
 Corrected problem with passing output of method_call to pipe/and/or expressions
 Added ability to append additional dispatchable modules to runtime, via the -r
