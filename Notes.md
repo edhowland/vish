@@ -17,6 +17,37 @@ foo(2,3)
 # => 5
 ```
 
+### The @lambdas hash in VishCompiler
+
+The keys in the @lambdas hash point to tuples of 2 nodes in the AST.
+Each key is of the form: Symbol of node name: :lambda_9999
+Where this colon is the node name of a Tree::TreeNode.
+The tuple consists of the following:
+
+1. Lambda AST node. - Actual lambda of parms+body
+2. LambdaName: The value of the LambdaName is:
+- LambdaType
+  * Name is The key above(:lambda_xxx)
+  * Frame: (starts as Unknown) - Filled in at runtime.
+
+Note: You can use the exl function in pry_helper.rb to examine this structure.
+
+There is a bunch behind the scenes kind of stuff dealing with
+JumpTargets and the BulletinBoard (A place to store references until
+They get resolved in the generate phase.
+See lib/generation/resolve_lambda_locations.rb
+
+
+#### In the case of a defn foo() declaration:
+
+@lambdas consistof
+1. NamedLambda AST node. - Actual lambda of parms+body also contains the name: foo
+2. LambdaName: The value of the LambdaName is:
+- LambdaType
+  * Name is The key above(:NamedLlambda_xxx)
+  * Frame: (starts as Unknown) - Filled in at runtime.
+
+
 ## Let binding
 
 ### The loop over closure problem

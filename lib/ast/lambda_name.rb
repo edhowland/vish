@@ -17,7 +17,8 @@ class LambdaName < Terminal
     bc.codes << :pushl
     jmp_t = JumpTarget.new(@value.name)
     # We do a post operation to BulletinBoard because we are creaters of the lambda object
-    BulletinBoard.post(jmp_t)
+    # TODO: This might not be true. Edge case  may have the lambda call before the creation
+    BulletinBoard.put(jmp_t)    #post(jmp_t)
     bc.codes << jmp_t
     bc.codes << :pushl
     bc.codes << 3
@@ -29,6 +30,6 @@ class LambdaName < Terminal
   end
 
   def inspect
-    "LambdaName: value: #{@value.inspect}"
+    "#{self.class.name}: value: #{@value.inspect}"
   end
 end

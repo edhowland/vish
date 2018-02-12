@@ -57,7 +57,7 @@ class AstTransform < Parslet::Transform
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   # keyword stuff
-  rule(return: simple(:return_expr)) { Return.subtree(return_expr) }
+  rule(return: simple(:return_expr)) { LambdaReturn.subtree(return_expr) }
   rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
   rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }
 
@@ -77,8 +77,13 @@ class AstTransform < Parslet::Transform
   rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
 
   # Functions
-  rule(fname: simple(:fname), parmlist: simple(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, [parmlist]) } 
-  rule(fname: simple(:fname), parmlist: sequence(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, parmlist) } 
+  # Change here
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
+
+
+#  rule(fname: simple(:fname), parmlist: simple(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, [parmlist]) } 
+#  rule(fname: simple(:fname), parmlist: sequence(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, parmlist) } 
 
 
   # Function calls, Lambda calls, etc.

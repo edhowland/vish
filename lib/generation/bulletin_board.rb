@@ -13,7 +13,7 @@ class BulletinBoard
       @@storage[target.name] = target
     end
     def get target_name
-      @@storage[target_name]
+      @@storage[target_name.to_sym]
     end
 
     # put(target) - Idempotent. Does not store it if it exists
@@ -23,8 +23,17 @@ class BulletinBoard
     def keys
       @@storage.keys
     end
+
     def values
       @@storage.values
+    end
+
+  def storage
+    @@storage
+  end
+
+    def clear
+      @@storage.clear
     end
   end
 

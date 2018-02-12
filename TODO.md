@@ -1,5 +1,33 @@
 # TODO
 
+## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
+
+Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
+
+## Todo: Add hello banner to REPL: ivs
+
+```
+$ bin/ivs
+Welcome to Vish. Version x.x.x
+vish>^D
+
+$
+```
+
+
+```
+# supress this banner:
+# in ~/.ivsrc:
+banner=false
+prompt='>> '
+
+$ bin/ivs
+>>
+>>^D
+
+$
+```
+
 ## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
 
 Problem: gem: tty-reader does not output an entered '['

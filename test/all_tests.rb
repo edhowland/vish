@@ -33,5 +33,4 @@ require_relative 'test_list'
 require_relative 'test_symbol'
 
 require_relative 'test_object'
-
-
+require_relative 'test_bulletin_board'

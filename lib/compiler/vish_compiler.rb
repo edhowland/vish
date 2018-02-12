@@ -26,6 +26,9 @@ class VishCompiler
   end
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
+    # Remember where the function declarations are
+    memoize_functions(ast, functions)
+
     # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
     resolve_logical_and(ast)
     resolve_logical_or(ast)
@@ -34,25 +37,23 @@ class VishCompiler
     resolve_pipecalls(ast)
 
     # locate and extract any defn function declarations. Move to @functions hash
-  @functions = extract_functions(ast)
+#  @functions = extract_functions(ast)
 
+    # Now the funcalls that are actually lambda calls get converted here.
+    convert_funcall_to_lambda_call(ast, functions)
     # convert assigned blocks to lambdas w/0 parameters
     convert_assigned_blocks_to_lambdas(ast)
-    # convert any function call parameters that are blocks to lambdas
-    convert_block_parameters_to_lambdas(ast, Funcall)
+#    # convert any function call parameters that are blocks to lambdas
+#    convert_block_parameters_to_lambdas(ast, Funcall)
 # Convert any block parameters to lambda clalls to lambdas
     convert_block_parameters_to_lambdas(ast, LambdaCall)
 
 
     # fixup Return classes
-    # fixup_returns(@blocks, BlockReturn)
-    # @blocks.each {|b| ast << b }
-    # Now add back in any previously declared blocks
-    # @blocks = blocks + @blocks
 
-    fixup_returns(@functions.values, FunctionReturn)
+#    fixup_returns(@functions.values, FunctionReturn)
     # Append the actual function bodies to end of AST
-    @functions.values.each {|f| ast << f }
+#    @functions.values.each {|f| ast << f }
     # Now add back in any previously declared functions passed in here.
     @functions = functions.merge(@functions)
 
@@ -60,18 +61,21 @@ class VishCompiler
     @lambdas = extract_lambdas(@ast)
 
     # fix up any returns within lambdas
-    fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
+    # REMOVEME because there is only one type o return
+    #fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
 
 #    @lambdas.each {|l| @ast << l }
 append_lambdas(ast, @lambdas)
 
 # fix up lambda name reference to lambda types into lambda entries
-fixup_lambda_entries(@lambdas)
+# This is need for some reason ???
+    fixup_lambda_entries(@lambdas)
 
     # add in any passed other lambdas. Possibly from earlier compiles.
     @lambdas.merge!  lambdas
   # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
-  differentiate_functions(@ast, @functions)
+  # REMOVEME because actual funcalls are now lambda calls, above
+#  differentiate_functions(@ast, @functions)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc

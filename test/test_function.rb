@@ -26,4 +26,10 @@ class TestFunction < BaseSpike
     result = interpret 'defn baz() { true };fn=->() { baz() };%fn()'
     assert result
   end
+
+  # Functions are also lambdas
+  def test_can_call_function_as_if_it_was_lambda
+    result = interpret 'defn fu() {0}; %fu'
+    assert_eq result, 0
+  end
 end

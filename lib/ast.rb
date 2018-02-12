@@ -82,6 +82,8 @@ require_relative 'ast/lambda_name'
 require_relative 'ast/lambda_entry'
 require_relative 'ast/lambda_exit'
 require_relative 'ast/lambda'
+require_relative 'ast/named_lambda'
+# Call a lambda
 require_relative 'ast/lambda_call'
 require_relative 'ast/lambda_call_list'
 

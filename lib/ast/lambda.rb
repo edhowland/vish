@@ -4,7 +4,7 @@ class Lambda < NonTerminal
     @arglist = arglist
   end
   attr_reader :arglist
-  
+
   # subtree - constructs a subtree of nodes: LambdaEntry, Block, LambdaExit
   # Parameters:
   # arglist - Array - list of (string literals)? - passed to LambdaEntry

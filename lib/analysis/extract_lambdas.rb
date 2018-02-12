@@ -2,6 +2,8 @@
 
 def extract_lambdas(ast)
 lambdas = select_class(ast, Lambda)
+lambdas += select_class(ast, NamedLambda)
+
   # get parents - returns list of tuples of parent, lambda
 #  parentsof_lambdas = lambdas.map {|l| [l.parent, l] }
 
