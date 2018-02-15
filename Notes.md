@@ -91,6 +91,18 @@ everytime. Therefore, each lambda created on the heap would point a new Frame.
 )
 ```
 
+### Note: This also applys to current problem of not shadowing parameters
+in lambda function calls.
+
+This problem may be solved in the compiler phase somehow. See shadowing.
+
+However, if you want local variables in your lambda (or a actual function with
+'defn', you would need a let binding.
+
+```(Ruby)
+
+```
+
 ## Variadic method signatures
 
 Function calls already take a variable number of parameters. But at runtime,

@@ -17,7 +17,7 @@ class Lambda < NonTerminal
     top << mknode(LambdaEntry.new(arglist))
     _body = node_unless(body)
     top <<  _body
-    top << mknode(LambdaExit.new)
+    top << mknode(LambdaExit.new(arglist.length))
 
     top
   end

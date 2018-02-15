@@ -166,6 +166,14 @@ def opcodes tmpreg=nil
     },
 
   # Lambda call stuff
+  _vars_push: 'Pushes a new variable frame on ctx.vars',
+  vars_push: ->(bc, ctx, fr, intp) {
+    ctx.vars.push
+  },
+  _vars_pop: 'Pops vars frame containing parameters of ctx.frame_stack',
+  vars_pop: ->(bc,ctx, fr, intp) {
+    ctx.vars.pop
+  },
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop

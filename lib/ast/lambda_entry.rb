@@ -23,7 +23,9 @@ jmp_t.target = bc.codes.length
 # The BB.put is idempotent
 BulletinBoard.put(jmp_t)
 
-
+    # if there are any parameters
+    bc.codes << :vars_push unless @arglist.empty?
+    # Now assign any parameters to the frame's vars
     @arglist.reverse.each do |a|
       bc.codes << :pushl
       bc.codes << a.to_s.to_sym
@@ -31,6 +33,7 @@ BulletinBoard.put(jmp_t)
       bc.codes << :assign 
     end
   end
+
   def inspect
     self.class.name + ': value: ' + @value.inspect + ' arglist: [' + 
       @arglist.map(&:inspect).join(', ') + ']'

@@ -8,7 +8,7 @@ class Context
   def initialize
     @stack = LimitedStack.new(limit:1000)
     @constants = []
-    @vars = {}
+    @vars = ShadowVariables.new
   end
   attr_accessor :stack, :constants, :vars
 

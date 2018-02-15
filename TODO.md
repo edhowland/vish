@@ -1,5 +1,7 @@
 # TODO
 
+## TODO, make sure LambdaExit pops the FrameStack if there are any parameters
+
 ## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
 
 Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
