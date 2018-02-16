@@ -1,7 +1,4 @@
 # runtime.rb - requires for runtime/
-#require_relative 'runtime/frame_stack'
-require_relative 'runtime/shadow_variables'
-
 
 require_relative 'runtime/context'
 

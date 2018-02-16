@@ -2,13 +2,13 @@
 
 require_relative 'test_helper'
 
-
 require_relative 'test_api'
-
 require_relative 'test_bytecodes'
 require_relative 'test_context'
+require_relative 'test_frame'
 require_relative 'test_code_interpreter'
 require_relative 'test_ast'
+require_relative 'test_simple_rdp'
 require_relative 'test_string'
 
 require_relative 'test_compile'
@@ -36,5 +36,3 @@ require_relative 'test_object'
 require_relative 'test_bulletin_board'
 require_relative 'test_pair_type'
 require_relative 'test_binding_type'
-
-
