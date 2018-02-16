@@ -95,6 +95,8 @@ append_lambdas(ast, @lambdas)
 start
   end
 
+  # run - runs all phases of compiler
+  # TODO: Add in BulletinBoard.clear to ensure no left dangling JumpTargets
   def run source=@source
     parse source
     transform

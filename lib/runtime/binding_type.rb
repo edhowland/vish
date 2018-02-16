@@ -53,4 +53,14 @@ class BindingType
       raise AssignmentDisallowed.new("Attempt to assign #{key}, but it was not defined")
     end
   end
+  def [] key
+    self.get(key)
+  end
+  def []= key, value
+    if set? key
+      self.set! key, value
+    else
+      self.set key, value
+    end
+  end
 end

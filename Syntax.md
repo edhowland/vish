@@ -124,6 +124,30 @@ sum(:li)
 %lm(foo(:x))
 ```
 
+## Variables
+
+Variables can be assign any valid expression, block or lambda expression.
+After assignement, a variable can be dereferenced via the ':var' form.
+
+
+### Function/Lambda formal parameters
+
+Function parameters act as variables within the body or scope of their execution
+context. They can be dereferenced or assigned to like normalvariable.
+
+#### Parameter shadowing
+
+If a parameter shares the name (i.e. symbol) as an outer variable,
+it will shadow its outer parent variable. Any assignment, leaving the outer
+variable unchanged. This includes the act of binding a value to a parameter
+at function call.
+
+#### Lexical scoping
+
+Variables defined in the scope  when a lambda or function is created will be
+captured in the lambda binding. Any assignments or dereferences will refer
+to the value in the original context/scope. This works like in Scheme or Ruby.
+
 ## Collections
 
 

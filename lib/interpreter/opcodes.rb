@@ -42,7 +42,7 @@ def opcodes tmpreg=nil
     _savefp: 'Finds the nearest UnionFrame on the call stack and saves it on LambdaType on top of data stack',
     savefp: ->(bc, ctx, fr, intp) {
     frame = fr.reverse.find {|f| UnionFrame === f}
-      ctx.stack.peek.frame= frame
+      ctx.stack.peek.binding = frame.ctx.vars
         },
 
 
@@ -91,7 +91,17 @@ def opcodes tmpreg=nil
 
     # assignments and dereferences
     _assign: 'assign - pop the name of the var, pop the value, store in ctx.vars.',
-    assign: ->(bc, ctx, _, intp) { var, val = ctx.stack.pop(2); ctx.vars[var] = val },
+    assign: ->(bc, ctx, _, intp) {
+      var, val = ctx.stack.pop(2)
+      ctx.vars[var] = val 
+      ctx.stack.push val
+    },
+    _set: 'Sets a new value in context vars binding, possibly shadowing other values',
+    set: ->(bc, ctx, fr, intp) {
+            var, val = ctx.stack.pop(2)
+            ctx.vars.set(var, val)
+      ctx.stack.push val
+    },
 
 
     # branching instructions
@@ -166,14 +176,14 @@ def opcodes tmpreg=nil
     },
 
   # Lambda call stuff
-  _vars_push: 'Pushes a new variable frame on ctx.vars',
-  vars_push: ->(bc, ctx, fr, intp) {
-    ctx.vars.push
-  },
-  _vars_pop: 'Pops vars frame containing parameters of ctx.frame_stack',
-  vars_pop: ->(bc,ctx, fr, intp) {
-    ctx.vars.pop
-  },
+#  _vars_push: 'Pushes a new variable frame on ctx.vars',
+#  vars_push: ->(bc, ctx, fr, intp) {
+#    ctx.vars.push
+#  },
+#  _vars_pop: 'Pops vars frame containing parameters of ctx.frame_stack',
+#  vars_pop: ->(bc,ctx, fr, intp) {
+#    ctx.vars.pop
+#  },
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
@@ -182,7 +192,10 @@ def opcodes tmpreg=nil
       argc = ctx.stack.pop
       raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
       argv = ctx.stack.pop(argc)
-frame = ltype.frame
+_binding = ltype.binding
+frame = FunctionFrame.new(Context.new)
+frame.ctx.constants = ctx.constants
+frame.ctx.vars = _binding.dup
 frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
 

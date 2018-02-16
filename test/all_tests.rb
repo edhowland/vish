@@ -34,3 +34,7 @@ require_relative 'test_symbol'
 
 require_relative 'test_object'
 require_relative 'test_bulletin_board'
+require_relative 'test_pair_type'
+require_relative 'test_binding_type'
+
+

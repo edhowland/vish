@@ -96,4 +96,20 @@ class TestBindingType < BaseSpike
     @b.set!(:a, 3)
     assert_eq @b.get(:a), 3
   end
+
+  # Now pretend we are Hash/Dictionary
+  def test_can_use_bracket_get
+    @b.set :a, 66
+    assert_eq @b[:a], 66
+  end
+  def test_can_assign_w_brackets
+    @b[:a] = 55
+    assert_eq @b[:a], 55
+  end
+  def test_reassigns_same_value
+    @b.set :c, 'c'
+    pair = @b.find_pair :c
+    @b[:c] = 67
+    assert_eq pair.value, 67
+  end
 end

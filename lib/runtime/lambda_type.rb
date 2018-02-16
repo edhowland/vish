@@ -15,11 +15,11 @@ class LambdaType
     @name.extend(LambdaFunction)
     @arity = arity
     @target = 0
-    @frame = :unknown
+    @binding = nil
   end
   attr_reader :name, :arity
-  attr_accessor :target, :frame
+  attr_accessor :target, :binding
   def inspect
-    "LambdaType: name: #{name}, arity: #{@arity}, target: #{@target} frame: #{@frame}"
+    "LambdaType: name: #{name}, arity: #{@arity}, target: #{@target} binding: #{@binding}"
   end
 end
