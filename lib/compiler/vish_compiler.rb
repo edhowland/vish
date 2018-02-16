@@ -36,24 +36,17 @@ class VishCompiler
     # resolve Pipe w/any right child nodes that respond_to? :argc
     resolve_pipecalls(ast)
 
-    # locate and extract any defn function declarations. Move to @functions hash
-#  @functions = extract_functions(ast)
 
     # Now the funcalls that are actually lambda calls get converted here.
     convert_funcall_to_lambda_call(ast, functions)
     # convert assigned blocks to lambdas w/0 parameters
     convert_assigned_blocks_to_lambdas(ast)
-#    # convert any function call parameters that are blocks to lambdas
-#    convert_block_parameters_to_lambdas(ast, Funcall)
 # Convert any block parameters to lambda clalls to lambdas
     convert_block_parameters_to_lambdas(ast, LambdaCall)
 
 
     # fixup Return classes
 
-#    fixup_returns(@functions.values, FunctionReturn)
-    # Append the actual function bodies to end of AST
-#    @functions.values.each {|f| ast << f }
     # Now add back in any previously declared functions passed in here.
     @functions = functions.merge(@functions)
 
@@ -64,7 +57,6 @@ class VishCompiler
     # REMOVEME because there is only one type o return
     #fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
 
-#    @lambdas.each {|l| @ast << l }
 append_lambdas(ast, @lambdas)
 
 # fix up lambda name reference to lambda types into lambda entries

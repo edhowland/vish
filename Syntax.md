@@ -148,6 +148,14 @@ Variables defined in the scope  when a lambda or function is created will be
 captured in the lambda binding. Any assignments or dereferences will refer
 to the value in the original context/scope. This works like in Scheme or Ruby.
 
+### Local scope of variables
+
+Variables declared within a function or lambda body exist for the life of the
+function execution. They disappear after the function exits. 
+
+The only exception of this is if a lambda is returned from the function.
+Variables referenced therin the the lambda persist in the closure.
+
 ## Collections
 
 
