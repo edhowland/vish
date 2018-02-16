@@ -19,4 +19,10 @@ class TestPairType < BaseSpike
     p.value = 3
     assert_eq p.value, 3
   end
+
+  # test output stuff
+  def test_pair_type_outputs_array_w_to_a
+    pt = PairType.new key: :a, value: 9
+    assert_eq pt.to_a, [:a, 9]
+  end
 end

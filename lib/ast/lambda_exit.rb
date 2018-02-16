@@ -5,7 +5,6 @@ class LambdaExit < Terminal
     @argc = argc
   end
   def emit(bc, ctx)
-#    bc.codes << :vars_pop unless @argc.zero?
     bc.codes << :fret
   end
   def inspect

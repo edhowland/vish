@@ -32,4 +32,18 @@ class TestFunction < BaseSpike
     result = interpret 'defn fu() {0}; %fu'
     assert_eq result, 0
   end
+
+  # test for variable scoping
+  def test_functions_have_local_scope_for_local_variables
+    result = interpret 'defn foo() { c=12};foo();:c'
+    assert_eq result, Undefined
+  end
+  def test_outer_variable_survies_after_function_declaration
+    result = interpret 'a=9;defn foo(a) { a=22};:a'
+    assert_eq result, 9
+  end
+  def test_shadowed_variables_retain_their_value_after_function_call_w_same_named_parameter
+    result = interpret 'z=10;defn baz(z) {:z};baz(99);:z'
+    assert_eq result, 10
+  end
 end

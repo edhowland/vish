@@ -22,7 +22,9 @@ class PairType
     "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
   end
   def ==(other)
-#    binding.pry
     self.key == other.key && self.value == other.value
+  end
+  def to_a
+    [@key, @value]
   end
 end

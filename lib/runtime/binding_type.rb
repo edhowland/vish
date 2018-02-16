@@ -26,6 +26,17 @@ class BindingType
   def set(key, value)
     @bindings = PairType.new(key: PairType.new(key: key, value: value), value: @bindings)
   end
+
+  # walk - walk the list of nodes
+  def walk(rest=@bindings, &blk)
+    if root?(rest)
+      rest
+    else
+      yield rest.key if block_given?
+      walk(rest.value, &blk)
+    end
+  end
+
   def find_pair(key, rest=@bindings)
     if root?(rest)
       rest
@@ -64,5 +75,15 @@ class BindingType
     else
       self.set key, value
     end
+  end
+  def variables
+    result = []
+    walk {|pt| result << pt.to_a }
+    result
+  end
+  # TODO: clean commented out
+  def inspect
+#    '[' + variables.map {|a| a.inspect }.join(', ') + ']'
+    variables.to_h.inspect
   end
 end

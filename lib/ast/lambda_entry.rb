@@ -24,7 +24,6 @@ jmp_t.target = bc.codes.length
 BulletinBoard.put(jmp_t)
 
     # TODO: REMOVEME
-#    bc.codes << :vars_push unless @arglist.empty?
     # Now assign any parameters to the frame's vars
     @arglist.reverse.each do |a|
       bc.codes << :pushl

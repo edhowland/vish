@@ -115,4 +115,41 @@ class TestBindingType < BaseSpike
     @b[:c] = 67
     assert_eq pair.value, 67
   end
+
+  # test walking the nodes
+  def test_can_walk_empty_list
+    x=0
+    @b.walk {|pt| x += 1 }
+    assert_eq x, 0
+  end
+  def test_walks_1_node
+    x = 0
+    @b[:a] = 9
+    @b.walk {|pt| x += 1 }
+    assert_eq x, 1
+  end
+  def test_walk_can_compute_length_of_members
+    x = 0
+    @b[:a] = 1
+    @b[:b] =2
+    @b[:c] = 3
+    @b[:d] =4
+    @b.walk {|pt| x += 1}
+    assert_eq x, 4
+  end
+  # test aggregate methods
+  def test_variables_when_empty
+    #
+  end
+  def test_pair_type_is_yielded_to_block
+    @b[:a] = 9
+    @b.walk do |pt|
+      assert_is pt, PairType
+    end
+  end
+  def test_variables_when_2_variables
+    @b[:a] = 1
+    @b[:b] = 2
+    assert_eq @b.variables, [[:b, 2], [:a, 1]]
+  end
 end
