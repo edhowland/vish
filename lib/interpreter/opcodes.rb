@@ -161,27 +161,14 @@ def opcodes tmpreg=nil
     },
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
-    _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
-    fcall: ->(bc, ctx, fr, intp) {
-     cx = Context.new
-     cx.constants = ctx.constants
-     argc = ctx.stack.pop
-     argv = ctx.stack.pop(argc)
-     cx.stack.push(*argv)
-      frame = FunctionFrame.new(cx)
-      # The return to should be one past the the operand
-      frame.return_to = bc.pc + 1
-          fr.push(frame) 
-          target = bc.next
-          bc.pc = target
-    },
+
+     # TODO: REMOVEME
 
   # Lambda call stuff
 
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
-#      binding.pry
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
       raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity

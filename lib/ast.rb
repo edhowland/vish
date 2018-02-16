@@ -87,10 +87,7 @@ require_relative 'ast/named_lambda'
 require_relative 'ast/lambda_call'
 require_relative 'ast/lambda_call_list'
 
-require_relative 'ast/function_call'
-require_relative 'ast/function_entry'
-require_relative 'ast/function_exit'
-require_relative 'ast/function'
+
 require_relative 'ast/logical_or'
 require_relative 'ast/logical_and'
 require_relative 'ast/pipe'
