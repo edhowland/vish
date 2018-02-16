@@ -20,6 +20,8 @@ class BindingType
   def root?(pair=@bindings)
     top_level == pair
   end
+  alias_method :empty?, :root?
+
   attr_accessor :bindings
   def set(key, value)
     @bindings = PairType.new(key: PairType.new(key: key, value: value), value: @bindings)

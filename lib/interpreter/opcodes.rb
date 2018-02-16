@@ -48,11 +48,12 @@ def opcodes tmpreg=nil
 
     _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },
-  _dup: 'Duplicates the top of the stack and pushes the copy back there.',
-  dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
-  _swp: 'Swaps top 2 items on stack',
-  swp: ->(bc, ctx, fr, intp) { ctx.stack.swap },
-
+    _dup: 'Duplicates the top of the stack and pushes the copy back there.',
+    dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
+    _swp: 'Swaps top 2 items on stack',
+    swp: ->(bc, ctx, fr, intp) { ctx.stack.swap },
+    _drop: 'Drops the top of stack',
+    drop: ->(bc, ctx, fr, intp) { ctx.stack.pop unless ctx.stack.empty? },
     # Arithmetic instructions.
     _add:  'Add - BinararyAdd - pops 2 operands and pushes the result of adding them',
     add: ->(bc, ctx, _, intp) { l,r = ctx.stack.pop(2); ctx.stack.push(l + r) },

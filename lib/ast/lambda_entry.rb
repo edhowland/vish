@@ -31,6 +31,8 @@ BulletinBoard.put(jmp_t)
       bc.codes << a.to_s.to_sym
       bc.codes << :swp
       bc.codes << :set  #:assign 
+      # drop the stored result of the :set which it leaves on  top of stack
+      bc.codes << :drop
     end
   end
 

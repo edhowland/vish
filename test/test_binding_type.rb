@@ -13,6 +13,9 @@ class TestBindingType < BaseSpike
     @b.set :a, 9
     assert_false @b.root?
   end
+  def test_is_empty
+    assert @b.empty?
+  end
   # Test can set a binding
   def test_can_set_a_binding
     @b.set :a, 9
