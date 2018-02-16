@@ -98,6 +98,7 @@ start
   # run - runs all phases of compiler
   # TODO: Add in BulletinBoard.clear to ensure no left dangling JumpTargets
   def run source=@source
+    BulletinBoard.clear
     parse source
     transform
     analyze
