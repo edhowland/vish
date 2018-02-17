@@ -91,6 +91,11 @@ fixup_lambda_entries(@lambdas)
 start
   end
 
+  # check if any errors or deprecations exist or any other warnings
+  def check
+    deprecation_functions(@ast)
+  end
+
   def run source=@source
     parse source
     transform

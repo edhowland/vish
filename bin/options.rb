@@ -17,6 +17,10 @@ OptionParser.new do |o|
     o.on('-r file', '--require file', String, 'Require extra file before starting') do |file|
       require file
     end
+    o.separator '=================================================='
+    o.on('-d', '--deprecations', 'Show any deprecation warnings for files and exit with status code:9') do
+      options[:deprecations] = true
+    end
   o.separator  ''
 
   o.on('-h', '--help', 'Display this help') do
