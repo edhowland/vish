@@ -8,7 +8,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## 0.4.4 - 2018-02-??
 
-- Possible bug fixes
+### Deprecated
+
+- User defined functions will be changed to lambdas with the name of the function saved in a variable.
+- Variables in the output .vsc will no longer be predefined.
+
+The new format of the variables in the Context.vars memeber will become 
+a BindingType type. It will act like Ruby's Binding class. You will be able to
+get at this type via the binding() call. It acts like a hash, but has Ruby/Scheme local
+binding stuff.
+
+When version 0.5.0 ships, you will need to recompile any test code for it to work.
+Especially, if you created any functions with 'defn' Also, variables pre-declared in the
+.vsc file will no longer work. 
+
+The format of the .vsc (Compile Vish code) will not change, however. 
+It might change in a later release.
 
 ## 0.4.3 - 2018-02-09
 
