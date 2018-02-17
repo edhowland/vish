@@ -65,6 +65,7 @@ class VishParser < Parslet::Parser
   # Compile time keywords
   rule(:pragma) { str('pragma') >> space! >> sq_string.as(:pragma) }
   rule(:import) { str('import') >> space! >> sq_string.as(:import) }
+  rule(:export) { str('export') >> space! >> parmlist.as(:export_list) }
 
   # Runtime keywords
   rule(:_break) { str('break') >> space? }

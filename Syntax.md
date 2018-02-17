@@ -126,6 +126,10 @@ sum(:li)
 
 ## Variables
 
+In Vish, variables are lexically scoped. This is different than dynamically
+scoped languages like Perl. In fact, Vish is more like Scheme.
+
+
 Variables can be assign any valid expression, block or lambda expression.
 After assignement, a variable can be dereferenced via the ':var' form.
 
@@ -142,7 +146,7 @@ it will shadow its outer parent variable. Any assignment, leaving the outer
 variable unchanged. This includes the act of binding a value to a parameter
 at function call.
 
-#### Lexical scoping
+#### Lexical Closures
 
 Variables defined in the scope  when a lambda or function is created will be
 captured in the lambda binding. Any assignments or dereferences will refer
@@ -156,6 +160,12 @@ function execution. They disappear after the function exits.
 The only exception of this is if a lambda is returned from the function.
 Variables referenced therin the the lambda persist in the closure.
 
+
+##### Future use of the set! function.
+
+This introduces a possible problem, how do you address global variables.
+Vish is meant to act more like a functional language than a an imperative language.
+Use of global variables is discouraged.
 ## Collections
 
 
