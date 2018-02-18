@@ -3,6 +3,7 @@
 require_relative 'test_helper'
 
 class TestBindingType < BaseSpike
+  include CompileHelper
   def set_up
     @b = BindingType.new
   end
@@ -151,5 +152,11 @@ class TestBindingType < BaseSpike
     @b[:a] = 1
     @b[:b] = 2
     assert_eq @b.variables, [[:b, 2], [:a, 1]]
+  end
+
+  # test for stack overflow ... in Ruby
+  def test_binding_assignment_does_cause_ruby_stack_overflow
+  skip "will cause stack overflow"
+    interpret 'b=binding();:b'
   end
 end

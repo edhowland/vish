@@ -1,5 +1,17 @@
 # Bugs
 
+## Major Bug binding() in ivs REPL causes Ruby stack overflow
+
+```
+#
+$ ivs --no-stdlib
+vish>binding()
+# => { ... }
+b=binding()
+# ...
+# Stack overflow in BindingType.inspect
+```
+
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
 Also, shoud perfom some kind of arity check for fn invocation.
