@@ -2,7 +2,7 @@
 # vishc.rb - compile vish program into bytecode
 # The format of the bytecode is a Ruby Marshall serialized object after
 # The ByteCodes, Context after they been compiled.
-# Usage: ./vishc file.vsh file.vshc
+# Usage: ./vishc -o file.vsc file.vs [file2.vs, ...]
 
 require 'optparse'
 require_relative '../lib/vish'
@@ -11,6 +11,7 @@ require_relative '../common/store_codes'
 @options = {
   check: false,
   compile: false,
+  deprecations: false,
   stdlib: true,
   ofile: 'v.out.vsc'
 }
@@ -27,6 +28,12 @@ o.separator ''
     @options[:ofile] = file
     @options[:compile] = true
   end
+    o.separator '=================================================='
+
+    o.on('-d', '--deprecations', 'Show any deprecation warnings for files and exit with status code:9') do
+      @options[:deprecations] = true
+      @options[:stdlib] = false
+    end
   o.separator ''
   o.on('-h', '--help', 'Display this help') do |op|
     puts o
@@ -71,6 +78,16 @@ end
 
 if @options[:check]
   exit(check(compose(ARGF.read)))
+end
+
+def deprecated?(source)
+  c = VishCompiler.new source
+  c.run
+  c.check ? 9 : 0
+end
+
+if @options[:deprecations]
+  exit(deprecated?(compose(ARGF.read)))
 end
 
 def compile(source, ofile)

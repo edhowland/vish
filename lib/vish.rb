@@ -39,4 +39,5 @@ require_relative 'generation'
 # bytecode interpreter stuff
 require_relative 'interpreter'
 require_relative 'evaluation'
+require_relative 'checks'
 

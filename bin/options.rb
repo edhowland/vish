@@ -17,6 +17,7 @@ OptionParser.new do |o|
     o.on('-r file', '--require file', String, 'Require extra file before starting') do |file|
       require file
     end
+
   o.separator  ''
 
   o.on('-h', '--help', 'Display this help') do
