@@ -25,6 +25,64 @@ Especially, if you created any functions with 'defn' Also, variables pre-declare
 The format of the .vsc (Compile Vish code) will not change, however. 
 It might change in a later release.
 
+### Issues
+
+- Formal lambda parameters do not shadow same named variables in outer scope.
+- The compiler jump table is not being cleared between compiles.
+
+#### Formal parameter of lambdas
+
+There is a known issue with lambdas with formal parameters having the
+same name as a variable in their enclosing scope, where they are created.
+
+E.g.
+
+```
+a=10
+y=->(a) { :a }
+%y(3)
+# => 3
+:a
+# => 3
+```
+
+The above example shows where the formal parameter :a does not properly
+shadow the :a in the outer scope.
+
+This edge case is fixed in version 0.5.0 and later.
+
+
+##### Workaround
+
+If this becomes a problem until 0.5.x, you can wrap the lambda in a function:
+
+```
+a=10
+defn _y(a) {
+  ->() { :a }
+}
+y=:_y(3)
+%y
+# => 3
+:a
+# => 10
+```
+
+#### Compiler Jumpp Table not being cleared.
+
+There is a small edge case where the internal jump table of the compiler is just
+accumulating jump targets between compiler runs. 
+
+
+Occassionally, a left over jump target for a branch or function call will be overwritten
+with the wrong address. This might to wrong behaviour or a infinite loop.
+
+This occasionally occurs in 2 sceanarios:
+
+1. When runing the 'ivs' REPL.
+2. When running the unit tests with rake test.
+
+
 ## 0.4.3 - 2018-02-09
 
 -  Updated this file: CHANGELOG.md) to format of keepachangelog.com. (See link above)
