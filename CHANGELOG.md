@@ -82,6 +82,12 @@ This occasionally occurs in 2 sceanarios:
 1. When runing the 'ivs' REPL.
 2. When running the unit tests with rake test.
 
+In case #2, just re-run the test suite again.
+In the REPL, you will have to exist and re-enter 'ivs'.
+
+This issue is fixed in version 0.5.0
+
+
 
 ## 0.4.3 - 2018-02-09
 
