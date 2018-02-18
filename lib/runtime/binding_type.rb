@@ -81,9 +81,9 @@ class BindingType
     walk {|pt| result << pt.to_a }
     result
   end
-  # TODO: clean commented out
+  # Displays the type of this object: BintingType.
+  # To get contents, do xmit(binding(), variables:) in Vish ivs REPL
   def inspect
-#    '[' + variables.map {|a| a.inspect }.join(', ') + ']'
-    variables.to_h.inspect
+    type
   end
 end

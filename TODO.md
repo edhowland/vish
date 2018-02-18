@@ -1,5 +1,12 @@
 # TODO
 
+## Todo: Use the require 'readline' in ./bin/ivs 
+
+Also in Builtins read/readi/...
+This works better for screenreaders.
+
+See feature/readline.ivs
+
 ## TODO, make sure LambdaExit pops the FrameStack if there are any parameters
 
 ## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
