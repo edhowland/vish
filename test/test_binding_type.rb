@@ -156,7 +156,6 @@ class TestBindingType < BaseSpike
 
   # test for stack overflow ... in Ruby
   def test_binding_assignment_does_cause_ruby_stack_overflow
-  skip "will cause stack overflow"
     interpret 'b=binding();:b'
   end
 end
