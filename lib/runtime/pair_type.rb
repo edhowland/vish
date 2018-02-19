@@ -21,6 +21,9 @@ class PairType
   def inspect
     "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
   end
+  def xinspect
+    "(#{@key} #{@value})"
+  end
   def ==(other)
     self.key == other.key && self.value == other.value
   end

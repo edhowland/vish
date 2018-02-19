@@ -86,4 +86,7 @@ class BindingType
   def inspect
     type
   end
+  def xinspect
+    @bindings.xinspect
+  end
 end

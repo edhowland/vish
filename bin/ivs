@@ -38,7 +38,8 @@ loop do
     source = readline(history).chomp
     break if source =~ /exit|quit/#
     _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
-p _
+    #xp _
+    p _
   rescue SigInt
   # nop
 rescue Parslet::ParseFailed => err
