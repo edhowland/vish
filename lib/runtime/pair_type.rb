@@ -19,10 +19,12 @@ class PairType
     @value = value
   end
   def inspect
-    "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
+  '(' + to_a.map(&:inspect).join(', ') + ')'
   end
   def xinspect
-    "(#{@key} #{@value})"
+    "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
+
+#    "(#{@key} #{@value})"
   end
   def ==(other)
     self.key == other.key && self.value == other.value

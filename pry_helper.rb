@@ -226,3 +226,6 @@ end
 def fun_lamb
   ['defn foo() {->() {9}};x=%foo;%x','foo=->() {->() {9}};x=%foo;%x']
 end
+def cons(k, v)
+  Builtins.mkpair(k, v)
+end

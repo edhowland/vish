@@ -84,7 +84,13 @@ class BindingType
   # Displays the type of this object: BintingType.
   # To get contents, do xmit(binding(), variables:) in Vish ivs REPL
   def inspect
-    type
+    result ="#{type}"
+
+  walk do |b|
+    result << (b.inspect + ' ')
+  end
+    #type
+    result
   end
   def xinspect
     @bindings.xinspect
