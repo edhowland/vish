@@ -208,9 +208,6 @@ frame.ctx.stack.push(*argv)
   _iret: 'Return from interrupt handler',
   iret: ->(bc, ctx, _, intp) { raise InterruptReturn.new },
 
-    # Debug opcodes
-    _spy: 'Spies on the state of bytecodes, context.',
-    spy: ->(bc, ctx, _, intp) { puts 'bc:', bc.inspect; puts 'ctx:', ctx.inspect }
   }
 end
 
