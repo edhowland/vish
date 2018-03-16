@@ -304,6 +304,6 @@ end
         bc, ctx = compile '44 - add(2)'
   end
   def test_expressions_can_stretch_past_newlines
-    result = interpret "1 + \n1\n"
+    result = interpret "1 +    \n1\n"
   end
 end

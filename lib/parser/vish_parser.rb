@@ -18,7 +18,7 @@ class VishParser < Parslet::Parser
   rule(:space?) { space.maybe }
   rule(:space!) { space >> space? }
   # whitespace including newlines
-  rule(:ws) { newline | space }
+  rule(:ws) { (newline | space).repeat(1) }
   rule(:ws?) { ws.maybe }
 
   # single character rules
@@ -34,13 +34,13 @@ class VishParser < Parslet::Parser
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
-  rule(:plus) { str('+') >> space? }
-  rule(:minus) { str('-') >> space? }
-  rule(:star) { str('*') >> space? }
-  rule(:fslash) { str('/') >> space? }
+  rule(:plus) { str('+') >> ws? }  #space? }
+  rule(:minus) { str('-') >> ws? }
+  rule(:star) { str('*') >> ws? }
+  rule(:fslash) { str('/') >> ws? }
   rule(:bslash) { str('\\') }
   rule(:percent) { str('%') >> space? }
-  rule(:star_star) { str("\*\*") >> space? }
+  rule(:star_star) { str("\*\*") >> ws? }
   # some punctuation
   rule(:dquote) { str('"') }
   rule(:squote) { str("'") }
