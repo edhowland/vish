@@ -12,6 +12,7 @@ class VishParser < Parslet::Parser
   # empty string
   rule(:empty) { str('').as(:empty) }
 
+  rule(:newline) { str("\n") }
   # This is Whitespace, not a single space; does not include newlines. See that rule
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
@@ -19,7 +20,6 @@ class VishParser < Parslet::Parser
 
 
   # single character rules
-  rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
   # The octothorpe - '#'
   rule(:octo) { str('#') }

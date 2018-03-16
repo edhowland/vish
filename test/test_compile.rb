@@ -303,5 +303,7 @@ end
   def  test_expression_can_have_funcall_as_rvalue
         bc, ctx = compile '44 - add(2)'
   end
-
+  def test_expressions_can_stretch_past_newlines
+    result = interpret "1 + \n1\n"
+  end
 end
