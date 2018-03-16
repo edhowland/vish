@@ -17,7 +17,9 @@ class VishParser < Parslet::Parser
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
   rule(:space!) { space >> space? }
-
+  # whitespace including newlines
+  rule(:ws) { newline | space }
+  rule(:ws?) { ws.maybe }
 
   # single character rules
   rule(:semicolon) { str(';') }
