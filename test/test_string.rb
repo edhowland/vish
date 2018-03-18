@@ -69,4 +69,12 @@ class TestString < BaseSpike
     result = interpret '\'x\' + "y"'
     assert_eq result, 'xy'
   end
+
+  # Bug: somehow introduced this empty string buf
+  def test_bug_empty_single_quore_string
+    assert_eq interpret("s=''"), ''
+  end
+  def test_empty_double_quoted_string
+    assert_eq interpret('""'), ""
+  end
 end
