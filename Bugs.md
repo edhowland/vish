@@ -1,5 +1,20 @@
 # Bugs
 
+## Possible bug: incorrect order of command line args in ./bin/vsr - .vsc runner
+
+Do not what is in getargs()[0], but [1] is name of .vsc script compiled.
+Should be the name of the first arg: $1
+And .vsc should be in :a[0]
+
+## Inconsistant behaviour for function dispatch
+
+Sometimes, when a function is called: the wrong function is dispatched.
+Probable cause:
+The LambdaType_XXXX is being clashed with another function on the heap.
+
+Possible fix:
+Change the the get_id() method to return the actual entier Object id
+
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
 Also, shoud perfom some kind of arity check for fn invocation.
