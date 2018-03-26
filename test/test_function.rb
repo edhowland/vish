@@ -46,4 +46,54 @@ class TestFunction < BaseSpike
     result = interpret 'z=10;defn baz(z) {:z};baz(99);:z'
     assert_eq result, 10
   end
+
+  # torture tests
+
+def fx(&blk)
+l=('a'..'j').to_a
+u=l.map(&:upcase)
+n=(1..10).to_a
+
+z=l.zip(n)
+x = u.zip(n)
+
+z.each do |c, i|
+  x.each do |d,  j|
+    yield(c+d, i*j)
+  end
+end
+
+end
+
+
+def rdefs
+  r = []
+  fx {|a,n| r << "def #{a}(); #{n}; end" }
+  r.join("\n")
+end
+def rcalls
+  r = []
+  fx {|a, n| r << "#{a}()" }
+  r.join(" + ")
+end
+
+def ruby_code
+  rdefs + "\n" + rcalls
+end
+
+# vish stuff
+def vdefs
+  r = []
+  fx {|a,n| r << "defn #{a}() { #{n} }" }
+  r.join("\n")
+end
+
+def vish_code
+  vdefs + "\n" + rcalls
+end
+
+
+  def test_torture_fn_defs_n_calls
+    assert_eq eval(ruby_code), interpret(vish_code)
+  end
 end

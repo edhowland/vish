@@ -83,7 +83,7 @@ class TestApi < BaseSpike
   def test_genid_has_object_id_afterclass_name
     result = genid(Object.new)
     result = result.to_s.split('_')[1]
-    assert_eq result.length, 4
+    assert_eq result.length, 12
   end
   def test_genid_w_object_and_other_class
     result = genid(Object.new, klass:MainFrame)
