@@ -12,7 +12,7 @@ attr_accessor :argc
   bc.codes << :pushl
   bc.codes << @argc
     bc.codes << :pushl
-    bc.codes << :list
+    bc.codes << :mkvector
     bc.codes << :icall
   end
 

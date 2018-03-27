@@ -90,12 +90,19 @@ module Builtins
   def self.fwrite(contents, name)
     File.write(name, contents)
   end
+  # Vector stuff
+  def self.mkvector(*args)
+    args
+  end
+  def self.flatten(vector)
+    vector.flatten
+  end
 
   # Linked list stuff
   
   # list(args) - returns all args in a list
   def self.list(*args)
-    args.flatten
+    args.reverse.reduce(mknull()) {|i, j| cons(j, i) }
   end
 
   # head(list) - returns the first item on a list.
@@ -128,6 +135,20 @@ module Builtins
   def self.mkpair(key, value)
     PairType.new(key:key, value:value)
   end
+  def self.cons(ar, dr)
+    mkpair(ar, dr)
+  end
+  def self.pair?(object)
+    object.kind_of?(PairType)
+  end
+  def self.list?(object)
+    return false unless pair?(object)
+    o = object
+    while (pair?(o) && !null?(o))
+      o = o.value
+    end
+    null?(o)
+  end
 
   # key(pair) - returns .key member from PairType
   def self.key(pair)
@@ -142,6 +163,13 @@ module Builtins
   # mkobject(pairs=[]) - create instance of type ObjectType
   def self.mkobject(*args)
     ObjectFactory.build(args)
+  end
+
+  def self.mknull()
+    NullType.new
+  end
+  def self.null?(object)
+    pair?(object) && PairType.null?(object)
   end
 
   # ix(arr, index) - should work with lists or dicts (arrays/hashes)

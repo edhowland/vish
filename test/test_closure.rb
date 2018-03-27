@@ -9,7 +9,7 @@ class TestClosure < BaseSpike
     assert_eq result, 99
   end
   def test_closure_changes_as_closed_var_changes
-    result = interpret 'z=88; lm=->() { :z }; x=%lm(); z=99;list(:x, %lm())'
+    result = interpret 'z=88; lm=->() { :z }; x=%lm(); z=99;[:x, %lm()]'
     assert_eq result, [88,99]
   end
 

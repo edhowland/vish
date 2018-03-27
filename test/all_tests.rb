@@ -29,7 +29,9 @@ require_relative 'test_function'
 require_relative 'test_closure'
 
 require_relative 'test_evaluator'
+require_relative 'test_vector'
 require_relative 'test_list'
+
 require_relative 'test_symbol'
 
 require_relative 'test_object'
