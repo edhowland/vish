@@ -169,15 +169,15 @@ Use of global variables is discouraged.
 ## Collections
 
 
-Vish has 2 collection types: List and objects (dictionary or Hash)
+Vish has 3 collection types: Vectors or Arrays, List and objects (dictionary or Hash)
 
-### Lists
+### Vectors
 
-Lists work like lists in Lisp. They can be created, recursived over, extracted,
-and be combined into larger lists.
+Vectors work like Arrays in languages like Ruby.
+They be created, indexed and combined into larger Vectors.
 
 ```
-# a simple list
+# a simple vector
 l=[0,1,2,3]
 :l
 # => [0,1,2,3]
@@ -197,6 +197,23 @@ idx=4
 :l[:idx]
 # => 4
 ```
+
+### Lists
+
+Vish has lists like those in Lisp or Scheme. They can be constructed by combining
+pairs with parens:
+
+```
+# make a new list:
+list=foo: (bar: (baz: 99))
+:list
+# =>  (foo: (bar: (baz: 99)))
+```
+
+#### Deconstructing lists
+
+You can use familar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
+deconstruct a list
 
 ### Objects
 
@@ -232,6 +249,20 @@ xmit(:pair,key:)
 # => :baz
 xmit(pair:, value:)
 # => 99
+```
+
+#### Use of the Standard Lib functions for key and value extraction
+
+Vish ships with some functions in its standard library. These are located
+in ./std/lib.vs
+
+```
+# use of std/lib.vs key/value functions
+pair=foo: 44
+key(:pair)
+# => :foo
+value(:pair)
+# => 44
 ```
 
 #### Object creation
