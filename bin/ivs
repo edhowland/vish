@@ -3,7 +3,10 @@
 # This is an outer REPL.
 # An inner REPL would use the loop { read() | eval() | print() }  implementation
 # as an interactive .vs script.
+require 'readline'
 
+# constants
+EOF=0
 require_relative 'options'
 
 require_relative '../lib/vish'
@@ -35,7 +38,9 @@ loop do
     BulletinBoard.clear
   prompt = eval.eval(':prompt')
     print prompt
-    source = readline(history).chomp
+#    source = readline(history).chomp
+    source=Readline.readline || EOF
+    break if source == EOF
     break if source =~ /exit|quit/#
     _ = eval.eval(source) {|i| i.ctx.vars[:_] = _ } unless source.strip.empty?
     #xp _
