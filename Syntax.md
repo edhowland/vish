@@ -187,8 +187,8 @@ head(:l)
 # => 0
 tail(:l)
 # => [1,2,3]
-l=list(:l,[4,5,6])
-# => nil
+l=[:l,[4,5,6]]
+l=flatten(:l)
 :l
 # => [0,1,2,3,4,5,6]
 
@@ -210,10 +210,71 @@ list=foo: (bar: (baz: 99))
 # =>  (foo: (bar: (baz: 99)))
 ```
 
+### The Null data type
+
+The Null data type can be used to terminate a long list of nested pairs.
+This will make the 'list?()' predicate true.
+
+```
+# Make a Lisp/Scheme-style list
+l=foo: (bar: (baz: Null))
+list?(:l)
+# => true
+#
+# Make a chain of pairs without Null
+x=foo: (bar: (baz: 2))
+list?(:x)
+# => false
+```
+
+The 'null?()' predicate can be used to check if something is Null.
+
+```
+null?(Null)
+# => true
+null?(2)
+# => false
+l=foo: (bar: Null)
+null?(:l)
+# => false
+```
+
+### Using the list constructor
+
+You can use the 'list()' constructor to make a proper list with a  terminating Null:
+
+```
+# make a Scheme-style list:
+l=list(1, 2, 3, 4)
+# =>  (1, (2, (3, (4, ()))))
+```
+
 #### Deconstructing lists
 
 You can use familar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
 deconstruct a list
+
+```
+l=list(1, 2, 3, 4, 5)
+# get first element:
+car(:l)
+# => 1
+>> cdr(:l)
+(2, (3, (4, (5, ()))))
+>> cadr(:l)
+2
+>> cddr(:l)
+(3, (4, (5, ())))
+>> caddr(:l)
+3
+>> cddr(:l)
+(3, (4, (5, ())))
+>> car(cdddr(:l))
+4
+>> car(cdr(cdddr(:l)))
+5
+```
+
 
 ### Objects
 

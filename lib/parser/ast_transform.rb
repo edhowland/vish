@@ -62,6 +62,7 @@ class AstTransform < Parslet::Transform
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   # keyword stuff
+  rule(null: simple(:keyword)) { Keyword.subtree(keyword) }
   rule(return: simple(:return_expr)) { LambdaReturn.subtree(return_expr) }
   rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
   rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }

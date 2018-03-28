@@ -9,8 +9,11 @@ class TestList < BaseSpike
     @null = Builtins.mknull()
   end
   def test_null_q_is_true
-    result = interpret 'l=mknull(); null?(:l)'
+    result = interpret 'l=Null; null?(:l)'
     assert result
+  end
+  def test_nul_q_Null_is_true
+    assert interpret('null?(Null)')
   end
   def test_array_is_not_a_list
     result = interpret 'l=[];null?(:l)'
@@ -54,7 +57,7 @@ class TestList < BaseSpike
     assert interpret('list?(cons(1, mknull()))')
   end
   def test_list_q_is_still_true_for_long_list
-    assert interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, mknull()))))))')
+    assert interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, Null))))))')
   end
   def test_list_q_is_false_for_long_chain_of_pairs_wo_null_tail
         assert_false interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, 5))))))')

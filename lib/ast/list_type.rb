@@ -1,7 +1,8 @@
 # list_type.rb - class ListType < Terminal - holds a array
 # Usage: arr=[1,2,3] - AST node of ListType is returned
-# Internally, emits code to call :icall, :list w/arguments
+# Internally, emits code to call :icall, :mkvector w/arguments
 
+# TODO Rename me to VectorNode
 
 class ListType < Terminal
 def initialize
