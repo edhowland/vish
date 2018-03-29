@@ -12,6 +12,8 @@ require_relative 'ast/symbol_type'
 
 # deref list:  - :a[0], :a[id()], :a[0,2,3], :a[%y(2)]
 require_relative 'ast/deref_list'
+require_relative 'ast/vector_id'
+
 
 require_relative 'ast/ignore'
 require_relative 'ast/clear_stack'
@@ -26,6 +28,8 @@ require_relative 'ast/block'
 require_relative 'ast/block_exec'
 
 require_relative 'ast/assign'
+require_relative 'ast/vector_assign'
+
 require_relative 'ast/unary_negation'
 require_relative 'ast/boolean_and'
 require_relative 'ast/boolean_or'

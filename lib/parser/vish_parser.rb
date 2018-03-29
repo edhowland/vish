@@ -157,6 +157,9 @@ class VishParser < Parslet::Parser
 
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
+  # Assignment
+  rule(:vector_identifier) { identifier.as(:vector_id) >> lbracket.as(:list) >> expr.as(:index) >> rbracket }
+  rule(:vector_assign) { vector_identifier.as(:vector) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
@@ -186,7 +189,7 @@ class VishParser < Parslet::Parser
   rule(:expr) { block | block_exec | _lambda | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }
 
 
   # pipe expressions: E.g. 99 | cat() | echo() # => "99\n"

@@ -33,6 +33,7 @@ class AstTransform < Parslet::Transform
 
   # deref a list w/index
   rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { DerefList.subtree(Deref.new(deref), arglist) }
+  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { VectorId.subtree(Deref.new(id), index) }
 
   # IList indexed lambda call: %a[0] TODO: Add backin parens and args
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
@@ -51,6 +52,7 @@ class AstTransform < Parslet::Transform
   # arithmetic expressions
   rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   # Assignment
+  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
 

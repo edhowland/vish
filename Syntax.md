@@ -129,7 +129,6 @@ sum(:li)
 In Vish, variables are lexically scoped. This is different than dynamically
 scoped languages like Perl. In fact, Vish is more like Scheme.
 
-
 Variables can be assign any valid expression, block or lambda expression.
 After assignement, a variable can be dereferenced via the ':var' form.
 
@@ -160,6 +159,44 @@ function execution. They disappear after the function exits.
 The only exception of this is if a lambda is returned from the function.
 Variables referenced therin the the lambda persist in the closure.
 
+### The binding
+
+All variables are stored in the current binding. This can be retrieved
+via making a call to 'binding()'.
+This result can be dereferenced like any variable:
+
+```
+# make a new variable
+var=123
+y=binding()
+:y[var:]
+# => 123
+```
+
+#### Returning the binding from a function and nested functions
+
+Normally, a function declared within a another function can only be used
+within that outer function body. It disappears along with all other variables
+declared within the outer function body. However, you can always capture the
+current binding and return it for future use. An example illustrates this pattern:
+
+```
+# nest some function w/o returning anything
+defn outer() {
+  defn inner() { 9 * 11 }
+  inner()
+}
+outer()
+# => 99
+# Now capture the binding and return it:
+defn outer() {
+  defn inner() { 11 * 8 }
+  binding()
+}
+b=outer()
+%b[inner:]
+88
+```
 
 ##### Future use of the set! function.
 
