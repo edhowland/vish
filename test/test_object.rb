@@ -137,4 +137,9 @@ class TestObject < BaseSpike
     result = interpret 'a=~{foo: ->(fn) { %fn }};%a.foo(->() {4})'
     assert_eq result, 4
   end
+  # test assign value to object with indexed assignment: o[foo:]=100
+  def test_can_assign_to_object_with_subscript_deref
+    result = interpret 'o=~{one: 1, two: 2, three: 3};o[two:]=22;:o[two:]'
+    assert_eq result, 22
+  end
 end

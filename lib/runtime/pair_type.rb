@@ -32,4 +32,28 @@ class PairType
   def to_a
     [@key, @value]
   end
+  def [](ndx)
+    case ndx
+    when Symbol
+      if ndx == :key
+        key
+      elsif ndx == :value
+        value
+      elsif ndx == key
+        value
+      else
+        Undefined
+      end
+    when Integer
+      if ndx == 0 || ndx == 1
+        if ndx == 0
+          key
+        else
+          value
+        end
+      else
+        Undefined
+      end
+    end
+  end
 end

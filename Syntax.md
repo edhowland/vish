@@ -233,7 +233,15 @@ l=flatten(:l)
 idx=4
 :l[:idx]
 # => 4
+# assigment to subscript of vector
+v=[0,1,2,3]
+v[1]=9
+:v
+# => [0,9,2,3]
 ```
+
+Note: the subscript can be any valid expression, when evaluated becomes an index
+of the vector.
 
 ### Lists
 
@@ -503,6 +511,26 @@ obj=mkattr(foo:, 2)
 #  => 4
 ```
 
+#### Explicit Object attribute assignment
+
+Objects can  assign to their internal attributes via 3 methods:
+
+1. Subscript assignment
+2. Use of setter methods (as detailed above)
+
+An example of using subscript assignment
+
+```
+o=~{quad: 4, quint: 5}
+o[quint:]=44
+:o.quint
+# => 44
+```
+
+
+Note: You Cannot use the dotted approach to assign values in an object at this time.
+This might be changed in the future.
+In the mean time, use the subscript approach or supply a setter method.
 ## Functions
 
 Vish has named and anonymous functions or lambdas.

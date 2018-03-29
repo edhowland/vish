@@ -83,4 +83,12 @@ end
     result = interpret 'a=[0,1];a[0] = 9;:a[0]'
     assert_eq result, 9
   end
+  def test_can_index_from_funcall_then_assign_result_subscript
+    result = interpret 'a=[1,2,3,4];defn sub() { 1 };a[%sub]=99;:a[1]'
+    assert_eq result, 99
+  end
+  def test_can_assign_to_subscript_computed_from_expression
+    result = interpret 'a=[1,2,3];a[44 / 22]=88;:a'
+    assert_eq result, [1,2,88]
+  end
 end
