@@ -20,6 +20,9 @@ opt = get_options { options }
 
 opt.parse!
 
+# stuff ourself into the remaining args at the first position: E.g. $0
+ARGV.unshift(__FILE__)
+
 eval = Evaluator.new
 history = History.new
 

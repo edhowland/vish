@@ -7,7 +7,7 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 [Viper](https://github.com/edhowland/viper)
 
-## Version 0.4.3
+## Version 0.5.0
 
 ## Requirements
 
@@ -48,7 +48,7 @@ loop { (:acc ==9) && break; acc=:acc + %add }
 ./compiler/vishc.rb loop.{vs,vsc}
 
 # Now run it
-./runtime/vre.rb loop.vsc
+./bin/vsr loop.vsc
 # => 9
 ```
 
@@ -65,6 +65,7 @@ Vish uses 3 special sigils : ':' and '%' and '~'.
 - Colon - ':'  Dereference a variable
 - Percent - '%' Execute a block or a block or lambda saved in a variable.
 - Tilde '~' Used to create an object/Dictionary
+
 ```
 var=100
 :var
@@ -81,13 +82,15 @@ add1=->(x) { :x + 1 }
 
 ## Keywords
 
-Vish uses just 4 keywords at the present time:
+Vish uses just 7 keywords at the present time:
 
 - break - breaks out of a loop
 - return expression - returns out of an executable block with an evaluated expression value
 - exit - Exits Vish
 - loop { block } - Loops over a block until break encountered, or forever.
-
+- Null - Syntax sugar to create a NullType for Scheme-style lists.
+- defn - to create a named function.
+- '->(...)' - To create an anonymous function or lambda closure.
 ## Operators
 
 Vish uses the same operators as Ruby itself. See the Ruby docs for more information
@@ -108,21 +111,83 @@ The keyword to define a function is 'defn functname() { ... }'.
 Similar to lambda anonymous functions, but with actual names.
 
 ```
-# rev.vs - reverses linked list
-l=list(1,2,3,4,5)
-defn rev(l) { :l == list() && return :l; list(rev(tail(:l)), head(:l)) }
+# rev.vs - reverses vector
+l=[1,2,3,4,5]
+defn rev(l) { :l == [] && return :l; rev(tail(:l)) +  [head(:l)] }
 rev(:l)
 # [5, 4, 3, 2, 1]
 ```
 
-### Builtin Functions
+Alternatively, you can use the builtin 'xmit(object, message)' to get Ruby to
+reverse the list for you.
+
+```
+# Use builtin Ruby reverse method
+l=[1,2,3,4,5]
+xmit(:l, reverse:)
+# => [5,4,3,2,1]
+```
+
+To reverse a Scheme style list, we have to do some more work:
+
+```
+# First we need to define the append function:
+defn append(x, y) {
+  null?(:x) && return :y
+cons(car(:x), append(cdr(:x), :y))
+}
+# now we can define the reverse function using append:
+defn rev(l) {
+  null?(:l) && return Null
+  append(rev(cdr(:l)), list(car(:l)))
+}
+#
+ l=list(1,2,3,4,5)
+# => (1, (2, (3, (4, (5, ())))))
+ rev(:l)
+# => (5, (4, (3, (2, (1, ())))))
+```
+
+Note: These above functions exist in ./compiler/append.vs and ./compiler/revlist.vs
+
+### Built-in Functions
 
 There a handful of builtin functions that be invoked
 in your Vish scripts. For a complete list, please see:
 
 [Builtins](Builtins.md)
 
-The above function uses recursion  to reverse a list
+### Custom Ruby functions
+
+You can easily extend Vish to suit your application by defining an interface
+to Vish's Builtin dispatch mechanism.
+
+For example, suppose we wanted to reach out to the internet and retrieve a file.
+Something like curl:
+
+```
+# net_io.rb - interface to Net::HTTP lib: net/http
+
+require 'net/http'
+
+module NetIO
+  def self.nread(uri)
+    Net::HTTP.get(URI(uri))
+  end
+end
+# Now attach this module to Vish Dispatch 'er
+Dispatch << NetIO
+```
+```
+
+Now we can use this in our Vish programs or the ivs REPL shell:
+
+```
+$ ivs -r ./net_io
+>> nread('https://www.google.com) | fwrite('google.html')
+```
+
+Note: This simple http reader  can be found in ruby_if/net_io.rb
 
 ## Pipelines
 
@@ -166,6 +231,43 @@ fcp('myfile.old', 'myfile.new')
 fexist?('myfile.new')
 # => true
 ```
+
+## The environmet
+
+Vish has 2 simple interfaces to the execution environment:
+
+- getenv() - Returns dictionary object of key/value pairs
+- getargs() - Returns vector/array of arguments passed to the program.
+
+Note: getargs() includes the name of the Vish script or the REPL - ivs or the
+name of the compiled Vish bytecode file in the first element. E.g.:
+
+```
+# myfile.vs -
+args=getargs()
+:args[0]
+# => 'myfile.vs'
+# end of myfile.vs
+
+# Now run in shell:
+$ vish myfile.vs
+# => myfile.vs
+```
+
+Note: To get more arguments past the last script, pass a dash : '-' between the script
+and the first arg to pass to the script.
+This only works in the 'vish' executable, since it consumest all scripts names
+as source files to compile and run. The '-' stops this consumption.
+
+```
+# getallargs.vs - all args
+getargs()
+# end of getallargs.vs
+# Call the above script with additional parameters
+$ vish  getallargs.vs - hello world
+# =>  ['getallargs.vs', 'hello', 'world']
+```
+
 ## Using the REPL
 
 Vish comes with a simple REPL (Read/Eval/Print/Loop), for interacting

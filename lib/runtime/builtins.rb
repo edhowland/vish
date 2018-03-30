@@ -10,6 +10,15 @@ module Builtins
   def self.version()
     Vish::VERSION
   end
+  # getenv() - returns dictionary object of running environment
+  def self.getenv()
+    ENV
+  end
+  # getargs() - returns arguments passed to script or program, including name of
+  # script or ivs
+  def self.getargs()
+    ARGV
+  end
 
   # dup - just dups it input to its output (via the stack)
   def self.dup(arg)
