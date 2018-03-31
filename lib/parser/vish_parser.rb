@@ -159,6 +159,8 @@ class VishParser < Parslet::Parser
 
   rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | object_deref | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list | object }
 
+  # unary expressions
+  rule(:negative) { minus.as(:op) >> space? >> expr.as(:negative) }
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
   # Assignment
@@ -190,7 +192,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
+  rule(:expr) { block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }

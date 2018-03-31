@@ -31,6 +31,7 @@ require_relative 'ast/assign'
 require_relative 'ast/vector_assign'
 
 require_relative 'ast/unary_negation'
+require_relative 'ast/unary_negative'
 require_relative 'ast/boolean_and'
 require_relative 'ast/boolean_or'
 

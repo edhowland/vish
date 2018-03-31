@@ -57,6 +57,7 @@ class AstTransform < Parslet::Transform
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
 
   rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
+  rule(op: simple(:op), negative: simple(:negative)) { UnaryTreeFactory.subtree(UnaryNegative, negative) }
 
   # dereference a variable
   rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }

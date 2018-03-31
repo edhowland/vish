@@ -82,6 +82,8 @@ def opcodes tmpreg=nil
 
     _not: 'Negates the top 1 item off the stack, pushes the result: true or false.',
     not: ->(bc, ctx, _, int) { ctx.stack.push(! ctx.stack.pop) },
+    _negate: 'unary negation arithmetic of top of stack, pushes result',
+    negate: ->(bc, ctx, _, _) { l = ctx.stack.pop; ctx.stack.push((-(l))) },
 
     # comparison operators
     _eq: 'Compares the top 2 items off the stack for equality, pushes the result: true or false.',
