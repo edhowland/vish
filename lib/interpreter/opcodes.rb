@@ -90,6 +90,8 @@ def opcodes tmpreg=nil
     _neq: 'Negates the meaning of equality of the top 2 items on the stack. Pushes true if  if they are inequal.',
     neq: ->(bc, ctx, _, intp) { v1, v2 = ctx.pop2; ctx.stack.push(v1 != v2) },
 
+    _less: 'pops the top 2 items off stack, comparse for less than, pushes result',
+    less: ->(bc, ctx, _, intp) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 < l2) },
     # assignments and dereferences
     _assign: 'assign - pop the name of the var, pop the value, store in ctx.vars.',
     assign: ->(bc, ctx, _, intp) {

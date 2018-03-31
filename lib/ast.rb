@@ -46,9 +46,12 @@ require_relative 'ast/binary_exponentiation'
 # Logical ops
 require_relative 'ast/binary_equality'
 require_relative 'ast/binary_inequality'
+require_relative 'ast/binary_less'
+require_relative 'ast/binary_lte'
+require_relative 'ast/binary_greater'
+require_relative 'ast/binary_gte'
 
-
-
+# Factory constructors
 require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'

@@ -31,6 +31,9 @@ class VishParser < Parslet::Parser
   rule(:rbrace) { str('}') >> space? }
   rule(:lbracket) { str('[') >> space? }
   rule(:rbracket) { str(']') >> space? }
+  rule(:langle) { str('<') >> space? }
+  rule(:rangle) { str('>') >> space? }
+
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
@@ -52,7 +55,8 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
-
+  rule(:lte) { langle >> equals >> space? }
+  rule(:gte) { rangle >> equals >> space? }
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
@@ -147,7 +151,7 @@ class VishParser < Parslet::Parser
     [star_star, 5, :left],
     [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
     [plus, 3, :right], [minus, 3, :right],
-    [equal_equal, 2, :left], [bang_equal, 2, :left],
+    [equal_equal, 2, :left], [bang_equal, 2, :left], [langle, 2, :left], [rangle, 2, :left], [lte, 2, :left], [gte, 2, :left],
     [l_and, 1, :left], [l_or, 1, :left]) }
 
   # parenthesis:
