@@ -3,7 +3,6 @@
 # TODO: Incomplete documentation:
 
 - Operators
-- Keywords
 - Control statements
 
 ## Abstract
@@ -37,8 +36,8 @@ The following keywords are reserved at the present time, but will throw a
 unknown  keyword at: compile time. (but will parse ok internally.)
 
 - pragma - Expects a string that will be passed to the compiler or runtime. (TBD.)
-- import - Expects a single quoted string that represents a   module to be loaded.
-- pragma
+- import - Expects a list of symbols that will be referenced in this translation unit.
+- export -  Expects a list of symbols that will be exported to other translation units.
 
 ## Atoms
 
@@ -124,6 +123,24 @@ sum(:li)
 %lm(foo(:x))
 ```
 
+### Operators
+
+Vish supports a subset of Ruby's operators. Here are the complete list
+
+#### Unary Operators
+
+- ! : Boolean inversion : !true #=> false
+
+#### Binary infix operators
+
+This list of infix operators is in order of precedence:
+
+- ** : Exponenation
+- *, /, % : Multiply and Divide and Modulo
+- +, - : Addition and Subtraction
+- ==, !==, <, <=, >, >= : Equality and Inequality
+- and, or : Logical operators for boolean expressions
+
 ## Variables
 
 In Vish, variables are lexically scoped. This is different than dynamically
@@ -203,6 +220,7 @@ b=outer()
 This introduces a possible problem, how do you address global variables.
 Vish is meant to act more like a functional language than a an imperative language.
 Use of global variables is discouraged.
+
 ## Collections
 
 

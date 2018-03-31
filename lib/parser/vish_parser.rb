@@ -70,7 +70,7 @@ class VishParser < Parslet::Parser
   # keywords
   # Compile time keywords
   rule(:pragma) { str('pragma') >> space! >> sq_string.as(:pragma) }
-  rule(:import) { str('import') >> space! >> sq_string.as(:import) }
+  rule(:import) { str('import') >> space! >> parmlist.as(:import_list) }
   rule(:export) { str('export') >> space! >> parmlist.as(:export_list) }
 
   # Runtime keywords
