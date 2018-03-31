@@ -92,6 +92,12 @@ def opcodes tmpreg=nil
 
     _less: 'pops the top 2 items off stack, comparse for less than, pushes result',
     less: ->(bc, ctx, _, intp) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 < l2) },
+    _lte: 'pushes result of top 2 items off stack if less than or equal',
+    lte: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 <= l2) },
+    _greater: 'pushes result of > top 2 items off stack',
+    greater: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 > l2) },
+    _gte: 'pushes result of >= top 2 items off stack',
+    gte: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 >= l2) },
     # assignments and dereferences
     _assign: 'assign - pop the name of the var, pop the value, store in ctx.vars.',
     assign: ->(bc, ctx, _, intp) {

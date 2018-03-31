@@ -69,9 +69,14 @@ end
   end
 
   
-  def syntax_check string
+  def syntax_check string, &blk
+  if block_given?
+    parser = yield
+  else
+    parser = VishParser.new
+  end
     begin
-      VishParser.new.parse string
+      parser.parse string
     rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree
     end

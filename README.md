@@ -1,9 +1,15 @@
 # Vish : A simple programming language
 
-## Abstrack
+## Abstract
 
-Vish is a simple DSL for expressing  statements for underlying
-program API. It derives from  The Viper code editor for screenreader users version 2.x.
+Vish is a simple general purpose language for expressing  statements for underlying
+program API. It derives from  The Viper code editor for screenreader users version 3.x
+
+Vish has a simple syntax but a very sparse runtime environment.
+However, by requiring Ruby libraries or gems and providinga thin wrapper
+to them, it can be turned into any Domain specific Language (DSL) for nearly any
+application. It is written in Ruby and hosted in Ruby which provides a rich
+ecosystem of tools and libraries.
 
 [Viper](https://github.com/edhowland/viper)
 

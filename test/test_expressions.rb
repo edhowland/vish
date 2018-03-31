@@ -14,4 +14,14 @@ class TestExpressions < BaseSpike
   def test_less_than
     assert interpret('2 < 6')
   end
+  def test_less_than_or_equality
+    assert interpret('2 <= 2')
+  end
+  # greater
+  def test_greater_than
+    assert interpret('3>2')
+  end
+  def test_greater_than_or_equal
+    assert interpret('3 >= 3')
+  end
 end
