@@ -12,14 +12,16 @@ class VishParser < Parslet::Parser
   # empty string
   rule(:empty) { str('').as(:empty) }
 
+  rule(:newline) { str("\n") }
   # This is Whitespace, not a single space; does not include newlines. See that rule
   rule(:space) { match(/[\t ]/).repeat(1) }
   rule(:space?) { space.maybe }
   rule(:space!) { space >> space? }
-
+  # whitespace including newlines
+  rule(:ws) { (newline | space).repeat(1) }
+  rule(:ws?) { ws.maybe }
 
   # single character rules
-  rule(:newline) { str("\n") }
   rule(:semicolon) { str(';') }
   # The octothorpe - '#'
   rule(:octo) { str('#') }
@@ -29,16 +31,19 @@ class VishParser < Parslet::Parser
   rule(:rbrace) { str('}') >> space? }
   rule(:lbracket) { str('[') >> space? }
   rule(:rbracket) { str(']') >> space? }
+  rule(:langle) { str('<') >> space? }
+  rule(:rangle) { str('>') >> space? }
+
     rule(:comma)      { str(',') >> space? }
   rule(:equals) { str('=') >> space? }
   rule(:colon) { str(':') }
-  rule(:plus) { str('+') >> space? }
-  rule(:minus) { str('-') >> space? }
-  rule(:star) { str('*') >> space? }
-  rule(:fslash) { str('/') >> space? }
+  rule(:plus) { str('+') >> ws? }  #space? }
+  rule(:minus) { str('-') >> ws? }
+  rule(:star) { str('*') >> ws? }
+  rule(:fslash) { str('/') >> ws? }
   rule(:bslash) { str('\\') }
   rule(:percent) { str('%') >> space? }
-  rule(:star_star) { str("\*\*") >> space? }
+  rule(:star_star) { str("\*\*") >> ws? }
   # some punctuation
   rule(:dquote) { str('"') }
   rule(:squote) { str("'") }
@@ -50,7 +55,8 @@ class VishParser < Parslet::Parser
   rule(:l_or) { str('or') >> space? }
     rule(:equal_equal) { str('==') >> space? }
   rule(:bang_equal) { str('!=') >> space? }
-
+  rule(:lte) { langle >> equals >> space? }
+  rule(:gte) { rangle >> equals >> space? }
   # data types
   rule(:symbol) { identifier.as(:symbol) >> colon }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
@@ -64,13 +70,18 @@ class VishParser < Parslet::Parser
   # keywords
   # Compile time keywords
   rule(:pragma) { str('pragma') >> space! >> sq_string.as(:pragma) }
-  rule(:import) { str('import') >> space! >> sq_string.as(:import) }
+  rule(:import) { str('import') >> space! >> parmlist.as(:import_list) }
+  rule(:export) { str('export') >> space! >> parmlist.as(:export_list) }
 
   # Runtime keywords
   rule(:_break) { str('break') >> space? }
   rule(:_exit) { str('exit') >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
-  rule(:keyword) { (_break | _exit | _return | pragma | import).as(:keyword) }
+
+  # keywords for builtin data types
+  rule(:null) { str('Null').as(:null) >> space? }
+
+  rule(:keyword) { (_break | _exit | _return | pragma | import | null).as(:keyword) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }
@@ -140,7 +151,7 @@ class VishParser < Parslet::Parser
     [star_star, 5, :left],
     [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
     [plus, 3, :right], [minus, 3, :right],
-    [equal_equal, 2, :left], [bang_equal, 2, :left],
+     [lte, 2, :left], [gte, 2, :left], [equal_equal, 2, :left], [bang_equal, 2, :left], [langle, 2, :left], [rangle, 2, :left],
     [l_and, 1, :left], [l_or, 1, :left]) }
 
   # parenthesis:
@@ -148,8 +159,13 @@ class VishParser < Parslet::Parser
 
   rule(:lvalue) { integer | boolean | dq_string | sq_string | list_index | execute_index | method_call | object_deref | deref | lambda_call | deref_block | block_exec | funcall | pair | symbol | list | object }
 
+  # unary expressions
+  rule(:negative) { minus.as(:op) >> space? >> expr.as(:negative) }
   rule(:negation) { bang.as(:op) >> space? >> expr.as(:negation) }
 
+  # Assignment
+  rule(:vector_identifier) { identifier.as(:vector_id) >> lbracket.as(:list) >> expr.as(:index) >> rbracket }
+  rule(:vector_assign) { vector_identifier.as(:vector) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:assign) { identifier.as(:lvalue) >> equals.as(:eq) >> expr.as(:rvalue) }
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
@@ -176,10 +192,10 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negation | infix_oper | funcall | lambda_call | object | deref | deref_block | integer | list_index }
+  rule(:expr) { block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
-  rule(:statement) { space? >> (keyword | loop | function | block | assign | expr | empty) }
+  rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }
 
 
   # pipe expressions: E.g. 99 | cat() | echo() # => "99\n"

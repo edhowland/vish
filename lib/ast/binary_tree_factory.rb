@@ -4,6 +4,7 @@
 class BinaryTreeFactory
   def self.subtree(klass, left, right)
     top = mknode(klass.new)
+#    binding.pry
     if left.instance_of? Tree::TreeNode 
       top << left
     else

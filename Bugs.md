@@ -16,15 +16,6 @@ takes(1,2,3,4,5,6)
 But does work in interactive mode.
 
 
-## Possible Bug: infix_oper not promoted enough in Vish grammar
-
-```
-# check this
-1 + { 2 }
-```
-
-
-
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,

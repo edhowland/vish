@@ -62,7 +62,7 @@ The above @addr macro expansion happens with the AST at compile. Internally, any
 infix precedence are already worked out. Your mileage might vary, if it is not
 as you might expect.
 
-## Postif Sigil hints
+## Postfix Sigil hints
 
 The following postfix sigils are proposed:
 
@@ -77,11 +77,97 @@ The following postfix sigils are proposed:
 - '!' Implication that function will change the state of one of its  parameters
 - '*' - Any  type or some unkown type.
 - '<' - User defined type w/type name. defn foo(t<Person) { ... }
+
 ### Unused postifx sigil
 
 - '@' - These get expanded at at compile time, so they cannot (yet?) be 
+
   be inferred in the type checker. You can just as easily pass the actual code
 yourself.
+
+## Infix Sigil
+
+There is one infix sigil, the '|' union type.
+
+- '|' - Union between 2 or more types
+
+If we want to take either one or the other type, we can hint this vai an 
+Union type expression:
+
+```
+# combine 2 things
+defn combine#|$(a#|$, b#|$) { :a + :b }
+x=combine('hello', ' world')
+# => 'hello world'
+y=combine(4,6)
+# => 10
+# But cannot mix 2 types:
+z=combine(1, 'world')
+# Runtime error
+# vtypec gives:
+# => Type mismatch
+# Expected int, int -> int
+# But got
+# int, String -> <...>
+```
+
+The type checker infers that if you give the same union type for each input,
+it will prefer the first type to be the meaning for all types
+following that match the same signature.
+
+The above example could be rewritten  to allow the latter mixed type case:
+
+```
+# Allow possible mixed types
+defn combine*(a#|$, b$|#) { :a + :b }
+x=combine(1, 'pear')
+# => Still gives runtime error.
+# But vtypec says is ok.
+#
+# Second rewrite
+defn combine*(#|$, b$|#) { xmit(:a, to_s:) + xmit(:b, to_s:) }
+combine(1, 'pear')
+# => '1pear'
+```
+
+This clearly does cover all situations. But, you can use pattern matching
+to cover most cases.
+
+```
+defn combine#|$(a#|$, b#|$) { :a + :b }
+defn combine$(a#, b$) { xmit(:a, to_s:) + :b }
+defn combine$(a$, b#) { :a + xmit(:b, to_s:) }
+```
+
+Now, you get happiness for both runtime and with the type checker: vtypec.
+
+### Multiple items in union types
+
+You can combine more than just 2 types with using more '|' union type  operator.
+This might be more relavelent with user defined types.
+
+```
+deftype T1() { ... }
+deftype T2() { ... }
+deftype T3() { ... }
+#
+# some use of the 3 above, along with a boolean:
+defn foo?(x<T1|T2|T3|?) { ... }
+```
+
+The above checker would allow any object of the type: T1, T2, T3 or any
+Boolean expression.
+
+### The IgnoreTypeCheck pragma
+
+You can signal the type checker: vtypec, to ignore a given type signature
+by placing a pragma before the function declaration:
+
+```
+pragma 'IgnoreTypeCheck'
+defn combine(a, b) { :a + :b }
+# But, you might still get runtime errors.
+```
 
 ### Notes on predicate/imperative sigils: '?'/'!'
 

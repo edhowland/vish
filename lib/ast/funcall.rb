@@ -20,6 +20,6 @@ class Funcall < NonTerminal
     bc.codes << :icall
   end
   def inspect
-    "funcall: #{@name}"
+    "#{self.class.name}: #{@name}: argc: #{@argc}"
   end
 end

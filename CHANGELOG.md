@@ -6,7 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-## 0.4.4 - 2018-02-??
+## 0.5.0 - 2018-04-01
+
+- Changed variable storage to use BindingType, ala: Scheme
+- Promoted  Scheme-style lists to first class citizens
+- Added Null syntax sugar to represent NullType subclass of PairType for above.
+- Added missing feature to allow assignment of value of subscripted vector or object.
+- Documentation changed to name arrays as vectors and lists as lists. (Scheme-style)
+
+### Deprecations
+
+The use of the 'list(...)'  builtin is used to create chains of cons pairs
+with a terminal Null. Formerly, it as used to create a flattened
+vector or array.
+
+You can accomplish via just creatinga vector, then use the 'flatten(:vector)' builtin
+if needed.
+
+## 0.4.4 - 2018-02-17
 
 ### Deprecated
 
@@ -86,8 +103,6 @@ In case #2, just re-run the test suite again.
 In the REPL, you will have to exist and re-enter 'ivs'.
 
 This issue is fixed in version 0.5.0
-
-
 
 ## 0.4.3 - 2018-02-09
 

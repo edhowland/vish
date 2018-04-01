@@ -69,9 +69,14 @@ end
   end
 
   
-  def syntax_check string
+  def syntax_check string, &blk
+  if block_given?
+    parser = yield
+  else
+    parser = VishParser.new
+  end
     begin
-      VishParser.new.parse string
+      parser.parse string
     rescue Parslet::ParseFailed => failure
   puts failure.parse_failure_cause.ascii_tree
     end
@@ -198,4 +203,34 @@ end
 
 def block_another
         'bk1={1+3};bk2={5*%bk1};%bk2' # , 20
+end
+
+
+def exl(lambdas)
+  lambdas.keys.each do |k|
+    puts "For #{k}"
+    t1, t2 = lambdas[k]
+    puts "  #{t1.content.inspect}"
+    puts "  #{t2.content.inspect}"
+    puts "    Value is #{t2.content.value.class.name}."
+    puts "    contents: #{t2.content.value.inspect}"
+  end
+end
+
+def bcdiff(l1, l2)
+  l1.each_with_index do |e, i|
+#puts "checking index #{i} at l1: #{l1[i]} against l2 #{l2[i]}"
+    if e != l2[i]
+              puts "differenced detected @#{i} l1[#{i}] is #{l1[i]} l2[#{i}] is #{l2[i]}"
+      break
+    end
+  end
+end
+
+
+def fun_lamb
+  ['defn foo() {->() {9}};x=%foo;%x','foo=->() {->() {9}};x=%foo;%x']
+end
+def cons(k, v)
+  Builtins.mkpair(k, v)
 end

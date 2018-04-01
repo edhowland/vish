@@ -3,6 +3,8 @@
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
 require_relative 'ast/list_type'
+require_relative 'ast/null_node'
+
 require_relative 'ast/pair_node'
 require_relative 'ast/object_node'
 
@@ -10,6 +12,8 @@ require_relative 'ast/symbol_type'
 
 # deref list:  - :a[0], :a[id()], :a[0,2,3], :a[%y(2)]
 require_relative 'ast/deref_list'
+require_relative 'ast/vector_id'
+
 
 require_relative 'ast/ignore'
 require_relative 'ast/clear_stack'
@@ -24,7 +28,10 @@ require_relative 'ast/block'
 require_relative 'ast/block_exec'
 
 require_relative 'ast/assign'
+require_relative 'ast/vector_assign'
+
 require_relative 'ast/unary_negation'
+require_relative 'ast/unary_negative'
 require_relative 'ast/boolean_and'
 require_relative 'ast/boolean_or'
 
@@ -40,9 +47,12 @@ require_relative 'ast/binary_exponentiation'
 # Logical ops
 require_relative 'ast/binary_equality'
 require_relative 'ast/binary_inequality'
+require_relative 'ast/binary_less'
+require_relative 'ast/binary_lte'
+require_relative 'ast/binary_greater'
+require_relative 'ast/binary_gte'
 
-
-
+# Factory constructors
 require_relative 'ast/unary_tree_factory'
 require_relative 'ast/binary_tree_factory'
 require_relative 'ast/deref'
@@ -82,13 +92,12 @@ require_relative 'ast/lambda_name'
 require_relative 'ast/lambda_entry'
 require_relative 'ast/lambda_exit'
 require_relative 'ast/lambda'
+require_relative 'ast/named_lambda'
+# Call a lambda
 require_relative 'ast/lambda_call'
 require_relative 'ast/lambda_call_list'
 
-require_relative 'ast/function_call'
-require_relative 'ast/function_entry'
-require_relative 'ast/function_exit'
-require_relative 'ast/function'
+
 require_relative 'ast/logical_or'
 require_relative 'ast/logical_and'
 require_relative 'ast/pipe'

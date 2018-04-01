@@ -3,10 +3,9 @@
 require 'rubytree'
 require_relative 'vish/version'
 
-
 # common stuff
-require_relative 'api'
 require_relative 'runtime'
+require_relative 'api'
 
 
 # compiler stuff

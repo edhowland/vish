@@ -4,7 +4,7 @@ class Lambda < NonTerminal
     @arglist = arglist
   end
   attr_reader :arglist
-  
+
   # subtree - constructs a subtree of nodes: LambdaEntry, Block, LambdaExit
   # Parameters:
   # arglist - Array - list of (string literals)? - passed to LambdaEntry
@@ -17,7 +17,7 @@ class Lambda < NonTerminal
     top << mknode(LambdaEntry.new(arglist))
     _body = node_unless(body)
     top <<  _body
-    top << mknode(LambdaExit.new)
+    top << mknode(LambdaExit.new(arglist.length))
 
     top
   end

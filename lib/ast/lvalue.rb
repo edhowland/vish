@@ -5,7 +5,7 @@
 
   def emit(bc, ctx)
     bc << :pushl
-    bc << ctx.store_var(@value)
+    bc.codes << @value.to_sym
   end
 
   def inspect
