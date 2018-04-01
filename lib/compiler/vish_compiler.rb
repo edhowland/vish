@@ -87,16 +87,9 @@ append_lambdas(ast, @lambdas)
 start
   end
 
-<<<<<<< HEAD
-  # check if any errors or deprecations exist or any other warnings
-  def check
-    deprecation_functions(@ast)
-  end
 
-=======
   # run - runs all phases of compiler
   # TODO: Add in BulletinBoard.clear to ensure no left dangling JumpTargets
->>>>>>> feature/0.5.0
   def run source=@source
     BulletinBoard.clear
     parse source
