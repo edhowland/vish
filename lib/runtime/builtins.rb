@@ -88,7 +88,10 @@ module Builtins
   def self.fexist?(name)
     File.exist?(name)
   end
-
+  ## file?(path) true if path is file and not directory
+  def self.file?(path)
+    fexist?(path) && !dir?(path)
+  end
   ## frm(filename) - removes (unlinks) file if it exists
   def self.frm(name)
     fexist?(name) && File.unlink(name)
