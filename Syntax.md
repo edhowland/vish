@@ -3,7 +3,6 @@
 # TODO: Incomplete documentation:
 
 - Operators
-- Keywords
 - Control statements
 
 ## Abstract
@@ -23,7 +22,7 @@ in the language.
 
 ## Reserved Keywords
 
-The following keywords have speacial meaning to Vish and cannot be used as identifiers or
+The following keywords have special meaning to Vish and cannot be used as identifiers or
 function names:
 
 - loop - Sets a loop that infinitely runs its block argument.
@@ -37,8 +36,8 @@ The following keywords are reserved at the present time, but will throw a
 unknown  keyword at: compile time. (but will parse ok internally.)
 
 - pragma - Expects a string that will be passed to the compiler or runtime. (TBD.)
-- import - Expects a single quoted string that represents a   module to be loaded.
-- pragma
+- import - Expects a list of symbols that will be referenced in this translation unit.
+- export -  Expects a list of symbols that will be exported to other translation units.
 
 ## Atoms
 
@@ -124,18 +123,129 @@ sum(:li)
 %lm(foo(:x))
 ```
 
+### Operators
+
+Vish supports a subset of Ruby's operators. Here are the complete list
+
+#### Unary Operators
+
+- ! : Boolean inversion : !true #=> false
+- '-' Unary Arithmetic negation : negative numbers: -3, negative expressions
+#### Binary infix operators
+
+This list of infix operators is in order of precedence:
+
+- ** : Exponenation
+- *, /, % : Multiply and Divide and Modulo
+- +, - : Addition and Subtraction
+- ==, !==, <, <=, >, >= : Equality and Inequality
+- and, or : Logical operators for boolean expressions
+
+## Variables
+
+In Vish, variables are lexically scoped. This is different than dynamically
+scoped languages like Perl. In fact, Vish is more like Scheme.
+
+Variables can be assign any valid expression, block or lambda expression.
+After assignement, a variable can be dereferenced via the ':var' form.
+
+
+### Function/Lambda formal parameters
+
+Function parameters act as variables within the body or scope of their execution
+context. They can be dereferenced or assigned to like normalvariable.
+
+#### Parameter shadowing
+
+If a parameter shares the name (i.e. symbol) as an outer variable,
+it will shadow its outer parent variable. Any assignment, leaving the outer
+variable unchanged. This includes the act of binding a value to a parameter
+at function call.
+
+#### Lexical Closures
+
+Variables defined in the scope  when a lambda or function is created will be
+captured in the lambda binding. Any assignments or dereferences will refer
+to the value in the original context/scope. This works like in Scheme or Ruby.
+
+### Local scope of variables
+
+Variables declared within a function or lambda body exist for the life of the
+function execution. They disappear after the function exits. 
+
+There are 2 exceptions to this:
+
+1. Variables declared in the outer lexical scope.
+2.  Lambdas returned from a function or if the binding() is returned.
+
+#### Lexically scoped variables
+
+Variables declared and set in any outer lexical scope have their bindings exposed
+to lambdas  or named functions.
+
+New variables or function parameters are local to the scope of the running
+function and disappear after the lambda or function returns.
+
+#### Variables closed within a closure
+
+Variables referenced within a returned lambda  the the lambda persist in the closure.
+They persist as long as the lambda persists on the heap.
+
+### The binding
+
+All variables are stored in the current binding. This can be retrieved
+via making a call to 'binding()'.
+This result can be dereferenced like any variable:
+
+```
+# make a new variable
+var=123
+y=binding()
+:y[var:]
+# => 123
+```
+
+#### Returning the binding from a function and nested functions
+
+Normally, a function declared within a another function can only be used
+within that outer function body. It disappears along with all other variables
+declared within the outer function body. However, you can always capture the
+current binding and return it for future use. An example illustrates this pattern:
+
+```
+# nest some function w/o returning anything
+defn outer() {
+  defn inner() { 9 * 11 }
+  inner()
+}
+outer()
+# => 99
+# Now capture the binding and return it:
+defn outer() {
+  defn inner() { 11 * 8 }
+  binding()
+}
+b=outer()
+%b[inner:]
+88
+```
+
+##### Future use of the set! function.
+
+TBD:
+
 ## Collections
 
 
-Vish has 2 collection types: List and objects (dictionary or Hash)
+Vish has 3 collection types: Vectors or Arrays, List and objects (dictionary or Hash)
 
-### Lists
+### Vectors
 
-Lists work like lists in Lisp. They can be created, recursived over, extracted,
-and be combined into larger lists.
+Vectors work like Arrays in languages like Ruby.
+They be created, indexed and combined into larger Vectors.
 
 ```
-# a simple list
+# a simple vector
 l=[0,1,2,3]
 :l
 # => [0,1,2,3]
@@ -145,8 +255,8 @@ head(:l)
 # => 0
 tail(:l)
 # => [1,2,3]
-l=list(:l,[4,5,6])
-# => nil
+l=[:l,[4,5,6]]
+l=flatten(:l)
 :l
 # => [0,1,2,3,4,5,6]
 
@@ -154,7 +264,93 @@ l=list(:l,[4,5,6])
 idx=4
 :l[:idx]
 # => 4
+# assigment to subscript of vector
+v=[0,1,2,3]
+v[1]=9
+:v
+# => [0,9,2,3]
 ```
+
+Note: the subscript can be any valid expression, when evaluated becomes an index
+of the vector.
+
+### Lists
+
+Vish has lists like those in Lisp or Scheme. They can be constructed by combining
+pairs with parens:
+
+```
+# make a new list:
+list=foo: (bar: (baz: 99))
+:list
+# =>  (foo: (bar: (baz: 99)))
+```
+
+### The Null data type
+
+The Null data type can be used to terminate a long list of nested pairs.
+This will make the 'list?()' predicate true.
+
+```
+# Make a Lisp/Scheme-style list
+l=foo: (bar: (baz: Null))
+list?(:l)
+# => true
+#
+# Make a chain of pairs without Null
+x=foo: (bar: (baz: 2))
+list?(:x)
+# => false
+```
+
+The 'null?()' predicate can be used to check if something is Null.
+
+```
+null?(Null)
+# => true
+null?(2)
+# => false
+l=foo: (bar: Null)
+null?(:l)
+# => false
+```
+
+### Using the list constructor
+
+You can use the 'list()' constructor to make a proper list with a  terminating Null:
+
+```
+# make a Scheme-style list:
+l=list(1, 2, 3, 4)
+# =>  (1, (2, (3, (4, ()))))
+```
+
+#### Deconstructing lists
+
+You can use familar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
+deconstruct a list
+
+```
+l=list(1, 2, 3, 4, 5)
+# get first element:
+car(:l)
+# => 1
+>> cdr(:l)
+(2, (3, (4, (5, ()))))
+>> cadr(:l)
+2
+>> cddr(:l)
+(3, (4, (5, ())))
+>> caddr(:l)
+3
+>> cddr(:l)
+(3, (4, (5, ())))
+>> car(cdddr(:l))
+4
+>> car(cdr(cdddr(:l)))
+5
+```
+
 
 ### Objects
 
@@ -166,7 +362,7 @@ You must use a key value pair to construct them like with JSON syntax
 #### Key/Value pairs
 
 A key in a key/value pair is a Vish symbol. An identifier with an immediate trailing colon. E.g. 'id:'
-This is followd by any legal Vish expression for the value in the pair.
+This is followed by any legal Vish expression for the value in the pair.
 The expression is first evaluated and then added to the value portion of the pair.
 
 ```
@@ -180,7 +376,7 @@ typeof(:pair)
 ##### Extracting the key or value from a PairType
 
 You can use the builtin 'xmit' function to get the individual elements of the PairType.
-This is usually not needed, which is why their is no syntactic sugar language construect for it.
+This is usually not needed, which is why their is no syntactic sugar language constructs for it.
 
 Example:
 
@@ -190,6 +386,20 @@ xmit(:pair,key:)
 # => :baz
 xmit(pair:, value:)
 # => 99
+```
+
+#### Use of the Standard Lib functions for key and value extraction
+
+Vish ships with some functions in its standard library. These are located
+in ./std/lib.vs
+
+```
+# use of std/lib.vs key/value functions
+pair=foo: 44
+key(:pair)
+# => :foo
+value(:pair)
+# => 44
 ```
 
 #### Object creation
@@ -225,7 +435,7 @@ age=:user[age:]
 
 In Vish, object constructors can be accomplished with functions that return
 objects, possibly with lambda values. See functions for a complete description
-of function declaration and executation.
+of function declaration and execution.
 
 However, here is a sample object constructor. The convention is to use upper/camel case
 for the function names.
@@ -255,7 +465,7 @@ plan=:carrier + ~{plan: 'Unlimited'}
 
 ### Inheritance
 
-In Vish, there is no direct mechansim to achieve inheritance. But, this can 
+In Vish, there is no direct mechanisim to achieve inheritance. But, this can 
 be accomplished with the addition above. 
 
 ```
@@ -287,10 +497,10 @@ baz=Baz(4)
 #### Setter and Getter methods
 
 Objects in Vish must use explicit setters and getters as lambda functions.
-As seen abobe in the prior example,  they can only have effect when executed with the '%' sigil.
+As seen above in the prior example,  they can only have effect when executed with the '%' sigil.
 The reason for this is because each instance variable is saved in a closure.
 
-Consider this example where we try to use just accessor a dereference  method:
+Consider this example where we try to use just accesor a dereference  method:
 
 ```
 defn Getter(x) {
@@ -310,15 +520,15 @@ g=Getter(1)
 ```
 
 The internal state of the value attached of the key x: is evaluated. It can never
-be modified via the set_x: lambda. set_x: will always change the state of the closure'sx.
+be modified via the set_x: lambda. set_x: will always change the state of the closure's.
 They are two distinct objects.
 
 #### The mkattr() Vish Standard Library function
 
-To make this easy, Vish comes with a number of standard libray functions.
+To make this easy, Vish comes with a number of standard library functions.
 One of these is 'mkattr()'. This takes a symbol  and a value and returns an 
 object. The first parameter, the symbol name also creates a setter method:
-'set_key:', where key: is the intial symbol.
+'set_key:', where key: is the initial symbol.
 
 E.g.
 
@@ -332,6 +542,26 @@ obj=mkattr(foo:, 2)
 #  => 4
 ```
 
+#### Explicit Object attribute assignment
+
+Objects can  assign to their internal attributes via 3 methods:
+
+1. Subscript assignment
+2. Use of setter methods (as detailed above)
+
+An example of using subscript assignment
+
+```
+o=~{quad: 4, quint: 5}
+o[quint:]=44
+:o.quint
+# => 44
+```
+
+
+Note: You Cannot use the dotted approach to assign values in an object at this time.
+This might be changed in the future.
+In the mean time, use the subscript approach or supply a setter method.
 ## Functions
 
 Vish has named and anonymous functions or lambdas.
@@ -366,14 +596,14 @@ A lambda can be called via use of the '%' sigil prefix on the named variable or
 or parameter. If lm is a lambda expression, %lm() will call it.
 
 ```
-# a simple subtracter
+# a simple subtractor
 sub=->(i,j) { :i - :j }
 # Now call it
 %sub(9,3)
 # => 6
 ```
 
-### The return keywor
+### The return keyword
 
 Although not recommended, a function or lambda can return early from a function via the return keyword:
 
@@ -407,7 +637,7 @@ map([1,2,3,4], ->(x) { :x * 2 })
 In Vish, blocks are first class citizens. They can be executed inline, saved in 
 variables or passed to functions.
 
-Blocks are delimted by curly braces and contain statements or expressions
+Blocks are delimited by curly braces and contain statements or expressions
 delimited by newlines or semicolons. Like in functions or lambdas, the last
 statement or expression evaluated is returned as the value of the block overall.
 
@@ -447,7 +677,7 @@ baz(4, {3 ** 2})
 
 #### Block expressions as lambda closures
 
-Anytime a block is either assigned to a variable or passed as a parametr, it is
+Anytime a block is either assigned to a variable or passed as a parameter, it is
 promoted to a lambda. You can  think of these kind of blocks as lambda
 expressions that take 0 parameters themselves.
 
@@ -468,7 +698,7 @@ b={ :n + 10 }
 #### Caveat:  A block cannot be returned from a function.
 
 To do return a block from a function body as a block expression,
-preceed it with '->() '. This turns it into a proper lambda.
+preceeded it with '->() '. This turns it into a proper lambda.
 
 Note: A future release will allow the return keyword to return a block
 as a block expression by first promoting it into a lambda.

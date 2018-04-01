@@ -17,18 +17,24 @@ class LambdaEntry < Terminal
   # which adds to matching LambdaName.LambdaType.target
   def emit(bc, ctx)
 @offset = bc.codes.length
-    jmp_t = BulletinBoard.get(@value.name.to_sym) || JumpTarget.new(@value.name)
+#binding.pry
+    jmp_t = BulletinBoard.get(@value.name) || JumpTarget.new(@value.name)
 jmp_t.target = bc.codes.length
+# The BB.put is idempotent
 BulletinBoard.put(jmp_t)
 
-
+    # TODO: REMOVEME
+    # Now assign any parameters to the frame's vars
     @arglist.reverse.each do |a|
       bc.codes << :pushl
       bc.codes << a.to_s.to_sym
       bc.codes << :swp
-      bc.codes << :assign 
+      bc.codes << :set  #:assign 
+      # drop the stored result of the :set which it leaves on  top of stack
+      bc.codes << :drop
     end
   end
+
   def inspect
     self.class.name + ': value: ' + @value.inspect + ' arglist: [' + 
       @arglist.map(&:inspect).join(', ') + ']'

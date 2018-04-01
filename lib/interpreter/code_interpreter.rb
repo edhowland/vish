@@ -39,6 +39,10 @@ class CodeInterpreter
 
     # Storage for the Heap
     @heap = {}
+
+    # hook into dispatcher. Mainly for debugging
+    InterpreterMethods.add_interpreter(self)
+    Dispatch << InterpreterMethods
   end
   attr_accessor :last_exception, :handlers, :register_a, :frames, :heap
 

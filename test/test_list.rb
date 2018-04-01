@@ -1,78 +1,65 @@
-# test_list.rb - tests for list: [1,2,...n] expressions
+# test_list.rb - tests for lists ... Scheme style cons pairs, etc
 
 require_relative 'test_helper'
 
+
 class TestList < BaseSpike
   include CompileHelper
-  def test_can_create_empty_list
-    result = interpret '[]'
-    assert_eq result, []
+  def set_up
+    @null = Builtins.mknull()
   end
-  def test_list_with_one_value
-    result=interpret '[9]'
-    assert_eq result, [9]
+  def test_null_q_is_true
+    result = interpret 'l=Null; null?(:l)'
+    assert result
   end
-  def test_list_with_many_elements_can_be_assigned
-    result = interpret 'lt=[0,1,2,3,4,5];:lt'
-    assert_eq result, [0,1,2,3,4,5]
+  def test_nul_q_Null_is_true
+    assert interpret('null?(Null)')
   end
-
-  # test list index
-  def test_list_index_of_simple_list
-    result = interpret 'a=[99,98,97];:a[1]'
-    assert_eq result, 98
+  def test_array_is_not_a_list
+    result = interpret 'l=[];null?(:l)'
+    assert_false result
   end
-  def test_list_index_can_be_assigned
-    result = interpret 'm=[33,4,55];x=:m[1];:x'
-    assert_eq result, 4
+  def test_can_make_null_type
+    assert_is @null, NullType
   end
 
-  # test builtin setting of object within list
-  def test_ax_sets_value_in_listmethod
-    result = interpret 'a=[5,6,7];ax(:a,2,100);:a'
-    assert_eq result, [5,6,100]
+  # cons stuff
+  def test_pair_q_is_true_for_pair_literal
+    assert interpret('pair?(foo: bar:)')
   end
-
-  # the way to append an item or many items to a list
-  def test_append_1_item_to_list
-    result = interpret 'l=[1,22,333,4444];l=list(:l,55555);:l'
-    assert_eq result, [1,22,333,4444,55555]
+  def test_pair_q_is_true_for_cons
+    assert interpret('pair?(cons(1, 2))')
   end
-  def test_appand_many_lists_into_one
-    result = interpret 'l=list([1],[2,3],[4,5,6],[7,8,9,10]);:l'
-    assert_eq result, [1,2,3,4,5,6,7,8,9,10]
+  def test_pair_q_is_false_for_array
+    assert_false interpret('pair?([])')
   end
-  def test_index_can_be_referenced_variable
-    result=interpret 'a=[9];y=0;:a[:y]'
-    assert_eq result, 9
+  def test_pair_q_is_false_for_dict
+    assert_false interpret('pair?(~{})')
   end
-
-  # test for able to execute lambdas within list index
-  # a=[->() {33}];%a[0]
-  def test_can_call_indexed_lambda_from_list
-    result = interpret 'z=[->() {44}];%z[0]'
-    assert_eq result, 44
+  def test_pair_q_is_false_for_int
+    assert_false interpret('pair?(2)')
   end
-  # can deref of list index be a first term in expression?
-  def test_can_deref_list_index_be_first_term_in_expression
-    result = interpret 'l=[1];:l[0] + 2'
-    assert_eq result, 3
+  # test list? stuff
+  def test_list_q_is_false_for_int
+    assert_false interpret('list?(1)')
   end
-  def test_can_execute_lambda_element_in_list_as_first_term_in_expression
-    result = interpret 'l=[->() {2}];%l[0] + 2'
+  def test_list_q_is_false_for_arrary
+    assert_false interpret('list?([])')
   end
-  def test_can_have_2_list_indexes_in_expressions
-    result = interpret 'l=[ 3 , 5 ];:l[0] + :l[1]'
-    assert_eq result, 8
+  def test_list_q_is_false_for_object_dict
+    assert_false interpret('o=~{foo: mknull()};list?(:o)')
   end
-
-  # test if can index into list with output from fn call
-  def test_can_index_list_w_result_of_fn_call
-    result = interpret 'a=[1,2]; defn id() { 0 }; :a[id()]'
-    assert_eq result, 1
+  def test_cons_is_not_list_wo_null_tail
+    result = interpret 'list?(cons(1, 2))'
+    assert_false result
   end
-def test_can_call_with_index_w_lambda_call_return
-  result = interpret 'a=[1,2]; y=->() {0}; :a[%y]'
-  assert_eq result, 1
-end
+  def test_cons_w_null_is_list_true
+    assert interpret('list?(cons(1, mknull()))')
+  end
+  def test_list_q_is_still_true_for_long_list
+    assert interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, Null))))))')
+  end
+  def test_list_q_is_false_for_long_chain_of_pairs_wo_null_tail
+        assert_false interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, 5))))))')
+  end
 end

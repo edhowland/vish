@@ -8,7 +8,7 @@ class Context
   def initialize
     @stack = LimitedStack.new(limit:1000)
     @constants = []
-    @vars = {}
+    @vars = BindingType.new   #ShadowVariables.new
   end
   attr_accessor :stack, :constants, :vars
 
@@ -34,11 +34,11 @@ class Context
     @vars[actual] = value
     actual
   end
-
+  # TODO: clean up this where we do or do not merge the variables, because is now BindingType
   def merge(other)
     ctx = self.class.new
     ctx.constants = @constants + other.constants
-    ctx.vars = @vars.merge(other.vars)
+    #ctx.vars = @vars.merge(other.vars)
     ctx
   end
 

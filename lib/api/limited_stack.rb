@@ -2,14 +2,18 @@
 # Also adds LockedStack child. - Provides ability to lock bottom
 # of stack from being popped. Can hold onto underlying MainFrame.
 
+# base class of stacks errors
+class StackError < VishRuntimeError; end
+
+
 # class  StackLimitReached - raised when LimitedStack hits overflow past its enforced limit:
-class StackLimitReached < RuntimeError
+class StackLimitReached < StackError
   def initialize 
     super 'Stack limit reached. Are you being called in an infinite recursion?'
   end
 end
 
-class StackUnderflow < RuntimeError
+class StackUnderflow < StackError
   def initialize 
     super 'LimitedStack has reached its lower limit. No more pop calls can be made'
   end
@@ -56,7 +60,7 @@ end
   end
 end
 
-class LockedStackLimitReached < RuntimeError
+class LockedStackLimitReached < StackError
   def initialize
     super 'Internal Error:. An attempt to pop the locked framehappened.'
   end

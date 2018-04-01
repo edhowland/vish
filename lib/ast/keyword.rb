@@ -16,7 +16,10 @@ class Keyword < NonTerminal
       Break
     when 'exit'
       Exit
+    when 'Null'
+      NullNode
     else
+    binding.pry
       UnknownKeyword
     end
   end

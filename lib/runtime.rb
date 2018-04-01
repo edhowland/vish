@@ -1,10 +1,15 @@
 # runtime.rb - requires for runtime/
+
 require_relative 'runtime/context'
 
 require_relative 'runtime/vish_runtime_error'
 
 require_relative 'runtime/type'
 require_relative 'runtime/pair_type'
+require_relative 'runtime/null_type'
+
+require_relative 'runtime/binding_type'
+
 require_relative 'runtime/object_type'
 
 

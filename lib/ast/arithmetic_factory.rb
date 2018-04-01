@@ -20,6 +20,14 @@ class ArithmeticFactory
       BinaryEquality
     when '!='
       BinaryInequality
+    when '<'
+      BinaryLess
+    when '>'
+      BinaryGreater
+    when '<='
+      BinaryLTE
+    when '>='
+      BinaryGTE
     when 'and'
       BooleanAnd
     when 'or'

@@ -42,17 +42,18 @@ def opcodes tmpreg=nil
     _savefp: 'Finds the nearest UnionFrame on the call stack and saves it on LambdaType on top of data stack',
     savefp: ->(bc, ctx, fr, intp) {
     frame = fr.reverse.find {|f| UnionFrame === f}
-      ctx.stack.peek.frame= frame
+      ctx.stack.peek.binding = frame.ctx.vars
         },
 
 
     _loadt: 'Loads top of stack into tmpreg (temporary register).',
     loadt: ->(bc, ctx, _, intp) { tmpreg.load(ctx.stack.pop) },
-  _dup: 'Duplicates the top of the stack and pushes the copy back there.',
-  dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
-  _swp: 'Swaps top 2 items on stack',
-  swp: ->(bc, ctx, fr, intp) { ctx.stack.swap },
-
+    _dup: 'Duplicates the top of the stack and pushes the copy back there.',
+    dup: ->(bc, ctx, _, intp) { ctx.stack.push(ctx.stack.peek) },
+    _swp: 'Swaps top 2 items on stack',
+    swp: ->(bc, ctx, fr, intp) { ctx.stack.swap },
+    _drop: 'Drops the top of stack',
+    drop: ->(bc, ctx, fr, intp) { ctx.stack.pop unless ctx.stack.empty? },
     # Arithmetic instructions.
     _add:  'Add - BinararyAdd - pops 2 operands and pushes the result of adding them',
     add: ->(bc, ctx, _, intp) { l,r = ctx.stack.pop(2); ctx.stack.push(l + r) },
@@ -81,6 +82,8 @@ def opcodes tmpreg=nil
 
     _not: 'Negates the top 1 item off the stack, pushes the result: true or false.',
     not: ->(bc, ctx, _, int) { ctx.stack.push(! ctx.stack.pop) },
+    _negate: 'unary negation arithmetic of top of stack, pushes result',
+    negate: ->(bc, ctx, _, _) { l = ctx.stack.pop; ctx.stack.push((-(l))) },
 
     # comparison operators
     _eq: 'Compares the top 2 items off the stack for equality, pushes the result: true or false.',
@@ -89,9 +92,27 @@ def opcodes tmpreg=nil
     _neq: 'Negates the meaning of equality of the top 2 items on the stack. Pushes true if  if they are inequal.',
     neq: ->(bc, ctx, _, intp) { v1, v2 = ctx.pop2; ctx.stack.push(v1 != v2) },
 
+    _less: 'pops the top 2 items off stack, comparse for less than, pushes result',
+    less: ->(bc, ctx, _, intp) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 < l2) },
+    _lte: 'pushes result of top 2 items off stack if less than or equal',
+    lte: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 <= l2) },
+    _greater: 'pushes result of > top 2 items off stack',
+    greater: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 > l2) },
+    _gte: 'pushes result of >= top 2 items off stack',
+    gte: ->(bc, ctx, _, _) { l1, l2 = ctx.stack.pop(2); ctx.stack.push(l1 >= l2) },
     # assignments and dereferences
     _assign: 'assign - pop the name of the var, pop the value, store in ctx.vars.',
-    assign: ->(bc, ctx, _, intp) { var, val = ctx.stack.pop(2); ctx.vars[var] = val },
+    assign: ->(bc, ctx, _, intp) {
+      var, val = ctx.stack.pop(2)
+      ctx.vars[var] = val 
+      ctx.stack.push val
+    },
+    _set: 'Sets a new value in context vars binding, possibly shadowing other values',
+    set: ->(bc, ctx, fr, intp) {
+            var, val = ctx.stack.pop(2)
+            ctx.vars.set(var, val)
+      ctx.stack.push val
+    },
 
 
     # branching instructions
@@ -150,31 +171,22 @@ def opcodes tmpreg=nil
     },
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
-    _fcall: 'Function call. Pushes FunctionFrame on fr. Loads parameters to functions in fr.ctx.stack',
-    fcall: ->(bc, ctx, fr, intp) {
-     cx = Context.new
-     cx.constants = ctx.constants
-     argc = ctx.stack.pop
-     argv = ctx.stack.pop(argc)
-     cx.stack.push(*argv)
-      frame = FunctionFrame.new(cx)
-      # The return to should be one past the the operand
-      frame.return_to = bc.pc + 1
-          fr.push(frame) 
-          target = bc.next
-          bc.pc = target
-    },
+
+     # TODO: REMOVEME
 
   # Lambda call stuff
+
   _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
-#      binding.pry
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       argc = ctx.stack.pop
       raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
       argv = ctx.stack.pop(argc)
-frame = ltype.frame
+_binding = ltype.binding
+frame = FunctionFrame.new(Context.new)
+frame.ctx.constants = ctx.constants
+frame.ctx.vars = _binding.dup
 frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
 
@@ -206,9 +218,6 @@ frame.ctx.stack.push(*argv)
   _iret: 'Return from interrupt handler',
   iret: ->(bc, ctx, _, intp) { raise InterruptReturn.new },
 
-    # Debug opcodes
-    _spy: 'Spies on the state of bytecodes, context.',
-    spy: ->(bc, ctx, _, intp) { puts 'bc:', bc.inspect; puts 'ctx:', ctx.inspect }
   }
 end
 
