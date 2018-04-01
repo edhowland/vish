@@ -162,7 +162,7 @@ fexist?('myfile.new')
 # => true
 ```
 
-## The environmet
+## The environment
 
 Vish has 2 simple interfaces to the execution environment:
 
@@ -186,7 +186,7 @@ $ vish myfile.vs
 
 Note: To get more arguments past the last script, pass a dash : '-' between the script
 and the first arg to pass to the script.
-This only works in the 'vish' executable, since it consumest all scripts names
+This only works in the 'vish' executable, since it consumes all scripts names
 as source files to compile and run. The '-' stops this consumption.
 
 ```
@@ -269,7 +269,7 @@ All these programs respond to flags. See the complete list with the --help flag.
 
 ### The --no-stdlib flag.
 
-By default, all of these programs will preload the file ./std/lib.vs before
+By default, all of these programs will pre-load the file ./std/lib.vs before
 compiling and running your program.
 This can be disabled with the '--no-stdlib' flag.
 

@@ -9,7 +9,7 @@ program API. It derives from  The Viper code editor for screenreader users versi
 
 
 Vish has a simple syntax but a very sparse runtime environment.
-However, by requiring Ruby libraries or gems and providinga thin wrapper
+However, by requiring Ruby libraries or gems and providing a thin wrapper
 to them, it can be turned into any Domain specific Language (DSL) for nearly any
 application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
@@ -18,7 +18,7 @@ ecosystem of tools and libraries.
 ## Version 0.5.0
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
-similar to point releases of Ruby dropping on Chrsitmas day each year.
+similar to point releases of Ruby dropping on Christmas day each year.
 However, after April 1, 2018 for release 0.5: There will be more frequent
 point releases until version 1.0 on April 1, 2019. (Hopefully)
 
@@ -48,13 +48,13 @@ Vish has support for:
 - Named functions (supporting recursion).
 - Higher order functions. Functions can be passed or returned from other functions. Including both named and lambda functions.
 - Optional lazy evaluation
-- Forign Function Interface (FFI) via simple Ruby module code.
+- Foreign Function Interface (FFI) via simple Ruby module code.
 
 ## Requirements
 
 Vish requires Ruby 2.2+
 
-### Note: Ruby version 2.2.0 and are only supported with the dependant rubytree/1.0.0 gem.
+### Note: Ruby version 2.2.0 and are only supported with the dependent rubytree/1.0.0 gem.
 
 It has been tested in the following environments:
 
@@ -133,7 +133,7 @@ For further reading on the syntax of Vish, please see:
 
 ## Further reading
 
-To read more information on the Vish language, please see the folloing files:
+To read more information on the Vish language, please see the following files:
 
 - [Overview of language and runtime environment](Overview.md)
 - [Vish Language Syntax](Syntax.md)
@@ -146,7 +146,7 @@ To read more information on the Vish language, please see the folloing files:
 
 ## Debugging
 
-If you cannot determi where you went wrong, and need help: Please
+If you cannot determine where you went wrong, and need help: Please
 enter an issue on the Github issue tracker for the repository.
 [Vish issue tracker](https://github.com/edhowland/vish/issues)
 

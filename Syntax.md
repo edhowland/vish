@@ -22,7 +22,7 @@ in the language.
 
 ## Reserved Keywords
 
-The following keywords have speacial meaning to Vish and cannot be used as identifiers or
+The following keywords have special meaning to Vish and cannot be used as identifiers or
 function names:
 
 - loop - Sets a loop that infinitely runs its block argument.
@@ -362,7 +362,7 @@ You must use a key value pair to construct them like with JSON syntax
 #### Key/Value pairs
 
 A key in a key/value pair is a Vish symbol. An identifier with an immediate trailing colon. E.g. 'id:'
-This is followd by any legal Vish expression for the value in the pair.
+This is followed by any legal Vish expression for the value in the pair.
 The expression is first evaluated and then added to the value portion of the pair.
 
 ```
@@ -376,7 +376,7 @@ typeof(:pair)
 ##### Extracting the key or value from a PairType
 
 You can use the builtin 'xmit' function to get the individual elements of the PairType.
-This is usually not needed, which is why their is no syntactic sugar language construect for it.
+This is usually not needed, which is why their is no syntactic sugar language constructs for it.
 
 Example:
 
@@ -435,7 +435,7 @@ age=:user[age:]
 
 In Vish, object constructors can be accomplished with functions that return
 objects, possibly with lambda values. See functions for a complete description
-of function declaration and executation.
+of function declaration and execution.
 
 However, here is a sample object constructor. The convention is to use upper/camel case
 for the function names.
@@ -465,7 +465,7 @@ plan=:carrier + ~{plan: 'Unlimited'}
 
 ### Inheritance
 
-In Vish, there is no direct mechansim to achieve inheritance. But, this can 
+In Vish, there is no direct mechanisim to achieve inheritance. But, this can 
 be accomplished with the addition above. 
 
 ```
@@ -497,10 +497,10 @@ baz=Baz(4)
 #### Setter and Getter methods
 
 Objects in Vish must use explicit setters and getters as lambda functions.
-As seen abobe in the prior example,  they can only have effect when executed with the '%' sigil.
+As seen above in the prior example,  they can only have effect when executed with the '%' sigil.
 The reason for this is because each instance variable is saved in a closure.
 
-Consider this example where we try to use just accessor a dereference  method:
+Consider this example where we try to use just accesor a dereference  method:
 
 ```
 defn Getter(x) {
@@ -520,15 +520,15 @@ g=Getter(1)
 ```
 
 The internal state of the value attached of the key x: is evaluated. It can never
-be modified via the set_x: lambda. set_x: will always change the state of the closure'sx.
+be modified via the set_x: lambda. set_x: will always change the state of the closure's.
 They are two distinct objects.
 
 #### The mkattr() Vish Standard Library function
 
-To make this easy, Vish comes with a number of standard libray functions.
+To make this easy, Vish comes with a number of standard library functions.
 One of these is 'mkattr()'. This takes a symbol  and a value and returns an 
 object. The first parameter, the symbol name also creates a setter method:
-'set_key:', where key: is the intial symbol.
+'set_key:', where key: is the initial symbol.
 
 E.g.
 
@@ -596,14 +596,14 @@ A lambda can be called via use of the '%' sigil prefix on the named variable or
 or parameter. If lm is a lambda expression, %lm() will call it.
 
 ```
-# a simple subtracter
+# a simple subtractor
 sub=->(i,j) { :i - :j }
 # Now call it
 %sub(9,3)
 # => 6
 ```
 
-### The return keywor
+### The return keyword
 
 Although not recommended, a function or lambda can return early from a function via the return keyword:
 
@@ -637,7 +637,7 @@ map([1,2,3,4], ->(x) { :x * 2 })
 In Vish, blocks are first class citizens. They can be executed inline, saved in 
 variables or passed to functions.
 
-Blocks are delimted by curly braces and contain statements or expressions
+Blocks are delimited by curly braces and contain statements or expressions
 delimited by newlines or semicolons. Like in functions or lambdas, the last
 statement or expression evaluated is returned as the value of the block overall.
 
@@ -677,7 +677,7 @@ baz(4, {3 ** 2})
 
 #### Block expressions as lambda closures
 
-Anytime a block is either assigned to a variable or passed as a parametr, it is
+Anytime a block is either assigned to a variable or passed as a parameter, it is
 promoted to a lambda. You can  think of these kind of blocks as lambda
 expressions that take 0 parameters themselves.
 
@@ -698,7 +698,7 @@ b={ :n + 10 }
 #### Caveat:  A block cannot be returned from a function.
 
 To do return a block from a function body as a block expression,
-preceed it with '->() '. This turns it into a proper lambda.
+preceeded it with '->() '. This turns it into a proper lambda.
 
 Note: A future release will allow the return keyword to return a block
 as a block expression by first promoting it into a lambda.
