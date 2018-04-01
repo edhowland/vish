@@ -31,10 +31,11 @@ require_relative 'startup'
 ivsrc = File.expand_path '~/.ivsrc'
 ivsrc_src = ''
 ivsrc_src = File.read(ivsrc) if File.exist?(ivsrc)
-startup_code = startup(options) { "prompt='vish> '; _=0" + ivsrc_src + "\n" + options[:ifiles].map {|n| File.read(n) }.join() }
+startup_code = startup(options) { "prompt='vish> '; _=0;banner='Welcome to Vish" + "version: #{Vish::VERSION}'" + ivsrc_src + "\n" + options[:ifiles].map {|n| File.read(n) }.join() }
 
 begin
   eval.eval startup_code
+puts(eval.eval(":banner"))
 _=0
 loop do
   begin

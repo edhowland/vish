@@ -15,6 +15,25 @@ ecosystem of tools and libraries.
 
 ## Version 0.5.0
 
+Note: Major releases of Vish will drop on April 1st of every year. This is
+similar to point releases of Ruby dropping on Chrsitmas day each year.
+However, after April 1, 2018 for release 0.5: There will be more frequent
+point releases until version 1.0 on April 1, 2019. (Hopefully)
+
+## Features
+
+Vish has support for:
+
+- Simple integer expressions
+- Boolean expressions
+- String expressions, including string interpolations.
+- Collections : Vectors (arrays), Dictionaries(Hashes) and Scheme-style lists.
+- Lambda or anonymous functions.
+- Lexical closures.
+- Higher order functions. Functions can be passed or returned from other functions.
+- Optional lazy evaluation
+
+
 ## Requirements
 
 Vish requires Ruby 2.2+

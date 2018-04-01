@@ -1,12 +1,5 @@
 # Bugs
 
-## Possible bug: incorrect order of command line args in ./bin/vsr - .vsc runner
-
-Do not what is in getargs()[0], but [1] is name of .vsc script compiled.
-Should be the name of the first arg: $1
-And .vsc should be in :a[0]
-
-
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
 Also, shoud perfom some kind of arity check for fn invocation.

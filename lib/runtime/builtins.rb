@@ -56,8 +56,10 @@ module Builtins
   end
 
   # read() - reads from stdin, chomping any trailing newlines.
-  def self.read(*args)
-    readline.chomp
+  def self.read()
+    result = Readline.readline
+    result = result.chomp unless result.nil?
+    result
   end
 
   # readi - reads and returns integer
@@ -150,6 +152,7 @@ module Builtins
   def self.pair?(object)
     object.kind_of?(PairType)
   end
+  # list?(possible_list) - true if really a list
   def self.list?(object)
     return false unless pair?(object)
     o = object
@@ -157,6 +160,10 @@ module Builtins
       o = o.value
     end
     null?(o)
+  end
+  # atom?(object) - true if not a list
+  def self.atom?(object)
+    not(list?(object))
   end
 
   # key(pair) - returns .key member from PairType

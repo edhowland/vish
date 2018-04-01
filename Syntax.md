@@ -130,7 +130,7 @@ Vish supports a subset of Ruby's operators. Here are the complete list
 #### Unary Operators
 
 - ! : Boolean inversion : !true #=> false
-
+- '-' Unary Arithmetic negation : negative numbers: -3, negative expressions
 #### Binary infix operators
 
 This list of infix operators is in order of precedence:
@@ -173,8 +173,23 @@ to the value in the original context/scope. This works like in Scheme or Ruby.
 Variables declared within a function or lambda body exist for the life of the
 function execution. They disappear after the function exits. 
 
-The only exception of this is if a lambda is returned from the function.
-Variables referenced therin the the lambda persist in the closure.
+There are 2 exceptions to this:
+
+1. Variables declared in the outer lexical scope.
+2.  Lambdas returned from a function or if the binding() is returned.
+
+#### Lexically scoped variables
+
+Variables declared and set in any outer lexical scope have their bindings exposed
+to lambdas  or named functions.
+
+New variables or function parameters are local to the scope of the running
+function and disappear after the lambda or function returns.
+
+#### Variables closed within a closure
+
+Variables referenced within a returned lambda  the the lambda persist in the closure.
+They persist as long as the lambda persists on the heap.
 
 ### The binding
 
@@ -217,9 +232,7 @@ b=outer()
 
 ##### Future use of the set! function.
 
-This introduces a possible problem, how do you address global variables.
-Vish is meant to act more like a functional language than a an imperative language.
-Use of global variables is discouraged.
+TBD:
 
 ## Collections
 

@@ -1,47 +1,11 @@
 # TODO
 
-## Todo: Use the require 'readline' in ./bin/ivs 
-
-Also in Builtins read/readi/...
-This works better for screenreaders.
-
-See feature/readline.ivs
-
-## TODO, make sure LambdaExit pops the FrameStack if there are any parameters
+## TODO: Add let binding
 
 ## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
 
 Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
 
-## Todo: Add hello banner to REPL: ivs
-
-```
-$ bin/ivs
-Welcome to Vish. Version x.x.x
-vish>^D
-
-$
-```
-
-
-```
-# supress this banner:
-# in ~/.ivsrc:
-banner=false
-prompt='>> '
-
-$ bin/ivs
->>
->>^D
-
-$
-```
-
-## TODO: MUST: replace bin/ivs with bin/reader.rb once enough testing has been done
-
-Problem: gem: tty-reader does not output an entered '['
-
-### Todo: Once the above is done: move internal builtin read() to use this gem
 
 ## TODO: Rename lib/ast/ListType to ListNode
 
@@ -77,65 +41,6 @@ y=mkblock()
 # => 42
 ```
 
-
-## Todo:  Allow named functions to be higher order function values:
-
-If you dereference a function symbol, it should return a FunctionType. These
-types can be passed to other functions/lambdas as parameters Or saved in a variable.
-
-```
-# simple case
-defn foo() {'hello'}
-fn=:foo
-# now execute it:
-%fn
-# => 'hello'
-#
-# Now pass as a parameter
-defn bar(fn) { %fn + ' world'}
-bar(:foo)
-# => 'hello world'
-```
-
-### Question: Can these be closures?
-
-```
-# this should work
-defn mkfoo(x) {
-  defn foo() { :x + 2 }
-}
-mkfoo(5)
-foo()
-# Should  be 7
-```
-## Todo: figure some way to handle nils
-
-See kotlin language for advice on how to do this.
-
-Also, in a stack-based VM, any assign returns nil because the stack is popped
-and nothing is there. Should we push the assignment ther?
-
-This works in Scheme and in Ruby.
-
-```
-x=9
-# gets nil
-
-# after change?
-x=9
-# gets 9
-```
-
-Note: This works in Ruby:
-
-```
-def mk_x
-  x = 9
-end
-y=mk_x
-p y
-# => 9
-```
 
 ##  Refactor function entries and function calls to use BulletinBoards
 
@@ -277,9 +182,10 @@ append the nodes to the root of the eventual bytecodes.
 #### Also implement the import keyword:
 
 ```
-import 'vishlib'
+import vishlib,http,net
 
 ... # other statements
+
 ```
 
 This is the same as using the ./vishc.rb to stitch various .vshc files together at compile time.
@@ -310,6 +216,7 @@ typeof(MyType)
 %myt.b
 # => 2
 ```
+
 Internally, the AST gets expanded to create an  function with the name of the type name.
 Internally, it will have an ObjectNode with  with lambdas for getting/setting each parameters
 of the type definition.
