@@ -104,16 +104,17 @@ module Builtins
     File.write(name, contents)
   end
   ## Vector stuff
+  ##  mkvector(args) - returns vector/array of arguments.
   def self.mkvector(*args)
     args
   end
+  ## flatten(vector) - flattens nested vector
   def self.flatten(vector)
     vector.flatten
   end
 
   ## Linked list stuff
-  
-  ## list(args) - returns all args in a list
+  ## list(args) - returns all args in a Scheme-style list 
   def self.list(*args)
     args.reverse.reduce(mknull()) {|i, j| cons(j, i) }
   end
@@ -148,9 +149,11 @@ module Builtins
   def self.mkpair(key, value)
     PairType.new(key:key, value:value)
   end
+  ## cons(object, object) - returns new PairType
   def self.cons(ar, dr)
     mkpair(ar, dr)
   end
+  ## pair?(object) - true if object is PairType
   def self.pair?(object)
     object.kind_of?(PairType)
   end
@@ -182,10 +185,11 @@ module Builtins
   def self.mkobject(*args)
     ObjectFactory.build(args)
   end
-
+    ## mknull() - returns Null instance
   def self.mknull()
     NullType.new
   end
+  ## nul?(list) - true if list is the Null list : ()
   def self.null?(object)
     pair?(object) && PairType.null?(object)
   end

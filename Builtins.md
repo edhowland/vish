@@ -6,6 +6,8 @@
 
   ## getargs() - returns arguments passed to script or program, including name of
 
+  ## script or ivs
+
   ## dup - just dups it input to its output (via the stack)
 
   ## typeof(obj) - gives the class/??? of the obj
@@ -42,9 +44,13 @@
 
   ## Vector stuff
 
+  ##  mkvector(args) - returns vector/array of arguments.
+
+  ## flatten(vector) - flattens nested vector
+
   ## Linked list stuff
 
-  ## list(args) - returns all args in a list
+  ## list(args) - returns all args in a Scheme-style list 
 
   ## headvectorst) - returns the first item on a vector or array.
 
@@ -58,6 +64,10 @@
 
   ## mkpair(k, v) - given two values returns PairType
 
+  ## cons(object, object) - returns new PairType
+
+  ## pair?(object) - true if object is PairType
+
   ## list?(possible_list) - true if really a list
 
   ## atom?(object) - true if not a list
@@ -68,13 +78,53 @@
 
   ## mkobject(pairs=[]) - create instance of type ObjectType
 
+    ## mknull() - returns Null instance
+
+  ## nul?(list) - true if list is the Null list : ()
+
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)
 
     arr[idx]#
 
   ## ax(ar,ix,val) - assigns a value to array or diction
 
+  ## eval(string) - compiles, interprets string in the current context.
+
+#  def self.eval(string)
+
+#    begin
+
+#      # we need to inject current bc, ctx : How do we get from currently running interpreter?
+
+#      comp = VishCompiler.new(string)
+
+#      comp.run
+
+#      # at this pointwe have new bc: bytecodes and new ctx:context
+
+#      ci = CodeInterpreter.new(comp.bc, comp.ctx)
+
+#      ci.run
+
+#  rescue => err
+
+#    puts err.message
+
+#    end
+
+#  end
+
   ## mklambda - creates LambdaType 
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
+
+  ### housekeeping/debugging
+
+  ## name
+
+#  def self.inspect
+
+#    self.name
+
+#  end
 
