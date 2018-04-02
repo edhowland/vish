@@ -139,10 +139,13 @@ To read more information on the Vish language, please see the following files:
 - [Vish Language Syntax](Syntax.md)
 - [Vish runtime builtin functions](Builtins.md)
 - [Changelog of current releases](CHANGELOG.md)
-
+- [LICENSE.txt](LICENSE.txt)
 - [Code of conduct](CODE_OF_CONDUCT.md)
 - [Contributing to this project](CONTRIBUTING.md)
 
+## License
+
+Vish is licensed under the MIT License. Please see [LICENSE.txt](LICENSE.txt)
 
 ## Debugging
 
