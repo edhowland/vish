@@ -1,12 +1,14 @@
 # builtins.rb - module Builtins - builtin methods
 require 'fileutils'
+require 'readline'
+
 
 
 
 class BreakCalled < RuntimeError; end
 
-# Vish Language built in functions
 
+# Vish Language built in functions
 module Builtins
   ## output the version of the runtime
   def self.version()
@@ -160,6 +162,16 @@ module Builtins
   def self.pair?(object)
     object.kind_of?(PairType)
   end
+  ## empty?(object) - true if object is an empty collection
+  def self.empty?(collection)
+    if list?(collection)
+      null?(collection)
+    elsif collection.respond_to?(:empty?)
+      collection.empty?
+    else
+      false
+    end
+  end
   ## list?(possible_list) - true if really a list
   def self.list?(object)
     return false unless pair?(object)
@@ -233,6 +245,18 @@ module Builtins
   # xmit(object, message) - sends Ruby message to object and returns its result.
   def self.xmit(obj, meth, *args)
     obj.send(meth, *args)
+  end
+  ## string?(object) - true if object is a string
+  def self.string?(object)
+    object.instance_of?(String)
+  end
+  ## number?(object) - true if object an integer
+  def self.number?(object)
+    object.kind_of?(Integer)
+  end
+  ## symbol?(object) - true if object is a Symbol
+  def self.symbol?(object)
+    object.instance_of?(Symbol)
   end
 
   ### housekeeping/debugging

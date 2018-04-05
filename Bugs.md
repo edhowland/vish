@@ -1,5 +1,12 @@
 # Bugs
 
+## Bug: syntax error when trying to return, sometimes
+
+TBD: No sample code yet
+
+Note: Seems to be missing return value. Perhaps this actually a REAL syntax error
+
+
 ## Bug incorrect behaviour when passing more arguments than are specified.
 
 Also, shoud perfom some kind of arity check for fn invocation.
