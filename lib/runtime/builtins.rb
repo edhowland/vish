@@ -249,6 +249,15 @@ module Builtins
     l.target = target
     l
   end
+  ## lambda?(object)
+  def self.lambda?(object)
+    if symbol?(object)
+      s = object.to_s
+      s.start_with?('LambdaType')
+    else
+      false
+    end
+  end
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
   def self.xmit(obj, meth, *args)
