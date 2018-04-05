@@ -111,7 +111,7 @@ module Builtins
   ## Vector stuff
   ##  mkvector(args) - returns vector/array of arguments.
   def self.mkvector(*args)
-    args
+    VectorFactory.build(args)
   end
   ## flatten(vector) - flattens nested vector
   def self.flatten(vector)
@@ -180,6 +180,14 @@ module Builtins
       o = o.value
     end
     null?(o)
+  end
+  ## object?(object) - true if object is ObjectType : Dictionary/Hash
+  def self.object?(object)
+    object.kind_of?(ObjectType)
+  end
+  ## vector?(object) - true if object is VectorType
+  def self.vector?(object)
+    object.kind_of?(VectorType)
   end
   ## atom?(object) - true if not a list
   def self.atom?(object)
