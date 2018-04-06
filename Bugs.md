@@ -23,7 +23,7 @@ Invoked whenever vish -c, vish or ivs is invoked
 - Bare return inside loop frame - should be break
 - Arity match of known functions
 - Empty function/lambda bodies - will output Ruby:nil BAD!!!
-
+- Check for unimplemented keywords: import,export and pragma and new require
 - Completely refactor ctx.stack to internal to CodeInterpreter and removed from Context.
 - or, search backword in fr.reverse.find {|f| f.kind_of? MainFrame }
 
