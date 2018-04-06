@@ -38,6 +38,16 @@ module Builtins
     end
   end
 
+  ## length(object) - if item responds to :length message: returns length as integer
+  ### else returns false
+  def self.length(object)
+    if object.respond_to?(:length)
+      object.length
+    else
+      false
+    end
+  end
+
   ## inspect runs inspect on its arguments
   def self.inspect(*args)
     args.inspect
