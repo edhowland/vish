@@ -58,7 +58,7 @@ class VishParser < Parslet::Parser
   rule(:lte) { langle >> equals >> space? }
   rule(:gte) { rangle >> equals >> space? }
   # data types
-  rule(:symbol) { identifier.as(:symbol) >> colon }
+  rule(:symbol) { identifier.as(:symbol) >> colon >> space? }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
   rule(:list_index) { deref >> list }
   rule(:execute_index) { deref_block >> list >> (lparen >> arglist.as(:lambda_args) >> rparen).maybe >> space? }
