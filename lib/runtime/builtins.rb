@@ -172,6 +172,14 @@ module Builtins
       false
     end
   end
+  ## zero? object - true if object is zero
+  def self.zero?(object)
+    if object.respond_to?(:zero?)
+      object.zero?
+    else
+      false
+    end
+  end
   ## list?(possible_list) - true if really a list
   def self.list?(object)
     return false unless pair?(object)
