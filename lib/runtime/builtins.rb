@@ -209,7 +209,7 @@ module Builtins
   end
   ## atom?(object) - true if not a list
   def self.atom?(object)
-    not(list?(object))
+    not(pair?(object)) && not(list?(object)) && not(string?(object)) && not(vector?(object)) && not(object?(object))
   end
 
   ## key(pair) - returns .key member from PairType
