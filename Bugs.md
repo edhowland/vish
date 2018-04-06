@@ -7,22 +7,6 @@ TBD: No sample code yet
 Note: Seems to be missing return value. Perhaps this actually a REAL syntax error
 
 
-## Bug incorrect behaviour when passing more arguments than are specified.
-
-Also, shoud perfom some kind of arity check for fn invocation.
-
-```
-defn takes2(a,b) { :a + :b }
-takes(1,2,3,4,5,6)
-# => 11, because 5 + 6 is 11
-```
-
-
-## Possible Bug: reading stdin input does not work in compiled mode
-
-But does work in interactive mode.
-
-
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,
@@ -30,6 +14,15 @@ Since the current stack is inside either MainFrame or outer FunctionFrame,
 In that case, the frames.peek.ctx wil be nil or undefined method call.
 
 The solution would to 
+
+There should be a compile time semantic check phase
+Invoked whenever vish -c, vish or ivs is invoked
+
+### Compile time checks
+
+- Bare return inside loop frame - should be break
+- Arity match of known functions
+- Empty function/lambda bodies - will output Ruby:nil BAD!!!
 
 - Completely refactor ctx.stack to internal to CodeInterpreter and removed from Context.
 - or, search backword in fr.reverse.find {|f| f.kind_of? MainFrame }

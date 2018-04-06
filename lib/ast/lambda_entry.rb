@@ -17,7 +17,6 @@ class LambdaEntry < Terminal
   # which adds to matching LambdaName.LambdaType.target
   def emit(bc, ctx)
 @offset = bc.codes.length
-#binding.pry
     jmp_t = BulletinBoard.get(@value.name) || JumpTarget.new(@value.name)
 jmp_t.target = bc.codes.length
 # The BB.put is idempotent

@@ -5,7 +5,6 @@
 def convert_funcall_to_lambda_call(ast, functions={})
   funcalls = select_class(ast, Funcall)
   funcalls.each do |f|
-#  binding.pry
     x =  functions[f.content.name.to_sym]
     if !x.nil?
       saved_argc = f.content.argc
