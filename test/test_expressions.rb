@@ -35,4 +35,8 @@ class TestExpressions < BaseSpike
   def test_can_negate_paren_expression
     assert_eq interpret('-(7 * 3)'), (- (7 * 3))
   end
+
+  def test_compare_2_symbols
+    assert interpret('foo: == foo:')
+  end
 end
