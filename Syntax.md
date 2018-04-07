@@ -2,8 +2,11 @@
 
 # TODO: Incomplete documentation:
 
-- Operators
 - Control statements
+
+## Version 0.5.1
+
+This document is complete as far as version 0.5.1  of the Vish language.
 
 ## Abstract
 
@@ -232,7 +235,28 @@ b=outer()
 
 ##### Future use of the set! function.
 
-TBD:
+Vish has no let binding syntax or keyword for local variable scoping.
+It also has no way to modify those local variables outside of the function
+body. In languages like Scheme, you can sometimes do this with the 'set!' procedure.
+
+However, you can just use the vector element assign syntax on the binding object
+itself.
+
+Here is a trivial example:
+
+```
+# define a function that sets local variable, defines inner function; returns binding
+defn mkbaz() { bb=99; defn baz() { :bb }; binding() }
+bz=mkbaz()
+fb=:bz[baz:]
+# => :LambdaType_xxxxxxx
+%fb
+# =>  99
+# now set the bb variable in that binding
+bz[bb:]= 100
+%fb
+# => 100
+```
 
 ## Collections
 

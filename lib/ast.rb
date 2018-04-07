@@ -8,7 +8,7 @@ require_relative 'ast/null_node'
 require_relative 'ast/pair_node'
 require_relative 'ast/object_node'
 
-require_relative 'ast/symbol_type'
+require_relative 'ast/symbol_node'
 
 # deref list:  - :a[0], :a[id()], :a[0,2,3], :a[%y(2)]
 require_relative 'ast/deref_list'
