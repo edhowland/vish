@@ -351,7 +351,7 @@ l=list(1, 2, 3, 4)
 
 #### Deconstructing lists
 
-You can use familar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
+You can use familiar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
 deconstruct a list
 
 ```

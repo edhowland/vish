@@ -297,10 +297,4 @@ module Builtins
   def self.symbol?(object)
     object.instance_of?(Symbol)
   end
-
-  ### housekeeping/debugging
-  ## name
-#  def self.inspect
-#    self.name
-#  end
 end
