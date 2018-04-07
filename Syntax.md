@@ -619,7 +619,7 @@ function or lambda.
 
 Here is some code that implements the map higher order function from other languages:
 
-``
+```
 # map.vs - implements map method over list applying fn for each item, returning
 # new list with each element doubled.
 defn map(li, fn) { 
@@ -627,7 +627,6 @@ defn map(li, fn) {
   list(%fn(:li[0]), map(tail(:li), :fn))
 }
 map([1,2,3,4], ->(x) { :x * 2 })
-
 ```
 
 

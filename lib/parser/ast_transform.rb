@@ -22,8 +22,8 @@ class AstTransform < Parslet::Transform
   rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
   rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
   rule(symbol: simple(:symbol)) { SymbolType.new(symbol) }
-  rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(ListType.new, [arg]) }
-  rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(ListType.new, arg) }
+  rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(VectorNode.new, [arg]) }
+  rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(VectorNode.new, arg) }
   rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
   rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
   rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolType.new(symbol),expr) }

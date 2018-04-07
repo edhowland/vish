@@ -1,5 +1,12 @@
 # TODO
 
+## TODO: Fix comentary of REPL in Overview.md
+
+It mentions tty-reader gem.
+
+
+## TODO make command history work in ivs REPL
+
 ## TODO: Add let binding
 
 ## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
