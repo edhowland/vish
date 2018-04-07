@@ -1,10 +1,5 @@
 # TODO
 
-## TODO: Fix comentary of REPL in Overview.md
-
-It mentions tty-reader gem.
-
-
 ## TODO make command history work in ivs REPL
 
 ## TODO: Add let binding
@@ -14,11 +9,7 @@ It mentions tty-reader gem.
 Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
 
 
-## TODO: Rename lib/ast/ListType to ListNode
 
-## TODO: Rename ast/ SymbolType to SymbolNode
-
-Should have all types in lib/runtime/xxxxx_type.rb derived from Type
 
 ## Todo: Make the return statement allow to convert blocks to lambdas.
 
