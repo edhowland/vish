@@ -39,4 +39,18 @@ class TestExpressions < BaseSpike
   def test_compare_2_symbols
     assert interpret('foo: == foo:')
   end
+
+  # eq? - 2 objects  are the same object
+  def test_eq_2_ints_are_same
+    assert interpret('eq?(1,1)')
+  end
+  def test_variable_refers_to_same_object
+    assert interpret('a=9;eq?(:a, 9)')
+  end
+  def test_not_eq_for_differents_ints
+    assert_false interpret('eq?(3,4)')
+  end
+  def test_vectors_are_not_the_same
+    assert_false interpret('a=[1,2];eq?(:a, [1,2])')
+  end
 end

@@ -207,6 +207,10 @@ module Builtins
   def self.vector?(object)
     object.kind_of?(VectorType)
   end
+  ## eq?(obj1, obj2) - true if obj1 is the same object as obj2
+  def self.eq?(o1, o2)
+    o1.equal?(o2)
+  end
   ## atom?(object) - true if not a list
   def self.atom?(object)
     not(pair?(object)) && not(list?(object)) && not(string?(object)) && not(vector?(object)) && not(object?(object))
