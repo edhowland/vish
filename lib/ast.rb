@@ -2,7 +2,7 @@
 
 require_relative 'ast/terminal'
 require_relative 'ast/non_terminal'
-require_relative 'ast/list_type'
+require_relative 'ast/vector_node'
 require_relative 'ast/null_node'
 
 require_relative 'ast/pair_node'

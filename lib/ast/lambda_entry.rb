@@ -22,7 +22,6 @@ jmp_t.target = bc.codes.length
 # The BB.put is idempotent
 BulletinBoard.put(jmp_t)
 
-    # TODO: REMOVEME
     # Now assign any parameters to the frame's vars
     @arglist.reverse.each do |a|
       bc.codes << :pushl
