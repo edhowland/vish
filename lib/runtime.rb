@@ -11,7 +11,7 @@ require_relative 'runtime/null_type'
 require_relative 'runtime/binding_type'
 
 require_relative 'runtime/object_type'
-
+require_relative 'runtime/vector_type'
 
 require_relative 'runtime/builtins'
 require_relative 'runtime/dispatch'

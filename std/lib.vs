@@ -15,6 +15,11 @@ defn cadr(l) { car(cdr(:l)) }
 defn cddr(l) { cdr(cdr(:l)) }
 defn caddr(l) { car(cddr(:l)) }
 defn cdddr(l) { cdr(cddr(:l)) }
+
+defn list_length(l) {
+  null?(:l) && return 0
+  1 + list_length(cdr(:l))
+}
 # set up some variables
 version=version()
 # Can check the current dir with %pwd

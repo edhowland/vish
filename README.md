@@ -15,7 +15,7 @@ application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.5.0
+## Version 0.5.1
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -139,10 +139,13 @@ To read more information on the Vish language, please see the following files:
 - [Vish Language Syntax](Syntax.md)
 - [Vish runtime builtin functions](Builtins.md)
 - [Changelog of current releases](CHANGELOG.md)
-
+- [LICENSE.txt](LICENSE.txt)
 - [Code of conduct](CODE_OF_CONDUCT.md)
 - [Contributing to this project](CONTRIBUTING.md)
 
+## License
+
+Vish is licensed under the MIT License. Please see [LICENSE.txt](LICENSE.txt)
 
 ## Debugging
 

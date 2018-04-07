@@ -172,7 +172,6 @@ def opcodes tmpreg=nil
     _frame: 'Pushes Frame type on call stack',
     frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
 
-     # TODO: REMOVEME
 
   # Lambda call stuff
 

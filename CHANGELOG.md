@@ -6,6 +6,31 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.5.1 2018-04-07
+
+This is a maintenance release consisting of bug fixes, documentation clean up
+and some additional runtime predicate functions.
+
+### Fixes
+
+- Fixed bug where got syntax error sometimes for using symbol as lvalue in expression.
+
+### Additions
+
+- Added many more predicate tests for the Vish language runtime.
+- Added some runtime functions such as length, etc.
+- List constructor 'cons' is builtin.
+- List destructors are in Vish standard library.
+- These include: car, cdr, cadr, cddr, etc.
+-  list_length is in standard library.
+
+### Changes
+
+- Corrected more documentation and source code to replace List with Vector.
+- Cleaned up typeof function to return Vish object types instead of Ruby tclasses.
+
+
+
 ## 0.5.0 - 2018-04-01
 
 - Changed variable storage to use BindingType, ala: Scheme

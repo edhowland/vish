@@ -34,13 +34,7 @@ class Context
     @vars[actual] = value
     actual
   end
-  # TODO: clean up this where we do or do not merge the variables, because is now BindingType
-  def merge(other)
-    ctx = self.class.new
-    ctx.constants = @constants + other.constants
-    #ctx.vars = @vars.merge(other.vars)
-    ctx
-  end
+
 
   def inspect
     "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}\n"

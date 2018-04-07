@@ -58,7 +58,7 @@ class VishParser < Parslet::Parser
   rule(:lte) { langle >> equals >> space? }
   rule(:gte) { rangle >> equals >> space? }
   # data types
-  rule(:symbol) { identifier.as(:symbol) >> colon }
+  rule(:symbol) { identifier.as(:symbol) >> colon >> space? }
   rule(:list) { lbracket.as(:list) >>  arglist.as(:arglist) >> rbracket }
   rule(:list_index) { deref >> list }
   rule(:execute_index) { deref_block >> list >> (lparen >> arglist.as(:lambda_args) >> rparen).maybe >> space? }
@@ -81,7 +81,7 @@ class VishParser < Parslet::Parser
   # keywords for builtin data types
   rule(:null) { str('Null').as(:null) >> space? }
 
-  rule(:keyword) { (_break | _exit | _return | pragma | import | null).as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import | export | null).as(:keyword) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }

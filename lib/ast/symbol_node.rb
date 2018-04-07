@@ -1,6 +1,6 @@
-# symbol_type.rb - class SymbolType < Terminal - represents Ruby symbol
+# symbol_node.rb - class SymbolNode < Terminal - represents Ruby symbol
 
-class SymbolType < Terminal
+class SymbolNode < Terminal
   def initialize value
     @value = value.to_s.chomp(':').to_sym
   end

@@ -1,12 +1,14 @@
 # builtins.rb - module Builtins - builtin methods
 require 'fileutils'
+require 'readline'
+
 
 
 
 class BreakCalled < RuntimeError; end
 
-# Vish Language built in functions
 
+# Vish Language built in functions
 module Builtins
   ## output the version of the runtime
   def self.version()
@@ -33,6 +35,16 @@ module Builtins
       obj.send(:type)
     else
     obj.send(:class)
+    end
+  end
+
+  ## length(object) - if item responds to :length message: returns length as integer
+  ### else returns false
+  def self.length(object)
+    if object.respond_to?(:length)
+      object.length
+    else
+      false
     end
   end
 
@@ -109,7 +121,7 @@ module Builtins
   ## Vector stuff
   ##  mkvector(args) - returns vector/array of arguments.
   def self.mkvector(*args)
-    args
+    VectorFactory.build(args)
   end
   ## flatten(vector) - flattens nested vector
   def self.flatten(vector)
@@ -160,6 +172,24 @@ module Builtins
   def self.pair?(object)
     object.kind_of?(PairType)
   end
+  ## empty?(object) - true if object is an empty collection
+  def self.empty?(collection)
+    if list?(collection)
+      null?(collection)
+    elsif collection.respond_to?(:empty?)
+      collection.empty?
+    else
+      false
+    end
+  end
+  ## zero? object - true if object is zero
+  def self.zero?(object)
+    if object.respond_to?(:zero?)
+      object.zero?
+    else
+      false
+    end
+  end
   ## list?(possible_list) - true if really a list
   def self.list?(object)
     return false unless pair?(object)
@@ -169,9 +199,21 @@ module Builtins
     end
     null?(o)
   end
+  ## object?(object) - true if object is ObjectType : Dictionary/Hash
+  def self.object?(object)
+    object.kind_of?(ObjectType)
+  end
+  ## vector?(object) - true if object is VectorType
+  def self.vector?(object)
+    object.kind_of?(VectorType)
+  end
+  ## eq?(obj1, obj2) - true if obj1 is the same object as obj2
+  def self.eq?(o1, o2)
+    o1.equal?(o2)
+  end
   ## atom?(object) - true if not a list
   def self.atom?(object)
-    not(list?(object))
+    not(pair?(object)) && not(list?(object)) && not(string?(object)) && not(vector?(object)) && not(object?(object))
   end
 
   ## key(pair) - returns .key member from PairType
@@ -229,10 +271,31 @@ module Builtins
     l.target = target
     l
   end
+  ## lambda?(object)
+  def self.lambda?(object)
+    if symbol?(object)
+      s = object.to_s
+      s.start_with?('LambdaType')
+    else
+      false
+    end
+  end
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
   def self.xmit(obj, meth, *args)
     obj.send(meth, *args)
+  end
+  ## string?(object) - true if object is a string
+  def self.string?(object)
+    object.instance_of?(String)
+  end
+  ## number?(object) - true if object an integer
+  def self.number?(object)
+    object.kind_of?(Integer)
+  end
+  ## symbol?(object) - true if object is a Symbol
+  def self.symbol?(object)
+    object.instance_of?(Symbol)
   end
 
   ### housekeeping/debugging

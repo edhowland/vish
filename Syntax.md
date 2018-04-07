@@ -2,8 +2,11 @@
 
 # TODO: Incomplete documentation:
 
-- Operators
 - Control statements
+
+## Version 0.5.1
+
+This document is complete as far as version 0.5.1  of the Vish language.
 
 ## Abstract
 
@@ -232,7 +235,28 @@ b=outer()
 
 ##### Future use of the set! function.
 
-TBD:
+Vish has no let binding syntax or keyword for local variable scoping.
+It also has no way to modify those local variables outside of the function
+body. In languages like Scheme, you can sometimes do this with the 'set!' procedure.
+
+However, you can just use the vector element assign syntax on the binding object
+itself.
+
+Here is a trivial example:
+
+```
+# define a function that sets local variable, defines inner function; returns binding
+defn mkbaz() { bb=99; defn baz() { :bb }; binding() }
+bz=mkbaz()
+fb=:bz[baz:]
+# => :LambdaType_xxxxxxx
+%fb
+# =>  99
+# now set the bb variable in that binding
+bz[bb:]= 100
+%fb
+# => 100
+```
 
 ## Collections
 
@@ -619,7 +643,7 @@ function or lambda.
 
 Here is some code that implements the map higher order function from other languages:
 
-``
+```
 # map.vs - implements map method over list applying fn for each item, returning
 # new list with each element doubled.
 defn map(li, fn) { 
@@ -627,7 +651,6 @@ defn map(li, fn) {
   list(%fn(:li[0]), map(tail(:li), :fn))
 }
 map([1,2,3,4], ->(x) { :x * 2 })
-
 ```
 
 
