@@ -103,7 +103,6 @@ any other variables will be reported by the compiler.
 
 Add the following keywords:
 
-- print - emits :print
 
 Add the following builtins
 

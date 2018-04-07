@@ -46,7 +46,7 @@ or be checked by the compiler during  analysis phase.
 
 ## Bug: Should have actual Ruby objects in bytecodes, like LoopFrame objects
 
-When written out .vshc files, as marshalled Ruby objects, this is not pure.
+When written out .vsc files, as marshalled Ruby objects, this is not pure.
 
 Not sure what to do about it, tho.
 
