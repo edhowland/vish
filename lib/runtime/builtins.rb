@@ -237,7 +237,7 @@ module Builtins
   end
   ## nul?(list) - true if list is the Null list : ()
   def self.null?(object)
-    pair?(object) && PairType.null?(object)
+    object.instance_of?(NullType)
   end
 
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)
