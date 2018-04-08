@@ -82,8 +82,7 @@ module Builtins
   end
   ## readc - read a single character, do not wait for return
   def self.readc()
-    $stdin.getch
-    #consume
+    consume
   end
 
   ## File I/O

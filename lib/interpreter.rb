@@ -1,6 +1,7 @@
 # requires for interpreter/
 # Nust make all these string double-quoted strings for Crystal language support
 
+require_relative "interpreter/genid"
 require_relative "../common/code_container"
 require_relative "interpreter/register"
 

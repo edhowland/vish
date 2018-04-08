@@ -8,7 +8,7 @@ opt=OptionParser.new do |o|
   o.banner = "vsr - Runtime for compiled Vish symcode files: *.vsc\nUsage: vsr myfile.vsc"
   o.separator ""
   o.on("-r file", "--require file", String, "Require file before executing runtime") do |file|
-#    require file
+    require file
   end
   o.separator ""
 

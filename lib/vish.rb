@@ -16,9 +16,7 @@ require_relative 'compiler'
 # Runtime only stuff
 
 
-require_relative 'halt_state'
 require_relative 'opcode_error'
-require_relative 'bytecodes'
 
 # anchor nodes
 
