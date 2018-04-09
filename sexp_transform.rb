@@ -36,7 +36,16 @@ end
 def sobject(arglist)
   mklist(:object, mklist(*arglist))
 end
+# Function calls
+def sfuncall(name, arg)
+  mklist(:funcall, name, mklist(*arg))
+end
 
+def slambdacall(name, args)
+  mklist(:lambdacall, name, mklist(*args))
+end
+
+# The empty set
 def signore()
   PairType.new(key: :ignore, value: NullType.new)
 end
@@ -192,15 +201,24 @@ class SexpTransform < Parslet::Transform
 
 
   # Function calls, Lambda calls, etc.
-  rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
-  rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
+#  rule(funcall: simple(:funcall), arglist: simple(:arg)) { FunctorNode.subtree(Funcall.new(funcall), [arg]) }
+#  rule(funcall: simple(:funcall), arglist: sequence(:arglist)) { FunctorNode.subtree(Funcall.new(funcall), arglist) }
 
   # Lambda call - %l;%l();%l(1,2,3)
-  rule(lambda_call: simple(:lambda_call)) { FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
-  rule(lambda_call: simple(:lambda_call), arglist: simple(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
-  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
+#  rule(lambda_call: simple(:lambda_call)) { FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
+#  rule(lambda_call: simple(:lambda_call), arglist: simple(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
+#  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # Lambda call - %l;%l();%l(1,2,3)
+  rule(lambda_call: simple(:name)) { slambdacall(name, [])  } #FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
+  rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, arglist) } #FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
+  rule(lambda_call: simple(:name), arglist: sequence(:arglist)) { slambdacall(name, arglist) }  #FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
+
+  # Function calls
+  rule(funcall: simple(:name), arglist: simple(:arg)) { sfuncall(name, arg) }  #FunctorNode.subtree(Funcall.new(funcall), [arg]) }
+  rule(funcall: simple(:name), arglist: sequence(:arglist)) { sfuncall(name, arglist) }  #FunctorNode.subtree(Funcall.new(funcall), arglist) }
+
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  #BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
 
   # Objects
