@@ -7,7 +7,12 @@ end
 def sbool(bool)
   mksexp(:bool, bool)
 end
+# identifier
+def sident(x)
+  mksexp(:ident, x)
+end
 
+# integer
 def sint(number)
   mksexp(:integer, number)
 end
@@ -70,10 +75,15 @@ end
 def bool_or(l, r)
   mklist(:or, l, r)
 end
+# assignment
+def assign(l, r)
+  mklist(:assign, l, r)
+end
 
 # mkarith - Make arithmetic subexpression
 def mkarith(o, l, r)
   msgs = {
+    '=' => :assign, 
     'and' => :bool_and,
     'or' => :bol_or,
     "**" => :exponent,
@@ -140,7 +150,7 @@ class SexpTransform < Parslet::Transform
   # Assignment
   rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
-  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
+#  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
 
   rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
   rule(op: simple(:op), negative: simple(:negative)) { UnaryTreeFactory.subtree(UnaryNegative, negative) }
@@ -191,6 +201,8 @@ class SexpTransform < Parslet::Transform
   rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  #BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+
   # Objects
   rule(object: simple(:object), arglist: simple(:arglist)) { sobject(arglist) }   #ObjectNode.subtree([arglist]) }
   rule(object: simple(:object), arglist: sequence(:arglist)) {sobject(arglist) }   #ObjectNode.subtree(arglist) }
