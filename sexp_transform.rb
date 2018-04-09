@@ -111,8 +111,19 @@ def mkarith(o, l, r)
   end
 end
 
+# Statement lists
+def sstatements(list)
+  mklist(*list)
+end
+
+# Blocks
+def sblock(list)
+  mklist(:block, list)
+end
+
+# The root of the program
 def sroot tree
-  Builtins.list(:program, tree)
+  mklist(:program, tree)
 end
 class SexpTransform < Parslet::Transform
   # single quoted strings
@@ -179,8 +190,8 @@ class SexpTransform < Parslet::Transform
   rule(loop: simple(:loop)) { Loop.subtree(loop) }
 
   # block stuff
-  rule(block: simple(:block)) { Block.subtree([block]) }
-  rule(block: sequence(:block)) { Block.subtree(block) }
+#  rule(block: simple(:block)) { Block.subtree([block]) }
+#  rule(block: sequence(:block)) { Block.subtree(block) }
 
   rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
   rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
@@ -210,6 +221,9 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  rule(block: simple(:block)) { sblock(sstatements(block)) }  #Block.subtree([block]) }
+  rule(block: sequence(:block)) {sblock(sstatements(block)) }    #Block.subtree(block) }
+
   # Lambda call - %l;%l();%l(1,2,3)
   rule(lambda_call: simple(:name)) { slambdacall(name, [])  } #FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
   rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, arglist) } #FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
@@ -244,5 +258,5 @@ class SexpTransform < Parslet::Transform
 
   # The root of the IR
   rule(program: simple(:program)) { sroot(program) }
-  rule(program: sequence(:program)) { sroot(program) }
+  rule(program: sequence(:program)) { sroot(sstatements(program)) }
 end
