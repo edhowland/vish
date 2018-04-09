@@ -1,5 +1,9 @@
 # Bugs
 
+
+## In sexpr_transform
+
+### Bug: grouped expressions are not being decended into
 ## Bug: syntax error when trying to return, sometimes
 
 TBD: No sample code yet

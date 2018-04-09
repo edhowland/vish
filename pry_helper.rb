@@ -3,6 +3,7 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
+require_relative 'sexp_transform'
 
 
 
@@ -86,6 +87,10 @@ end
 
 def pa
   return VishParser.new, AstTransform.new
+end
+# ps - return VisParser, SexpTransform
+def ps
+  [VishParser.new, SexpTransform.new]
 end
 
 # mkast(string) : creates an AST after parsing string.
@@ -233,4 +238,74 @@ def fun_lamb
 end
 def cons(k, v)
   Builtins.mkpair(k, v)
+end
+
+def car(x)
+  x.key
+end
+def cdr(x)
+  x.value
+end
+def cadr(x)
+  car(cdr(x))
+end
+def cddr(x)
+  cdr(cdr(x))
+end
+def caddr(x)
+  car(cddr(x))
+end
+
+# utility fns from Builtins
+def atom?(x)
+  Builtins.atom?(x)
+end
+def list?(x)
+  begin
+    Builtins.list?(x)
+  rescue => err
+    binding.pry
+  end
+end
+def pair?(x)
+  Builtins.pair?(x)
+end
+def null?(x)
+  x.instance_of?(NullType)
+end
+
+# walk the S-expression tree
+def swalk(t)
+
+  return nil if null?(t)
+  if atom?(t)
+#    puts "atom: #{t.inspect}"
+    return nil
+  end
+  x = car(t)
+  if null?(x)
+    puts 'ascending'
+    return nil
+  elsif atom?(x)
+    puts x.inspect
+  elsif list?(x)
+    puts 'descending'
+    swalk(x)
+  elsif pair?(x)
+    puts "#{x.key}: #{x.value}"
+  else
+  binding.pry
+    puts 'error'
+  end
+#  binding.pry
+  swalk(cdr(t))
+end
+
+
+def walks(t)
+  begin
+    swalk(t)
+  rescue => err
+    binding.pry
+  end
 end
