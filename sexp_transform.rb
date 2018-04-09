@@ -11,6 +11,26 @@ end
 def sint(number)
   mksexp(:integer, number)
 end
+# sstrlit - StringLiteral
+def sstrlit(x)
+  mksexp(:string, x)
+end
+# symb ol
+def ssymbol(x)
+  mksexp(:symbol, x)
+end
+# make a pair: of s:symbol, e:expression
+def spair(s, e)
+  mklist(:pair, s, e)
+end
+# Vector
+def svector(args)
+  mklist(:vector, mklist(*args))
+end
+# objects: dics or Ruby hash
+def sobject(arglist)
+  mklist(:object, mklist(*arglist))
+end
 
 def signore()
   PairType.new(key: :ignore, value: NullType.new)
@@ -77,8 +97,8 @@ def sroot tree
 end
 class SexpTransform < Parslet::Transform
   # single quoted strings
-  rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
-  rule(sq_string: sequence(:sq_string)) { StringLiteral.new('') }
+#  rule(sq_string: simple(:sq_string)) { StringLiteral.new(sq_string) }
+#  rule(sq_string: sequence(:sq_string)) { StringLiteral.new('') }
 
   # double quoted strings: string interpolations
   rule(strtok: simple(:strtok)) { StringLiteral.new(strtok) }
@@ -87,12 +107,12 @@ class SexpTransform < Parslet::Transform
 
   rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
 #  rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
-  rule(symbol: simple(:symbol)) { SymbolNode.new(symbol) }
-  rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(VectorNode.new, [arg]) }
-  rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(VectorNode.new, arg) }
-  rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
-  rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
-  rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolNode.new(symbol),expr) }
+#  rule(symbol: simple(:symbol)) { SymbolNode.new(symbol) }
+#  rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(VectorNode.new, [arg]) }
+#  rule(list: simple(:list), arglist: sequence(:arg)) { FunctorNode.subtree(VectorNode.new, arg) }
+#  rule(object: simple(:object), arglist: simple(:arglist)) { ObjectNode.subtree([arglist]) }
+#  rule(object: simple(:object), arglist: sequence(:arglist)) { ObjectNode.subtree(arglist) }
+#  rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolNode.new(symbol),expr) }
 
   # deref an object with dotted method
   rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { DerefList.subtree(Deref.new(deref), SymbolNode.new(symbol)) }
@@ -171,6 +191,18 @@ class SexpTransform < Parslet::Transform
   rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # Objects
+  rule(object: simple(:object), arglist: simple(:arglist)) { sobject(arglist) }   #ObjectNode.subtree([arglist]) }
+  rule(object: simple(:object), arglist: sequence(:arglist)) {sobject(arglist) }   #ObjectNode.subtree(arglist) }
+  # vectors
+  rule(list: simple(:list), arglist: simple(:arg)) { svector(arg) }   #FunctorNode.subtree(VectorNode.new, [arg]) }
+  rule(list: simple(:list), arglist: sequence(:args)) { svector(args) }  #FunctorNode.subtree(VectorNode.new, arg) }
+  rule(symbol: simple(:symbol), expr: subtree(:expr)) { spair(ssymbol(symbol),expr) }     # PairNode.subtree(SymbolNode.new(symbol),expr) }
+
+  rule(symbol: simple(:symbol)) {ssymbol(symbol) }   #SymbolNode.new(symbol) }
+
+  rule(sq_string: simple(:sq_string)) { sstrlit(sq_string) }  # StringLiteral.new() }
+  rule(sq_string: sequence(:sq_string)) { sstrlit('') }   #StringLiteral.new('') }
   rule(boolean: simple(:boolean)) { sbool(boolean) }
   # Boolean.new() }
 
