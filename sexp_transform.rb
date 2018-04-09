@@ -12,6 +12,20 @@ def sident(x)
   mksexp(:ident, x)
 end
 
+# deref
+def sderef(ident)
+  mklist(:deref, ident)
+end
+
+# deref a list  ... :a[0]
+def sdereflist(deref, list)
+  mklist(:dereflist, deref, list)
+end
+# deref a list for assignment as lvalue: a[2] = 3
+def svectorid(deref, index)
+  mklist(:vectorid, deref, index)
+end
+
 # integer
 def sint(number)
   mksexp(:integer, number)
@@ -145,11 +159,11 @@ class SexpTransform < Parslet::Transform
 #  rule(symbol: simple(:symbol), expr: subtree(:expr)) { PairNode.subtree(SymbolNode.new(symbol),expr) }
 
   # deref an object with dotted method
-  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { DerefList.subtree(Deref.new(deref), SymbolNode.new(symbol)) }
+#  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { DerefList.subtree(Deref.new(deref), SymbolNode.new(symbol)) }
 
   # deref a list w/index
-  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { DerefList.subtree(Deref.new(deref), arglist) }
-  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { VectorId.subtree(Deref.new(id), index) }
+#  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { DerefList.subtree(Deref.new(deref), arglist) }
+#  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { VectorId.subtree(Deref.new(id), index) }
 
   # IList indexed lambda call: %a[0] TODO: Add backin parens and args
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
@@ -168,7 +182,7 @@ class SexpTransform < Parslet::Transform
   # arithmetic expressions
 #  rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   # Assignment
-  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
+#  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
 #  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
 
@@ -176,7 +190,7 @@ class SexpTransform < Parslet::Transform
   rule(op: simple(:op), negative: simple(:negative)) { UnaryTreeFactory.subtree(UnaryNegative, negative) }
 
   # dereference a variable
-  rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
+#  rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
   # deref a variable (or function arg) and execute it immediately
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
@@ -221,6 +235,14 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } #BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
+  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } # VectorId.subtree(Deref.new(id), index) }
+
+  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { sdereflist(sderef(deref), ssymbol(symbol)) }   # sdereflist( } #DerefList.subtree(Deref.new(deref), SymbolNode.new(symbol)) }
+  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { sdereflist(sderef(deref), arglist) }  #DerefList.subtree(Deref.new(deref), arglist) }
+
+  rule(deref: simple(:deref)) { sderef(deref) }  #mknode(Deref.new(deref)) }
+
   rule(block: simple(:block)) { sblock(sstatements(block)) }  #Block.subtree([block]) }
   rule(block: sequence(:block)) {sblock(sstatements(block)) }    #Block.subtree(block) }
 
