@@ -284,7 +284,7 @@ def swalk(t)
   end
   x = car(t)
   if null?(x)
-    puts 'ascending'
+    puts 'ascending at end of list'
     return nil
   elsif atom?(x)
     puts x.inspect
@@ -292,7 +292,7 @@ def swalk(t)
     puts 'descending'
     swalk(x)
   elsif pair?(x)
-    puts "#{x.key}: #{x.value}"
+    puts "pair: #{x.key}: #{x.value}"
   else
   binding.pry
     puts 'error'

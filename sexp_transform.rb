@@ -50,6 +50,14 @@ end
 def sobject(arglist)
   mklist(:object, mklist(*arglist))
 end
+# parameter list
+def sparmlist(list)
+  mklist(:parmlist, list)
+end
+# Functions
+def slambda(parms, block)
+  mklist(:lambda, sparmlist(parms), block)
+end
 # Function calls
 def sfuncall(name, arg)
   mklist(:funcall, name, mklist(*arg))
@@ -211,14 +219,14 @@ class SexpTransform < Parslet::Transform
   rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
 
   # lambdas
-  rule(parm: simple(:parm)) { StringLiteral.new(parm) }
-  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree([parmlist], _lambda) }
-  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
+#  rule(parm: simple(:parm)) { StringLiteral.new(parm) }
+#  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree([parmlist], _lambda) }
+#  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
 
   # Functions
   # Change here
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
+#  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+#  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
 
 
 #  rule(fname: simple(:fname), parmlist: simple(:parmlist), block: simple(:fbody)) { Function.subtree(fname, fbody, [parmlist]) } 
@@ -235,6 +243,16 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # parameter : as in a parmlist to a function/lambda definition
+  rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
+  # lambdas
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda(mklist(),_lambda) }  #Lambda.subtree([parmlist], _lambda) }
+  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } #Lambda.subtree(parmlist, _lambda) }
+
+# Functions
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda(mklist(), sblock(fbody))) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(mklist(*parmlist), sblock(fbody))) }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
+
   rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } #BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } # VectorId.subtree(Deref.new(id), index) }
 
