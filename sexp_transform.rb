@@ -4,6 +4,19 @@ def mksexp(k, v)
   PairType.new(key: k, value: v)
 end
 
+# make a list form a variety of objects or collections
+def list_from(object)
+  if list?(object)
+    object
+  elsif (object.respond_to?(:empty?) and object.empty?) or object.nil?
+    NullType.new
+  elsif object.instance_of?(Array)
+    mklist(*object)
+  else
+    mklist(object)
+  end
+end
+
 def sbool(bool)
   mksexp(:bool, bool)
 end
@@ -52,6 +65,7 @@ def sobject(arglist)
 end
 # parameter list
 def sparmlist(list)
+  list = list_from(list)
   mklist(:parmlist, list)
 end
 # Functions
@@ -246,12 +260,12 @@ class SexpTransform < Parslet::Transform
   # parameter : as in a parmlist to a function/lambda definition
   rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
   # lambdas
-  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda(mklist(),_lambda) }  #Lambda.subtree([parmlist], _lambda) }
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist,_lambda) }  #Lambda.subtree([parmlist], _lambda) }
   rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } #Lambda.subtree(parmlist, _lambda) }
 
 # Functions
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda(mklist(), sblock(fbody))) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(mklist(*parmlist), sblock(fbody))) }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
 
   rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } #BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } # VectorId.subtree(Deref.new(id), index) }
