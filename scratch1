@@ -1,0 +1,10 @@
+(define (math-eval expr)
+  (cond ;; self-evaluating object?  (we only handle numbers)
+        ((number? expr)
+         expr)
+        ;; compound expression? (we only handle two-arg combinations)
+        ((and (list? expr)
+              (eq? (length expr) 3))
+         (math-eval-combo expr))
+        (else
+         (error "invalid expression" expr))))

@@ -4,6 +4,8 @@
 require_relative 'lib/vish'
 require_relative 'pry/lib'
 require_relative 'sexp_transform'
+require_relative 'semitr'
+
 
 
 
@@ -308,4 +310,8 @@ def walks(t)
   rescue => err
     binding.pry
   end
+end
+
+def ex str, p=VishParser.new, s=SexpTransform.new
+  s.apply(p.parse(str))
 end

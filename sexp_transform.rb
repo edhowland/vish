@@ -18,11 +18,11 @@ def list_from(object)
 end
 
 def sbool(bool)
-  mksexp(:bool, bool)
+  mklist(:boolean, bool)
 end
 # identifier
 def sident(x)
-  mksexp(:ident, x)
+  mklist(:ident, x)
 end
 
 # deref
@@ -41,15 +41,15 @@ end
 
 # integer
 def sint(number)
-  mksexp(:integer, number)
+  mklist(:integer, number)
 end
 # sstrlit - StringLiteral
 def sstrlit(x)
-  mksexp(:string, x)
+  mklist(:string, x)
 end
 # symb ol
 def ssymbol(x)
-  mksexp(:symbol, x)
+  mklist(:symbol, x)
 end
 # make a pair: of s:symbol, e:expression
 def spair(s, e)
@@ -87,7 +87,7 @@ def signore()
 end
 
 def shalt()
-  mksexp(:halt, :_)
+  mklist(:halt, :_)
 end
 
 # utility
