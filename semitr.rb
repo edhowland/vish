@@ -36,6 +36,10 @@ end
   def symbol(sexp)
     ident(sexp)
   end
+  def pair(sexp)
+    [self.eval(car(sexp)), self.eval(cadr(sexp)), :pushl, 2, :pushl, :mkpair, :icall].flatten
+
+  end
   def ident(sexp)
     [:pushl,  car(sexp).to_s.to_sym]
   end
