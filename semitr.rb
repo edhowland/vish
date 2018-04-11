@@ -25,29 +25,64 @@ class Seval
   def cdr x
     x.value
   end
+def cadr(x)
+  car(cdr(x))
+end
+  def caddr(x)
+    car(cadr(x))
+  end
   def integer exp
-    car(exp).to_s.to_i
+    [:pushl, car(exp).to_s.to_i]
   end
   def boolean exp
-    {'true' => true, 'false' => false}[car(exp).to_s]
+    [:pushl, {'true' => true, 'false' => false}[car(exp).to_s.strip]]
   end
   # helper for arith expressions
   def _arith(sym, sexp)
-    [sym, self.eval(car(sexp)), self.eval(cadr(sexp))]
+    [self.eval(car(sexp)), self.eval(cadr(sexp)), sym].flatten
   end
   def add sexp
-    _arith(:+, sexp)
+    _arith(:addsexp)
   end
   def sub sexp
-    _arith(:-, sexp)
+    _arith(:sub, sexp)
+  end
+  def mult(sexp)
+    _arith(:mult, sexp)
+  end
+  def div(sexp)
+    _arith(:div, sexp)
+  end
+  def modulo(sexp)
+    _arith(:mod, sexp)
+  end
+  def exp(sexp)
+    _arith(:exp, sexp)
+  end
+  # logical ops
+  def and(sexp)
+    _arith(:and, sexp)
+  end
+  def or(sexp)
+    _arith(:or, sexp)
+  end
+
+  # main root: :program
+  def program(sexp)
+    [:cls, self.eval(car(sexp)), :halt].flatten
   end
 
   def eval sexp
-    if atom?(sexp)
+    if null?(sexp)
+      sexp
+    elsif undefined?(sexp)
+      NullType.new
+    elsif atom?(sexp)
       sexp
     elsif list?(sexp)
       self.send(car(sexp), cdr(sexp))
     else
+#    binding.pry
       error 'bad s-expression' + sexp.inspect
     end
   end

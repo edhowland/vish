@@ -130,7 +130,7 @@ def mkarith(o, l, r)
   msgs = {
     '=' => :assign, 
     'and' => :bool_and,
-    'or' => :bol_or,
+    'or' => :bool_or,
     "**" => :exponent,
     "%" => :modulo,
     "+" => :add,

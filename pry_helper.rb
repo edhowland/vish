@@ -315,3 +315,7 @@ end
 def ex str, p=VishParser.new, s=SexpTransform.new
   s.apply(p.parse(str))
 end
+
+def undefined?(object)
+  Undefined == object
+end
