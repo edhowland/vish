@@ -57,7 +57,7 @@ def spair(s, e)
 end
 # Vector
 def svector(args)
-  mklist(:vector, mklist(*args))
+  mklist(:vector, *args)
 end
 # objects: dics or Ruby hash
 def sobject(arglist)
@@ -158,7 +158,6 @@ end
 
 # Statement lists
 def sstatements(list)
-#binding.pry
   mklist(*list)
 end
 

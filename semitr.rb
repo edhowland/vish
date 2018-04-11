@@ -33,6 +33,21 @@ end
   end
 
   # start of expression action verbs
+  def _vector(sexp, result=[])
+#binding.pry
+    if null?(sexp)
+      return result
+    end
+    (self.eval(car(sexp)) + _vector(cdr(sexp), result)).flatten
+  end
+  def vector(sexp)
+#binding.pry
+
+    result = _vector(sexp)
+    result << :pushl
+    result << (result.length / 2)
+    result + [:pushl, :mkvector, :icall]
+  end
   def symbol(sexp)
     ident(sexp)
   end
