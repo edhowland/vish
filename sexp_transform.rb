@@ -158,6 +158,7 @@ end
 
 # Statement lists
 def sstatements(list)
+#binding.pry
   mklist(*list)
 end
 
@@ -320,6 +321,6 @@ class SexpTransform < Parslet::Transform
   rule(empty: simple(:empty)) { signore }
 
   # The root of the IR
-  rule(program: simple(:program)) { sroot(program) }
+  rule(program: simple(:program)) { sroot(sstatements([program])) }
   rule(program: sequence(:program)) { sroot(sstatements(program)) }
 end

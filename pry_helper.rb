@@ -323,6 +323,11 @@ def pse
   ps + [Seval.new]
 end
 
+def gsexp str
+  p,s=ps
+  s.apply(p.parse(str))
+end
+
 def compute str
   p,s,e = pse
   codes = e.eval(s.apply(p.parse(str)))
@@ -331,4 +336,10 @@ def compute str
   bc.codes = codes
   ci = CodeInterpreter.new bc, ctx
   ci.run
+end
+def cx codes
+    ctx = Context.new
+  bc = ByteCodes.new
+  bc.codes = codes
+  ci = CodeInterpreter.new bc, ctx
 end

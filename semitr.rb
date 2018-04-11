@@ -31,6 +31,14 @@ end
   def caddr(x)
     car(cadr(x))
   end
+
+  # start of expression action verbs
+  def symbol(sexp)
+    ident(sexp)
+  end
+  def ident(sexp)
+    [:pushl,  car(sexp).to_s.to_sym]
+  end
   def integer exp
     [:pushl, car(exp).to_s.to_i]
   end
@@ -43,6 +51,12 @@ end
   # helper for arith expressions
   def _arith(sym, sexp)
     [self.eval(car(sexp)), self.eval(cadr(sexp)), sym].flatten
+  end
+  def deref(sexp)
+    [:pushv, car(sexp).to_s.to_sym]
+  end
+  def assign(sexp)
+    _arith(:assign, sexp)
   end
   def add sexp
     _arith(:add, sexp)
@@ -78,8 +92,17 @@ end
   end
 
   # main root: :program
+  # A program is a list of 0 or more statements
+  def statements sexp, result=[]
+    if null?(sexp)
+      return result
+    end
+    self.eval(car(sexp)) +     statements(cdr(sexp), result)
+  end
+
   def program(sexp)
-    [:cls, self.eval(car(sexp)), :halt].flatten
+#binding.pry
+    [:cls, statements(car(sexp)).flatten, :halt].flatten
   end
 
   def eval sexp
