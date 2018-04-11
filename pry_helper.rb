@@ -319,3 +319,16 @@ end
 def undefined?(object)
   Undefined == object
 end
+def pse
+  ps + [Seval.new]
+end
+
+def compute str
+  p,s,e = pse
+  codes = e.eval(s.apply(p.parse(str)))
+  ctx = Context.new
+  bc = ByteCodes.new
+  bc.codes = codes
+  ci = CodeInterpreter.new bc, ctx
+  ci.run
+end
