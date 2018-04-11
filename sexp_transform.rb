@@ -61,7 +61,7 @@ def svector(args)
 end
 # objects: dics or Ruby hash
 def sobject(arglist)
-  mklist(:object, mklist(*arglist))
+  mklist(:object, *arglist)
 end
 # parameter list
 def sparmlist(list)

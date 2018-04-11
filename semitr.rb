@@ -19,6 +19,10 @@ class Seval
   def error msg
     raise RuntimeError.new msg
   end
+def length(sexp, result=0)
+  return result if null?(sexp)
+  1 + length(cdr(sexp), result)
+end
   def car(x)
     x.key
   end
@@ -41,12 +45,25 @@ end
     (self.eval(car(sexp)) + _vector(cdr(sexp), result)).flatten
   end
   def vector(sexp)
-#binding.pry
-
     result = _vector(sexp)
     result << :pushl
     result << (result.length / 2)
     result + [:pushl, :mkvector, :icall]
+  end
+  def _object(sexp, result=[])
+#binding.pry
+    if null?(sexp)
+      return result
+    end
+    (self.eval(car(sexp)) + _object(cdr(sexp), result)).flatten
+  end
+  def object(sexp)
+    result = _object(sexp)
+    result << :pushl
+    result << length(sexp)
+    result << :pushl
+    result << :mkobject
+    result + [:icall]
   end
   def symbol(sexp)
     ident(sexp)
