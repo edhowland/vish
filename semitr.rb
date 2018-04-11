@@ -62,6 +62,13 @@ end
   def exp(sexp)
     _arith(:exp, sexp)
   end
+  # equality
+  def eq(sexp)
+    _arith(:eq, sexp)
+  end
+  def neq(sexp)
+    _arith(:neq, sexp)
+  end
   # logical ops
   def and(sexp)
     _arith(:and, sexp)

@@ -124,6 +124,13 @@ end
 def assign(l, r)
   mklist(:assign, l, r)
 end
+# equality
+def eq(l, r )
+  mklist(:eq, l, r)
+end
+def neq(l, r)
+  mklist(:neq, l, r)
+end
 
 # mkarith - Make arithmetic subexpression
 def mkarith(o, l, r)
@@ -136,7 +143,9 @@ def mkarith(o, l, r)
     "+" => :add,
     "-" => :sub,
     "*" => :mult,
-    "/" => :div
+    "/" => :div,
+    "==" => :eq,
+    "!=" => :neq
   }
   m = msgs[o.to_s.strip]
   if m.nil?
