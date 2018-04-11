@@ -37,12 +37,15 @@ end
   def boolean exp
     [:pushl, {'true' => true, 'false' => false}[car(exp).to_s.strip]]
   end
+  def string(sexp)
+    [:pushl, car(sexp).to_s]
+  end
   # helper for arith expressions
   def _arith(sym, sexp)
     [self.eval(car(sexp)), self.eval(cadr(sexp)), sym].flatten
   end
   def add sexp
-    _arith(:addsexp)
+    _arith(:add, sexp)
   end
   def sub sexp
     _arith(:sub, sexp)
