@@ -135,6 +135,10 @@ end
     end
     self.eval(car(sexp)) +     statements(cdr(sexp), result)
   end
+  # The empty case
+  def ignore(sexp)
+    []
+  end
 
   def program(sexp)
 #binding.pry

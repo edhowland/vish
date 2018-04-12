@@ -57,11 +57,11 @@ def spair(s, e)
 end
 # Vector
 def svector(args)
-  mklist(:vector, *args)
+  mklist(:vector, *(args).reject(&:nil?))
 end
 # objects: dics or Ruby hash
 def sobject(arglist)
-  mklist(:object, *arglist)
+  mklist(:object, *(arglist).reject(&:nil?))
 end
 # parameter list
 def sparmlist(list)
@@ -299,10 +299,10 @@ class SexpTransform < Parslet::Transform
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  #BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
 
   # Objects
-  rule(object: simple(:object), arglist: simple(:arglist)) { sobject(arglist) }   #ObjectNode.subtree([arglist]) }
+  rule(object: simple(:object), arglist: simple(:arglist)) { sobject([arglist]) }   #ObjectNode.subtree([arglist]) }
   rule(object: simple(:object), arglist: sequence(:arglist)) {sobject(arglist) }   #ObjectNode.subtree(arglist) }
   # vectors
-  rule(list: simple(:list), arglist: simple(:arg)) { svector(arg) }   #FunctorNode.subtree(VectorNode.new, [arg]) }
+  rule(list: simple(:list), arglist: simple(:arg)) { svector([arg]) }   #FunctorNode.subtree(VectorNode.new, [arg]) }
   rule(list: simple(:list), arglist: sequence(:args)) { svector(args) }  #FunctorNode.subtree(VectorNode.new, arg) }
   rule(symbol: simple(:symbol), expr: subtree(:expr)) { spair(ssymbol(symbol),expr) }     # PairNode.subtree(SymbolNode.new(symbol),expr) }
 
