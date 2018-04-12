@@ -3,12 +3,6 @@
 
 ## In sexpr_transform
 
-### Bug: vector of 1 element fails. 0, 2 or more work
-
-This is also true with a single element in object/dictionary/hash.
-
-Problems with sexp_transform? Should be arrary?
-
 
 ## Bug: syntax error when trying to return, sometimes
 

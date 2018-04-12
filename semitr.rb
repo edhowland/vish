@@ -8,7 +8,6 @@ def semitr sexp
     :vector => ->(e) { e }
   }
   f = funcs[car(sexp)]
-#binding.pry
   f[cdr(sexp)]
 end
 
@@ -38,7 +37,6 @@ end
 
   # start of expression action verbs
   def _vector(sexp, result=[])
-#binding.pry
     if null?(sexp)
       return result
     end
@@ -51,7 +49,6 @@ end
     result + [:pushl, :mkvector, :icall]
   end
   def _object(sexp, result=[])
-#binding.pry
     if null?(sexp)
       return result
     end
@@ -76,6 +73,7 @@ end
     [:pushl,  car(sexp).to_s.to_sym]
   end
   def integer exp
+
     [:pushl, car(exp).to_s.to_i]
   end
   def boolean exp
@@ -127,6 +125,10 @@ end
     _arith(:or, sexp)
   end
 
+  # A block is a bunch of statements
+  def block(sexp)
+    statements(sexp)
+  end
   # main root: :program
   # A program is a list of 0 or more statements
   def statements sexp, result=[]
@@ -141,7 +143,6 @@ end
   end
 
   def program(sexp)
-#binding.pry
     [:cls, statements(car(sexp)).flatten, :halt].flatten
   end
 
@@ -155,7 +156,6 @@ end
     elsif list?(sexp)
       self.send(car(sexp), cdr(sexp))
     else
-#    binding.pry
       error 'bad s-expression' + sexp.inspect
     end
   end

@@ -163,7 +163,7 @@ end
 
 # Blocks
 def sblock(list)
-  mklist(:block, list)
+  mksexp(:block, list)
 end
 
 # The root of the program
@@ -284,7 +284,7 @@ class SexpTransform < Parslet::Transform
 
   rule(deref: simple(:deref)) { sderef(deref) }  #mknode(Deref.new(deref)) }
 
-  rule(block: simple(:block)) { sblock(sstatements(block)) }  #Block.subtree([block]) }
+  rule(block: simple(:block)) { sblock(sstatements([block])) }  #Block.subtree([block]) }
   rule(block: sequence(:block)) {sblock(sstatements(block)) }    #Block.subtree(block) }
 
   # Lambda call - %l;%l();%l(1,2,3)
