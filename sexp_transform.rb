@@ -74,7 +74,7 @@ def slambda(parms, block)
 end
 # Function calls
 def sfuncall(name, arg)
-  mklist(:funcall, name, mklist(*arg))
+  mklist(:funcall, name, *(arg.reject(&:nil?)))
 end
 
 def slambdacall(name, args)
@@ -293,7 +293,7 @@ class SexpTransform < Parslet::Transform
   rule(lambda_call: simple(:name), arglist: sequence(:arglist)) { slambdacall(name, arglist) }  #FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   # Function calls
-  rule(funcall: simple(:name), arglist: simple(:arg)) { sfuncall(name, arg) }  #FunctorNode.subtree(Funcall.new(funcall), [arg]) }
+  rule(funcall: simple(:name), arglist: simple(:arg)) { sfuncall(name, [arg]) }  #FunctorNode.subtree(Funcall.new(funcall), [arg]) }
   rule(funcall: simple(:name), arglist: sequence(:arglist)) { sfuncall(name, arglist) }  #FunctorNode.subtree(Funcall.new(funcall), arglist) }
 
   rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  #BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }

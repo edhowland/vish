@@ -72,9 +72,8 @@ end
   def ident(sexp)
     [:pushl,  car(sexp).to_s.to_sym]
   end
-  def integer exp
-
-    [:pushl, car(exp).to_s.to_i]
+  def integer sexp
+    [:pushl, car(sexp).to_s.to_i]
   end
   def boolean exp
     [:pushl, {'true' => true, 'false' => false}[car(exp).to_s.strip]]
@@ -123,6 +122,12 @@ end
   end
   def or(sexp)
     _arith(:or, sexp)
+  end
+  # a Funcall is a function name and a list of expressions
+  def funcall(sexp)
+    parms = _vector(cdr(sexp)).flatten
+    parms_length = length(cdr(sexp))
+    parms + [:pushl, parms_length,:pushl,  car(sexp).to_s.to_sym, :icall]
   end
 
   # A block is a bunch of statements
