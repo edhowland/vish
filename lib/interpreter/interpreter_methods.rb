@@ -16,9 +16,15 @@ module InterpreterMethods
   end
 
   # TODO: These methods need to go into a CompilerMethods module
-  def self.attach(vector)
+  ## _attach vector - appends the bytecodes to end of current bytecodes
+  def self._attach(vector)
     result = @@interpreter.bc.codes.length
     @@interpreter.bc.codes << vector
     result
+  end
+
+  ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
+  def self._emit(ast)
+    Seval.new.eval(ast)
   end
 end

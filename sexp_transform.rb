@@ -167,7 +167,7 @@ def sblock(list)
 end
   # Quote: Un-emitted AST nodes - The emitter will just return this subtree
   def squote(sexp)
-    mklist(:quote, sexp)
+    mksexp(:quote, sexp)
   end
 
 # The root of the program
