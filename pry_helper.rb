@@ -345,3 +345,7 @@ def cx codes
   bc.codes = codes
   ci = CodeInterpreter.new bc, ctx
 end
+
+def ml str
+  "a=:<#{str}>:;body=_emit(:a);foo=_mklambda(:body, binding())"
+end

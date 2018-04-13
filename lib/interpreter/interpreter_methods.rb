@@ -19,12 +19,25 @@ module InterpreterMethods
   ## _attach vector - appends the bytecodes to end of current bytecodes
   def self._attach(vector)
     result = @@interpreter.bc.codes.length
-    @@interpreter.bc.codes << vector
+    @@interpreter.bc.codes += vector
     result
   end
 
   ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
   def self._emit(ast)
     Seval.new.eval(ast)
+  end
+
+  ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
+  def self._mklambda(body, binding, parms=[], loc=nil)
+    result = NambdaType.new(parms, body, binding, loc)
+    loc = _attach(result[:body])
+    result[:loc] = loc
+    result
+  end
+
+  ## _codes - output the entire bytecodes. - Used mainly for debugging
+  def self._codes()
+    @@interpreter.bc.codes
   end
 end

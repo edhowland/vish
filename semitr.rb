@@ -145,6 +145,11 @@ puts "lambda: #{sexp.inspect}"
     args + [:pushl, args_length,:pushl,  car(sexp).to_s.to_sym, :icall]
   end
 
+  # lambda call - deref symbol which should be a NambdaType. then :ncall
+  def lambdacall(sexp)
+    (deref(sexp) + [:ncall]).flatten
+  end
+
   # A block is a bunch of statements
   def block(sexp)
     statements(sexp)

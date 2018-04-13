@@ -183,10 +183,10 @@ def opcodes tmpreg=nil
       raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
       argv = ctx.stack.pop(argc)
 _binding = ltype.binding
-frame = FunctionFrame.new(Context.new)
+      frame = FunctionFrame.new(Context.new)
 frame.ctx.constants = ctx.constants
 frame.ctx.vars = _binding.dup
-frame.ctx.stack.push(*argv)
+      frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
 
       fr.push(frame)
@@ -199,6 +199,26 @@ frame.ctx.stack.push(*argv)
       fr.peek.ctx.stack.push ret_val
       bc.pc = frame.return_to
       frame.pop_retto
+    },
+
+    # New version of  lcall: TODO. rename this to :lcall, remove old :lcall
+    _ncall: 'New version of lambda call',
+    ncall: ->(bc, ctx, fr, intp) {
+      ltype = ctx.stack.pop
+      _binding = ltype[:binding]
+      frame = FunctionFrame.new(Context.new)
+frame.ctx.constants = ctx.constants
+frame.ctx.vars = _binding.dup
+      frame.return_to = bc.pc
+      frame = FunctionFrame.new(Context.new)
+frame.ctx.constants = ctx.constants
+frame.ctx.vars = _binding.dup
+#      frame.ctx.stack.push(*argv)
+      frame.return_to = bc.pc
+
+      fr.push(frame)
+      bc.pc = ltype[:loc]
+
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.
