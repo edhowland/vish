@@ -123,11 +123,26 @@ end
   def or(sexp)
     _arith(:or, sexp)
   end
+  # Quotation: Just push the actual AST subtree onto  the stack
+  def quote(sexp)
+    [:pushl, sexp]
+  end
+
+  # a lambda actually returns a array of a single lambda (or Proc)
+  # This gets filtered in the next stage
+  def parmlist(sexp)
+puts "parmlist: #{sexp.inspect}"
+    vector(car(sexp))
+  end
+  def lambda(sexp)
+puts "lambda: #{sexp.inspect}"
+    parms = self.eval(car(sexp))
+  end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
-    parms = _vector(cdr(sexp)).flatten
-    parms_length = length(cdr(sexp))
-    parms + [:pushl, parms_length,:pushl,  car(sexp).to_s.to_sym, :icall]
+    args = _vector(cdr(sexp)).flatten
+    args_length = length(cdr(sexp))
+    args + [:pushl, args_length,:pushl,  car(sexp).to_s.to_sym, :icall]
   end
 
   # A block is a bunch of statements

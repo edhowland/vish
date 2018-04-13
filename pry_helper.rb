@@ -5,6 +5,8 @@ require_relative 'lib/vish'
 require_relative 'pry/lib'
 require_relative 'sexp_transform'
 require_relative 'semitr'
+require_relative 'apply'
+
 
 
 

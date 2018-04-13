@@ -14,4 +14,11 @@ module InterpreterMethods
   def self.binding?(object)
     object.instance_of?(BindingType)
   end
+
+  # TODO: These methods need to go into a CompilerMethods module
+  def self.attach(vector)
+    result = @@interpreter.bc.codes.length
+    @@interpreter.bc.codes << vector
+    result
+  end
 end

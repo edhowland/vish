@@ -31,6 +31,9 @@ class VishParser < Parslet::Parser
   rule(:rbrace) { str('}') >> space? }
   rule(:lbracket) { str('[') >> space? }
   rule(:rbracket) { str(']') >> space? }
+  # The quotation delimiters - :< print("some Vish string") >:
+  rule(:qleft) { str(':<') >> space? }
+  rule(:qright) { str('>:') >> space? }
   rule(:langle) { str('<') >> space? }
   rule(:rangle) { str('>') >> space? }
 
@@ -192,7 +195,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
+  rule(:expr) { quote | block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }
@@ -207,6 +210,9 @@ class VishParser < Parslet::Parser
   rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }
   rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
+  # Quotation: Should resolve to AST at runtime - :< 1+2 >: 
+  # =>  (:add, ((:integer, ("1"@0, ())), ((:integer, ("2"@2, ())), ())))
+  rule(:quote) { qleft >> statement_list.as(:quote) >> qright }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }

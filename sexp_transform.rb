@@ -65,8 +65,8 @@ def sobject(arglist)
 end
 # parameter list
 def sparmlist(list)
-  list = list_from(list)
-  mklist(:parmlist, list)
+#  list = list_from(list)
+  mklist(:parmlist, *(list.reject(&:nil?)))
 end
 # Functions
 def slambda(parms, block)
@@ -165,6 +165,10 @@ end
 def sblock(list)
   mksexp(:block, list)
 end
+  # Quote: Un-emitted AST nodes - The emitter will just return this subtree
+  def squote(sexp)
+    mklist(:quote, sexp)
+  end
 
 # The root of the program
 def sroot tree
@@ -273,8 +277,9 @@ class SexpTransform < Parslet::Transform
   rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } #Lambda.subtree(parmlist, _lambda) }
 
 # Functions
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda([parmlist], fbody)) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  
+  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
 
   rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } #BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
   rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } # VectorId.subtree(Deref.new(id), index) }
@@ -319,7 +324,10 @@ class SexpTransform < Parslet::Transform
 
   rule(empty: simple(:empty)) { signore }
 
-  # The root of the IR
+  # Quotation - :< expr ... >: returns the AST un-emitted into bytecode
+  rule(quote: simple(:quote)) {squote(quote) }
+
+  # The root of the AST
   rule(program: simple(:program)) { sroot(sstatements([program])) }
   rule(program: sequence(:program)) { sroot(sstatements(program)) }
 end
