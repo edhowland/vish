@@ -131,8 +131,8 @@ end
   # a lambda actually returns a array of a single lambda (or Proc)
   # This gets filtered in the next stage
   def parmlist(sexp)
-puts "parmlist: #{sexp.inspect}"
-    vector(car(sexp))
+#puts "parmlist: #{sexp.inspect}"
+    _vector(sexp)
   end
   def lambda(sexp)
 puts "lambda: #{sexp.inspect}"

@@ -13,4 +13,8 @@ class NambdaType < Hash
   def type
     self.class
   end
+
+  def inspect
+    "#{type.name}: loc: #{self[:loc]}"
+  end
 end

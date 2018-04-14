@@ -65,7 +65,6 @@ def sobject(arglist)
 end
 # parameter list
 def sparmlist(list)
-#  list = list_from(list)
   mklist(:parmlist, *(list.reject(&:nil?)))
 end
 # Functions
@@ -273,7 +272,7 @@ class SexpTransform < Parslet::Transform
   # parameter : as in a parmlist to a function/lambda definition
   rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
   # lambdas
-  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist,_lambda) }  #Lambda.subtree([parmlist], _lambda) }
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda([parmlist],_lambda) }  #Lambda.subtree([parmlist], _lambda) }
   rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } #Lambda.subtree(parmlist, _lambda) }
 
 # Functions
