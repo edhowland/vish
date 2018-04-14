@@ -268,7 +268,7 @@ def list?(x)
   begin
     Builtins.list?(x)
   rescue => err
-    binding.pry
+puts "list? error: #{err.message}"
   end
 end
 def pair?(x)
@@ -298,10 +298,8 @@ def swalk(t)
   elsif pair?(x)
     puts "pair: #{x.key}: #{x.value}"
   else
-  binding.pry
     puts 'error'
   end
-#  binding.pry
   swalk(cdr(t))
 end
 
@@ -310,7 +308,7 @@ def walks(t)
   begin
     swalk(t)
   rescue => err
-    binding.pry
+puts "swalk: error: #{err.message}"
   end
 end
 

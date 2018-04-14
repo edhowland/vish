@@ -291,6 +291,10 @@ module Builtins
   def self.string?(object)
     object.instance_of?(String)
   end
+  ## boolean? object - true if object is a true or false expression
+  def self.boolean?(object)
+    [TrueClass, FalseClass].member?(object.class)
+  end
   ## number?(object) - true if object an integer
   def self.number?(object)
     object.kind_of?(Integer)

@@ -40,7 +40,7 @@ end
     if null?(sexp)
       return result
     end
-    (self.eval(car(sexp)) + _vector(cdr(sexp), result)).flatten
+    (self.eval(car(sexp)) + _vector(cdr(sexp), result))#.flatten
   end
   def vector(sexp)
     result = _vector(sexp)
@@ -52,7 +52,7 @@ end
     if null?(sexp)
       return result
     end
-    (self.eval(car(sexp)) + _object(cdr(sexp), result)).flatten
+    (self.eval(car(sexp)) + _object(cdr(sexp), result))#.flatten
   end
   def object(sexp)
     result = _object(sexp)
@@ -66,8 +66,7 @@ end
     ident(sexp)
   end
   def pair(sexp)
-    [self.eval(car(sexp)), self.eval(cadr(sexp)), :pushl, 2, :pushl, :mkpair, :icall].flatten
-
+    self.eval(car(sexp)) +  self.eval(cadr(sexp)) + [:pushl, 2, :pushl, :mkpair, :icall]
   end
   def ident(sexp)
     [:pushl,  car(sexp).to_s.to_sym]
@@ -83,7 +82,7 @@ end
   end
   # helper for arith expressions
   def _arith(sym, sexp)
-    [self.eval(car(sexp)), self.eval(cadr(sexp)), sym].flatten
+    self.eval(car(sexp)) + self.eval(cadr(sexp)) + [sym]
   end
   def deref(sexp)
     [:pushv, car(sexp).to_s.to_sym]
@@ -142,14 +141,14 @@ end
   end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
-    args = _vector(cdr(sexp)).flatten
+    args = _vector(cdr(sexp)) #.flatten
     args_length = length(cdr(sexp))
     args + [:pushl, args_length,:pushl,  car(sexp).to_s.to_sym, :icall]
   end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)
-    (deref(sexp) + [:ncall]).flatten
+    (deref(sexp) + [:ncall])
   end
 
   # A block is a bunch of statements
@@ -170,7 +169,7 @@ end
   end
 
   def program(sexp)
-    [:cls, statements(car(sexp)).flatten, :halt].flatten
+    [:cls] +  statements(car(sexp)) + [:halt]
   end
 
   def eval sexp

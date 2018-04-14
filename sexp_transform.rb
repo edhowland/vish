@@ -144,11 +144,14 @@ def mkarith(o, l, r)
     "*" => :mult,
     "/" => :div,
     "==" => :eq,
-    "!=" => :neq
+    "!=" => :neq,
+    ">" => :greater,
+    "<" => :less,
+    ">=" => :gte,
+    "<=" => :lte
   }
   m = msgs[o.to_s.strip]
   if m.nil?
-    binding.pry
     raise CompileError.new 'Unknown arithmetic expression type'
   else
     self.send m, l, r
