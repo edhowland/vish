@@ -135,8 +135,10 @@ end
     _vector(sexp)
   end
   def lambda(sexp)
-puts "lambda: #{sexp.inspect}"
+#puts "lambda: #{sexp.inspect}"
     parms = self.eval(car(sexp))
+    body = self.eval(cadr(sexp))
+    [:pushl, parms, :pushl, body, :pushl, 2, :pushl, :_mklambda, :icall]
   end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
