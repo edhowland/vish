@@ -205,10 +205,14 @@ frame.ctx.vars = _binding.dup
     _ncall: 'New version of lambda call',
     ncall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
+  argc = ctx.stack.pop
+  argv = ctx.stack.pop(argc)
       _binding = ltype[:binding]
       frame = FunctionFrame.new(Context.new)
 frame.ctx.constants = ctx.constants
 frame.ctx.vars = _binding.dup
+      frame.ctx.stack.push(*argv)
+
       frame.return_to = bc.pc
       frame = FunctionFrame.new(Context.new)
 frame.ctx.constants = ctx.constants

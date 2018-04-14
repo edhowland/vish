@@ -131,7 +131,10 @@ end
   # This gets filtered in the next stage
   def parmlist(sexp)
 #puts "parmlist: #{sexp.inspect}"
-    _vector(sexp)
+    result = _vector(sexp)
+    count = result.length / 2
+    count.times { result << :assign }
+    result
   end
   def lambda(sexp)
 #puts "lambda: #{sexp.inspect}"
@@ -148,7 +151,9 @@ end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)
-    (deref(sexp) + [:ncall])
+#binding.pry
+  args = _vector(cadr(sexp))
+    args + [:pushl, args.length / 2] + deref(sexp) + [:ncall]
   end
 
   # A block is a bunch of statements
