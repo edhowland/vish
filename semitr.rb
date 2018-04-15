@@ -40,13 +40,18 @@ end
     if null?(sexp)
       return result
     end
-    (self.eval(car(sexp)) + _vector(cdr(sexp), result))#.flatten
+    (self.eval(car(sexp)) + _vector(cdr(sexp), result)) 
   end
   def vector(sexp)
     result = _vector(sexp)
     result << :pushl
     result << (result.length / 2)
     result + [:pushl, :mkvector, :icall]
+  end
+  def _args(sexp)
+    args = _vector(cdr(sexp))
+    args_length = length(cdr(sexp))
+    args + [:pushl, args_length]
   end
   def _object(sexp, result=[])
     if null?(sexp)
@@ -129,11 +134,20 @@ end
 
   # a lambda actually returns a array of a single lambda (or Proc)
   # This gets filtered in the next stage
+
+  def _to_a(sexp, result=[])
+    if null?(sexp)
+      return result
+    end
+    ident = self.eval(car(sexp))
+    sym = ident.last.to_s.to_sym
+     [sym] + _to_a(cdr(sexp), result)
+  end
   def parmlist(sexp)
 #puts "parmlist: #{sexp.inspect}"
-    result = _vector(sexp)
-    count = result.length / 2
-    count.times { result << :assign }
+    result = _to_a(sexp)
+    count = result.length
+    result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :assign] }
     result
   end
   def lambda(sexp)
@@ -144,16 +158,12 @@ end
   end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
-    args = _vector(cdr(sexp)) #.flatten
-    args_length = length(cdr(sexp))
-    args + [:pushl, args_length,:pushl,  car(sexp).to_s.to_sym, :icall]
+    _args(sexp) + [:pushl,  car(sexp).to_s.to_sym, :icall]
   end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)
-#binding.pry
-  args = _vector(cadr(sexp))
-    args + [:pushl, args.length / 2] + deref(sexp) + [:ncall]
+    _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall] 
   end
 
   # A block is a bunch of statements

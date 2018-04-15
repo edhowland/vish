@@ -4,8 +4,8 @@
 class NambdaType < Hash
   include Type
   def initialize parms:, body:, _binding:, loc:nil
-    self[:parms] = []
-    self[:body] = body + [:fret]
+    self[:parms] = parms
+    self[:body] = parms + body + [:fret]
     self[:binding] = _binding
     self[:loc] = loc
   self[:name] = :anonymous

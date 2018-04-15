@@ -30,7 +30,7 @@ module InterpreterMethods
 
   ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
   def self._mklambda(parms, body, loc=nil)
-#    puts "in mklambda body: #{body}"
+#    puts "in mklambda parms: #{parms}, body: #{body}"
     result = NambdaType.new(parms:parms, body:body, _binding:binding(), loc:loc)
     loc = _attach(result[:body])
     result[:loc] = loc

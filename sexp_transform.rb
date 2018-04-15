@@ -72,12 +72,12 @@ def slambda(parms, block)
   mklist(:lambda, sparmlist(parms), block)
 end
 # Function calls
-def sfuncall(name, arg)
-  mklist(:funcall, name, *(arg.reject(&:nil?)))
+def sfuncall(name, args)
+  mklist(:funcall, name, *(args.reject(&:nil?)))
 end
 
 def slambdacall(name, args)
-  mklist(:lambdacall, name, mklist(*args))
+  mklist(:lambdacall, name, *(args.reject(&:nil?)))
 end
 
 # The empty set
@@ -296,7 +296,7 @@ class SexpTransform < Parslet::Transform
 
   # Lambda call - %l;%l();%l(1,2,3)
   rule(lambda_call: simple(:name)) { slambdacall(name, [])  } #FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
-  rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, arglist) } #FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
+  rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, [arglist]) } #FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
   rule(lambda_call: simple(:name), arglist: sequence(:arglist)) { slambdacall(name, arglist) }  #FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   # Function calls
