@@ -147,7 +147,7 @@ end
 #puts "parmlist: #{sexp.inspect}"
     result = _to_a(sexp)
     count = result.length
-    result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :assign] }
+    result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :set, :drop] }
     result
   end
   def lambda(sexp)

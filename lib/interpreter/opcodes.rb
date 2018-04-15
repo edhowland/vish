@@ -217,7 +217,7 @@ frame.ctx.vars = _binding.dup
       frame = FunctionFrame.new(Context.new)
 frame.ctx.constants = ctx.constants
 frame.ctx.vars = _binding.dup
-#      frame.ctx.stack.push(*argv)
+      frame.ctx.stack.push(*argv)
       frame.return_to = bc.pc
 
       fr.push(frame)
