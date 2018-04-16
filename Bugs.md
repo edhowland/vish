@@ -3,6 +3,13 @@
 
 ## In sexp_transform
 
+### Bug: No arity checking on any type oof lambda
+
+1. First detect arity at compile time
+2. For function calls to lambdas, check arity of call
+
+This is a part of larger discussion with regard to variadic methods.
+See TODO.md wrt variadiac methods
 ## Bug: syntax error when trying to return, sometimes
 
 TBD: No sample code yet

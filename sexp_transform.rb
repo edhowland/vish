@@ -68,6 +68,10 @@ def sparmlist(list)
   mklist(:parmlist, *(list.reject(&:nil?)))
 end
 # Functions
+# function return
+def sreturn(expr)
+  mksexp(:_return, expr)
+end
 def slambda(parms, block)
   mklist(:lambda, sparmlist(parms), block)
 end
@@ -237,7 +241,6 @@ class SexpTransform < Parslet::Transform
 
   # keyword stuff
   rule(null: simple(:keyword)) { Keyword.subtree(keyword) }
-  rule(return: simple(:return_expr)) { LambdaReturn.subtree(return_expr) }
   rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
   rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }
 
@@ -276,6 +279,8 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  rule(return: simple(:return_expr)) { sreturn(return_expr) }  #LambdaReturn.subtree(return_expr) }
+
   # parameter : as in a parmlist to a function/lambda definition
   rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
   # lambdas

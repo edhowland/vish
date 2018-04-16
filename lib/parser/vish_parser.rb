@@ -84,7 +84,7 @@ class VishParser < Parslet::Parser
   # keywords for builtin data types
   rule(:null) { str('Null').as(:null) >> space? }
 
-  rule(:keyword) { (_break | _exit | _return | pragma | import | export | null).as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import | export | null) } #.as(:keyword) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }

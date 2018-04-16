@@ -139,10 +139,13 @@ end
   def quote(sexp)
     [:pushl, sexp]
   end
+  def _return(sexp)
+#binding.pry
+    self.eval(sexp) + [:fret]
+  end
 
   # a lambda actually returns a array of a single lambda (or Proc)
   # This gets filtered in the next stage
-
   def _to_a(sexp, result=[])
     if null?(sexp)
       return result
@@ -152,7 +155,6 @@ end
      [sym] + _to_a(cdr(sexp), result)
   end
   def parmlist(sexp)
-#puts "parmlist: #{sexp.inspect}"
     result = _to_a(sexp)
     count = result.length
     result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :set, :drop] }

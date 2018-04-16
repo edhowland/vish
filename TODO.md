@@ -1,12 +1,28 @@
 # TODO
 
+## Todo: Derive a way to make variadic arguments to lambda def/call work.
+
+
+Should somehow be part of function signature. Needed for type/program correctness
+
+
+```
+# a variadic signature:
+defn foo(a, b, c&) {
+  :a # is single value
+  : b # as is b
+  :c # => [rest of args
+}
+# now call later
+foo(1,2,3)
+# => [3]
+```
+
+
 ## TODO make command history work in ivs REPL
 
 ## TODO: Add let binding
 
-## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
-
-Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
 
 
 
