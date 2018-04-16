@@ -12,27 +12,19 @@ def semitr sexp
 end
 
 class Seval
+  include ListProc
+
   def initialize
-    #
+    @named_lambdas = {}
+  end
+  attr_reader :named_lambdas
+  def _named_lambdas!(sexp)
+#binding.pry
+
+    @named_lambdas[cadr(car(sexp)).to_s.to_sym] = true
   end
   def error msg
     raise RuntimeError.new msg
-  end
-def length(sexp, result=0)
-  return result if null?(sexp)
-  1 + length(cdr(sexp), result)
-end
-  def car(x)
-    x.key
-  end
-  def cdr x
-    x.value
-  end
-def cadr(x)
-  car(cdr(x))
-end
-  def caddr(x)
-    car(cadr(x))
   end
 
   # start of expression action verbs
@@ -93,6 +85,9 @@ end
     [:pushv, car(sexp).to_s.to_sym]
   end
   def assign(sexp)
+if car(cadr(sexp)) == :lambda
+    _named_lambdas!(sexp)
+end
     _arith(:assign, sexp)
   end
   def add sexp
@@ -171,7 +166,12 @@ end
   end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
-    _args(sexp) + [:pushl,  car(sexp).to_s.to_sym, :icall]
+    fname = car(sexp).to_s.to_sym
+    if @named_lambdas[fname]
+      lambdacall(sexp)
+    else
+      _args(sexp) + [:pushl, fname, :icall]
+    end
   end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
