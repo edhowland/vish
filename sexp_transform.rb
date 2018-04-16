@@ -93,6 +93,9 @@ end
 def mklist(*args)
   Builtins.list(*args)
 end
+def binop(op, l, r)
+  mklist(op, l, r)
+end
 
 def add(l, r)
   Builtins.list(:add, l, r)
@@ -154,7 +157,8 @@ def mkarith(o, l, r)
   if m.nil?
     raise CompileError.new 'Unknown arithmetic expression type'
   else
-    self.send m, l, r
+#    self.send m, l, r
+  binop(m, l, r)
   end
 end
 

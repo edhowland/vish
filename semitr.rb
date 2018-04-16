@@ -120,6 +120,19 @@ end
   def neq(sexp)
     _arith(:neq, sexp)
   end
+  # comparison
+  def less(sexp)
+    _arith(:less, sexp)
+  end
+  def greater(sexp)
+    _arith(:greater, sexp)
+  end
+  def lte(sexp)
+    _arith(:lte, sexp)
+  end
+  def gte(sexp)
+    _arith(:gte, sexp)
+  end
   # logical ops
   def and(sexp)
     _arith(:and, sexp)
