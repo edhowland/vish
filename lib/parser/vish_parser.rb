@@ -77,8 +77,8 @@ class VishParser < Parslet::Parser
   rule(:export) { str('export') >> space! >> parmlist.as(:export_list) }
 
   # Runtime keywords
-  rule(:_break) { str('break') >> space? }
-  rule(:_exit) { str('exit') >> space? }
+  rule(:_break) { str('break').as(:break) >> space? }
+  rule(:_exit) { str('exit').as(:exit) >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
 
   # keywords for builtin data types

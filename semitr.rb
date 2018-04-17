@@ -68,6 +68,9 @@ class Seval
   def ident(sexp)
     [:pushl,  car(sexp).to_s.to_sym]
   end
+  def null(sexp)
+    [:pushl, 0, :pushl, :mknull, :icall]
+  end
   def integer sexp
     [:pushl, car(sexp).to_s.to_i]
   end
@@ -139,9 +142,19 @@ end
   def quote(sexp)
     [:pushl, sexp]
   end
+  # control flow
+  def loop(sexp)
+    raise CompileError.new 'Loop not yet implemented'
+  end
   def _return(sexp)
 #binding.pry
     self.eval(sexp) + [:fret]
+  end
+  def _exit(sexp)
+    [:int, :_exit]
+  end
+  def _break(sexp)
+    [:unwind, LoopFrame, :bret]
   end
 
   # a lambda actually returns a array of a single lambda (or Proc)

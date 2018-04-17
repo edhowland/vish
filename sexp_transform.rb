@@ -240,12 +240,12 @@ class SexpTransform < Parslet::Transform
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   # keyword stuff
-  rule(null: simple(:keyword)) { Keyword.subtree(keyword) }
-  rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
-  rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }
+#  rule(null: simple(:keyword)) { Keyword.subtree(keyword) }
+#  rule(keyword: simple(:keyword)) { Keyword.subtree(keyword) }
+#  rule(keyword: subtree(:keyword)) { Keyword.subtree(keyword) }
 
   # loop stuff
-  rule(loop: simple(:loop)) { Loop.subtree(loop) }
+#  rule(loop: simple(:loop)) { Loop.subtree(loop) }
 
   # block stuff
 #  rule(block: simple(:block)) { Block.subtree([block]) }
@@ -279,7 +279,14 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # loop stuff
+  rule(loop: simple(:loop)) { mksexp(:loop, loop) }
+  # Null
+  rule(null: simple(:null)) { mklist(:null) }
+  # keywords: return, break and exit
   rule(return: simple(:return_expr)) { sreturn(return_expr) }  #LambdaReturn.subtree(return_expr) }
+  rule(exit: simple(:_exit)) { mklist(:_exit) }
+  rule(break: simple(:_break)) { mklist(:_break) }
 
   # parameter : as in a parmlist to a function/lambda definition
   rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
