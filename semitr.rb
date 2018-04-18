@@ -156,6 +156,19 @@ end
     [:pushl, sexp]
   end
   # control flow
+  #
+  # _cedent(sexp) - evaluates sexp, computes length to jump over, returns as
+  # first element
+  def _cedent(sexp)
+    iter = self.eval(sexp)
+    [iter.length + 1] + iter
+  end
+  def logical_and(sexp)
+    self.eval(car(sexp)) + [:jmprf] + _cedent(cadr(sexp))
+  end
+def logical_or(sexp)
+      self.eval(car(sexp)) + [:jmprt] + _cedent(cadr(sexp))
+end
   # compute branch relative locations
   # __loopb block - compute relative jump targets past end of block.
   # Handles inner loops and inner/inner/inner loops.

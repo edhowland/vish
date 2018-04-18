@@ -119,6 +119,14 @@ end
 def exponent(l, r)
   mklist(:exp, l, r)
 end
+# control flow
+# logical and and or. Shortcircuits
+def logical_and(l, r)
+  mklist(:logical_and, l, r)
+end
+def logical_or(l, r)
+  mklist(:logical_or, l, r)
+end
 # logical
 def bool_and(l, r)
   mklist(:and, l, r)
@@ -142,6 +150,8 @@ end
 def mkarith(o, l, r)
   msgs = {
     '=' => :assign, 
+    '&&' => :logical_and,
+    '||' => :logical_or,
     'and' => :bool_and,
     'or' => :bool_or,
     "**" => :exponent,

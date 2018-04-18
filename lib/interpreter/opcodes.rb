@@ -130,6 +130,24 @@ def opcodes tmpreg=nil
             _loc = bc.next
       bc.pc = _curr + _loc
     },
+    _jmprt: 'Jumps relative to this position if top of stack true',
+    jmprt: ->(bc, ctx, fr, intp) {
+  val = ctx.stack.pop
+                  _loc = bc.next
+      if val
+              _curr = bc.pc
+        bc.pc = _curr + _loc - 1
+       end
+    },
+    _jmprf: 'Jumps relative from here if top of stack is false',
+    jmprf: ->(bc, ctx, fr, intp) {
+          val = ctx.stack.pop
+              _loc = bc.next
+      unless val
+                    _curr = bc.pc
+        bc.pc = _curr + _loc - 1
+      end
+    },
 
     # call stack manipulation :unwind, :pusht
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
