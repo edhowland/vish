@@ -257,4 +257,11 @@ end
       error 'bad s-expression' + sexp.inspect
     end
   end
+
+  # Main entry: emit(s_expression)
+  def emit(sexp)
+    result = eval(sexp)
+    raise CompileError.new('break statement encountered outside of loop block') if result.any? {|e| e == BreakStop or e.class == BreakStop }
+    result
+  end
 end

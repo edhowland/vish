@@ -331,7 +331,7 @@ end
 
 def compute str
   p,s,e = pse
-  codes = e.eval(s.apply(p.parse(str)))
+  codes = e.emit(s.apply(p.parse(str)))
   ctx = Context.new
   bc = ByteCodes.new
   bc.codes = codes
