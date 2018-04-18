@@ -11,6 +11,9 @@ def semitr sexp
   f[cdr(sexp)]
 end
 
+class BreakStop; end
+
+
 class Seval
   include ListProc
 
@@ -143,8 +146,20 @@ end
     [:pushl, sexp]
   end
   # control flow
+  # compute branch relative locations
+  def __loopb(&blk)
+    codes = yield
+    len = codes.length * (-1)
+    result = codes + [:jmpr, len]
+    if result.any? {|e| e.class == BreakStop }
+      outside = result.length
+      result.map! {|e| e.class == BreakStop ? outside : e }
+    end
+    result
+  end
   def loop(sexp)
-    raise CompileError.new 'Loop not yet implemented'
+#    raise CompileError.new 'Loop not yet implemented'
+    __loopb { self.eval(sexp) }
   end
   def _return(sexp)
 #binding.pry
@@ -154,7 +169,7 @@ end
     [:int, :_exit]
   end
   def _break(sexp)
-    [:unwind, LoopFrame, :bret]
+    [:jmp, BreakStop]
   end
 
   # a lambda actually returns a array of a single lambda (or Proc)

@@ -124,6 +124,13 @@ def opcodes tmpreg=nil
     _jmpf: 'Branch if top of stack is false to position of next operand',
         jmpf: ->(bc, ctx, _, intp) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
 
+    _jmpr: 'Jump relative. Jumps to bytecode position relative to this opcode',
+    jmpr: ->(bc,ctx, fr, intp) {
+      _curr = bc.pc
+            _loc = bc.next
+      bc.pc = _curr + _loc
+    },
+
     # call stack manipulation :unwind, :pusht
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
     unwind: ->(bc, ctx, fr, intp) do
