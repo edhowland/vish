@@ -11,7 +11,17 @@ def semitr sexp
   f[cdr(sexp)]
 end
 
-class BreakStop; end
+class BreakStop
+  def initialize index, loc
+    @index = index
+    @loc = loc
+  end
+  attr_reader :loc
+  attr_accessor :index
+  def to_offset
+    @loc - @index
+  end
+end
 
 
 class Seval
@@ -147,13 +157,17 @@ end
   end
   # control flow
   # compute branch relative locations
+  # __loopb block - compute relative jump targets past end of block.
+  # Handles inner loops and inner/inner/inner loops.
   def __loopb(&blk)
     codes = yield
     len = codes.length * (-1)
     result = codes + [:jmpr, len]
-    if result.any? {|e| e.class == BreakStop }
+    if result.any? {|e| e == BreakStop }
       outside = result.length
-      result.map! {|e| e.class == BreakStop ? outside : e }
+      result = result.map {|e| e == BreakStop ? e.new(0, outside) : e }
+      result.each_with_index {|e, i| e.class == BreakStop ? e.index = i : e }
+      result.map! {|e| e.class == BreakStop ? e.to_offset : e }
     end
     result
   end
@@ -169,7 +183,7 @@ end
     [:int, :_exit]
   end
   def _break(sexp)
-    [:jmp, BreakStop]
+    [:jmpr, BreakStop]
   end
 
   # a lambda actually returns a array of a single lambda (or Proc)
