@@ -118,6 +118,11 @@ if car(cadr(sexp)) == :lambda
 end
     _arith(:assign, sexp)
   end
+
+  # Arith expressions
+  def unary_negation(sexp)
+    self.eval(sexp) + [:negate]
+  end
   def add sexp
     _arith(:add, sexp)
   end
@@ -157,6 +162,9 @@ end
     _arith(:gte, sexp)
   end
   # logical ops
+  def unary_inversion(sexp)
+    self.eval(sexp) + [:not]
+  end
   def and(sexp)
     _arith(:and, sexp)
   end

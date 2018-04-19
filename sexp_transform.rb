@@ -242,11 +242,11 @@ class SexpTransform < Parslet::Transform
 #  rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { ArithmeticFactory.subtree(op, lvalue, rvalue) }
   # Assignment
 #  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
-  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+  #rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
 #  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: subtree(:_lambda)) { BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), _lambda)  }
 
-  rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
-  rule(op: simple(:op), negative: simple(:negative)) { UnaryTreeFactory.subtree(UnaryNegative, negative) }
+#  rule(op: simple(:op), negation: simple(:negation)) { UnaryTreeFactory.subtree(UnaryNegation, negation) }
+#  rule(op: simple(:op), negative: simple(:negative)) { UnaryTreeFactory.subtree(UnaryNegative, negative) }
 
   # dereference a variable
 #  rule(deref: simple(:deref)) { mknode(Deref.new(deref)) }
@@ -293,6 +293,10 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # Unary operators
+  rule(op: simple(:op), negation: simple(:negation)) { mksexp(:unary_inversion, negation) } #UnaryTreeFactory.subtree(UnaryNegation, negation) }
+  rule(op: simple(:op), negative: simple(:negative)) { mksexp(:unary_negation, negative) } #UnaryTreeFactory.subtree(UnaryNegative, negative) }
+
   # loop stuff
   rule(loop: simple(:loop)) { mksexp(:loop, loop) }
   # Null
