@@ -265,8 +265,8 @@ class SexpTransform < Parslet::Transform
 #  rule(block: simple(:block)) { Block.subtree([block]) }
 #  rule(block: sequence(:block)) { Block.subtree(block) }
 
-  rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
-  rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
+#  rule(block_exec: simple(:block)) { BlockExec.subtree([block]) }
+#  rule(block_exec: sequence(:block)) { BlockExec.subtree(block) }
 
   # lambdas
 #  rule(parm: simple(:parm)) { StringLiteral.new(parm) }
@@ -274,7 +274,6 @@ class SexpTransform < Parslet::Transform
 #  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { Lambda.subtree(parmlist, _lambda) }
 
   # Functions
-  # Change here
 #  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
 #  rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
 
@@ -293,6 +292,9 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  rule(block_exec: simple(:block)) { block }   # BlockExec.subtree([block]) }
+  rule(block_exec: sequence(:block)) { block }  #BlockExec.subtree(block) }
+
   # Unary operators
   rule(op: simple(:op), negation: simple(:negation)) { mksexp(:unary_inversion, negation) } #UnaryTreeFactory.subtree(UnaryNegation, negation) }
   rule(op: simple(:op), negative: simple(:negative)) { mksexp(:unary_negation, negative) } #UnaryTreeFactory.subtree(UnaryNegative, negative) }
