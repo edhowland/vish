@@ -82,9 +82,9 @@ class VishParser < Parslet::Parser
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
 
   # keywords for builtin data types
-  rule(:null) { str('Null').as(:null) >> space? }
+#  rule(:null) { str('null').as(:null) >> space? }
 
-  rule(:keyword) { (_break | _exit | _return | pragma | import | export | null) } #.as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import | export) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }
@@ -195,7 +195,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { quote | block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
+  rule(:expr) { quote | block | block_exec | _lambda | negative | negation | infix_oper | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }

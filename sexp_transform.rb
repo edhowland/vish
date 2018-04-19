@@ -120,6 +120,9 @@ def exponent(l, r)
   mklist(:exp, l, r)
 end
 # control flow
+def pipe(l, r)
+  mklist(:pipe, l, r)
+end
 # logical and and or. Shortcircuits
 def logical_and(l, r)
   mklist(:logical_and, l, r)
@@ -150,6 +153,7 @@ end
 def mkarith(o, l, r)
   msgs = {
     '=' => :assign, 
+    '|' => :pipe,
     '&&' => :logical_and,
     '||' => :logical_or,
     'and' => :bool_and,
@@ -292,7 +296,7 @@ class SexpTransform < Parslet::Transform
   # loop stuff
   rule(loop: simple(:loop)) { mksexp(:loop, loop) }
   # Null
-  rule(null: simple(:null)) { mklist(:null) }
+#  rule(null: simple(:null)) { mklist(:null) }
   # keywords: return, break and exit
   rule(return: simple(:return_expr)) { sreturn(return_expr) }  #LambdaReturn.subtree(return_expr) }
   rule(exit: simple(:_exit)) { mklist(:_exit) }

@@ -18,6 +18,39 @@ foo(1,2,3)
 # => [3]
 ```
 
+## Todo: Allow builtin functions to be passed in and out of higher order functions.
+
+The way to do this is via proxy variables. Each stands in for some  builtin function.
+
+```
+length([])
+# => 0
+:length
+# => LambdaType :builtin, name: length, arity: 1
+```
+
+This includes Builtins, and any Ruby FFI functions linked in.
+
+Will require the intended Ruby FFI modules to be supplied to the vishc
+compiler ahead of time.
+
+## Todo: Create 'curry' method
+
+Takes a function as one argument (for now)
+Returns new function that can be partially evaluated over its arg list.
+
+Actually kind of clones the LambdaType
+
+```
+defn foo(x, y, z) { :x + :y * :z }
+bar = curry(:foo)
+baz=bar(1)
+# => LambdaType
+qux=baz(2)
+# => LambdaType
+qux(3)
+# => 9
+```
 
 ## TODO make command history work in ivs REPL
 
@@ -54,13 +87,6 @@ y=mkblock()
 %y
 # => 42
 ```
-
-
-##  Refactor function entries and function calls to use BulletinBoards
-
-Currently, the way function targets are specifed is w/target_p, whcih 
-returns a closure. Since we use BulletinBoard to resolve
-lambda targets via/JumpTarget, this is a better method.
 
 
 ## Make block instances become inline, wherever possible
@@ -103,12 +129,6 @@ CompileError: :name is not set yet
 
 do this in VishCompiler.analyze phase
 
-### Support for evntual closure stuff.
-
-In the analyze phase, the AST can find unbound variables in subtree nodes.. If any exist in
-lambdas, it can mark them for special runtime dereferences.
-
-any other variables will be reported by the compiler.
 
 ## Completions
 
@@ -126,27 +146,9 @@ Add the following builtins
 Later, we will have to handle exceptions ourselves.
 
 
-### Blocks:
-
-```
-# passing as an argument:
-my_func(:block)
-in my_func
-ok
-
 # in my_func()
 defn my_func(blk) {
   print('in my_func')
-%blk}
-```
-
-The variable block is dereferenced in the funcall: 
-( this behaviour currently works, if you can save a CodeContainer in named :block variable)
-Then this item on the stack is bound to the argument vairable :blk in 
-the new frame stack.
-After in the body of th function, it is dereferenced as aboove in the top level
-context.
-
 
 ### true and false in vasm, vdis.rb
 

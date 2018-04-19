@@ -1,5 +1,11 @@
 # semitr.rb - Given some S-Expression, return bytecode(s)
 
+def ife
+  "defn ife(p,c,a) { {%p && %c} || %a }"
+end
+
+
+
 def semitr sexp
   funcs = {
     :integer => ->(e) { e.to_s.to_i },
@@ -29,12 +35,18 @@ class Seval
 
   def initialize
     @named_lambdas = {}
+    @_saved_incr = ->() {0}
+    @incr = @_saved_incr
   end
+  attr_accessor :incr
   attr_reader :named_lambdas
   def _named_lambdas!(sexp)
 #binding.pry
 
     @named_lambdas[cadr(car(sexp)).to_s.to_sym] = true
+  end
+  def pump_incr
+    @incr = ->() { @incr = @_saved_incr; 1 }
   end
   def error msg
     raise RuntimeError.new msg
@@ -55,7 +67,7 @@ class Seval
   end
   def _args(sexp)
     args = _vector(cdr(sexp))
-    args_length = length(cdr(sexp))
+    args_length = length(cdr(sexp)) + @incr[]
     args + [:pushl, args_length]
   end
   def _object(sexp, result=[])
@@ -81,9 +93,9 @@ class Seval
   def ident(sexp)
     [:pushl,  car(sexp).to_s.to_sym]
   end
-  def null(sexp)
-    [:pushl, 0, :pushl, :mknull, :icall]
-  end
+#  def null(sexp)
+#    [:pushl, 0, :pushl, :mknull, :icall]
+#  end
   def integer sexp
     [:pushl, car(sexp).to_s.to_i]
   end
@@ -156,6 +168,12 @@ end
     [:pushl, sexp]
   end
   # control flow
+  # Pipelines
+  # A pipe is just a concat of its 2 statements. The stack is shared between
+  # each statement
+  def pipe(sexp)
+    self.eval(car(sexp)) + instance_exec {pump_incr; self.eval(cadr(sexp)) }
+  end
   #
   # _cedent(sexp) - evaluates sexp, computes length to jump over, returns as
   # first element

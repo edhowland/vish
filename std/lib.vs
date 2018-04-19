@@ -21,6 +21,7 @@ defn list_length(l) {
   1 + list_length(cdr(:l))
 }
 # set up some variables
+null=mknull()
 version=version()
 # Can check the current dir with %pwd
 pwd=->() { pwd() }
