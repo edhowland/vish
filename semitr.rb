@@ -17,6 +17,9 @@ def semitr sexp
   f[cdr(sexp)]
 end
 
+def rbevalstr(string)
+  Kernel.eval('"' + string + '"')
+end
 class BreakStop
   def initialize index, loc
     @index = index
@@ -41,7 +44,6 @@ class Seval
   attr_accessor :incr
   attr_reader :named_lambdas
   def _named_lambdas!(sexp)
-#binding.pry
 
     @named_lambdas[cadr(car(sexp)).to_s.to_sym] = true
   end
@@ -101,6 +103,23 @@ class Seval
   end
   def boolean exp
     [:pushl, {'true' => true, 'false' => false}[car(exp).to_s.strip]]
+  end
+  # String interpolation
+  def strtok(sexp)
+    car(sexp).to_s
+  end
+  def escape_seq(sexp)
+    rbevalstr(car(sexp).to_s)
+  end
+  def __str_collect(sexp)
+    if null?(sexp)
+      ''
+    else
+     self.eval(car(sexp)) + __str_collect(cdr(sexp))
+    end
+  end
+  def string_intp(sexp)
+    [:pushl, __str_collect(sexp)]
   end
   def string(sexp)
     [:pushl, car(sexp).to_s]
@@ -215,7 +234,6 @@ end
     __loopb { self.eval(sexp) }
   end
   def _return(sexp)
-#binding.pry
     self.eval(sexp) + [:fret]
   end
   def _exit(sexp)

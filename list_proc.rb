@@ -14,6 +14,9 @@ module ListProc
 def cadr(x)
   car(cdr(x))
 end
+def caadr(x)
+  car(cadr(x))
+end
   def caddr(x)
     car(cadr(x))
   end

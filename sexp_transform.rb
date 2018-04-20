@@ -47,6 +47,10 @@ end
 def sstrlit(x)
   mklist(:string, x)
 end
+# string interpolation
+def sstr_intp(list)
+  mklist(:string_intp, *list)
+end
 # symb ol
 def ssymbol(x)
   mklist(:symbol, x)
@@ -204,11 +208,12 @@ class SexpTransform < Parslet::Transform
 #  rule(sq_string: sequence(:sq_string)) { StringLiteral.new('') }
 
   # double quoted strings: string interpolations
-  rule(strtok: simple(:strtok)) { StringLiteral.new(strtok) }
-  rule(escape_seq: simple(:escape_seq)) { EscapeSequence.new(escape_seq) }
-  rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
+#  rule(strtok: simple(:strtok)) { StringLiteral.new(strtok) }
+#  rule(escape_seq: simple(:escape_seq)) { EscapeSequence.new(escape_seq) }
+#  rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
 
-  rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
+#  rule(string_interpolation: sequence(:string_interpolation)) { StringInterpolation.subtree(string_interpolation) }
+
 #  rule(boolean: simple(:boolean)) { Boolean.new(boolean) }
 #  rule(symbol: simple(:symbol)) { SymbolNode.new(symbol) }
 #  rule(list: simple(:list), arglist: simple(:arg)) { FunctorNode.subtree(VectorNode.new, [arg]) }
@@ -292,6 +297,13 @@ class SexpTransform < Parslet::Transform
 #  rule(lambda_call: simple(:lambda_call), arglist: sequence(:arglist)) { FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
 
   #####
+  # double quoted strings: string interpolations
+  rule(strtok: simple(:strtok)) { mklist(:strtok, strtok) }
+  rule(escape_seq: simple(:escape_seq)) { mklist(:escape_seq, escape_seq) }
+#  rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
+  # Bring it all together
+  rule(string_interpolation: sequence(:string_interpolation)) { sstr_intp(string_interpolation) }
+
   rule(block_exec: simple(:block)) { block }   # BlockExec.subtree([block]) }
   rule(block_exec: sequence(:block)) { block }  #BlockExec.subtree(block) }
 

@@ -101,8 +101,8 @@ class VishParser < Parslet::Parser
 
   # string interpolation stuff
   # See: Notes.md
-  rule(:colon_lbrace) { colon >> lbrace }
-  rule(:deref_expr) { colon_lbrace >> expr >> rbrace }
+  rule(:percent_lbrace) { percent >> lbrace }
+  rule(:deref_expr) { percent_lbrace >> expr >> rbrace }
 
   # escape sequences
   rule(:esc_newline) { bslash >> str('n') }

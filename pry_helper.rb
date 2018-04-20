@@ -254,6 +254,9 @@ end
 def cadr(x)
   car(cdr(x))
 end
+def caadr(x)
+  car(cadr(x))
+end
 def cddr(x)
   cdr(cdr(x))
 end
