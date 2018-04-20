@@ -300,7 +300,7 @@ class SexpTransform < Parslet::Transform
   # double quoted strings: string interpolations
   rule(strtok: simple(:strtok)) { mklist(:strtok, strtok) }
   rule(escape_seq: simple(:escape_seq)) { mklist(:escape_seq, escape_seq) }
-#  rule(string_expr: simple(:string_expr)) { SubtreeFactory.subtree(StringExpression, string_expr) }
+  rule(string_expr: simple(:string_expr)) { mksexp(:str_expr, string_expr) }  #SubtreeFactory.subtree(StringExpression, string_expr) }
   # Bring it all together
   rule(string_interpolation: sequence(:string_interpolation)) { sstr_intp(string_interpolation) }
 

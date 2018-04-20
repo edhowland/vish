@@ -106,20 +106,24 @@ class Seval
   end
   # String interpolation
   def strtok(sexp)
-    car(sexp).to_s
+    [:pushl, car(sexp).to_s]
   end
   def escape_seq(sexp)
-    rbevalstr(car(sexp).to_s)
+    [:pushl, rbevalstr(car(sexp).to_s)]
+  end
+  def str_expr(sexp)
+    self.eval(sexp)
   end
   def __str_collect(sexp)
     if null?(sexp)
-      ''
+      []
     else
      self.eval(car(sexp)) + __str_collect(cdr(sexp))
     end
   end
   def string_intp(sexp)
-    [:pushl, __str_collect(sexp)]
+  len = length(sexp)
+    __str_collect(sexp) + [:pushl, len, :pushl, :cat, :icall]
   end
   def string(sexp)
     [:pushl, car(sexp).to_s]
