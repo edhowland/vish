@@ -1,7 +1,18 @@
 # TODO
 
-## Todo: Derive a way to make variadic arguments to lambda def/call work.
+## Todo: Improve string interpolation
 
+Currently, every character is an individual strtok For even short strings,
+this explodes the bytecode to perform a call to 'cat' builtin function.
+
+There should be a regular expression that captures the string run lengths 
+of contiguous strings upto escape sequences and %{ vish-expression } s.
+
+### Todo: Better syntax checking for string interpolation internal expressions
+
+
+
+## Todo: Derive a way to make variadic arguments to lambda def/call work.
 
 Should somehow be part of function signature. Needed for type/program correctness
 

@@ -1,5 +1,12 @@
 # Bugs
 
+## Bug: Cannot escape single quote inside of single quote.
+
+```
+'\''
+# Syntax error from Parslet
+```
+
 
 ## In sexp_transform
 

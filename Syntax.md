@@ -59,6 +59,91 @@ to a function.
 
 Double quoted strings are also possible interpolated strings.
 
+### Strings
+
+A string is any length of characters within either a double quotation or apostrophes or 
+single quotes.
+
+Strings are true to the predicate: 'string?()'
+Strings respond to the 'length()' function
+Strings can be concatenated with either the 'cat()' method or by using the
+'+' infix operator
+Strings also respond to the '*' multiplication infix operator. In this
+case the string is repeated by the number of the integer on the right of the '*'.
+
+```
+'H' * 5
+# => "HHHHH"
+```
+
+Strings can be indexed if there first stored ina variable. Acting like a vector
+
+```
+val="Sometimes"
+:a[0]
+# => "S"
+#
+# Can also assign to this position
+a[0]="s"
+# => "something"
+```
+#### Single quoted strings
+A single quoted string is any number of characters inside 2 apostrophes.
+
+```
+# a single quoted string:
+'My name is Sam'
+# => "My name is Sam"
+```
+
+There are no allowed escape sequences or string interpolations within single
+quoted string. For these, use double quoted strings.
+
+#### Double quoted strings and string interpolations.
+
+Here are some possible double quoted string examples.
+
+```
+# Simple string
+"hello world"
+# With escape sequences
+greeting="Hello world!\n"
+# With interpolation.
+name=read()
+print("Hello %{:name}. How are you?")
+# => Hello Mary. How are you
+
+```
+
+##### Escape sequences.
+
+Here the valid known backslash escap sequences in a Vish double quoted string.
+
+- "\n" : Newline
+- "\t" : Tab character
+- "\a" : Sound the system bell.
+- "\\" : Backslash character
+- "\'" : single quote
+- "\"" : Double quote
+
+
+##### String interpolations with Vish expressions.
+
+A string interpolation consists of the following elements:
+
+- '%{'
+- Valid vish expression
+- '}'
+
+This should occur within a double quoted string literal.
+
+```
+"5 times 10 is %{5*10}"
+#
+"it is %{3 < 4} that 3 is less than 4"
+# => "It is true that 3 is less than 4"
+```
+
 ## Sigils
 
 Vish uses several sigils (single ASCII characters) to represent different type 

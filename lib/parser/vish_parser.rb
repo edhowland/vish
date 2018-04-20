@@ -107,12 +107,14 @@ class VishParser < Parslet::Parser
   # escape sequences
   rule(:esc_newline) { bslash >> str('n') }
   rule(:esc_tab) { bslash >> str('t') }
+  rule(:esc_bel) { bslash >> str('a') }
 
   rule(:esc_bslash) { bslash >> bslash }
   rule(:esc_dquote) { bslash >> dquote }
   rule(:esc_squote) { bslash >> squote }
+  rule(:esc_dquote) { bslash >> dquote }
   # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
-  rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote }
+  rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote | esc_dquote | esc_bel }
 
 
   # interpolated string is any amount of string_atoms, deref_expr and escape_seq 
