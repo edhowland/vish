@@ -222,73 +222,70 @@ class SexpTransform < Parslet::Transform
   # double quoted strings: string interpolations
   rule(strtok: simple(:strtok)) { mklist(:strtok, strtok) }
   rule(escape_seq: simple(:escape_seq)) { mklist(:escape_seq, escape_seq) }
-  rule(string_expr: simple(:string_expr)) { mksexp(:str_expr, string_expr) }  #SubtreeFactory.subtree(StringExpression, string_expr) }
+  rule(string_expr: simple(:string_expr)) { mksexp(:str_expr, string_expr) }  
   # Bring it all together
   rule(string_interpolation: sequence(:string_interpolation)) { sstr_intp(string_interpolation) }
 
-  rule(block_exec: simple(:block)) { block }   # BlockExec.subtree([block]) }
-  rule(block_exec: sequence(:block)) { block }  #BlockExec.subtree(block) }
+  rule(block_exec: simple(:block)) { block }
+  rule(block_exec: sequence(:block)) { block }
 
   # Unary operators
-  rule(op: simple(:op), negation: simple(:negation)) { mksexp(:unary_inversion, negation) } #UnaryTreeFactory.subtree(UnaryNegation, negation) }
-  rule(op: simple(:op), negative: simple(:negative)) { mksexp(:unary_negation, negative) } #UnaryTreeFactory.subtree(UnaryNegative, negative) }
+  rule(op: simple(:op), negation: simple(:negation)) { mksexp(:unary_inversion, negation) } 
+  rule(op: simple(:op), negative: simple(:negative)) { mksexp(:unary_negation, negative) } 
 
   # loop stuff
   rule(loop: simple(:loop)) { mksexp(:loop, loop) }
-  # Null
-#  rule(null: simple(:null)) { mklist(:null) }
   # keywords: return, break and exit
-  rule(return: simple(:return_expr)) { sreturn(return_expr) }  #LambdaReturn.subtree(return_expr) }
+  rule(return: simple(:return_expr)) { sreturn(return_expr) }  
   rule(exit: simple(:_exit)) { mklist(:_exit) }
   rule(break: simple(:_break)) { mklist(:_break) }
 
   # parameter : as in a parmlist to a function/lambda definition
-  rule(parm: simple(:parm)) { sident(parm) }  #StringLiteral.new(parm) }
+  rule(parm: simple(:parm)) { sident(parm) }  
   # lambdas
-  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda([parmlist],_lambda) }  #Lambda.subtree([parmlist], _lambda) }
-  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } #Lambda.subtree(parmlist, _lambda) }
+  rule(parmlist: simple(:parmlist), _lambda: simple(:_lambda)) { slambda([parmlist],_lambda) }  
+  rule(parmlist: sequence(:parmlist), _lambda: simple(:_lambda)) { slambda(parmlist, _lambda) } 
 
 # Functions
-  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda([parmlist], fbody)) }  #( }  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree([parmlist], fbody, fname)) }
+  rule(fname: simple(:fname), block: simple(:fbody), parmlist: simple(:parmlist)) { mkarith('=', sident(fname), slambda([parmlist], fbody)) }  
   rule(fname: simple(:fname), block: simple(:fbody), parmlist: sequence(:parmlist)) { mkarith('=', sident(fname), slambda(parmlist, fbody)) }  
-  #BinaryTreeFactory.subtree(Assign, LValue.new(fname), NamedLambda.subtree(parmlist, fbody, fname)) }
 
-  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } #BinaryTreeFactory.subtree(VectorAssign, lvalue, rvalue) }
-  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } # VectorId.subtree(Deref.new(id), index) }
 
-  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { sdereflist(sderef(deref), ssymbol(symbol)) }   # sdereflist( } #DerefList.subtree(Deref.new(deref), SymbolNode.new(symbol)) }
-  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { sdereflist(sderef(deref), arglist) }  #DerefList.subtree(Deref.new(deref), arglist) }
+  rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } 
+  rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } 
 
-  rule(deref: simple(:deref)) { sderef(deref) }  #mknode(Deref.new(deref)) }
+  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { sdereflist(sderef(deref), ssymbol(symbol)) }   
+  rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { sdereflist(sderef(deref), arglist) }  
 
-  rule(block: simple(:block)) { sblock(sstatements([block])) }  #Block.subtree([block]) }
-  rule(block: sequence(:block)) {sblock(sstatements(block)) }    #Block.subtree(block) }
+  rule(deref: simple(:deref)) { sderef(deref) }  
+
+  rule(block: simple(:block)) { sblock(sstatements([block])) }  
+  rule(block: sequence(:block)) {sblock(sstatements(block)) }    
 
   # Lambda call - %l;%l();%l(1,2,3)
-  rule(lambda_call: simple(:name)) { slambdacall(name, [])  } #FunctorNode.subtree(LambdaCall.new(lambda_call), []) }
-  rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, [arglist]) } #FunctorNode.subtree(LambdaCall.new(lambda_call), [arglist]) }
-  rule(lambda_call: simple(:name), arglist: sequence(:arglist)) { slambdacall(name, arglist) }  #FunctorNode.subtree(LambdaCall.new(lambda_call), arglist) }
+  rule(lambda_call: simple(:name)) { slambdacall(name, [])  } 
+  rule(lambda_call: simple(:name), arglist: simple(:arglist)) { slambdacall(name, [arglist]) } 
+  rule(lambda_call: simple(:name), arglist: sequence(:arglist)) { slambdacall(name, arglist) }  
 
   # Function calls
-  rule(funcall: simple(:name), arglist: simple(:arg)) { sfuncall(name, [arg]) }  #FunctorNode.subtree(Funcall.new(funcall), [arg]) }
-  rule(funcall: simple(:name), arglist: sequence(:arglist)) { sfuncall(name, arglist) }  #FunctorNode.subtree(Funcall.new(funcall), arglist) }
+  rule(funcall: simple(:name), arglist: simple(:arg)) { sfuncall(name, [arg]) }  
+  rule(funcall: simple(:name), arglist: sequence(:arglist)) { sfuncall(name, arglist) }  
 
-  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  #BinaryTreeFactory.subtree(Assign, LValue.new(lvalue), rvalue) }
+  rule(lvalue: simple(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq, sident(lvalue), rvalue) }  
 
   # Objects
-  rule(object: simple(:object), arglist: simple(:arglist)) { sobject([arglist]) }   #ObjectNode.subtree([arglist]) }
-  rule(object: simple(:object), arglist: sequence(:arglist)) {sobject(arglist) }   #ObjectNode.subtree(arglist) }
+  rule(object: simple(:object), arglist: simple(:arglist)) { sobject([arglist]) }   
+  rule(object: simple(:object), arglist: sequence(:arglist)) {sobject(arglist) }   
   # vectors
-  rule(list: simple(:list), arglist: simple(:arg)) { svector([arg]) }   #FunctorNode.subtree(VectorNode.new, [arg]) }
-  rule(list: simple(:list), arglist: sequence(:args)) { svector(args) }  #FunctorNode.subtree(VectorNode.new, arg) }
-  rule(symbol: simple(:symbol), expr: subtree(:expr)) { spair(ssymbol(symbol),expr) }     # PairNode.subtree(SymbolNode.new(symbol),expr) }
+  rule(list: simple(:list), arglist: simple(:arg)) { svector([arg]) }   
+  rule(list: simple(:list), arglist: sequence(:args)) { svector(args) }  
+  rule(symbol: simple(:symbol), expr: subtree(:expr)) { spair(ssymbol(symbol),expr) }     
 
-  rule(symbol: simple(:symbol)) {ssymbol(symbol) }   #SymbolNode.new(symbol) }
+  rule(symbol: simple(:symbol)) {ssymbol(symbol) }   
 
-  rule(sq_string: simple(:sq_string)) { sstrlit(sq_string) }  # StringLiteral.new() }
-  rule(sq_string: sequence(:sq_string)) { sstrlit('') }   #StringLiteral.new('') }
+  rule(sq_string: simple(:sq_string)) { sstrlit(sq_string) }  
+  rule(sq_string: sequence(:sq_string)) { sstrlit('') }   
   rule(boolean: simple(:boolean)) { sbool(boolean) }
-  # Boolean.new() }
 
   rule(int: simple(:int)) { sint(int) }
   rule(l: simple(:lvalue), o: simple(:op), r: simple(:rvalue)) { mkarith(op, lvalue, rvalue) }

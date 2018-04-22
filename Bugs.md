@@ -1,5 +1,7 @@
 # Bugs
 
+## Bug: simple binary and/or expressions fail
+
 ## Bug: Cannot escape single quote inside of single quote.
 
 ```
