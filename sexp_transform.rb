@@ -204,7 +204,6 @@ def sroot tree
 end
 class SexpTransform < Parslet::Transform
   # IList indexed lambda call: %a[0] TODO: Add backin parens and args
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), lambda_args) }
 
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist)) }
@@ -219,6 +218,8 @@ class SexpTransform < Parslet::Transform
   rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   #####
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
+
   # double quoted strings: string interpolations
   rule(strtok: simple(:strtok)) { mklist(:strtok, strtok) }
   rule(escape_seq: simple(:escape_seq)) { mklist(:escape_seq, escape_seq) }

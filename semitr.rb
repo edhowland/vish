@@ -132,6 +132,10 @@ class Seval
   def _arith(sym, sexp)
     self.eval(car(sexp)) + self.eval(cadr(sexp)) + [sym]
   end
+  # dereflist - extrack from object: :[a[foo:]
+  def dereflist(sexp)
+    self.eval(car(sexp)) + self.eval(cadr(sexp)) + [:pushl, 2, :pushl, :ix, :icall]
+  end
   def deref(sexp)
     [:pushv, car(sexp).to_s.to_sym]
   end
