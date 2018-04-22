@@ -56,6 +56,7 @@ to a function.
 - Symbols - identifiers with a trailing colon, like keys in JSON strings. Symbols can be used as keys to objects.
 - lambdas - Anonymous functions : ->(arg) { :arg + 1 }
 - Blocks - small contained units of program statements. Blocks as atoms are lambdas with 0 parameters.
+- Null - the empty list
 
 Double quoted strings are also possible interpolated strings.
 

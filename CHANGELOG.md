@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Deprecations
+
+- The Null keyword is no longer recognized. Use std/lib : :null variable
 
 ## 0.5.1 2018-04-07
 
