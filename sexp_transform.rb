@@ -101,6 +101,11 @@ end
 def mklist(*args)
   Builtins.list(*args)
 end
+# mkargs - helper function for wierd Parslet:: wway to deal with optionally empty
+#arrays
+def mkargs(array)
+  mklist(*(array.reject(&:nil?)))
+end
 def binop(op, l, r)
   mklist(op, l, r)
 end
@@ -214,8 +219,8 @@ class SexpTransform < Parslet::Transform
 #  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   #####
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { mksexp(:lambdacall, sdereflist(sderef(deref), ssymbol(symbol))) }
-#  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), lambda_args) }
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { mklist(:lambdacall_args, mkargs([lambda_args]),sdereflist(sderef(deref), arglist)) } 
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) {mklist(:lambdacall_args, mkargs(lambda_args),sdereflist(sderef(deref), arglist)) }
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { mksexp(:lambdacall_index, sdereflist(sderef(deref), arglist)) }
 
 

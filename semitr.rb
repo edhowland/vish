@@ -72,6 +72,12 @@ class Seval
     args_length = length(cdr(sexp)) + @incr[]
     args + [:pushl, args_length]
   end
+  # __args_length - special case wherein construct: %a[foo:](1,2)
+  def __args_index(sexp)
+    args = _vector(sexp)
+        args_length = length(sexp) + @incr[]
+    args + [:pushl, args_length]
+  end
   def _object(sexp, result=[])
     if null?(sexp)
       return result
@@ -285,11 +291,16 @@ end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)
-    _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall] 
+    _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall]
   end
   # deref first, then call lambda
-  def lambdacall_index(sexp)
-    [:pushl, 0] + self.eval(sexp) + [:ncall]
+  # argc should be [] if more than 0 args when called from lambdacall_args
+  def lambdacall_index(sexp, argc=[:pushl, 0])
+    argc +  self.eval(sexp) + [:ncall]
+  end
+  # lambdacall_args - same as lambdacall_index, but possible args. Even if arg list is empty
+  def lambdacall_args(sexp)
+__args_index(car(sexp)) + lambdacall_index(cadr(sexp), [])
   end
 
   # A block is a bunch of statements
