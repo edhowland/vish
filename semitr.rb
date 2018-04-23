@@ -287,6 +287,10 @@ end
   def lambdacall(sexp)
     _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall] 
   end
+  # deref first, then call lambda
+  def lambdacall_index(sexp)
+    [:pushl, 0] + self.eval(sexp) + [:ncall]
+  end
 
   # A block is a bunch of statements
   def block(sexp)

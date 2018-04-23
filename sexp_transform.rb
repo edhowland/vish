@@ -203,22 +203,21 @@ def sroot tree
   mklist(:program, tree)
 end
 class SexpTransform < Parslet::Transform
-  # IList indexed lambda call: %a[0] TODO: Add backin parens and args
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), lambda_args) }
-
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist)) }
 
   # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), []) } 
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), [arglist]) } 
-  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), arglist) }
+#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), []) } 
+#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), [arglist]) } 
+#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), arglist) }
 
 
 
-  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
+#  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   #####
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), [lambda_args]) }
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { mksexp(:lambdacall, sdereflist(sderef(deref), ssymbol(symbol))) }
+#  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(deref), arglist), lambda_args) }
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { mksexp(:lambdacall_index, sdereflist(sderef(deref), arglist)) }
+
 
   # double quoted strings: string interpolations
   rule(strtok: simple(:strtok)) { mklist(:strtok, strtok) }
@@ -255,7 +254,7 @@ class SexpTransform < Parslet::Transform
   rule(vector: subtree(:lvalue), eq: simple(:eq), rvalue: simple(:rvalue)) { mkarith(eq,lvalue, rvalue)  } 
   rule(vector_id: simple(:id), list: simple(:list), index: simple(:index))  { svectorid(sderef(id),index)  } 
 
-  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { sdereflist(sderef(deref), ssymbol(symbol)) }   
+  rule(deref: simple(:deref), list: simple(:list), symbol: simple(:symbol)) { sdereflist(sderef(deref), ssymbol(symbol)) }
   rule(deref: simple(:deref), list: simple(:list), arglist: simple(:arglist)) { sdereflist(sderef(deref), arglist) }  
 
   rule(deref: simple(:deref)) { sderef(deref) }  
