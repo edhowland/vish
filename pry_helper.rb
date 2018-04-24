@@ -5,7 +5,7 @@ require_relative 'lib/vish'
 require_relative 'pry/lib'
 require_relative 'sexp_transform'
 require_relative 'list_proc'
-require_relative 'semitr'
+require_relative 'semit'
 require_relative 'apply'
 
 
@@ -324,7 +324,7 @@ def undefined?(object)
   Undefined == object
 end
 def pse
-  ps + [Seval.new]
+  ps + [Semit.new]
 end
 
 def gsexp str

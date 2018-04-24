@@ -1,5 +1,15 @@
 # TODO
 
+## TODO: Replace all occurances w/LambdaType for NambdaType
+
+Note: Must ensure that lambdas are captured by compiler and
+adjusted back to of bytecods during code emission.
+
+Note: Ensure anonymous lambdas get lambda ids for use in code emission.
+This is to ensure we do not recreate multiple instances of the code blocks
+when we call a function that returns a lambda. The binding is new and a new object
+but the code block is shared.
+
 ## Todo: Make sure predicate of lambda? works in s-expression land
 
 ## Todo: Improve string interpolation

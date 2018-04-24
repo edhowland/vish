@@ -1,25 +1,10 @@
-# semitr.rb - Given some S-Expression, return bytecode(s)
+# seval.rb - class Semit - given some s-expression, return bytecodes
 
-def ife
-  "defn ife(p,c,a) { {%p && %c} || %a }"
-end
-
-
-
-def semitr sexp
-  funcs = {
-    :integer => ->(e) { e.to_s.to_i },
-    :boolean => ->(e) {{'true' => true, 'false' => false}[e.to_s] },
-    :string => ->(e) { e.to_s }, 
-    :vector => ->(e) { e }
-  }
-  f = funcs[car(sexp)]
-  f[cdr(sexp)]
-end
 
 def rbevalstr(string)
   Kernel.eval('"' + string + '"')
 end
+
 class BreakStop
   def initialize index, loc
     @index = index
@@ -33,7 +18,7 @@ class BreakStop
 end
 
 
-class Seval
+class Semit
   include ListProc
 
   def initialize
