@@ -1,5 +1,12 @@
 # Bugs
 
+## Bug. Indexing of vectors with lambda values does not work
+
+```
+a=[->() {2}]
+# => nil or Undefined
+```
+
 ## Bug: Cannot escape single quote inside of single quote.
 
 ```

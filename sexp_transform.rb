@@ -209,19 +209,22 @@ def sroot tree
 end
 class SexpTransform < Parslet::Transform
 
-  # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), []) } 
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: simple(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), [arglist]) } 
-#  rule(lambda_call: simple(:lambda_call), execute_index: simple(:execute_index), index: simple(:index), arglist: sequence(:arglist)) { LambdaCallList.subtree(DerefList.subtree(Deref.new(lambda_call), SymbolNode.new(index)), arglist) }
 
 
 
 #  rule(deref_block: simple(:deref_block)) {  mknode(DerefBlock.new(deref_block)) }
 
   #####
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { mklist(:lambdacall_args, mkargs([lambda_args]),sdereflist(sderef(deref), arglist)) } 
-  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) {mklist(:lambdacall_args, mkargs(lambda_args),sdereflist(sderef(deref), arglist)) }
+  # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
+  # This is different from indexed objects like %a[foo:] due to VishParser stuff
+  rule(lambda_call: simple(:deref), execute_index: simple(:execute_index), index: simple(:arglist)) { mksexp(:lambdacall_index, sdereflist(sderef(deref), ssymbol(arglist))) }
+  rule(lambda_call: simple(:deref), execute_index: simple(:execute_index), index: simple(:arglist), arglist: simple(:lambda_args)) {mklist(:lambdacall_args, mkargs([lambda_args]),sdereflist(sderef(deref), ssymbol(arglist))) }
+  rule(lambda_call: simple(:deref), execute_index: simple(:execute_index), index: simple(:arglist), arglist: sequence(:lambda_args)) {mklist(:lambdacall_args, mkargs(lambda_args),sdereflist(sderef(deref), ssymbol(arglist))) } 
+
+  # Call lambda from index of object: %a[foo:], %a[foo:](), %a[foo:](1,2,...)
   rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist)) { mksexp(:lambdacall_index, sdereflist(sderef(deref), arglist)) }
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: simple(:lambda_args)) { mklist(:lambdacall_args, mkargs([lambda_args]),sdereflist(sderef(deref), arglist)) } 
+  rule(lambda_call: simple(:deref),list: simple(:list), arglist: simple(:arglist), lambda_args: sequence(:lambda_args)) { mklist(:lambdacall_args, mkargs(lambda_args),sdereflist(sderef(deref), arglist)) }
 
 
   # double quoted strings: string interpolations
