@@ -7,14 +7,15 @@ class VishCompiler
     @ast = mknode('root')
     @parser = VishParser.new
     @ir = {}
-    @transform = AstTransform.new
+    @transform = SexpTransform.new  #AstTransform.new
+    @generator = Semit.new
     @bc = ByteCodes.new
     @ctx = Context.new
     @blocks = []
     @lambdas = {}
     @functions = {}
   end
-  attr_accessor :ast, :parser, :transform, :ir, :ctx, :blocks, :lambdas, :functions, :source
+  attr_accessor :ast, :parser, :transform, :generator, :ir, :ctx, :blocks, :lambdas, :functions, :source
   attr_reader :bc
 
   def parse source=@source
@@ -73,16 +74,18 @@ append_lambdas(ast, @lambdas)
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
     start = bcodes.codes.length
 
-    @bc, @ctx = emit_walker ast, ctx, bcodes
-
+#    @bc, @ctx = emit_walker ast, ctx, bcodes
+    # Changed to Semit class
+    codes = @generator.emit(ast)
+    bcodes.codes = codes
     # Resolve BranchSource operands after BranchTargets have been emitted
-    visit_ast(ast, BranchSource) do |n|
-      bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
-    end
-    @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
+#    visit_ast(ast, BranchSource) do |n|
+#      bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target
+#    end
+#    @bc.codes.map! {|e|  e.respond_to?(:call) ? e.call : e }
 
     # resolve jump targets
-    resolve_lambda_locations(@bc)
+#    resolve_lambda_locations(@bc)
 
 start
   end
@@ -91,10 +94,10 @@ start
   # run - runs all phases of compiler
   # TODO: Add in BulletinBoard.clear to ensure no left dangling JumpTargets
   def run source=@source
-    BulletinBoard.clear
+#    BulletinBoard.clear
     parse source
     transform
-    analyze
+#    analyze
     generate
   end
 end

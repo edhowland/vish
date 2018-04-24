@@ -154,7 +154,15 @@ def mkcompiler source=''
   VishCompiler.new source
 end
 
-def inter source
+## interpret source runs full compiler stack
+def interpret(source)
+  c = compile(source)
+  ci = cifrom(c)
+  ci.run
+end
+
+## _inter source get the CodeInterpreter from compiling some source
+def _inter source
   c = compile source
   cifrom c
 end
@@ -264,22 +272,8 @@ def caddr(x)
 end
 
 # utility fns from Builtins
-def atom?(x)
-  Builtins.atom?(x)
-end
-def list?(x)
-  begin
-    Builtins.list?(x)
-  rescue => err
-puts "list? error: #{err.message}"
-  end
-end
-def pair?(x)
-  Builtins.pair?(x)
-end
-def null?(x)
-  x.instance_of?(NullType)
-end
+
+
 
 # walk the S-expression tree
 def swalk(t)
@@ -319,9 +313,7 @@ def ex str, p=VishParser.new, s=SexpTransform.new
   s.apply(p.parse(str))
 end
 
-def undefined?(object)
-  Undefined == object
-end
+
 def pse
   ps + [Semit.new]
 end
