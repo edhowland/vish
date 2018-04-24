@@ -1,5 +1,6 @@
 # api.rb - requires for api/
 
+require_relative 'api/list_proc'
 require_relative 'api/delve_if'
 require_relative 'api/array_select'
 require_relative 'api/node_unless'

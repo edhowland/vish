@@ -3,10 +3,9 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
-require_relative 'sexp_transform'
-require_relative 'list_proc'
-require_relative 'semit'
-require_relative 'apply'
+#require_relative 'sexp_transform'
+#require_relative 'list_proc'
+#require_relative 'semit'
 
 
 
