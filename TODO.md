@@ -1,5 +1,7 @@
 # TODO
 
+## Todo: Make sure predicate of lambda? works in s-expression land
+
 ## Todo: Improve string interpolation
 
 Currently, every character is an individual strtok For even short strings,

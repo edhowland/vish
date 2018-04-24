@@ -62,9 +62,10 @@ class Seval
     (self.eval(car(sexp)) + _vector(cdr(sexp), result)) 
   end
   def vector(sexp)
+    len = length(sexp)
     result = _vector(sexp)
     result << :pushl
-    result << (result.length / 2)
+    result << len
     result + [:pushl, :mkvector, :icall]
   end
   def _args(sexp)
