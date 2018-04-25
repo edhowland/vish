@@ -327,7 +327,8 @@ __args_index(car(sexp)) + lambdacall_index(cadr(sexp), [])
   # Main entry: emit(s_expression)
   def emit(sexp)
     result = eval(sexp)
-    raise CompileError.new('break statement encountered outside of loop block') if result.any? {|e| e == BreakStop or e.class == BreakStop }
+#binding.pry
+    raise CompileError.new('break statement encountered outside of loop block') if result.flatten.any? {|e| e == BreakStop or e.class == BreakStop }
     result
   end
 end
