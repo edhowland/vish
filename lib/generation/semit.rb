@@ -219,7 +219,7 @@ end
   # Handles inner loops and inner/inner/inner loops.
   def __loopb(&blk)
     codes = yield
-    len = codes.length * (-1)
+    len = (codes.length + 1) * (-1)
     result = codes + [:jmpr, len]
     if result.any? {|e| e == BreakStop }
       outside = result.length
@@ -230,7 +230,6 @@ end
     result
   end
   def loop(sexp)
-#    raise CompileError.new 'Loop not yet implemented'
     __loopb { self.eval(sexp) }
   end
   def _return(sexp)
