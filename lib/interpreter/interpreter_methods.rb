@@ -32,6 +32,8 @@ module InterpreterMethods
   def self._mklambda(parms, body, loc=nil)
 #    puts "in mklambda parms: #{parms}, body: #{body}"
     result = NambdaType.new(parms:parms, body:body, _binding:binding(), loc:loc)
+    # compute arity here. Might have to change for variadic lambdas
+    result[:arity] = parms.length.zero? ? 0 : parms.length/5
     loc = _attach(result[:body])
     result[:loc] = loc
     result

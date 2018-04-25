@@ -230,7 +230,10 @@ frame.ctx.vars = _binding.dup
     _ncall: 'New version of lambda call',
     ncall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? NambdaType
   argc = ctx.stack.pop
+      raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
+
   argv = ctx.stack.pop(argc)
       _binding = ltype[:binding]
       frame = FunctionFrame.new(Context.new)

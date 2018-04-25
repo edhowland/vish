@@ -57,9 +57,9 @@ class TestLambda < BaseSpike
   def test_4_mix_of_lambdas_and_blocks_can_call_each_other
     result = interpret <<EOC
 l1=->() {1}
-b1={%l1()}
+b1=:{%l1()}
 l2=->() {%b1}
-m2={%l2}
+m2=:{%l2}
 %m2
 EOC
     assert_eq result, 1
