@@ -175,6 +175,8 @@ class VishParser < Parslet::Parser
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
   rule(:deref_block) { percent >> identifier.as(:lambda_call) >> space? }
+  # :{true && false} - gets promoted to lambda of no args
+  rule(:block_lambda) {colon >> block.as(:block_lambda) }
 
   # lambda declaration: ->(x, y) { :x + :y }
   rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }
@@ -197,7 +199,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { quote | block | block_exec | _lambda | negative | negation | infix_oper | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
+  rule(:expr) { quote | block | block_exec | block_lambda | _lambda | negative | negation | infix_oper | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }

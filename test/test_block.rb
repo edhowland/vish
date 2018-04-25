@@ -111,7 +111,7 @@ EOD
     assert_eq result, 15
   end
   def test_blocks_become_closures_when_passed_as_parameters
-    result = interpret 'defn baz(b) { %b + 1 };cl=9;baz({:cl})'
+    result = interpret 'defn baz(b) { %b + 1 };cl=9;baz(:{:cl})'
     assert_eq result, 10
   end
   def test_blocks_become_closures_when_assigned_to_a_variable

@@ -6,9 +6,8 @@ require_relative 'lib/spike_load'
 
 module CompileHelper
   # Use in set_up:
-  # @parser, @transform = parser_transformer
   def parser_transformer
-    return VishParser.new, AstTransform.new
+    return VishParser.new, SexpTransform.new
   end
   def compile string
   @compiler = VishCompiler.new string

@@ -769,7 +769,7 @@ as parameters:
 
 ```
 # saving a block to a variable:
-blk={4+3}
+blk=:{4+3}
 # Calling it:
 6*%blk
 # => 42
@@ -779,7 +779,7 @@ blk={4+3}
 
 ```
 defn baz(n, blk) { :n + %blk }
-baz(4, {3 ** 2})
+baz(4, :{3 ** 2})
 # => 13
 ```
 
@@ -796,20 +796,18 @@ actually closures themselves.
 ```
 # A block expression as a closure
 n=100
-b={ :n + 10 }
+b=:{ :n + 10 }
 # ... some other code
 %b + 1
 # => 111
 ```
 
 
-#### Caveat:  A block cannot be returned from a function.
+#### :  A block can be returned from a function.
 
 To do return a block from a function body as a block expression,
-preceeded it with '->() '. This turns it into a proper lambda.
+preceeded it with  a clolon ':'.
 
-Note: A future release will allow the return keyword to return a block
-as a block expression by first promoting it into a lambda.
 
 ### Immediate block execution
 

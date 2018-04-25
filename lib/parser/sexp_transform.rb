@@ -208,7 +208,8 @@ def sroot tree
   mklist(:program, tree)
 end
 class SexpTransform < Parslet::Transform
-
+  # promote :{ statements ... } into lambda closure
+  rule(block_lambda: simple(:block_lambda)) { slambda([], block_lambda) }
   # method call %p.foo; %p.foo(0); %p.foo(1,2,3)
   # This is different from indexed objects like %a[foo:] due to VishParser stuff
   rule(lambda_call: simple(:deref), execute_index: simple(:execute_index), index: simple(:arglist)) { mksexp(:lambdacall_index, sdereflist(sderef(deref), ssymbol(arglist))) }
