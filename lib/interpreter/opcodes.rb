@@ -113,6 +113,12 @@ def opcodes tmpreg=nil
       result = object.[]=(index, val)
       ctx.stack.push result
     },
+    _index: 'Pushes value of index of object, either hash or vector',
+    index: ->(bc, ctx, fr, intp) {
+      object, ndx = ctx.stack.pop(2)
+      result = object.[](ndx)
+      ctx.stack.push result
+    },
     _set: 'Sets a new value in context vars binding, possibly shadowing other values',
     set: ->(bc, ctx, fr, intp) {
             var, val = ctx.stack.pop(2)

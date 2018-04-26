@@ -11,12 +11,13 @@ class Evaluator
     compiler = VishCompiler.new string
     compiler.parse
     compiler.transform
-    compiler.analyze functions:@compiler.functions, blocks:@compiler.blocks, lambdas:@compiler.lambdas
+#    compiler.analyze functions:@compiler.functions, blocks:@compiler.blocks, lambdas:@compiler.lambdas
     start = compiler.generate ctx:@compiler.ctx, bcodes:@compiler.bc
     @interpreter = CodeInterpreter.new(compiler.bc, compiler.ctx)
     @interpreter.heap = @saved_heap
     yield @interpreter if block_given?
     @compiler = compiler
+
     @interpreter.run(start)
   end
 end

@@ -130,7 +130,7 @@ self.eval(car(sexp)) + self.eval(cadr(sexp))
   end
   # dereflist - extrack from object: :[a[foo:]
   def dereflist(sexp)
-    self.eval(car(sexp)) + self.eval(cadr(sexp)) + [:pushl, 2, :pushl, :ix, :icall]
+    self.eval(car(sexp)) + self.eval(cadr(sexp)) + [:index]  #[:pushl, 2, :pushl, :ix, :icall]
   end
   def deref(sexp)
     [:pushv, car(sexp).to_s.to_sym]
@@ -209,7 +209,7 @@ end
   # A pipe is just a concat of its 2 statements. The stack is shared between
   # each statement
   def pipe(sexp)
-    self.eval(car(sexp)) + instance_exec {pump_incr; self.eval(cadr(sexp)) }
+    self.eval(car(sexp)) + instance_exec { pump_incr; self.eval(cadr(sexp)) }
   end
   #
   # _cedent(sexp) - evaluates sexp, computes length to jump over, returns as

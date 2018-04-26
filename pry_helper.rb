@@ -342,3 +342,7 @@ end
 def ml str
   "a=:<#{str}>:;body=_emit(:a);foo=_mklambda(:body, binding())"
 end
+# libvs - read in std/lib.vs
+def libvs
+  File.read('std/lib.vs')
+end

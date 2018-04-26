@@ -78,6 +78,7 @@ append_lambdas(ast, @lambdas)
     # Changed to Semit class
     codes = @generator.emit(ast)
     bcodes.codes = codes
+    @bc = bcodes
     # Resolve BranchSource operands after BranchTargets have been emitted
 #    visit_ast(ast, BranchSource) do |n|
 #      bc.codes[n.content.operand] = find_ast_node(ast, bc.codes[n.content.operand]).content.target

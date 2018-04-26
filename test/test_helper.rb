@@ -9,6 +9,9 @@ module CompileHelper
   def parser_transformer
     return VishParser.new, SexpTransform.new
   end
+  def standard_lib
+    File.read('std/lib.vs')
+  end
   def compile string
   @compiler = VishCompiler.new string
   @compiler.run
@@ -22,7 +25,7 @@ module CompileHelper
     ci = mkci bc, ctx
     ci.run
   end  
-
+    # TODO: Check if can remove this method:
 def mk_ast string
   @transform.apply(@parser.parse(string))
 end

@@ -4,6 +4,9 @@ require_relative 'test_helper'
 
 class TestBuiltins < BaseSpike
   include CompileHelper
+  def set_up
+    @lib = standard_lib
+  end
   def test_unknown_fn_call_raises
     assert_raises UnknownFunction do
       interpret 'foo()'
@@ -24,7 +27,7 @@ class TestBuiltins < BaseSpike
     assert interpret('atom?(false)')
   end
   def test_non_atom_w_null
-    assert_false interpret('atom?(Null)')
+    assert_false interpret(@lib + ';atom?(:null)')
   end
   def test_non_atom_w_pair
     assert interpret('! atom?(bax: 33)')
@@ -39,7 +42,7 @@ class TestBuiltins < BaseSpike
     assert interpret('atom?(false)')
   end
   def test_non_atom_for_any_list_including_null
-    assert_false interpret('atom?(Null)')
+    assert_false interpret(@lib + ';atom?(:null)')
   end
   def test_non_atom_for_list_of_2_elements
     assert interpret('!atom?(list(1,2))')
