@@ -1,4 +1,4 @@
-# seval.rb - class Semit - given some s-expression, return bytecodes
+# semit.rb - class Semit - given some s-expression, return bytecodes
 
 
 def rbevalstr(string)
@@ -52,6 +52,10 @@ class Semit
     result << :pushl
     result << len
     result + [:pushl, :mkvector, :icall]
+  end
+  # vectorid - assign a value to element of vector or object
+  def vectorid(sexp)
+self.eval(car(sexp)) + self.eval(cadr(sexp))
   end
   def _args(sexp)
     args = _vector(cdr(sexp))
@@ -135,7 +139,13 @@ class Semit
 if car(cadr(sexp)) == :lambda
     _named_lambdas!(sexp)
 end
-    _arith(:assign, sexp)
+    result = _arith(:assign, sexp)
+    # Check if this is an assignment to index of some object, like hash or vartor
+    # if it is, then replace the :assign with its :assignx cousin
+    if car(car(sexp)) == :vectorid
+    result[-1] = :assignx
+  end
+  result
   end
 
   # Arith expressions

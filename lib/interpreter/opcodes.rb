@@ -107,6 +107,12 @@ def opcodes tmpreg=nil
       ctx.vars[var] = val 
       ctx.stack.push val
     },
+    _assignx: 'Assigns a value to object, a vector or hash, via the .[]= method',
+    assignx: ->(bc,ctx, fr, intp) {
+      object, index, val = ctx.stack.pop(3)
+      result = object.[]=(index, val)
+      ctx.stack.push result
+    },
     _set: 'Sets a new value in context vars binding, possibly shadowing other values',
     set: ->(bc, ctx, fr, intp) {
             var, val = ctx.stack.pop(2)
