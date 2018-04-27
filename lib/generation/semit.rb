@@ -4,16 +4,44 @@
 def rbevalstr(string)
   Kernel.eval('"' + string + '"')
 end
+class UnknownBreak
+  @@occurs = 0
+  def initialize
+    @@occurs += 1
+  end
+  def to_break index, loc
+  @@occurs -= 1
+    BreakStop.new(index, loc)
+  end
+
+  # Check if any (possibly deeply nested) occurrences left
+  def self.occurs_left?(&blk)
+    @@occurs = 0
+    result = yield
+    raise CompileError.new 'Unresolved breaks still exist. Break statements must exist at top level of loop block' unless @@occurs.zero?
+    result
+  end
+end
 
 class BreakStop
+  @@occurs = 0
   def initialize index, loc
     @index = index
     @loc = loc
+    @@occurs += 1
   end
   attr_reader :loc
   attr_accessor :index
   def to_offset
+    @@occurs -= 1
     @loc - @index
+  end
+  # check if we get mapped out of existance
+  def self.occurs_left?(&blk)
+    @@occurs = 0
+    result = yield
+    raise CompileError.new('Internal Compile Error: Break remains after all jump targets resolved') unless @@occurs.zero?
+    result
   end
 end
 
@@ -231,9 +259,9 @@ end
     codes = yield
     len = (codes.length + 1) * (-1)
     result = codes + [:jmpr, len]
-    if result.any? {|e| e == BreakStop }
+    if result.any? {|e| e.class == UnknownBreak }
       outside = result.length
-      result = result.map {|e| e == BreakStop ? e.new(0, outside) : e }
+      result = result.map {|e| e.class == UnknownBreak ? e.to_break(0, outside) : e }
       result.each_with_index {|e, i| e.class == BreakStop ? e.index = i : e }
       result.map! {|e| e.class == BreakStop ? e.to_offset : e }
     end
@@ -249,7 +277,7 @@ end
     [:int, :_exit]
   end
   def _break(sexp)
-    [:jmpr, BreakStop]
+    [:jmpr, UnknownBreak.new]
   end
 
   # a lambda actually returns a array of a single lambda (or Proc)
@@ -336,9 +364,10 @@ __args_index(car(sexp)) + lambdacall_index(cadr(sexp), [])
 
   # Main entry: emit(s_expression)
   def emit(sexp)
-    result = eval(sexp)
-#binding.pry
-    raise CompileError.new('break statement encountered outside of loop block') if result.flatten.any? {|e| e == BreakStop or e.class == BreakStop }
-    result
+    UnknownBreak.occurs_left? {
+      BreakStop.occurs_left? {
+        eval(sexp) 
+      }
+    }
   end
 end
