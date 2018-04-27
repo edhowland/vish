@@ -291,6 +291,7 @@ end
   # deref first, then call lambda
   # argc should be [] if more than 0 args when called from lambdacall_args
   def lambdacall_index(sexp, argc=[:pushl, 0])
+  argc[-1] += @incr[] unless argc[-1].nil?
     argc +  self.eval(sexp) + [:ncall]
   end
   # lambdacall_args - same as lambdacall_index, but possible args. Even if arg list is empty
