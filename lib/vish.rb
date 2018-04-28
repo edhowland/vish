@@ -25,7 +25,8 @@ require_relative 'mknode'
 
 
 # AST analysis stuff
-require_relative 'analysis'
+# Restore this whenever some AST analysis is going on
+#require_relative 'analysis'
 
 
 # code emission stuff 
