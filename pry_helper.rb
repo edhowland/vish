@@ -49,13 +49,6 @@ def for_broke(ci)
 end
 
 
-# walker: walks the AST in pre-order, using .each
-def walker(ast)
-  ast.each {|e| p e.level; p e.content }
-  nil
-end
-
-
   def compile string, &blk
   begin
     parser = (block_given? ? (yield VishParser.new) : VishParser.new)
@@ -89,19 +82,11 @@ end
 
 
 
-def pa
-  return VishParser.new, AstTransform.new
-end
 # ps - return VisParser, SexpTransform
 def ps
   [VishParser.new, SexpTransform.new]
 end
 
-# mkast(string) : creates an AST after parsing string.
-def mk_ast string
-  p, a = pa
-  a.apply(p.parse(string))
-end
 
 # misty: play misty for me: runs one step
 # + ci : The CodeInterpreter
