@@ -184,6 +184,30 @@ def gparse &blk
     puts failure.parse_failure_cause.ascii_tree
   end
 end
+
+# pr string - return result and parse errors
+def pr str='', &blk
+  err=nil
+  begin
+    if block_given?
+      result = yield
+    else
+      result = interpret str
+    end
+  rescue Parslet::ParseFailed => err
+  end
+  [result, err]
+end
+# extract the Ascii art tree of the parse error
+def art obj
+  case obj
+  when Array
+    puts obj.last.parse_failure_cause.ascii_tree
+  else
+  puts obj.message
+  end
+end
+
 #  get_statements gets actual statements from AST root. Removes them.
 # Parameters
 # ast - The AST to work on

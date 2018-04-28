@@ -18,11 +18,7 @@ class TestString < BaseSpike
     end
   end
 
-  def test_string_literal_object
-    string = 'this is a string'
-    lit  = StringLiteral.new string
-    assert_eq lit.value, string
-  end
+
 
   # compile steps
   def test_compile_empty_string

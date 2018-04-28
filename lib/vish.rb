@@ -9,7 +9,6 @@ require_relative 'api'
 
 
 # compiler stuff
-require_relative 'ast'
 require_relative 'parser'
 require_relative 'compiler'
 
