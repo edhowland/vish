@@ -25,7 +25,16 @@ module InterpreterMethods
 
   ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
   def self._emit(ast)
-    Seval.new.eval(ast)
+    Semit.new.emit(ast)
+  end
+  ## _halt - append a :halt instruction onto emitted bytecodes
+  def self._halt(codes)
+    codes << :halt
+    codes
+  end
+  ## _jump location - Forces CodeInterpreter to jump to location
+  def self._jump(loc)
+    @@interpreter.bc.pc = loc
   end
 
   ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
