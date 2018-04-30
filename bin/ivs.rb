@@ -14,9 +14,11 @@ end
 Dispatch << ParserLib
 
 
-
 source =<<-EOC
-read() | parse() | _emit() | _halt() | _attach() | _jump()
+defn repl() {
+  read() | parse() | _emit() |  _call() | print()
+}
+loop { repl() }
 EOC
 
 c = VishCompiler.new source

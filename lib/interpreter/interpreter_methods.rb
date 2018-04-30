@@ -36,6 +36,16 @@ module InterpreterMethods
   def self._jump(loc)
     @@interpreter.bc.pc = loc
   end
+  ## _call(codes) - appends :fret to codes, attaches to executing, builds stack
+  # frame and sets return code, and jumps there
+  def self._call(codes)
+    codes << :fret
+          frame = FunctionFrame.new(Context.new)
+    frame.return_to = @@interpreter.bc.pc
+    loc = _attach(codes)
+    @@interpreter.frames.push frame
+    @@interpreter.bc.pc = loc
+  end
 
   ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
   def self._mklambda(parms, body, loc=nil)
