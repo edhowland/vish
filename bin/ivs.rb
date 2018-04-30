@@ -15,6 +15,7 @@ Dispatch << ParserLib
 
 
 source =<<-EOC
+vab='hello'
 defn repl() {
   read() | parse() | _emit() |  _call() | print()
 }
@@ -24,5 +25,9 @@ EOC
 c = VishCompiler.new source
 bc, ctx = c.run
 ci = CodeInterpreter.new c.bc, c.ctx
-result = ci.run
+begin
+  result = ci.run
+rescue => err
+  $stderr.puts  err.message
+end
 

@@ -45,6 +45,7 @@ module InterpreterMethods
       codes << :fret
     end
           frame = FunctionFrame.new(Context.new)
+          frame.ctx.vars = @@interpreter.ctx.vars
     frame.return_to = @@interpreter.bc.pc
     loc = _attach(codes)
     @@interpreter.frames.push frame
