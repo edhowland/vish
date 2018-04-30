@@ -39,7 +39,11 @@ module InterpreterMethods
   ## _call(codes) - appends :fret to codes, attaches to executing, builds stack
   # frame and sets return code, and jumps there
   def self._call(codes)
-    codes << :fret
+    if codes[-1] == :halt
+      codes[-1] =  :fret
+    else
+      codes << :fret
+    end
           frame = FunctionFrame.new(Context.new)
     frame.return_to = @@interpreter.bc.pc
     loc = _attach(codes)

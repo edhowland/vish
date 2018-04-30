@@ -18,13 +18,11 @@ source =<<-EOC
 defn repl() {
   read() | parse() | _emit() |  _call() | print()
 }
-loop { repl() }
+loop { prints(">> "); repl() }
 EOC
 
 c = VishCompiler.new source
 bc, ctx = c.run
 ci = CodeInterpreter.new c.bc, c.ctx
-print '>> '
 result = ci.run
-p result
 

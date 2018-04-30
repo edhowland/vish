@@ -148,6 +148,10 @@ module Builtins
   def self.print(*args)
     args.each { |e| $stdout.puts(e.inspect) }
   end
+  ## prints string - prints string w/o newlines
+  def self.prints(string)
+    $stdout.print string
+  end
 
   ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
   def self.dict(*args)
