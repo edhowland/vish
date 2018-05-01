@@ -37,18 +37,17 @@ module InterpreterMethods
     @@interpreter.bc.pc = loc
   end
   ## _call(codes) - appends :fret to codes, attaches to executing, builds stack
-  # frame and sets return code, and jumps there
   def self._call(codes)
+#  puts 'in _call'
+#  puts @@interpreter.frames.inspect
+#    puts @@interpreter.ctx.vars.inspect
     if codes[-1] == :halt
-      codes[-1] =  :fret
+      codes[-1] =  :jmp
+      codes << @@interpreter.bc.pc
     else
-      codes << :fret
+      codes += [:jmp, @@interpreter.bc.pc]
     end
-          frame = FunctionFrame.new(Context.new)
-          frame.ctx.vars = @@interpreter.ctx.vars
-    frame.return_to = @@interpreter.bc.pc
     loc = _attach(codes)
-    @@interpreter.frames.push frame
     @@interpreter.bc.pc = loc
   end
 
