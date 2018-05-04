@@ -244,7 +244,9 @@ frame.ctx.vars = _binding.dup
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? NambdaType
   argc = ctx.stack.pop
+  if ltype[:arity] >= 0
       raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
+  end
 
   argv = ctx.stack.pop(argc)
       _binding = ltype[:binding]
@@ -252,17 +254,16 @@ frame.ctx.vars = _binding.dup
 frame.ctx.constants = ctx.constants
 frame.ctx.vars = _binding.dup
       frame.ctx.stack.push(*argv)
+#binding.pry
 
-      frame.return_to = bc.pc
-      frame = FunctionFrame.new(Context.new)
-frame.ctx.constants = ctx.constants
-frame.ctx.vars = _binding.dup
-      frame.ctx.stack.push(*argv)
+  if ltype[:arity] < 0
+    frame.ctx.stack.push(argc)
+  end
+
       frame.return_to = bc.pc
 
       fr.push(frame)
       bc.pc = ltype[:loc]
-
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.

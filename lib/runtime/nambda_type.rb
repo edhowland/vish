@@ -3,7 +3,7 @@
 
 class NambdaType < Hash
   include Type
-  def initialize parms:, body:, _binding:, loc:nil
+  def initialize parms:, body:, _binding:, loc: nil
     self[:parms] = parms
     self[:body] = parms + body + [:fret]
     self[:binding] = _binding

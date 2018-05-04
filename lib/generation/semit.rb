@@ -304,12 +304,12 @@ end
   end
   # a Funcall is a function name and a list of expressions
   def funcall(sexp)
-    fname = car(sexp).to_s.to_sym
-    if @named_lambdas[fname]
+#    fname = car(sexp).to_s.to_sym
+#    if @named_lambdas[fname]
       lambdacall(sexp)
-    else
-      _args(sexp) + [:pushl, fname, :icall]
-    end
+#    else
+#      _args(sexp) + [:pushl, fname, :icall]
+#    end
   end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
