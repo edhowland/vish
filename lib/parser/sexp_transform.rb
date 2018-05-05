@@ -242,7 +242,7 @@ class SexpTransform < Parslet::Transform
   rule(return: simple(:return_expr)) { sreturn(return_expr) }  
   rule(exit: simple(:_exit)) { mklist(:_exit) }
   rule(break: simple(:_break)) { mklist(:_break) }
-
+  rule(_icall: simple(:fn)) { mksexp(:_icall, fn) }
   # parameter : as in a parmlist to a function/lambda definition
   rule(parm: simple(:parm)) { sident(parm) }  
   # lambdas

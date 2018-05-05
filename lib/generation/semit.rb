@@ -303,6 +303,10 @@ end
     [:pushl, parms, :pushl, body, :pushl, 2, :pushl, :_mklambda, :icall]
   end
 
+  # _icall - emit a :icall opcode with a :pushl, cadr(sexp) and arg count of 0
+  def _icall(sexp)
+    [:pushl, @incr[], :pushl, cadr(sexp), :icall]
+  end
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)
     _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall]

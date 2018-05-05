@@ -80,11 +80,13 @@ class VishParser < Parslet::Parser
   rule(:_break) { str('break').as(:break) >> space? }
   rule(:_exit) { str('exit').as(:exit) >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
+  # This forces a explicit :icall opcode in the bytecode stream
+  rule(:_icall) { (str('_icall') >> space! >> symbol).as(:_icall) }
 
   # keywords for builtin data types
 #  rule(:null) { str('null').as(:null) >> space? }
 
-  rule(:keyword) { (_break | _exit | _return | pragma | import | export) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import | export | _icall) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }

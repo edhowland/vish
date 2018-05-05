@@ -36,11 +36,8 @@ module InterpreterMethods
   def self._jump(loc)
     @@interpreter.bc.pc = loc
   end
-  ## _call(codes) - appends :fret to codes, attaches to executing, builds stack
+  ## _call(codes) - appends :jmp, current.pc to codes, attaches to executing codes in interpreter.
   def self._call(codes)
-#  puts 'in _call'
-#  puts @@interpreter.frames.inspect
-#    puts @@interpreter.ctx.vars.inspect
     if codes[-1] == :halt
       codes[-1] =  :jmp
       codes << @@interpreter.bc.pc

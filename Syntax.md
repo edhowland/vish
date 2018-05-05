@@ -32,6 +32,7 @@ function names:
 - break - Breaks out the innermost loop it is encountered within.
 - return - Used only a function or lambda body to exit early with some value.
 - exit - Exits out of the program from whether it is encountered.
+- _icall - performs an explicit :icall opcode with the next symbol as function to call
 
 ### Reserved keywords for future use:
 
@@ -830,6 +831,25 @@ bar(%{2})
 Vish ships with several builtin functions.
 These can be treated like any other user-defined function. They can
 be called, used in a pipeline, passed into or out of a function.
+
+### The '_icall' keyword
+
+Sometimes, you need to explicitly call a builtin function or FFI function.
+By preceeding the symbol of the function withthe _icall keyword,
+yo can cause the parser to emit an explicit :icall opcode block with the next symbol
+as the name of the function to call.
+
+E.g. Suppose you wanted to call the dup() function without going through
+the normal normal function call sequence. (Perhaps you have renamed the dup variable to some other 
+function.)
+
+```
+# redefine dup:
+defn dup(a) { :a + 2 }
+# now call the real dup
+5 | _icall dup:
+# => 5
+```
 
 ### Linked Foreign Function Interface (FFI)
 

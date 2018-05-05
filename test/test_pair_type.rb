@@ -25,4 +25,9 @@ class TestPairType < BaseSpike
     pt = PairType.new key: :a, value: 9
     assert_eq pt.to_a, [:a, 9]
   end
+  # test other non-pairtype equality
+  def test_pair_is_not_equal_w_string
+    pair = PairType.new(key: 'xxx', value: 9)
+    assert_false pair == 'string'
+  end
 end

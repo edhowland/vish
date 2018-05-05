@@ -17,9 +17,10 @@ Dispatch << ParserLib
 source =<<-EOC
   loop {
     prints('vish>')
-    read() | parse() | _emit() |  _call() | print()
+    read() | parse() | _emit() | _icall _call: | print()
   }
 EOC
+source = File.read('std/lib.vs') + "\n" + source
 
 c = VishCompiler.new source
 bc, ctx = c.run
