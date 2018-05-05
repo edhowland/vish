@@ -19,6 +19,6 @@ module Dispatch
   end
   # ffi_ruby - enumerate Builtin/required Ruby FFI methods
   def self.ffi_ruby
-    @@klasses.map {|k| k.methods - Object.methods }.flatten
+    @@klasses.map {|k| k.methods(false) }.flatten
   end
 end

@@ -7,8 +7,8 @@ class TestBuiltins < BaseSpike
   def set_up
     @lib = standard_lib
   end
-  def test_unknown_fn_call_raises
-    assert_raises UnknownFunction do
+  def test_unknown_fn_call_raises_lambda_not_found
+    assert_raises LambdaNotFound do
       interpret 'foo()'
     end
   end
