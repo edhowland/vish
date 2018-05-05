@@ -1,5 +1,9 @@
 # Bugs
 
+## Bug: interactive Vish shell does not allow for lambda creation and calls.
+
+This only happens in ./bin/ivs.rb, not in compiled and executed code.
+
 ## Bug: Cannot escape single quote inside of single quote.
 
 ```

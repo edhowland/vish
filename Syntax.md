@@ -484,16 +484,14 @@ typeof(:pair)
 
 ##### Extracting the key or value from a PairType
 
-You can use the builtin 'xmit' function to get the individual elements of the PairType.
-This is usually not needed, which is why their is no syntactic sugar language constructs for it.
-
-Example:
+You can use either the builtin 'key()' or 'value()'  functions
+to extract the individual parts of a Pair.
 
 ```
 pair=baz: 99
-xmit(:pair,key:)
+key(:pair)
 # => :baz
-xmit(pair:, value:)
+value(:pair)
 # => 99
 ```
 
@@ -505,9 +503,9 @@ in ./std/lib.vs
 ```
 # use of std/lib.vs key/value functions
 pair=foo: 44
-key(:pair)
+car(:pair)
 # => :foo
-value(:pair)
+cdr(:pair)
 # => 44
 ```
 
@@ -825,3 +823,15 @@ bar(%{2})
 ```
 
 
+
+
+## Builtin functions
+
+Vish ships with several builtin functions.
+These can be treated like any other user-defined function. They can
+be called, used in a pipeline, passed into or out of a function.
+
+### Linked Foreign Function Interface (FFI)
+
+Any FFI function linked via the --require option at runtime, will be
+treated like any Vish buit-in function.
