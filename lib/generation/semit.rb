@@ -302,15 +302,6 @@ end
     body = self.eval(cadr(sexp))
     [:pushl, parms, :pushl, body, :pushl, 2, :pushl, :_mklambda, :icall]
   end
-  # a Funcall is a function name and a list of expressions
-  def funcall(sexp)
-#    fname = car(sexp).to_s.to_sym
-#    if @named_lambdas[fname]
-      lambdacall(sexp)
-#    else
-#      _args(sexp) + [:pushl, fname, :icall]
-#    end
-  end
 
   # lambda call - deref symbol which should be a NambdaType. then :ncall
   def lambdacall(sexp)

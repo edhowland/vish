@@ -81,7 +81,7 @@ def slambda(parms, block)
 end
 # Function calls
 def sfuncall(name, args)
-  mklist(:funcall, name, *(args.reject(&:nil?)))
+  mklist(:lambdacall, name, *(args.reject(&:nil?)))
 end
 
 def slambdacall(name, args)
