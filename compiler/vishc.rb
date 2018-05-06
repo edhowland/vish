@@ -5,6 +5,7 @@
 # Usage: ./vishc -o file.vsc file.vs [file2.vs, ...]
 
 require 'optparse'
+require 'erb'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
 

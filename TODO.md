@@ -28,6 +28,14 @@ of contiguous strings upto escape sequences and %{ vish-expression } s.
 
 Should somehow be part of function signature. Needed for type/program correctness
 
+### Negative arity
+
+Currently, the :arity member of the NambdaType structure is 0  .. n
+It can be manually changed to -1 and the :ncall with not error out when called.
+This is used to support the lambda proxies on built in functions and FFI 
+functions, since they have unknown arity and many are variadic. E.g. cat, print, list etc.
+
+The _mklambda should have a way to set this or override its calculation.
 
 ```
 # a variadic signature:
