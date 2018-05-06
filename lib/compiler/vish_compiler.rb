@@ -27,48 +27,7 @@ class VishCompiler
   end
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
-    # Remember where the function declarations are
-    memoize_functions(ast, functions)
-
-    # Find LogicalAnds, LogicalOrs and properly insert  BranchSource/BranchTarget
-    resolve_logical_and(ast)
-    resolve_logical_or(ast)
-
-    # resolve Pipe w/any right child nodes that respond_to? :argc
-    resolve_pipecalls(ast)
-
-
-    # Now the funcalls that are actually lambda calls get converted here.
-    convert_funcall_to_lambda_call(ast, functions)
-    # convert assigned blocks to lambdas w/0 parameters
-    convert_assigned_blocks_to_lambdas(ast)
-# Convert any block parameters to lambda clalls to lambdas
-    convert_block_parameters_to_lambdas(ast, LambdaCall)
-
-
-    # fixup Return classes
-
-    # Now add back in any previously declared functions passed in here.
-    @functions = functions.merge(@functions)
-
-    # Find and process any Lambdas
-    @lambdas = extract_lambdas(@ast)
-
-    # fix up any returns within lambdas
-    # REMOVEME because there is only one type o return
-    #fixup_returns(@lambdas.values.map(&:first), LambdaReturn)
-
-append_lambdas(ast, @lambdas)
-
-# fix up lambda name reference to lambda types into lambda entries
-# This is need for some reason ???
-    fixup_lambda_entries(@lambdas)
-
-    # add in any passed other lambdas. Possibly from earlier compiles.
-    @lambdas.merge!  lambdas
-  # replace any Funcall s (:icalls) with FunctionCall s (:fcall)
-  # REMOVEME because actual funcalls are now lambda calls, above
-#  differentiate_functions(@ast, @functions)
+    # NOP # for now, at least
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
@@ -95,10 +54,9 @@ start
   # run - runs all phases of compiler
   # TODO: Add in BulletinBoard.clear to ensure no left dangling JumpTargets
   def run source=@source
-#    BulletinBoard.clear
     parse source
     transform
-#    analyze
+    analyze
     generate
   end
 end
