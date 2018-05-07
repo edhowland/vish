@@ -14,7 +14,10 @@ require_relative '../common/store_codes'
   compile: false,
   deprecations: false,
   stdlib: true,
-  ofile: 'v.out.vsc'
+  ofile: 'v.out.vsc',
+  template: 'vish.erb',
+  ruby: false,
+  requires: []
 }
 opt = OptionParser.new do |o|
 o.banner = 'Vish compiler'
@@ -28,6 +31,16 @@ o.separator ''
   o.on('-o file', '--output file', String, 'Output to file') do |file|
     @options[:ofile] = file
     @options[:compile] = true
+  end
+  o.on('-R', '--ruby', 'Compile into Ruby output file.rb') do
+    @options[:ruby] = true
+@options[:compile] = false
+  end
+  o.on('-t file', '--template file', String, 'Use file.erb as template instead of vish.erb') do |file|
+    @options[:template] = file
+  end
+  o.on('-r file', '--require file', String, 'Add this required  gem or Ruby file into generated output .rb') do |file|
+    @options[:requires] << file
   end
     o.separator '=================================================='
 
@@ -110,7 +123,17 @@ rescue => err
   result
 end
 
-if @options[:compile]
+# render Ruby source file with ERB
+def render opt=@options
+  template = File.read('vish.erb')
+  renderer = ERB.new(template)
+  output = renderer.result()
+File.write(opt[:ofile], output)
+end
+
+if @options[:compile] and !@options[:ruby]
   result = compile(compose(ARGF.read), @options[:ofile])
   exit([true,false].index(result))
+elsif @options[:ruby]
+  render
 end

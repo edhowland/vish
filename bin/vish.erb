@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+# vish.erb - template for compiler output to Ruby file.rb
+# 
+
+require_relative "vish_runtime"
+
+ctx = Context.new
+bc = ByteCodes.new
+ci = CodeInterpreter.new bc, ctx
+
+# Main
+p ci.run
+
+
+
+
