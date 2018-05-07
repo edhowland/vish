@@ -1,7 +1,7 @@
 # Main requires for Viper lib
 
-require 'rubytree'
 require_relative 'vish/version'
+require_relative 'vish/vish_path'
 
 # common stuff
 require_relative 'runtime'
@@ -20,7 +20,6 @@ require_relative 'opcode_error'
 # anchor nodes
 
 # AST stuff
-require_relative 'mknode'
 
 
 

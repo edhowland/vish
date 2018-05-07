@@ -4,6 +4,13 @@
 
 require_relative "vish_runtime"
 
+### Foreign requires
+<% opt[:requires].each do |r|
+%>require_relative '<%= r %>'
+<% end %>
+
+###
+
 ctx = Context.new
 bc = ByteCodes.new
 ci = CodeInterpreter.new bc, ctx

@@ -127,7 +127,7 @@ end
 def render opt=@options
   template = File.read('vish.erb')
   renderer = ERB.new(template)
-  output = renderer.result()
+  output = renderer.result(binding)
 File.write(opt[:ofile], output)
 end
 

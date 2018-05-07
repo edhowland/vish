@@ -3,8 +3,9 @@
 class VishCompiler
   def initialize source=''
     @source = source
-  $node_name = 0 # start this from the beginning
-    @ast = mknode('root')
+#  $node_name = 0 # start this from the beginning
+#    @ast = mknode('root')
+@ast = NullType.new
     @parser = VishParser.new
     @ir = {}
     @transform = SexpTransform.new  #AstTransform.new
