@@ -107,16 +107,17 @@ end
 if @options[:deprecations]
   exit(deprecated?(compose(ARGF.read)))
 end
+def save compiler, ofile
+io = File.open(ofile, 'w')
+  store_codes(compiler.bc, compiler.ctx, io)
+end
 
-def compile(source, ofile)
+
+def compile source
   result = false
 begin
   compiler = VishCompiler.new source
   compiler.run
-
-  # now write it out to file.vshc
-io = File.open(ofile, 'w')
-  store_codes(compiler.bc, compiler.ctx, io)
   result = true
 rescue Parslet::ParseFailed => failure
   $stderr.puts failure.parse_failure_cause.ascii_tree
@@ -124,7 +125,7 @@ rescue => err
   $stderr.puts err.class.name
   $stderr.puts err.message
   end
-  result
+  [compiler, result]
 end
 
 # render Ruby source file with ERB
@@ -136,7 +137,8 @@ File.write(opt[:ofile], output)
 end
 
 if @options[:compile] and !@options[:ruby]
-  result = compile(compose(ARGF.read), @options[:ofile])
+  compiler, result = compile(compose(ARGF.read))
+save compiler, @options[:ofile] if result 
   exit([true,false].index(result))
 elsif @options[:ruby]
   render
