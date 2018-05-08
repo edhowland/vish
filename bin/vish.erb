@@ -20,8 +20,11 @@ require_relative "<%= vish_path('/runtime/vish_runtime') %>"
 
 ctx = Context.new
 bc = ByteCodes.new
+### emission of bytecodes
+bc.codes = <%= compiler.bc.codes %>
+###
 ci = CodeInterpreter.new bc, ctx
 
 # Main
 # TODO uncomment the following line:
-#p ci.run
+p ci.run

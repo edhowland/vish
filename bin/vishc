@@ -6,6 +6,7 @@
 
 require 'optparse'
 require 'erb'
+require 'fileutils'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
 
@@ -134,6 +135,7 @@ def render compiler, opt=@options
   renderer = ERB.new(template)
   output = renderer.result(binding)
 File.write(opt[:ofile], output)
+  FileUtils.chmod('+x', opt[:ofile])
 end
 
 if @options[:compile] and !@options[:ruby]
