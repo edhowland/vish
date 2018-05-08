@@ -3,3 +3,4 @@
     prints('vish>')
     read() | parse() | _emit() | _icall _call: | print()
   }
+
