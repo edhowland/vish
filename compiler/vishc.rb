@@ -3,8 +3,15 @@
 # The format of the bytecode is a Ruby Marshall serialized object after
 # The ByteCodes, Context after they been compiled.
 # Usage: ./vishc -o file.vsc file.vs [file2.vs, ...]
+# To create a Ruby wrapper  using vish.erb ERB file:
+# vishc --ruby -o file.rb file.vs
+# or vishc -R -i some_lib.rb -o file.rb file.vs
+# Note: in above case, some_lib.rb will be included inline in resulting output file.rb
+# To add some a gem or Ruby standard lib:
+# vishc -R -r net/http -o file.rb file.vs
 
 require 'optparse'
+require 'fileutils'
 require 'erb'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
@@ -134,6 +141,7 @@ def render compiler, opt=@options
   renderer = ERB.new(template)
   output = renderer.result(binding)
 File.write(opt[:ofile], output)
+  FileUtils.chmod('+x',opt[:ofile]) 
 end
 
 if @options[:compile] and !@options[:ruby]

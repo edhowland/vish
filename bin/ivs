@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# vish.erb - template for compiler output to Ruby file.rb
+# 
+
+require_relative "/home/vagrant/dev/vish/runtime/vish_runtime"
+
+### Foreign requires with -r, --require vishc compiler flag(s)
+
+###
+
+### Included files with -i, --include vishc compiler flag(s)
+
+## Included file: parser_lib.rb
+# parser_lib.rb - module ParserLib
+require_relative '../lib/vish'
+
+module ParserLib
+  def self.parse(string)
+    c = VishCompiler.new string
+    c.parse
+    c.transform
+    c.ast
+  end
+end
+
+Dispatch << ParserLib
+
+## end of  file: parser_lib.rb
+
+###
+
+ctx = Context.new
+bc = ByteCodes.new
+### Get the compiled bytecodes
+bc.codes = [:cls, :pushl, :mkattr, :pushl, [:pushl, :v, :swp, :set, :drop, :pushl, :k, :swp, :set, :drop], :pushl, [:pushl, :s, :pushv, :k, :pushl, "!", :pushl, 2, :pushl, :cat, :icall, :pushl, 1, :pushv, :mksym, :ncall, :assign, :pushv, :k, :pushl, [], :pushl, [:pushv, :v], :pushl, 2, :pushl, :_mklambda, :icall, :pushl, 2, :pushv, :mkpair, :ncall, :pushv, :s, :pushl, [:pushl, :x, :swp, :set, :drop], :pushl, [:pushl, :v, :pushv, :x, :assign, :pushv, :v], :pushl, 2, :pushl, :_mklambda, :icall, :pushl, 2, :pushv, :mkpair, :ncall, :pushl, 2, :pushv, :mkobject, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :keys, :pushl, [:pushl, :obj, :swp, :set, :drop], :pushl, [:pushv, :obj, :pushl, :keys, :pushl, 2, :pushv, :xmit, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :values, :pushl, [:pushl, :obj, :swp, :set, :drop], :pushl, [:pushv, :obj, :pushl, :values, :pushl, 2, :pushv, :xmit, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :car, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :key, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :cdr, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :value, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :cadr, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :cdr, :ncall, :pushl, 1, :pushv, :car, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :cddr, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :cdr, :ncall, :pushl, 1, :pushv, :cdr, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :caddr, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :cddr, :ncall, :pushl, 1, :pushv, :car, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :cdddr, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :cddr, :ncall, :pushl, 1, :pushv, :cdr, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :list_length, :pushl, [:pushl, :l, :swp, :set, :drop], :pushl, [:pushv, :l, :pushl, 1, :pushv, :null?, :ncall, :jmprf, 4, :pushl, 0, :fret, :pushl, 1, :pushv, :l, :pushl, 1, :pushv, :cdr, :ncall, :pushl, 1, :pushv, :list_length, :ncall, :add], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :null, :pushl, 0, :pushv, :mknull, :ncall, :assign, :pushl, :version, :pushl, 0, :pushv, :version, :ncall, :assign, :pushl, :pwd, :pushl, [], :pushl, [:pushl, 0, :pushv, :pwd, :ncall], :pushl, 2, :pushl, :_mklambda, :icall, :assign, :pushl, :version, :pushl, "0.5.1", :assign, :pushl, "vish>", :pushl, 1, :pushv, :prints, :ncall, :pushl, 0, :pushv, :read, :ncall, :pushl, 1, :pushv, :parse, :ncall, :pushl, 1, :pushv, :_emit, :ncall, :pushl, 1, :pushl, :_call, :icall, :pushl, 1, :pushv, :print, :ncall, :jmpr, -33, :halt]
+###
+ci = CodeInterpreter.new bc, ctx
+
+# Main
+# TODO uncomment the following line:
+p ci.run
