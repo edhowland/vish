@@ -20,6 +20,9 @@ defn list_length(l) {
   null?(:l) && return 0
   1 + list_length(cdr(:l))
 }
+defn undefined?(key) {
+_undefined?(:key, binding())
+}
 # set up some variables
 null=mknull()
 version=version()

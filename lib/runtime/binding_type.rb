@@ -86,7 +86,6 @@ class BindingType
   def length
     count = 0
     inter = @bindings
-#binding.pry
 
     while inter != @@__TOP_LEVEL
       count += 1
@@ -106,5 +105,9 @@ class BindingType
   end
   def xinspect
     @bindings.xinspect
+  end
+  def exist?(key)
+    attempt = find_pair(key)
+    ! root?(attempt)
   end
 end

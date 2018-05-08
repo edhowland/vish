@@ -242,7 +242,17 @@ module Builtins
   ## nul?(list) - true if list is the Null list : ()
   def self.null?(object)
     object.instance_of?(NullType)
-#    pair?(object) && NullType.instance_of?(object)  #PairType.null?(object)
+  end
+  ## undefined? object - true if object is an undefined
+  def self._undefined?(object, bind)
+    case object
+    when Symbol
+      bind.exist?(object)
+    when String
+      object == Undefined
+    else
+      false
+    end
   end
 
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)

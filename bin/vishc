@@ -17,7 +17,7 @@ require_relative '../common/store_codes'
   stdlib: true,
   ofile: 'v.out.vsc',
 loads: [],
-  template: 'vish.erb',
+  template: vish_path('/bin/vish.erb'),
   ruby: false,
   requires: [],
 includes: []
@@ -136,7 +136,7 @@ end
 
 # render Ruby source file with ERB
 def render compiler, opt=@options
-  template = File.read('vish.erb')
+  template = File.read(opt[:template])
   renderer = ERB.new(template)
   output = renderer.result(binding)
 File.write(opt[:ofile], output)
