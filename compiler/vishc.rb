@@ -129,7 +129,7 @@ rescue => err
 end
 
 # render Ruby source file with ERB
-def render opt=@options
+def render compiler, opt=@options
   template = File.read('vish.erb')
   renderer = ERB.new(template)
   output = renderer.result(binding)
@@ -139,7 +139,13 @@ end
 if @options[:compile] and !@options[:ruby]
   compiler, result = compile(compose(ARGF.read))
 save compiler, @options[:ofile] if result 
-  exit([true,false].index(result))
 elsif @options[:ruby]
-  render
+  compiler, result = compile(compose(ARGF.read)) 
+  if result
+    render(compiler) 
+  else
+    $stderr.puts "Could not create output Ruby file: #{@options[:ofile]} because of compiler error."
+  end
 end
+
+  exit([true,false].index(result))
