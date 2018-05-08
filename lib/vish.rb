@@ -1,4 +1,6 @@
 # Main requires for Viper lib
+require 'rake'
+
 
 require_relative 'vish/version'
 require_relative 'vish/vish_path'

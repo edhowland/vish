@@ -17,7 +17,8 @@ require_relative '../common/store_codes'
   ofile: 'v.out.vsc',
   template: 'vish.erb',
   ruby: false,
-  requires: []
+  requires: [],
+includes: []
 }
 opt = OptionParser.new do |o|
 o.banner = 'Vish compiler'
@@ -40,7 +41,10 @@ o.separator ''
     @options[:template] = file
   end
   o.on('-r file', '--require file', String, 'Add this required  gem or Ruby file into generated output .rb') do |file|
-    @options[:requires] << file
+    @options[:requires] << file.pathmap('%d/%f')
+  end
+  o.on('-i file', '--include file', String, 'Include file in Ruby output file') do |file|
+    @options[:includes] << file
   end
     o.separator '=================================================='
 
