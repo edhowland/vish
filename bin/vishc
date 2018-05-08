@@ -67,7 +67,7 @@ opt.parse!
 
 def compose(source, opts=@options)
   if opts[:stdlib]
-    source = File.read(stdlib) + "\nversion='#{Vish::VERSION}'\n" + source
+    source = File.read(stdlib) + source
   end
   source
 end
