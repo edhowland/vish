@@ -2,7 +2,7 @@
 # vsr.rb - vre CLI tool to run .vsc bytecodes files, like JRE
 require "optparse"
 
-require_relative "vish_runtime"
+require_relative "../runtime/vish_runtime"
 
 opt=OptionParser.new do |o|
   o.banner = "vsr - Runtime for compiled Vish symcode files: *.vsc\nUsage: vsr myfile.vsc"

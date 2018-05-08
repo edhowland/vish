@@ -16,6 +16,7 @@ require_relative '../common/store_codes'
   deprecations: false,
   stdlib: true,
   ofile: 'v.out.vsc',
+loads: [],
   template: 'vish.erb',
   ruby: false,
   requires: [],
@@ -33,6 +34,9 @@ o.separator ''
   o.on('-o file', '--output file', String, 'Output to file') do |file|
     @options[:ofile] = file
     @options[:compile] = true
+  end
+  o.on('-l file', '--load file', String, 'Loads Vish sources files to be compiled before target.vs') do |file|
+    @options[:loads] << file
   end
   o.on('-R', '--ruby', 'Compile into Ruby output file.rb') do
     @options[:ruby] = true
@@ -66,6 +70,7 @@ end
 opt.parse!
 
 def compose(source, opts=@options)
+  source = opts[:loads].map {|f| File.read(f) }.join("\n") + "\n" + source + "\n"
   if opts[:stdlib]
     source = File.read(stdlib) + source
   end
