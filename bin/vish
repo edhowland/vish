@@ -1,0 +1,50 @@
+#!/usr/bin/env ruby
+# vish - runs Vish scripts: *.vs
+
+require_relative '../lib/vish'
+require_relative 'options'
+require_relative 'startup'
+
+options = { stdlib: true,
+  ifiles: []
+}
+opt=get_options('vish', 'Compile and run Vish source file file.vs') { options }
+opt.parse!
+
+# This bit of Jiggery-Do is to ensure contract with scripts and outer environment
+script_name = '<empty>'
+remains = []
+if ARGV.member?('-')
+  ndx = ARGV.index '-'
+  unless ndx.zero?
+    script_name = ARGV[ndx - 1]
+  end
+  count = ARGV.length - ndx
+  remains = ARGV.pop(count)
+  remains.shift
+else
+  unless ARGV.empty?
+    script_name = ARGV.last
+  end
+end
+
+# Now consume all Vish scripts loaded with -l or just on the command line
+source = startup(options) { options[:ifiles].map {|n| File.read(n) }.join("\n") } + "\n" + ARGF.read
+
+# Now restore ARGV for our script
+remains.unshift script_name
+ARGV.push *remains
+exit_status = 1
+begin
+  eval = Evaluator.new
+  p eval.eval(source)
+exit_status = 0
+rescue Parslet::ParseFailed => err
+    puts "Syntax Error: #{err.message}"
+  rescue VishRuntimeError => err
+    puts "Runtime error: #{err.message}"
+  rescue CompileError => err
+  puts "Compile error: #{err.message}"
+end
+
+exit(exit_status)
