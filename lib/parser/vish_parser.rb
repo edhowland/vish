@@ -148,7 +148,7 @@ class VishParser < Parslet::Parser
   # operators and precedence
   # Note: Only do binary operators here. The meaning of infix!
   rule(:infix_oper) { infix_expression(group,
-    [star_star, 5, :left],
+    [star_star, 5, :right],
     [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
     [plus, 3, :right], [minus, 3, :right],
      [lte, 2, :left], [gte, 2, :left], [equal_equal, 2, :left], [bang_equal, 2, :left], [langle, 2, :left], [rangle, 2, :left],

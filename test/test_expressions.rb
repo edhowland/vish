@@ -53,4 +53,8 @@ class TestExpressions < BaseSpike
   def test_vectors_are_not_the_same
     assert_false interpret('a=[1,2];eq?(:a, [1,2])')
   end
+  # associativity for power operator: ** should be right assoc
+  def test_right_assoc_of_power_op
+    assert_eq interpret('2 ** 3 ** 2'), 512
+  end
 end
