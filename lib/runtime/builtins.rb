@@ -37,7 +37,10 @@ module Builtins
     obj.send(:class)
     end
   end
-
+  ## idof(object) - returns object_id of object
+  def self.idof(object)
+    object.object_id
+  end
   ## length(object) - if item responds to :length message: returns length as integer
   ### else returns false
   def self.length(object)

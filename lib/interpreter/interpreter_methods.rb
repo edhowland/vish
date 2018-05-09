@@ -55,6 +55,19 @@ module InterpreterMethods
     result[:loc] = loc
     result
   end
+  ## _globals - returns top level bindings
+  def self._globals()
+    @@interpreter.frames[0].ctx.vars
+  end
+  ## _toprun(codes) - run these codes at the top level
+  def self._toprun(codes)
+    ctx = Context.new
+    ctx.vars = _globals()
+    fr = FunctionFrame.new(ctx)
+    @@interpreter.frames.push fr
+    _call(codes)
+    @@interpreter.frames.pop
+  end
 
   ## _codes - output the entire bytecodes. - Used mainly for debugging
   def self._codes()

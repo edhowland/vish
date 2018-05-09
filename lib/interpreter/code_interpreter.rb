@@ -40,7 +40,7 @@ class CodeInterpreter
     # Storage for the Heap
     @heap = {}
 
-    # hook into dispatcher. Mainly for debugging
+    # hook into dispatcher.
     InterpreterMethods.add_interpreter(self)
     Dispatch << InterpreterMethods
     # setup all FFI methods as :icalls and ctx.vars in scope

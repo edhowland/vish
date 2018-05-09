@@ -1,16 +1,5 @@
 # Bugs
 
-## Bug: must make bin/vish.erb accessible from anywhere.
-
-
-## Bug: Should expect more than one file in vishc compiler
-
-Nice error message, if after processing all -l inputs, no more
-file and/or more than one file.
-
-Remove ARGF for ARGV[0] and not ARGV.empty?
-
-
 
 ## Bug: Cannot escape single quote inside of single quote.
 
