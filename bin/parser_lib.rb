@@ -8,6 +8,10 @@ module ParserLib
     c.transform
     c.ast
   end
+  ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
+  def self._emit(ast)
+    Semit.new.emit(ast)
+  end
 end
 
 Dispatch << ParserLib

@@ -23,10 +23,7 @@ module InterpreterMethods
     result
   end
 
-  ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
-  def self._emit(ast)
-    Semit.new.emit(ast)
-  end
+
   ## _halt - append a :halt instruction onto emitted bytecodes
   def self._halt(codes)
     codes << :halt
