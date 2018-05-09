@@ -23,6 +23,11 @@ defn list_length(l) {
 defn undefined?(key) {
 _undefined?(:key, binding())
 }
+# utility/collection
+defn map(coll, fn) {
+  empty?(:coll) && return []
+  [%fn(head(:coll))] + map(tail(:coll), :fn)
+}
 # set up some variables
 null=mknull()
 version=version()
