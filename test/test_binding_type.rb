@@ -172,4 +172,13 @@ class TestBindingType < BaseSpike
     @b[:d]=3
     assert_eq @b.length, 4
   end
+  # can pass binding out of function
+  def test_can_pass_out_inner_binding_from_function
+    result = interpret 'defn foo(x) { binding()};b=foo(2);:b[x:]'
+    assert_eq result, 2
+  end
+  def test_can_set_local_in_inner_binding_and_get_it_out
+    result = interpret 'defn bar() { z=99; binding()};b=bar();:b[z:]'
+    assert_eq result, 99
+  end
 end
