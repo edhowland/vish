@@ -15,6 +15,10 @@ class NambdaType < Hash
   def type
     self.class
   end
+  # binding_dup - calls dup on behalf of optcode :ncall
+  def binding_dup
+    self[:binding].dup
+  end
 
   def inspect
     "#{type.name}: loc: #{self[:loc]}"

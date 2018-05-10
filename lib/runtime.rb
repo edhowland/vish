@@ -18,6 +18,8 @@ require_relative "runtime/dispatch"
 require_relative "runtime/frame"
 require_relative "runtime/lambda_type"
 require_relative 'runtime/nambda_type'
+require_relative 'runtime/internal_function'
+
 
 require_relative "runtime/lambda_not_found"
 require_relative "runtime/unknown_function"

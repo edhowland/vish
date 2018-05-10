@@ -249,10 +249,10 @@ frame.ctx.vars = _binding.dup
   end
 
   argv = ctx.stack.pop(argc)
-      _binding = ltype[:binding]
+      #_binding = ltype[:binding]
       frame = FunctionFrame.new(Context.new)
 frame.ctx.constants = ctx.constants
-frame.ctx.vars = _binding.dup
+frame.ctx.vars = ltype.binding_dup #_binding.dup
       frame.ctx.stack.push(*argv)
 #binding.pry
 
