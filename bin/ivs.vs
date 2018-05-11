@@ -9,6 +9,6 @@ loop {
   loop {
     prints('vish>')
 src=read()
-    empty?(:src) || { parse(:src) | _emit() | _icall _call: | print() }
+    empty?(:src) || { parse(:src) | _emit() | _call() | print() }
   }
 

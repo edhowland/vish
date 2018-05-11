@@ -45,7 +45,8 @@ class CodeInterpreter
     Dispatch << InterpreterMethods
     # setup all FFI methods as :icalls and ctx.vars in scope
     Dispatch.ffi_ruby.each do |ffi|
-      ctx.vars[ffi] = NambdaType.new(parms:[], body:[:pushl, ffi, :icall], _binding:ctx.vars, loc:bc.codes.length)
+      ctx.vars[ffi] = InternalFunction.new(parms:[], body:[:pushl, ffi, :icall], _binding:ctx.vars, loc:bc.codes.length)
+      ctx.vars[ffi][:name] = ffi
       ctx.vars[ffi][:arity] = -1
       bc.codes += ctx.vars[ffi][:body]
     end

@@ -3,7 +3,10 @@
 # This lambda differs from normal by not actually calling binding.dup
 
 class InternalFunction < NambdaType
+  def binding_dup
+    self[:binding]
+  end
   def inspect
-    self.class.name
+    "#{self.class.name} #{self[:name]}"
   end
 end
