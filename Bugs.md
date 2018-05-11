@@ -28,7 +28,6 @@ Note: Seems to be missing return value. Perhaps this actually a REAL syntax erro
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,
-:frep trys to push the return value. It might be returning to a LoopFrame or BlockFrame.
 In that case, the frames.peek.ctx wil be nil or undefined method call.
 
 The solution would to 
@@ -62,7 +61,7 @@ This shoul have a default action at runtime,
 or be checked by the compiler during  analysis phase.
 
 
-## Bug: Should have actual Ruby objects in bytecodes, like LoopFrame objects
+## Bug: Should have actual Ruby objects in bytecodes, like 
 
 When written out .vsc files, as marshalled Ruby objects, this is not pure.
 

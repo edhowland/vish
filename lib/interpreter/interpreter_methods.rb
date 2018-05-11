@@ -7,6 +7,8 @@ module InterpreterMethods
   def self.add_interpreter interpreter
     @@interpreter = interpreter
   end
+  ## get the current binding
+  # Remember, if called through lambda proxy, gets that binding, not current  fn
   def self.binding()
     @@interpreter.frames.last.ctx.vars
   end

@@ -190,29 +190,21 @@ def opcodes tmpreg=nil
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx, _, intp) { value = ctx.stack.pop; $stdout.puts(value) },
 
-    # flow control : :bcall, :bret, etc
-    _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    __bcall: ->(bc, ctx, fr, intp) { 
-      frame=BlockFrame.new
-      frame.return_to = bc.pc
-      fr.push(frame)
-      var = ctx.stack.pop
-      loc = ctx.vars[var.to_sym]
-      bc.pc = loc 
-    },
+    # flow control :  :bret, etc
+
     _bret: 'pops return location off fr. jmps there',
     bret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
       loc = frame.return_to
       bc.pc = loc 
     },
-    _frame: 'Pushes Frame type on call stack',
-    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
+#    _frame: 'Pushes Frame type on call stack',
+#    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
 
 
   # Lambda call stuff
 
-  _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
+  _lcall: 'Lambda call.  calls LambdaType on top of stack',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType

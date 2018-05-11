@@ -31,8 +31,7 @@ class CodeInterpreter
     ebc, ectx = exit_handler
     @handlers[:_exit] = [ebc, ectx]
 
-    # Setup frames. Stack frame for LoopFrame, BlockFrame, MainFrame
-    # and FunctionFrame
+    # Setup frames. Stack frame for  MainFrame and FunctionFrame
     @frames = LockedStack.new(limit: 1000)
     # The MainFrame, which holds the Context, cannot be popped off this stack
     @frames.push(MainFrame.new(ctx))

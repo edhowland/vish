@@ -437,9 +437,6 @@ Because, we can never miss dessert, even if we caught nothing.
 
 ### Implementation:
 
-The catch block must be :bcalled into preserving the return location
-on the call stack. The end of the catch block must :bcall into the dessert block.  
-The end of the dinner block must also :bcall into the dessert block.
 
 --- Or they merely :jmp there. ---
 

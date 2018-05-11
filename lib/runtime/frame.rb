@@ -1,6 +1,6 @@
-# frame.rb - class Frame, BlockFrame, LoopFrame, FunctionFrame
+# frame.rb - class Frame,  MainFrame and FunctionFrame
 
-# class Frame - base class for BlockFrame, FunctionFrame and LoopFrame
+# class Frame - base class for  FunctionFrame 
 class Frame
   def initialize
     @ctx = Context.new
@@ -50,8 +50,6 @@ end
 class FunctionFrame < MainFrame
 end
 
-class LoopFrame < Frame
-end
 
 
 # class UnionFrame For type match of either FunctionFrame or MainFrame
