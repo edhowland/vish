@@ -9,9 +9,9 @@ module InterpreterMethods
   end
   ## get the current binding
   # Remember, if called through lambda proxy, gets that binding, not current  fn
-  def self.binding()
-    @@interpreter.frames.last.ctx.vars
-  end
+#  def self.binding()
+#    @@interpreter.frames.last.ctx.vars
+#  end
   ## binding?(object) - true if object is some binding
   def self.binding?(object)
     object.instance_of?(BindingType)
@@ -49,8 +49,7 @@ module InterpreterMethods
 
   ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
   def self._mklambda(parms, body, loc=nil)
-#    puts "in mklambda parms: #{parms}, body: #{body}"
-    result = NambdaType.new(parms:parms, body:body, _binding:binding(), loc:loc)
+    result = NambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
     # compute arity here. Might have to change for variadic lambdas
     result[:arity] = parms.length.zero? ? 0 : parms.length/5
     loc = _attach(result[:body])

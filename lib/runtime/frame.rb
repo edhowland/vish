@@ -44,6 +44,10 @@ class MainFrame < Frame
   def frame_id
     "#{self.class.name}_#{self.object_id.to_s}".to_sym
   end
+  # get the current binding# Not to be confused with member :binding of the lambda itself
+  def _binding
+    @ctx.vars
+  end
 end
 
 # FunctionFrame - storage for user defined functions

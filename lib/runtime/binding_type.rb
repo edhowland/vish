@@ -96,12 +96,7 @@ class BindingType
   # Displays the type of this object: BindingType
   # To get contents, do xmit(binding(), variables:) in Vish ivs REPL
   def inspect
-    result ="#{type} length: #{length}"
-
-#  walk do |b|
-#    result << (b.inspect + ' ')
-#  end
-    result
+    "#{self.class.name} length: #{length}"
   end
   def xinspect
     @bindings.xinspect

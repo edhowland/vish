@@ -12,7 +12,10 @@ def opcodes tmpreg=nil
     pushc: ->(bc, ctx, _, intp) { i = bc.next; ctx.stack.push ctx.constants[i] },
 
     _pushv: 'pushv : Pushes value of named variable',
-    pushv: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(ctx.vars[var]) },
+    pushv: ->(bc, ctx, _, intp) {
+      var = bc.next
+      ctx.stack.push(ctx.vars[var]) 
+    },
 
     _pushl: 'pushl - Pushes literal of LValue on stack',
     pushl: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(var) },
@@ -259,7 +262,19 @@ frame.ctx.vars = ltype.binding_dup #_binding.dup
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.
+    _frame: 'Pushes frame stack onto data stack',
+    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(fr) },
 
+    _send: 'Sends the message in opcode to object on stop of stack, pushes result onto stack',
+    send: ->(bc, ctx, fr, intp) {
+      obj = ctx.stack.pop
+      msg = bc.next
+      if obj.respond_to?(msg)
+        ctx.stack.push(obj.send(msg))
+      else
+        raise VishRuntimeError.new "Object #{obj.class.naem} does not respond to #{msg}"
+      end
+    },
 
     _nop: 'Null operation.',
     nop: ->(bc, ctx, _, intp) { },

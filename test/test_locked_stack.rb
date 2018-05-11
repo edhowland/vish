@@ -69,6 +69,22 @@ class TestLockedStack < BaseSpike
   def test_limited_stack_safe_pop_w_empty_is_nil_and_does_not_raise_stack_underflow
     stack = LimitedStack.new limit:10
     assert stack.safe_pop.nil?
-
+  end
+  # previous frame
+  def test_previous_frame_is_main_frame
+    @stack.push MainFrame.new Context.new
+    @stack.push FunctionFrame.new Context.new
+    assert_is @stack.previous, MainFrame
+  end
+  def test_previous_raises_error_if_not_frames_on_stack
+    assert_raises VishRuntimeError do
+      @stack.previous
+    end
+    def test_previous_raises_runtime_error_if_only_1_item_on_stack
+      @stack.push MainFrame.new Context.new
+      assert_raises VishRuntimeError do
+        @stack.previous
+      end
+    end
   end
 end

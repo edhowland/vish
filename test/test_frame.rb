@@ -10,6 +10,5 @@ class TestFrame < BaseSpike
   def test_function_frame_is_equal_to_its_self
     assert FunctionFrame.new(@ctx) == FunctionFrame.new(@ctx)
   end
-
 end
 
