@@ -3,35 +3,32 @@
 # The format of the bytecode is a Ruby Marshall serialized object after
 # The ByteCodes, Context after they been compiled.
 # Usage: ./vishc -o file.vsc file.vs [file2.vs, ...]
-# To create a Ruby wrapper  using vish.erb ERB file:
-# vishc --ruby -o file.rb file.vs
-# or vishc -R -i some_lib.rb -o file.rb file.vs
-# Note: in above case, some_lib.rb will be included inline in resulting output file.rb
-# To add some a gem or Ruby standard lib:
-# vishc -R -r net/http -o file.rb file.vs
 
 require 'optparse'
-require 'fileutils'
 require 'erb'
+require 'fileutils'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
 
 @options = {
   check: false,
-  compile: false,
+  compile: true,
   deprecations: false,
   stdlib: true,
   ofile: 'v.out.vsc',
-  template: 'vish.erb',
+loads: [],
+  template: vish_path('/bin/vish.erb'),
   ruby: false,
   requires: [],
 includes: []
 }
 opt = OptionParser.new do |o|
-o.banner = 'Vish compiler'
-o.separator ''
+  o.banner = 'Vish compiler'
+  o.separator ''
+
   o.on('-c', '--check', 'Check syntax') do
     @options[:check] = true
+    @options[:compile] = false
   end
   o.on('--no-stdlib', 'Do not preload Vish standard lib first') do
     @options[:stdlib] = false
@@ -39,6 +36,9 @@ o.separator ''
   o.on('-o file', '--output file', String, 'Output to file') do |file|
     @options[:ofile] = file
     @options[:compile] = true
+  end
+  o.on('-l file', '--load file', String, 'Loads Vish sources files to be compiled before target.vs') do |file|
+    @options[:loads] << file
   end
   o.on('-R', '--ruby', 'Compile into Ruby output file.rb') do
     @options[:ruby] = true
@@ -71,14 +71,15 @@ o.separator ''
 end
 opt.parse!
 
+
 def compose(source, opts=@options)
+  source = opts[:loads].map {|f| File.read(f) }.join("\n") + "\n" + source + "\n"
   if opts[:stdlib]
-    source = File.read(stdlib) + "\nversion='#{Vish::VERSION}'\n" + source
+    source = File.read(stdlib) + source
   end
   source
 end
 
-#source = ARGF.read
 
 # Possibly add in Vish StdLib stuff
 
@@ -102,7 +103,7 @@ rescue Parslet::ParseFailed => failure
 end
 
 if @options[:check]
-  exit(check(compose(ARGF.read)))
+  exit(check(compose(File.read(ARGV[0]))))
 end
 
 def deprecated?(source)
@@ -112,7 +113,7 @@ def deprecated?(source)
 end
 
 if @options[:deprecations]
-  exit(deprecated?(compose(ARGF.read)))
+  exit(deprecated?(compose(File.read(ARGV[0]))))
 end
 def save compiler, ofile
 io = File.open(ofile, 'w')
@@ -137,18 +138,30 @@ end
 
 # render Ruby source file with ERB
 def render compiler, opt=@options
-  template = File.read('vish.erb')
+  template = File.read(opt[:template])
   renderer = ERB.new(template)
   output = renderer.result(binding)
 File.write(opt[:ofile], output)
-  FileUtils.chmod('+x',opt[:ofile]) 
+  FileUtils.chmod('+x', opt[:ofile])
 end
+
+if __FILE__ == $0
+if ARGV.empty?
+  $stderr.puts 'Must supply a single source file to check or compile'
+  exit(1)
+end
+
+if  ! File.exist?(ARGV[0])
+  $stderr.puts "File #{ARGV[0]} does not exist"
+  exit(1)
+end
+
 
 if @options[:compile] and !@options[:ruby]
   compiler, result = compile(compose(ARGF.read))
 save compiler, @options[:ofile] if result 
 elsif @options[:ruby]
-  compiler, result = compile(compose(ARGF.read)) 
+  compiler, result = compile(compose(File.read(ARGV[0]))) 
   if result
     render(compiler) 
   else
@@ -157,3 +170,4 @@ elsif @options[:ruby]
 end
 
   exit([true,false].index(result))
+end

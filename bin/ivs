@@ -1,29 +1,16 @@
 #!/usr/bin/env ruby
-# ivs.erb - template for compiler output to  ivs executable
+# vish.erb - template for compiler output to Ruby file.rb
 # 
 
-require 'optparse'
 require_relative "/home/vagrant/dev/vish/runtime/vish_runtime"
 
 ### Foreign requires with -r, --require vishc compiler flag(s)
 
 ###
 
-opt=OptionParser.new do |o|
-  o.banner = 'ivs - Interactive Vish shell'
-  o.separator  ''
-  o.on('-r file', '--require file', String, 'Require extra file before starting') do |file|
-    require file
-  end
-  o.separator  ''
-
-  o.on('-h', '--help', 'Displays this help') { puts o; exit() }
-  o.on('-v', '--version', 'Display the version of Vish') { puts Vish::VERSION; exit }
-end
-opt.parse!
 ### Included files with -i, --include vishc compiler flag(s)
 
-## Included file: parser_lib.rb
+## Included file: ./parser_lib.rb
 # parser_lib.rb - module ParserLib
 require_relative '../lib/vish'
 
@@ -42,7 +29,7 @@ end
 
 Dispatch << ParserLib
 
-## end of  file: parser_lib.rb
+## end of  file: ./parser_lib.rb
 
 ###
 

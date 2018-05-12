@@ -12,7 +12,7 @@ require_relative '../common/store_codes'
 
 @options = {
   check: false,
-  compile: false,
+  compile: true,
   deprecations: false,
   stdlib: true,
   ofile: 'v.out.vsc',
@@ -23,10 +23,12 @@ loads: [],
 includes: []
 }
 opt = OptionParser.new do |o|
-o.banner = 'Vish compiler'
-o.separator ''
+  o.banner = 'Vish compiler'
+  o.separator ''
+
   o.on('-c', '--check', 'Check syntax') do
     @options[:check] = true
+    @options[:compile] = false
   end
   o.on('--no-stdlib', 'Do not preload Vish standard lib first') do
     @options[:stdlib] = false
@@ -68,15 +70,7 @@ o.separator ''
   end
 end
 opt.parse!
-if ARGV.empty?
-  $stderr.puts 'Must supply a single source file to check or compile'
-  exit(1)
-end
 
-if ! File.exist?(ARGV[0])
-  $stderr.puts "File #{ARGV[0]} does not exist"
-  exit(1)
-end
 
 def compose(source, opts=@options)
   source = opts[:loads].map {|f| File.read(f) }.join("\n") + "\n" + source + "\n"
@@ -151,6 +145,18 @@ File.write(opt[:ofile], output)
   FileUtils.chmod('+x', opt[:ofile])
 end
 
+if __FILE__ == $0
+if ARGV.empty?
+  $stderr.puts 'Must supply a single source file to check or compile'
+  exit(1)
+end
+
+if  ! File.exist?(ARGV[0])
+  $stderr.puts "File #{ARGV[0]} does not exist"
+  exit(1)
+end
+
+
 if @options[:compile] and !@options[:ruby]
   compiler, result = compile(compose(ARGF.read))
 save compiler, @options[:ofile] if result 
@@ -164,3 +170,4 @@ elsif @options[:ruby]
 end
 
   exit([true,false].index(result))
+end
