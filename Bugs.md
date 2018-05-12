@@ -9,8 +9,6 @@
 ```
 
 
-## In sexp_transform
-
 ### Bug: No arity checking on any type oof lambda
 
 1. First detect arity at compile time
