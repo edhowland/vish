@@ -17,7 +17,6 @@ require_relative 'compiler'
 # Runtime only stuff
 
 
-require_relative 'opcode_error'
 
 # anchor nodes
 
