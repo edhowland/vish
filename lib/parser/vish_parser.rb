@@ -218,7 +218,7 @@ class VishParser < Parslet::Parser
 
   # Quotation: Should resolve to AST at runtime - :< 1+2 >: 
   # =>  (:add, ((:integer, ("1"@0, ())), ((:integer, ("2"@2, ())), ())))
-  rule(:quote) { qleft >> space? >> statement_list.as(:quote) >> space? >> qright }
+  rule(:quote) { str('quote') >> space? >> lbrace >> space? >> statement_list.as(:quote) >> rbrace }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }

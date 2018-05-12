@@ -32,6 +32,7 @@ function names:
 - break - Breaks out the innermost loop it is encountered within.
 - return - Used only a function or lambda body to exit early with some value.
 - exit - Exits out of the program from whether it is encountered.
+- quote - quotes a block, returning abstract syntax tree (AST) as S-Expression
 - _icall - performs an explicit :icall opcode with the next symbol as function to call
 
 ### Reserved keywords for future use:
@@ -670,6 +671,28 @@ o[quint:]=44
 Note: You Cannot use the dotted approach to assign values in an object at this time.
 This might be changed in the future.
 In the mean time, use the subscript approach or supply a setter method.
+
+
+## The quote keyword
+
+### Experimental
+
+The 'quote { ... }' expression returns the compiled expression between the braces
+as an abstract syntax tree or AST. This is represented with a nested S-Expression.
+
+The S-Expression is just a nested list of PairTypes.
+These can be examined, or modified and then sent along to _emit and _call
+if using the parser_lib.rb language FFI extension library.
+
+```
+vish> ex=quote { 4 * 3 + 2 }
+# => (:add, ((:mult, ((:integer, ("4"@7, ())), ((:integer, ("3"@9, ())), ()))), ((:integer, ("2"@11, ())), ())))
+# Now call it
+_emit(:ex) | _call()
+# => 14
+```
+
+
 ## Functions
 
 Vish has named and anonymous functions or lambdas.
