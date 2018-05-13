@@ -61,7 +61,6 @@ Vish has support for:
 
 Vish requires Ruby 2.2+
 
-### Note: Ruby version 2.2.0 and are only supported with the dependent rubytree/1.0.0 gem.
 
 It has been tested in the following environments:
 
