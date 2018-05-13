@@ -3,8 +3,7 @@
 # 
 
 require 'optparse'
-require_relative "<%= vish_path('/runtime/vish_runtime') %>"
-
+require_relative '../runtime/vish_runtime'
 ### Foreign requires with -r, --require vishc compiler flag(s)
 <% opt[:requires].each do |r|
 %>require_relative '<%= r %>'
