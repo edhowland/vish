@@ -2,7 +2,7 @@
 
 desc 'Builds the ivs REPL for Vish language'
 task :build do
-  sh './vishc -R -i ./parser_lib.rb -t vish.erb -o ivs ivs.vs'
+  sh './vishc -R -i ./parser_lib.rb -t ivs.erb -o ivs ivs.vs'
 end
 
 
