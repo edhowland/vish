@@ -145,6 +145,7 @@ For further reading on the syntax of Vish, please see:
 
 To read more information on the Vish language, please see the following files:
 
+- [Installing](INSTALL.md)
 - [Overview of language and runtime environment](Overview.md)
 - [Vish Language Syntax](Syntax.md)
 - [Vish runtime builtin functions](Builtins.md)
