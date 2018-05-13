@@ -41,5 +41,4 @@ bc.codes = [:cls, :pushl, :mkattr, :pushl, [:pushl, :v, :swp, :set, :drop, :push
 ci = CodeInterpreter.new bc, ctx
 
 # Main
-# TODO uncomment the following line:
 p ci.run

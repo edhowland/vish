@@ -1,5 +1,4 @@
 # context.rb - class  Context - scratchpad for constants, stack, vars, .etc
-# TODO: MOVEME to proper home for. ./interperter?
 
 # This value is stored before any assignment(s)
 Undefined = 'undefined'

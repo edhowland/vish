@@ -207,6 +207,11 @@ module Builtins
     end
     null?(o)
   end
+  ## binding?(object) - true if object is some binding
+  def self.binding?(object)
+    object.instance_of?(BindingType)
+  end
+
   ## object?(object) - true if object is ObjectType : Dictionary/Hash
   def self.object?(object)
     object.kind_of?(ObjectType)
