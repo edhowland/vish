@@ -22,10 +22,12 @@
   ## typeof(obj) - gives the class/??? of the obj
 
 
+  ## idof(object) - returns object_id of object
+
+
   ## length(object) - if item responds to :length message: returns length as integer
 
 
-  ### else returns false
 
 
   ## inspect runs inspect on its arguments
@@ -34,7 +36,6 @@
   ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
 
 
-  ## Outputs a trailing newline.
 
 
   ## cat(args) - concats its arguments and returns them
@@ -50,6 +51,9 @@
 
 
   ## readc - read a single character, do not wait for return
+
+
+    #consume
 
 
   ## File I/O
@@ -100,6 +104,9 @@
   ## print(args) - outputs all its args to stdout.
 
 
+  ## prints string - prints string w/o newlines
+
+
   ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
 
 
@@ -122,6 +129,9 @@
 
 
   ## list?(possible_list) - true if really a list
+
+
+  ## binding?(object) - true if object is some binding
 
 
   ## object?(object) - true if object is ObjectType : Dictionary/Hash
@@ -149,6 +159,9 @@
 
 
   ## nul?(list) - true if list is the Null list : ()
+
+
+  ## undefined? object - true if object is an undefined
 
 
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)
@@ -205,10 +218,16 @@
   ## lambda?(object)
 
 
+    object.class == NambdaType # LambdaType # TODO replace this back
+
+
   # xmit(object, message) - sends Ruby message to object and returns its result.
 
 
   ## string?(object) - true if object is a string
+
+
+  ## boolean? object - true if object is a true or false expression
 
 
   ## number?(object) - true if object an integer

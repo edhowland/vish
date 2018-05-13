@@ -90,7 +90,7 @@ fib(9)
 # end of fib.vs
 # Now compile it
 ./bin/vishc -o fib.vsc fib.vs
-#
+# Creates new file fib.vsc containing the bytecode.
 # Now run it
 ./bin/vsr fibvsc
 # => 34
@@ -99,11 +99,15 @@ fib(9)
 # => 34
 #
 # Now load in interactive REPL
-./bin/ivs -l fib.vs
+./bin/ivs  fib.vs
 vish> fib(12)
 # => 144
-[Ctrl-D]
-$
+vish> exit
+# Now run compiler targeting executable Ruby script
+./bin/vishc --ruby -o fib.rb fib.vs
+# creates new file fib.rb which is executable
+$ ./fib.rb
+# => 34
 ```
 
 
