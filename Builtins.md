@@ -10,10 +10,7 @@
   ## getenv() - returns dictionary object of running environment
 
 
-  ## getargs() - returns arguments passed to script or program, including name of
-
-
-  ## script or ivs
+  ## getargs() - returns arguments passed to script or program
 
 
   ## dup - just dups it input to its output (via the stack)
@@ -25,17 +22,13 @@
   ## idof(object) - returns object_id of object
 
 
-  ## length(object) - if item responds to :length message: returns length as integer
-
-
+  ## length(object) - if item responds to :length message: returns length as integer, else returns false
 
 
   ## inspect runs inspect on its arguments
 
 
-  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
-
-
+  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.  Outputs a trailing newline.
 
 
   ## cat(args) - concats its arguments and returns them
@@ -107,7 +100,7 @@
   ## prints string - prints string w/o newlines
 
 
-  ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  ## dict - returns object hash with every 2 items as key/value pairs.
 
 
   ## mksym(string_or_sym) - returns Symbol

@@ -18,8 +18,7 @@ module Builtins
   def self.getenv()
     ENV
   end
-  ## getargs() - returns arguments passed to script or program, including name of
-  ## script or ivs
+  ## getargs() - returns arguments passed to script or program
   def self.getargs()
     ARGV
   end
@@ -41,8 +40,7 @@ module Builtins
   def self.idof(object)
     object.object_id
   end
-  ## length(object) - if item responds to :length message: returns length as integer
-  ### else returns false
+  ## length(object) - if item responds to :length message: returns length as integer, else returns false
   def self.length(object)
     if object.respond_to?(:length)
       object.length
@@ -56,8 +54,7 @@ module Builtins
     args.inspect
   end
 
-  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
-  ## Outputs a trailing newline.
+  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.  Outputs a trailing newline.
   def self.echo(*args)
     args.map(&:to_s).join(' ') + "\n"
   end
@@ -156,11 +153,13 @@ module Builtins
     $stdout.print string
   end
 
-  ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  ## dict - returns object hash with every 2 items as key/value pairs.
   def self.dict(*args)
-    evens = array_select(args) {|e,i| i.even? }
-    odds = array_select(args) {|e,i| i.odd? }
-    evens.zip(odds).to_h
+    chunk = ->(a=-2,b=-1) {
+      ->(x) { a+=2;b+=2; [x[a], x[b]]}
+    }
+    chunkr=chunk.()
+    Array.new(args.length / 2).map { chunkr[args] }.to_h
   end
 
   ## mksym(string_or_sym) - returns Symbol

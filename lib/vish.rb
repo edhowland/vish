@@ -7,7 +7,6 @@ require_relative 'vish/vish_path'
 
 # common stuff
 require_relative 'runtime'
-require_relative 'api'
 
 
 # compiler stuff
