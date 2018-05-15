@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 This release eliminates the dependence on the rubytree gem.
 It implements an S-Expression intermediate abstract syntax tree (AST).
 
+### Changes
+
+#### Breaking changes
+
+- Must recompile all previous code to use this version. Use of new and deletion bytecodes.
+-  New syntax for string interpolations.
+- New syntax for blocks as objects for assigning, passing and returning from functions.
+  * Use of :{ statements } instead of a={ expr }
+
+
 ### Additions
 
 - All builtin functions and user supplied FFI Ruby methods are wrapped in lambdas.

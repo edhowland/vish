@@ -155,11 +155,8 @@ module Builtins
 
   ## dict - returns object hash with every 2 items as key/value pairs.
   def self.dict(*args)
-    chunk = ->(a=-2,b=-1) {
-      ->(x) { a+=2;b+=2; [x[a], x[b]]}
-    }
-    chunkr=chunk.()
-    Array.new(args.length / 2).map { chunkr[args] }.to_h
+    e = args.each
+    Array.new(args.length / 2).map { [e.next, e.next ] }.to_h
   end
 
   ## mksym(string_or_sym) - returns Symbol
@@ -288,12 +285,7 @@ module Builtins
 
 
 
-  ## mklambda - creates LambdaType 
-  def self.mklambda(name, arity, target)
-    l = LambdaType.new(name, arity)
-    l.target = target
-    l
-  end
+
   ## lambda?(object)
   def self.lambda?(object)
     object.class == NambdaType # LambdaType # TODO replace this back
