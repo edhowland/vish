@@ -207,23 +207,7 @@ def opcodes tmpreg=nil
 
   # Lambda call stuff
 
-  _lcall: 'Lambda call.  calls LambdaType on top of stack',
-    lcall: ->(bc, ctx, fr, intp) {
-      ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
-      argc = ctx.stack.pop
-      raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
-      argv = ctx.stack.pop(argc)
-_binding = ltype.binding
-      frame = FunctionFrame.new(Context.new)
-frame.ctx.constants = ctx.constants
-frame.ctx.vars = _binding.dup
-      frame.ctx.stack.push(*argv)
-      frame.return_to = bc.pc
 
-      fr.push(frame)
-      bc.pc = ltype.target
-    },
     _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
     fret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
