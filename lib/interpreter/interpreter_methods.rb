@@ -40,12 +40,19 @@ module InterpreterMethods
   end
 
   ## _mklambda - creates a NambdaType object. Can be called with :ncall bytecode
-  def self._mklambda(parms, body, loc=nil)
+  def self._mklambda(parms, body, id, loc=nil)
     result = NambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
     # compute arity here. Might have to change for variadic lambdas
     result[:arity] = parms.length.zero? ? 0 : parms.length/5
-    loc = _attach(result[:body])
+    g = self._globals
+    if g.exist? id
+      loc = g[id]
+    else
+      loc = _attach(result[:body])
+    g[id] = loc
+    end
     result[:loc] = loc
+    result[:id] = id
     result
   end
   ## _globals - returns top level bindings

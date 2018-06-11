@@ -123,4 +123,9 @@ a=~{bar: ->(fn) { %fn(10) }}
 EOC
     assert_eq result, 9
   end
+  # Make sure the same lambda has the same loc in bytecode even if created twice
+  def test_lambda_retains_its_location_in_bytecode
+    result = interpret 'defn foo() { ->() {} }; [%foo, %foo]'
+    assert_eq result.first[:loc], result.last[:loc]
+  end
 end

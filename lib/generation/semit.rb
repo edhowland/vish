@@ -300,7 +300,7 @@ end
 #puts "lambda: #{sexp.inspect}"
     parms = self.eval(car(sexp))
     body = self.eval(cadr(sexp))
-    [:pushl, parms, :pushl, body, :pushl, 2, :pushl, :_mklambda, :icall]
+    [:pushl, parms, :pushl, body, :pushl, genid(Object.new), :pushl, 3, :pushl, :_mklambda, :icall]
   end
 
   # _icall - emit a :icall opcode with a :pushl, cadr(sexp) and arg count of 0
