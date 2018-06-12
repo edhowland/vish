@@ -1,7 +1,6 @@
-# nambda_type.rb - class NambdaType < Hash - replacement for LambdaType
-# TODO: rename me to LambdaType
+# lambda_type.rb - class LambdaType < Hash - replacement for LambdaType
 
-class NambdaType < Hash
+class LambdaType < Hash
   include Type
   def initialize parms:, body:, _binding:, loc: nil
     self[:parms] = parms

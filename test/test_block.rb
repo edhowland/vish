@@ -15,9 +15,9 @@ class TestBlock < BaseSpike
   def test_block_can_be_1_statement_of_many
     assert_eq interpret( '{var=1+2};:var'), 3
   end
-  def _test_results_of_blocks_can_be_assigned_to_variables
+  def test_results_of_blocks_can_be_assigned_to_variables
     result = interpret('vv=:{5*3};:vv')
-    assert_is result, NambdaType
+    assert_is result, LambdaType
   end
 
   # tests for blocks used in conditionals

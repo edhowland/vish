@@ -221,7 +221,7 @@ def opcodes tmpreg=nil
     _ncall: 'New version of lambda call',
     ncall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? NambdaType
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
   argc = ctx.stack.pop
   if ltype[:arity] >= 0
       raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]

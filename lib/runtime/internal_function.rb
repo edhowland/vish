@@ -2,7 +2,7 @@
 # any FFI user supplied functions
 # This lambda differs from normal by not actually calling binding.dup
 
-class InternalFunction < NambdaType
+class InternalFunction < LambdaType
   def binding_dup
     self[:binding]
   end

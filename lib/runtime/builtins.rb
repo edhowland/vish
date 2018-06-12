@@ -288,7 +288,7 @@ module Builtins
 
   ## lambda?(object)
   def self.lambda?(object)
-    object.class == NambdaType # LambdaType # TODO replace this back
+    object.class == LambdaType
   end
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
