@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+# vish.erb - template for compiler output to Ruby file.rb
+# 
+
+require_relative "<%= vish_path('/runtime/vish_runtime') %>"
+
+### Foreign requires with -r, --require vishc compiler flag(s)
+<% opt[:requires].each do |r|
+%>require_relative '<%= r %>'
+<% end %>
+###
+
+### Included files with -i, --include vishc compiler flag(s)
+<% opt[:includes].each do |i| %>
+## Included file: <%= i %>
+<%= File.read(i) %>
+## end of  file: <%= i %>
+<% end %>
+###
+
+ctx = Context.new
+bc = ByteCodes.new
+### emission of bytecodes
+bc.codes = <%= compiler.bc.codes %>
+###
+ci = CodeInterpreter.new bc, ctx
+
+# Main
+p ci.run

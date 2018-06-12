@@ -12,8 +12,10 @@ class TestFunction < BaseSpike
     result = interpret 'defn foo(x) { :x == 0 && return 0; foo(:x - 1) };foo(10)'
     assert_eq result, 0
   end
-  def test_loop_can_break_from_within_lambda_within_function
-    interpret 'defn foo(fn) { %fn() }; loop { foo(->() { break }) }'
+  def test_loop_raises_compile_error_when_break_from_within_lambda_within_function
+    assert_raises CompileError do
+      interpret 'defn foo(fn) { %fn() }; loop { foo(->() { break }) }'
+    end
   end
   def test_function_can_return_lambda
     result = interpret 'defn foo() { ->() {1} }'

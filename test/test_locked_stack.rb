@@ -6,19 +6,11 @@ class TestLockedStack < BaseSpike
   def set_up
     @stack = LockedStack.new limit: 10
   end
-  def test_can_push_loop_frame
-    @stack.push LoopFrame.new
-  end
   def test_can_not_pop_below_stack_base
     assert_raises LockedStackLimitReached do
         @stack.pop
     end
 
-  end
-  def test_can_push_2_and_pop_1
-    @stack.push LoopFrame.new
-    @stack.push FunctionFrame
-    @stack.pop
   end
   # test push many things
   def test_can_push_more_than_thing
@@ -77,6 +69,22 @@ class TestLockedStack < BaseSpike
   def test_limited_stack_safe_pop_w_empty_is_nil_and_does_not_raise_stack_underflow
     stack = LimitedStack.new limit:10
     assert stack.safe_pop.nil?
-
+  end
+  # previous frame
+  def test_previous_frame_is_main_frame
+    @stack.push MainFrame.new Context.new
+    @stack.push FunctionFrame.new Context.new
+    assert_is @stack.previous, MainFrame
+  end
+  def test_previous_raises_error_if_not_frames_on_stack
+    assert_raises VishRuntimeError do
+      @stack.previous
+    end
+    def test_previous_raises_runtime_error_if_only_1_item_on_stack
+      @stack.push MainFrame.new Context.new
+      assert_raises VishRuntimeError do
+        @stack.previous
+      end
+    end
   end
 end

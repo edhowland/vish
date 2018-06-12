@@ -45,7 +45,7 @@ Additional tags can be added after the patchlevel part.
 This project is currently at the pre-alpha phase. As such, the above rules should apply as below:
 
 - [upcoming] - 0
-- Feature release - 5
+- Feature release - 6
 - Minor release - 0
 
 ```

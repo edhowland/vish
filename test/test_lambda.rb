@@ -57,9 +57,9 @@ class TestLambda < BaseSpike
   def test_4_mix_of_lambdas_and_blocks_can_call_each_other
     result = interpret <<EOC
 l1=->() {1}
-b1={%l1()}
+b1=:{%l1()}
 l2=->() {%b1}
-m2={%l2}
+m2=:{%l2}
 %m2
 EOC
     assert_eq result, 1
@@ -122,5 +122,10 @@ a=~{bar: ->(fn) { %fn(10) }}
 %a.bar(->(x) { :x - 1})
 EOC
     assert_eq result, 9
+  end
+  # Make sure the same lambda has the same loc in bytecode even if created twice
+  def test_lambda_retains_its_location_in_bytecode
+    result = interpret 'defn foo() { ->() {} }; [%foo, %foo]'
+    assert_eq result.first[:loc], result.last[:loc]
   end
 end

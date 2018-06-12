@@ -6,21 +6,22 @@ require_relative 'test_helper'
 class TestList < BaseSpike
   include CompileHelper
   def set_up
-    @null = Builtins.mknull()
+#    @null = Builtins.mknull()
+@lib = standard_lib
   end
   def test_null_q_is_true
-    result = interpret 'l=Null; null?(:l)'
+    result = interpret @lib + ';l=:null; null?(:l)'
     assert result
   end
   def test_nul_q_Null_is_true
-    assert interpret('null?(Null)')
+    assert interpret(@lib + ';null?(:null)')
   end
   def test_array_is_not_a_list
     result = interpret 'l=[];null?(:l)'
     assert_false result
   end
   def test_can_make_null_type
-    assert_is @null, NullType
+    assert_is interpret(@lib + ';:null'), NullType
   end
 
   # cons stuff
@@ -57,7 +58,7 @@ class TestList < BaseSpike
     assert interpret('list?(cons(1, mknull()))')
   end
   def test_list_q_is_still_true_for_long_list
-    assert interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, Null))))))')
+    assert interpret(@lib + ';list?(cons(1, cons(2, cons(3, cons(4, cons(5, :null))))))')
   end
   def test_list_q_is_false_for_long_chain_of_pairs_wo_null_tail
         assert_false interpret('list?(cons(1, cons(2, cons(3, cons(4, cons(5, 5))))))')

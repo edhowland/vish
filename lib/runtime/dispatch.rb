@@ -17,4 +17,8 @@ module Dispatch
   raise UnknownFunction.new(meth) if klass.nil?
     klass.send(meth, *args)
   end
+  # ffi_ruby - enumerate Builtin/required Ruby FFI methods
+  def self.ffi_ruby
+    @@klasses.map {|k| k.methods(false) }.flatten
+  end
 end

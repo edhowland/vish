@@ -26,8 +26,13 @@ class PairType
 
 #    "(#{@key} #{@value})"
   end
+  # == checks for types of key/value then checks for equality
   def ==(other)
-    self.key == other.key && self.value == other.value
+    if other.kind_of?(PairType)
+      self.key == other.key && self.value == other.value
+    else
+      false
+    end
   end
   def to_a
     [@key, @value]

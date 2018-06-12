@@ -36,8 +36,11 @@ remains.unshift script_name
 ARGV.push *remains
 exit_status = 1
 begin
-  eval = Evaluator.new
-  p eval.eval(source)
+
+vc = VishCompiler.new source
+vc.run
+ci = CodeInterpreter.new vc.bc, vc.ctx
+p ci.run
 exit_status = 0
 rescue Parslet::ParseFailed => err
     puts "Syntax Error: #{err.message}"

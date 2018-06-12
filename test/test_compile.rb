@@ -22,10 +22,7 @@ class TestCompile < BaseSpike
     bc, ctx = compile '_name=1'
   end
   def test_compile_1
-    ir = @parser.parse '1'
-    ast = @transform.apply ir
-    bc, ctx = emit_walker ast
-    assert_false bc.codes.empty?
+    assert_eq interpret('1'), 1
   end
   def test_compile_and_run_1
     bc, ctx = compile('1')
@@ -155,9 +152,7 @@ class TestCompile < BaseSpike
     bc, ctx = compile '         ' # many spaces
   end
   def test_empty_returns_only_program_start_and_ignore_and_then_finish_in_ast
-    ir = @parser.parse ''
-    ast = @transform.apply ir
-    assert_eq ast.length, 2
+    assert interpret('').nil?
   end
 
   # operator precedence

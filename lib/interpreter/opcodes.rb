@@ -12,7 +12,10 @@ def opcodes tmpreg=nil
     pushc: ->(bc, ctx, _, intp) { i = bc.next; ctx.stack.push ctx.constants[i] },
 
     _pushv: 'pushv : Pushes value of named variable',
-    pushv: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(ctx.vars[var]) },
+    pushv: ->(bc, ctx, _, intp) {
+      var = bc.next
+      ctx.stack.push(ctx.vars[var]) 
+    },
 
     _pushl: 'pushl - Pushes literal of LValue on stack',
     pushl: ->(bc, ctx, _, intp) { var = bc.next; ctx.stack.push(var) },
@@ -107,6 +110,18 @@ def opcodes tmpreg=nil
       ctx.vars[var] = val 
       ctx.stack.push val
     },
+    _assignx: 'Assigns a value to object, a vector or hash, via the .[]= method',
+    assignx: ->(bc,ctx, fr, intp) {
+      object, index, val = ctx.stack.pop(3)
+      result = object.[]=(index, val)
+      ctx.stack.push result
+    },
+    _index: 'Pushes value of index of object, either hash or vector',
+    index: ->(bc, ctx, fr, intp) {
+      object, ndx = ctx.stack.pop(2)
+      result = object.[](ndx)
+      ctx.stack.push result
+    },
     _set: 'Sets a new value in context vars binding, possibly shadowing other values',
     set: ->(bc, ctx, fr, intp) {
             var, val = ctx.stack.pop(2)
@@ -123,6 +138,31 @@ def opcodes tmpreg=nil
     jmpt: ->(bc, ctx, _, intp) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ex },
     _jmpf: 'Branch if top of stack is false to position of next operand',
         jmpf: ->(bc, ctx, _, intp) { ex = ctx.stack.pop; loc = bc.next; bc.pc = loc if ! ex },
+
+    _jmpr: 'Jump relative. Jumps to bytecode position relative to this opcode',
+    jmpr: ->(bc,ctx, fr, intp) {
+      _curr = bc.pc
+            _loc = bc.next
+      bc.pc = _curr + _loc
+    },
+    _jmprt: 'Jumps relative to this position if top of stack true',
+    jmprt: ->(bc, ctx, fr, intp) {
+  val = ctx.stack.pop
+                  _loc = bc.next
+      if val
+              _curr = bc.pc
+        bc.pc = _curr + _loc - 1
+       end
+    },
+    _jmprf: 'Jumps relative from here if top of stack is false',
+    jmprf: ->(bc, ctx, fr, intp) {
+          val = ctx.stack.pop
+              _loc = bc.next
+      unless val
+                    _curr = bc.pc
+        bc.pc = _curr + _loc - 1
+      end
+    },
 
     # call stack manipulation :unwind, :pusht
     _unwind: 'Unwinds one object off call stack and pushes on interperter stack.',
@@ -153,45 +193,21 @@ def opcodes tmpreg=nil
     _print: 'Prints the top 1 item off the stack.',
     print: ->(bc, ctx, _, intp) { value = ctx.stack.pop; $stdout.puts(value) },
 
-    # flow control : :bcall, :bret, etc
-    _bcall: 'pops name of block to jump to. . Pushes return location on call stack for eventual :bret opcode',
-    __bcall: ->(bc, ctx, fr, intp) { 
-      frame=BlockFrame.new
-      frame.return_to = bc.pc
-      fr.push(frame)
-      var = ctx.stack.pop
-      loc = ctx.vars[var.to_sym]
-      bc.pc = loc 
-    },
+    # flow control :  :bret, etc
+
     _bret: 'pops return location off fr. jmps there',
     bret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
       loc = frame.return_to
       bc.pc = loc 
     },
-    _frame: 'Pushes Frame type on call stack',
-    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
+#    _frame: 'Pushes Frame type on call stack',
+#    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
 
 
   # Lambda call stuff
 
-  _lcall: 'Lambda call. Like :fcall, but with :bcall sugar sprinkled in',
-    lcall: ->(bc, ctx, fr, intp) {
-      ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
-      argc = ctx.stack.pop
-      raise VishArgumentError.new(ltype.arity, argc) if argc != ltype.arity
-      argv = ctx.stack.pop(argc)
-_binding = ltype.binding
-frame = FunctionFrame.new(Context.new)
-frame.ctx.constants = ctx.constants
-frame.ctx.vars = _binding.dup
-frame.ctx.stack.push(*argv)
-      frame.return_to = bc.pc
 
-      fr.push(frame)
-      bc.pc = ltype.target
-    },
     _fret: 'Returns from function. Pops FunctionFrame off frames stack. Uses .return_to to return to calling code',
     fret: ->(bc, ctx, fr, intp) {
       frame = fr.pop
@@ -201,8 +217,48 @@ frame.ctx.stack.push(*argv)
       frame.pop_retto
     },
 
-    # machine low-level instructions: nop, halt, :int,  etc.
+    # New version of  lcall: TODO. rename this to :lcall, remove old :lcall
+    _ncall: 'New version of lambda call',
+    ncall: ->(bc, ctx, fr, intp) {
+      ltype = ctx.stack.pop
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+  argc = ctx.stack.pop
+  if ltype[:arity] >= 0
+      raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
+  end
 
+  argv = ctx.stack.pop(argc)
+      #_binding = ltype[:binding]
+      frame = FunctionFrame.new(Context.new)
+frame.ctx.constants = ctx.constants
+frame.ctx.vars = ltype.binding_dup #_binding.dup
+      frame.ctx.stack.push(*argv)
+#binding.pry
+
+  if ltype[:arity] < 0
+    frame.ctx.stack.push(argc)
+  end
+
+      frame.return_to = bc.pc
+
+      fr.push(frame)
+      bc.pc = ltype[:loc]
+    },
+
+    # machine low-level instructions: nop, halt, :int,  etc.
+    _frame: 'Pushes frame stack onto data stack',
+    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(fr) },
+
+    _send: 'Sends the message in opcode to object on stop of stack, pushes result onto stack',
+    send: ->(bc, ctx, fr, intp) {
+      obj = ctx.stack.pop
+      msg = bc.next
+      if obj.respond_to?(msg)
+        ctx.stack.push(obj.send(msg))
+      else
+        raise VishRuntimeError.new "Object #{obj.class.naem} does not respond to #{msg}"
+      end
+    },
 
     _nop: 'Null operation.',
     nop: ->(bc, ctx, _, intp) { },

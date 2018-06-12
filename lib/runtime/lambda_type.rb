@@ -1,25 +1,25 @@
-# lambda_type.rb - class LambdaType < Type - holds data regarding lambda :location, 
-# arity, etc
+# lambda_type.rb - class LambdaType < Hash - replacement for LambdaType
 
-# module LambdaFunction < Type 
-# Used for typeof? operator
-module LambdaFunction
+class LambdaType < Hash
   include Type
-end
-
-
-class LambdaType
-  include Type
-  def initialize name, arity=0
-    @name = name
-    @name.extend(LambdaFunction)
-    @arity = arity
-    @target = 0
-    @binding = nil
+  def initialize parms:, body:, _binding:, loc: nil
+    self[:parms] = parms
+    self[:body] = parms + body + [:fret]
+    self[:binding] = _binding
+    self[:loc] = loc
+  self[:name] = :anonymous
+  self[:doc] = :nodoc
   end
-  attr_reader :name, :arity
-  attr_accessor :target, :binding
+
+  def type
+    self.class
+  end
+  # binding_dup - calls dup on behalf of optcode :ncall
+  def binding_dup
+    self[:binding].dup
+  end
+
   def inspect
-    "LambdaType: name: #{name}, arity: #{@arity}, target: #{@target} binding: #{@binding}"
+    "#{type.name}: loc: #{self[:loc]}"
   end
 end

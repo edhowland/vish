@@ -8,14 +8,14 @@ program API. It derives from  The Viper code editor for screenreader users versi
 [Viper](https://github.com/edhowland/viper)
 
 
-Vish has a simple syntax but a very sparse runtime environment.
+Vish has a simple syntax and a very sparse runtime environment.
 However, by requiring Ruby libraries or gems and providing a thin wrapper
 to them, it can be turned into any Domain specific Language (DSL) for nearly any
 application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.5.1
+## Version 0.6.0
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -34,6 +34,13 @@ It has:
 - Script runner : Compile and run Vish code (*.vs).
 - Interactive Read Eval Print Loop (REPL).
 - Syntax Checker in compiler.
+
+#### Additional note regarding the compiler
+
+The Vish compiler can also output a single executable Ruby script that wraps your
+compiled Vish bytecode. This makes it easy to deploy your Vish programs
+without needing the entire Vish language stack to be present on the target
+computer or for other users.
 
 ### Language Features
 
@@ -54,7 +61,6 @@ Vish has support for:
 
 Vish requires Ruby 2.2+
 
-### Note: Ruby version 2.2.0 and are only supported with the dependent rubytree/1.0.0 gem.
 
 It has been tested in the following environments:
 
@@ -84,7 +90,7 @@ fib(9)
 # end of fib.vs
 # Now compile it
 ./bin/vishc -o fib.vsc fib.vs
-#
+# Creates new file fib.vsc containing the bytecode.
 # Now run it
 ./bin/vsr fibvsc
 # => 34
@@ -93,11 +99,15 @@ fib(9)
 # => 34
 #
 # Now load in interactive REPL
-./bin/ivs -l fib.vs
+./bin/ivs  fib.vs
 vish> fib(12)
 # => 144
-[Ctrl-D]
-$
+vish> exit
+# Now run compiler targeting executable Ruby script
+./bin/vishc --ruby -o fib.rb fib.vs
+# creates new file fib.rb which is executable
+$ ./fib.rb
+# => 34
 ```
 
 
@@ -135,6 +145,7 @@ For further reading on the syntax of Vish, please see:
 
 To read more information on the Vish language, please see the following files:
 
+- [Installing](INSTALL.md)
 - [Overview of language and runtime environment](Overview.md)
 - [Vish Language Syntax](Syntax.md)
 - [Vish runtime builtin functions](Builtins.md)

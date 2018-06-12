@@ -5,7 +5,36 @@ require_relative 'test_helper'
 class TestObject < BaseSpike
   include CompileHelper
   def set_up
-    @lib = 'defn mkattr(k,v) {  s=mksym("set_:{:k}");  mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v })) };'
+#    @lib = 'defn mkattr(k,v) {  s=mksym("set_:{:k}");  mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v })) };'
+    @lib =<<-EOD
+# std/lib.vs - Vish Standard Library functions
+# mkarr - creates object for use of  in object construction
+# Usage: obj=mkarr(foo:, 2)
+defn mkattr(k,v) {
+  s=mksym("%{:k}!")
+  mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v }))
+}
+defn keys(obj) { xmit(:obj, keys:) }
+defn values(obj) { xmit(:obj, values:) }
+
+# list helpers
+defn car(l) { key(:l) }
+defn cdr(l) { value(:l) }
+defn cadr(l) { car(cdr(:l)) }
+defn cddr(l) { cdr(cdr(:l)) }
+defn caddr(l) { car(cddr(:l)) }
+defn cdddr(l) { cdr(cddr(:l)) }
+
+defn list_length(l) {
+  null?(:l) && return 0
+  1 + list_length(cdr(:l))
+}
+# set up some variables
+null=mknull()
+version=version()
+# Can check the current dir with %pwd
+pwd=->() { pwd() }
+EOD
   end
   def test_simple_object_ctor_with_2_attr_readers
     result = interpret 'defn ctor(x,y) { [->() { :x },->() { :y }] };obj=ctor(7,8);mx=ix(:obj,0);my=ix(:obj,1);%mx() + %my()'
@@ -120,7 +149,7 @@ class TestObject < BaseSpike
     assert_eq result, 2
   end
   def test_can_accept_input_from_another_fn_over_a_pipe
-    result = interpret @lib + 'x=mkattr(foo:, 1); 3 | %x.set_foo; %x.foo'
+    result = interpret @lib + 'x=mkattr(foo:, 1); 3 | %x.foo!; %x.foo'
     assert_eq result, 3
   end
   def test_can_use_method_call_in_logical_and_expression

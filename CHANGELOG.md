@@ -6,6 +6,34 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.0 2018-05-14
+
+This release eliminates the dependence on the rubytree gem.
+It implements an S-Expression intermediate abstract syntax tree (AST).
+
+### Changes
+
+#### Breaking changes
+
+- Must recompile all previous code to use this version. Use of new and deletion bytecodes.
+-  New syntax for string interpolations.
+- New syntax for blocks as objects for assigning, passing and returning from functions.
+  * Use of :{ statements } instead of a={ expr }
+
+
+### Additions
+
+- All builtin functions and user supplied FFI Ruby methods are wrapped in lambdas.
+  * This allows these to be queried, assigned, passed into and out of functions.
+- The REPL - 'ivs' is now an internal REPL implemented in Vish.
+- The compiler can output a stand-alone Ruby script executable.
+  * This allows deploy compiled programs as  a single executable.
+  * In fact, the 'ivs' REPL is implemented this way.
+
+### Deletions
+
+Many source files that are no longer needed.
+
 ## 0.5.1 2018-04-07
 
 This is a maintenance release consisting of bug fixes, documentation clean up

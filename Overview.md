@@ -9,9 +9,9 @@ Vish uses just 7 keywords at the present time:
 - return expression - returns out of an executable block with an evaluated expression value
 - exit - Exits Vish
 - loop { block } - Loops over a block until break encountered, or forever.
-- Null - Syntax sugar to create a NullType for Scheme-style lists.
 - defn - to create a named function.
 - '->(...)' - To create an anonymous function or lambda closure.
+- quote - return compiled code unevaluated. (Like Lisp/Scheme)
 
 ## Operators
 
@@ -32,6 +32,7 @@ This semantic is similar to the Unix shell (i.e. Bash).
 Also, there is no bit-wise operators.
 The '|' symbol is a statement separator, also like in the Unix shell.
 (See the section on Pipelines in the Syntax Guide.)
+[Syntax](Syntax.md)
 
 ## Defining functions
 
@@ -79,6 +80,24 @@ defn rev(l) {
 
 Note: These above functions exist in ./compiler/append.vs and ./compiler/revlist.vs
 
+### Higher-order functions
+
+Vish functions can assigned to variables, passed in as parameters to other functions
+and be returned as the return value of a function.
+
+You can also pass builtin functions or FFI Ruby functions as parameters to
+functions and as results of calling your functions.
+The only exception is that you cannot pass user-defined functions or builtin/FFI
+functions to other builtin/FFI functions. Ruby does not how
+to handle these. There are no builtin functions that take a function as a parameter.
+
+#### Future implementation of the 'curry' function.
+
+The only exception to the last exception might be the eventuall 'curry' function. It
+will take a builtin function, some parameters and return the curried result,
+either another lambda or the result of applying all the remaining parameters
+to the original function.
+
 ### Built-in Functions
 
 There a handful of builtin functions that be invoked
@@ -114,7 +133,7 @@ Now we can use this in our Vish programs or the ivs REPL shell:
 ```
 $ ./bin/ivs -r ./net_io
 vish> nread('https://www.google.com) | fwrite('google.html')
-[Ctrl-D]
+vish> exit
 ```
 
 Note: This simple http reader  can be found in ruby_if/net_io.rb
@@ -144,10 +163,6 @@ Their are several builtin file I/O functions:
 - frm(path) - removes path if it exists
 - pwd() - returns the present working directory
 
-### The pwd lambda:
-
-You can also check the pwd with '%pwd'.
-This depends on ./std/lib.vs being loaded, by default, it is.
 
 For instance, you could create a file copy function like this:
 
@@ -166,37 +181,12 @@ fexist?('myfile.new')
 
 Vish has 2 simple interfaces to the execution environment:
 
-- getenv() - Returns dictionary object of key/value pairs
+- getenv() - Returns dictionary object of key/value pairs of the current process enviornment
 - getargs() - Returns vector/array of arguments passed to the program.
 
-Note: getargs() includes the name of the Vish script or the REPL - ivs or the
-name of the compiled Vish bytecode file in the first element. E.g.:
-
-```
-# myfile.vs -
-args=getargs()
-:args[0]
-# => 'myfile.vs'
-# end of myfile.vs
-
-# Now run in shell:
-$ vish myfile.vs
-# => myfile.vs
-```
 
 Note: To get more arguments past the last script, pass a dash : '-' between the script
-and the first arg to pass to the script.
-This only works in the 'vish' executable, since it consumes all scripts names
-as source files to compile and run. The '-' stops this consumption.
 
-```
-# getallargs.vs - all args
-getargs()
-# end of getallargs.vs
-# Call the above script with additional parameters
-$ vish  getallargs.vs - hello world
-# =>  ['getallargs.vs', 'hello', 'world']
-```
 
 ## Using the REPL
 
@@ -236,7 +226,7 @@ Any illegal commands will beep the bell.
 
 ### The 'read()' builtin function
 
-Read uses the
+Read uses the Gnu readline
 line editor but does not have any history.
 
 
@@ -247,13 +237,6 @@ that refer to each other, but if foo() calls bar(), but
 defines bar() after foo(), and you call foo(),
 you will get a UnknownFunction runtime error.
 
-#### The experimental REPL. 
-
-You can try out the experimental REPL in ./bin/repl.rb which does have this problem.
-However, it has a bug with entering a '[' character. It will not
-be echoed to the screen until after another character has been entered.
-
-Suspect this is a problem in the tty-reader gem or its usage on my part.
 
 ## Executables:
 
@@ -262,6 +245,7 @@ These are all in the ./bin folder.
 
 - vish - Runs all .vs scripts passed to it
 - vishc - Compiles .vs files to .vsc runtime files. Can also  check syntax w/ -c
+  * vishc can also compile source into bytecode wrapped with a Ruby script wrapper.
 - vsr - Runs compiled .vsc files.
 - ivs - Interactive REPL for trying out Vish expressions.
 
@@ -281,4 +265,28 @@ arguments, and return any value, it can be added at runtime.
 
 Then, add it to the Dispatch module at the end of your required file:
 This was illustrated in the net_io.rb example above.
+
+
+### Passing the -r, --require flag to the Vish compiler, 'vishc'
+
+If you pass the -R, --ruby flag to get a ruby executable, these requires
+will be added to the compiled Ruby output as require statements.
+
+This can be useful for including Ruby gems or standard libraries in your code.
+
+Note: you must also include some FFI function interface to them to be able
+to call them from your Vish code.
+
+### Including ruby script into compiled Ruby output with the -i, --include flage to 'vishc'
+
+You can directly include your own Ruby code inside of the compiled Ruby script
+with the -i, --include file flag. This code will be copied inline  into your
+Ruby output script.
+
+### Using another ERB template with the compiled to Ruby script in the compiler
+
+You can use another template than the provided ./bin/vish.erb  to wrap your code.
+To see how this can be done, use the ./bin/vish.erb file as a starting place.
+
+You can also use the ./bin/ivs.erb code to get a REPL version of your code.
 

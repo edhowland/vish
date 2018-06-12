@@ -31,6 +31,9 @@ class VishParser < Parslet::Parser
   rule(:rbrace) { str('}') >> space? }
   rule(:lbracket) { str('[') >> space? }
   rule(:rbracket) { str(']') >> space? }
+  # The quotation delimiters - :< print("some Vish string") >:
+  rule(:qleft) { str(':<') >> space? }
+  rule(:qright) { str('>:') >> space? }
   rule(:langle) { str('<') >> space? }
   rule(:rangle) { str('>') >> space? }
 
@@ -74,14 +77,16 @@ class VishParser < Parslet::Parser
   rule(:export) { str('export') >> space! >> parmlist.as(:export_list) }
 
   # Runtime keywords
-  rule(:_break) { str('break') >> space? }
-  rule(:_exit) { str('exit') >> space? }
+  rule(:_break) { str('break').as(:break) >> space? }
+  rule(:_exit) { str('exit').as(:exit) >> space? }
   rule(:_return) { (str('return') >> space! >> expr).as(:return) }
+  # This forces a explicit :icall opcode in the bytecode stream
+  rule(:_icall) { (str('_icall') >> space! >> symbol).as(:_icall) }
 
   # keywords for builtin data types
-  rule(:null) { str('Null').as(:null) >> space? }
+#  rule(:null) { str('null').as(:null) >> space? }
 
-  rule(:keyword) { (_break | _exit | _return | pragma | import | export | null).as(:keyword) }
+  rule(:keyword) { (_break | _exit | _return | pragma | import | export | _icall) }
 
   # Control flow
   rule(:loop) { str('loop') >> space! >> block.as(:loop) }
@@ -98,18 +103,20 @@ class VishParser < Parslet::Parser
 
   # string interpolation stuff
   # See: Notes.md
-  rule(:colon_lbrace) { colon >> lbrace }
-  rule(:deref_expr) { colon_lbrace >> expr >> rbrace }
+  rule(:percent_lbrace) { percent >> lbrace }
+  rule(:deref_expr) { percent_lbrace >> expr >> rbrace }
 
   # escape sequences
   rule(:esc_newline) { bslash >> str('n') }
   rule(:esc_tab) { bslash >> str('t') }
+  rule(:esc_bel) { bslash >> str('a') }
 
   rule(:esc_bslash) { bslash >> bslash }
   rule(:esc_dquote) { bslash >> dquote }
   rule(:esc_squote) { bslash >> squote }
+  rule(:esc_dquote) { bslash >> dquote }
   # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
-  rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote }
+  rule(:escape_seq) { esc_newline | esc_tab | esc_bslash | esc_dquote | esc_squote | esc_dquote | esc_bel }
 
 
   # interpolated string is any amount of string_atoms, deref_expr and escape_seq 
@@ -148,7 +155,7 @@ class VishParser < Parslet::Parser
   # operators and precedence
   # Note: Only do binary operators here. The meaning of infix!
   rule(:infix_oper) { infix_expression(group,
-    [star_star, 5, :left],
+    [star_star, 5, :right],
     [star, 4, :left], [fslash, 4, :left], [percent, 4, :left],
     [plus, 3, :right], [minus, 3, :right],
      [lte, 2, :left], [gte, 2, :left], [equal_equal, 2, :left], [bang_equal, 2, :left], [langle, 2, :left], [rangle, 2, :left],
@@ -170,6 +177,8 @@ class VishParser < Parslet::Parser
   rule(:deref) { colon >> identifier.as(:deref) >> space? }
   # This syntax: %block will cause emitter to push CodeContainer, then :exec
   rule(:deref_block) { percent >> identifier.as(:lambda_call) >> space? }
+  # :{true && false} - gets promoted to lambda of no args
+  rule(:block_lambda) {colon >> block.as(:block_lambda) }
 
   # lambda declaration: ->(x, y) { :x + :y }
   rule(:parm_atoms) { identifier.as(:parm) >> ( comma >> identifier.as(:parm)).repeat }
@@ -192,7 +201,7 @@ class VishParser < Parslet::Parser
 
 
   # Expressions, assignments, etc.
-  rule(:expr) { block | block_exec | _lambda | negative | negation | infix_oper | null | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
+  rule(:expr) { quote | block | block_exec | block_lambda | _lambda | negative | negation | infix_oper | funcall | lambda_call | object | deref | deref_block  | integer | list_index }
 
   # A statement is either an assignment, an expression, deref(... _block) or the empty match, possibly preceeded by whitespace
   rule(:statement) { space? >> (keyword | loop | function | block | vector_assign | assign | expr | empty) }
@@ -207,6 +216,9 @@ class VishParser < Parslet::Parser
   rule(:statement_list) { infix_pipe >> (delim >> infix_pipe).repeat }
   rule(:block) { lbrace >> space? >> statement_list.as(:block) >> space? >> rbrace }
 
+  # Quotation: Should resolve to AST at runtime - :< 1+2 >: 
+  # =>  (:add, ((:integer, ("1"@0, ())), ((:integer, ("2"@2, ())), ())))
+  rule(:quote) { str('quote') >> space? >> lbrace >> space? >> statement_list.as(:quote) >> rbrace }
 
   # The top node :program is made up of many statements
   rule(:program) { statement_list.as(:program) }

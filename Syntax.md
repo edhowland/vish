@@ -4,9 +4,9 @@
 
 - Control statements
 
-## Version 0.5.1
+## Version 0.6.0
 
-This document is complete as far as version 0.5.1  of the Vish language.
+This document is complete as far as version 0.6.0  of the Vish language.
 
 ## Abstract
 
@@ -32,6 +32,8 @@ function names:
 - break - Breaks out the innermost loop it is encountered within.
 - return - Used only a function or lambda body to exit early with some value.
 - exit - Exits out of the program from whether it is encountered.
+- quote - quotes a block, returning abstract syntax tree (AST) as S-Expression
+- _icall - performs an explicit :icall opcode with the next symbol as function to call
 
 ### Reserved keywords for future use:
 
@@ -58,6 +60,91 @@ to a function.
 - Blocks - small contained units of program statements. Blocks as atoms are lambdas with 0 parameters.
 
 Double quoted strings are also possible interpolated strings.
+
+### Strings
+
+A string is any length of characters within either a double quotation or apostrophes or 
+single quotes.
+
+Strings are true to the predicate: 'string?()'
+Strings respond to the 'length()' function
+Strings can be concatenated with either the 'cat()' method or by using the
+'+' infix operator
+Strings also respond to the '*' multiplication infix operator. In this
+case the string is repeated by the number of the integer on the right of the '*'.
+
+```
+'H' * 5
+# => "HHHHH"
+```
+
+Strings can be indexed if there first stored ina variable. Acting like a vector
+
+```
+val="Sometimes"
+:a[0]
+# => "S"
+#
+# Can also assign to this position
+a[0]="s"
+# => "something"
+```
+#### Single quoted strings
+A single quoted string is any number of characters inside 2 apostrophes.
+
+```
+# a single quoted string:
+'My name is Sam'
+# => "My name is Sam"
+```
+
+There are no allowed escape sequences or string interpolations within single
+quoted string. For these, use double quoted strings.
+
+#### Double quoted strings and string interpolations.
+
+Here are some possible double quoted string examples.
+
+```
+# Simple string
+"hello world"
+# With escape sequences
+greeting="Hello world!\n"
+# With interpolation.
+name=read()
+print("Hello %{:name}. How are you?")
+# => Hello Mary. How are you
+
+```
+
+##### Escape sequences.
+
+Here the valid known backslash escap sequences in a Vish double quoted string.
+
+- "\n" : Newline
+- "\t" : Tab character
+- "\a" : Sound the system bell.
+- "\\" : Backslash character
+- "\'" : single quote
+- "\"" : Double quote
+
+
+##### String interpolations with Vish expressions.
+
+A string interpolation consists of the following elements:
+
+- '%{'
+- Valid vish expression
+- '}'
+
+This should occur within a double quoted string literal.
+
+```
+"5 times 10 is %{5*10}"
+#
+"it is %{3 < 4} that 3 is less than 4"
+# => "It is true that 3 is less than 4"
+```
 
 ## Sigils
 
@@ -351,7 +438,7 @@ l=list(1, 2, 3, 4)
 
 #### Deconstructing lists
 
-You can use familar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
+You can use familiar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
 deconstruct a list
 
 ```
@@ -399,16 +486,14 @@ typeof(:pair)
 
 ##### Extracting the key or value from a PairType
 
-You can use the builtin 'xmit' function to get the individual elements of the PairType.
-This is usually not needed, which is why their is no syntactic sugar language constructs for it.
-
-Example:
+You can use either the builtin 'key()' or 'value()'  functions
+to extract the individual parts of a Pair.
 
 ```
 pair=baz: 99
-xmit(:pair,key:)
+key(:pair)
 # => :baz
-xmit(pair:, value:)
+value(:pair)
 # => 99
 ```
 
@@ -420,9 +505,9 @@ in ./std/lib.vs
 ```
 # use of std/lib.vs key/value functions
 pair=foo: 44
-key(:pair)
+car(:pair)
 # => :foo
-value(:pair)
+cdr(:pair)
 # => 44
 ```
 
@@ -586,6 +671,28 @@ o[quint:]=44
 Note: You Cannot use the dotted approach to assign values in an object at this time.
 This might be changed in the future.
 In the mean time, use the subscript approach or supply a setter method.
+
+
+## The quote keyword
+
+### Experimental
+
+The 'quote { ... }' expression returns the compiled expression between the braces
+as an abstract syntax tree or AST. This is represented with a nested S-Expression.
+
+The S-Expression is just a nested list of PairTypes.
+These can be examined, or modified and then sent along to _emit and _call
+if using the parser_lib.rb language FFI extension library.
+
+```
+vish> ex=quote { 4 * 3 + 2 }
+# => (:add, ((:mult, ((:integer, ("4"@7, ())), ((:integer, ("3"@9, ())), ()))), ((:integer, ("2"@11, ())), ())))
+# Now call it
+_emit(:ex) | _call()
+# => 14
+```
+
+
 ## Functions
 
 Vish has named and anonymous functions or lambdas.
@@ -684,7 +791,7 @@ as parameters:
 
 ```
 # saving a block to a variable:
-blk={4+3}
+blk=:{4+3}
 # Calling it:
 6*%blk
 # => 42
@@ -694,7 +801,7 @@ blk={4+3}
 
 ```
 defn baz(n, blk) { :n + %blk }
-baz(4, {3 ** 2})
+baz(4, :{3 ** 2})
 # => 13
 ```
 
@@ -711,20 +818,18 @@ actually closures themselves.
 ```
 # A block expression as a closure
 n=100
-b={ :n + 10 }
+b=:{ :n + 10 }
 # ... some other code
 %b + 1
 # => 111
 ```
 
 
-#### Caveat:  A block cannot be returned from a function.
+#### :  A block can be returned from a function.
 
 To do return a block from a function body as a block expression,
-preceeded it with '->() '. This turns it into a proper lambda.
+preceeded it with  a clolon ':'.
 
-Note: A future release will allow the return keyword to return a block
-as a block expression by first promoting it into a lambda.
 
 ### Immediate block execution
 
@@ -742,3 +847,34 @@ bar(%{2})
 ```
 
 
+
+
+## Builtin functions
+
+Vish ships with several builtin functions.
+These can be treated like any other user-defined function. They can
+be called, used in a pipeline, passed into or out of a function.
+
+### The '_icall' keyword
+
+Sometimes, you need to explicitly call a builtin function or FFI function.
+By preceeding the symbol of the function withthe _icall keyword,
+yo can cause the parser to emit an explicit :icall opcode block with the next symbol
+as the name of the function to call.
+
+E.g. Suppose you wanted to call the dup() function without going through
+the normal normal function call sequence. (Perhaps you have renamed the dup variable to some other 
+function.)
+
+```
+# redefine dup:
+defn dup(a) { :a + 2 }
+# now call the real dup
+5 | _icall dup:
+# => 5
+```
+
+### Linked Foreign Function Interface (FFI)
+
+Any FFI function linked via the --require option at runtime, will be
+treated like any Vish buit-in function.

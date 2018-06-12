@@ -2,7 +2,7 @@
 # mkarr - creates object for use of  in object construction
 # Usage: obj=mkarr(foo:, 2)
 defn mkattr(k,v) {
-  s=mksym(":{:k}!")
+  s=mksym("%{:k}!")
   mkobject(mkpair(:k, ->() { :v }), mkpair(:s, ->(x) { v=:x; :v }))
 }
 defn keys(obj) { xmit(:obj, keys:) }
@@ -20,7 +20,14 @@ defn list_length(l) {
   null?(:l) && return 0
   1 + list_length(cdr(:l))
 }
+defn undefined?(key) {
+_undefined?(:key, binding())
+}
+# utility/collection
+defn map(coll, fn) {
+  empty?(:coll) && return []
+  [%fn(head(:coll))] + map(tail(:coll), :fn)
+}
 # set up some variables
+null=mknull()
 version=version()
-# Can check the current dir with %pwd
-pwd=->() { pwd() }
