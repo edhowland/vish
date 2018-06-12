@@ -1,4 +1,4 @@
-# internal_function.rb - class InternalFunction < NambdaType - wraps Builtins,
+# internal_function.rb - class InternalFunction < ambdaType - wraps Builtins,
 # any FFI user supplied functions
 # This lambda differs from normal by not actually calling binding.dup
 

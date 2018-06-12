@@ -211,7 +211,6 @@
   ## lambda?(object)
 
 
-    object.class == NambdaType # LambdaType # TODO replace this back
 
 
   # xmit(object, message) - sends Ruby message to object and returns its result.

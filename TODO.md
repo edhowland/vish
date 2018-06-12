@@ -21,7 +21,7 @@ Should somehow be part of function signature. Needed for type/program correctnes
 
 ### Negative arity
 
-Currently, the :arity member of the NambdaType structure is 0  .. n
+Currently, the :arity member of the LambdaType structure is 0  .. n
 It can be manually changed to -1 and the :ncall with not error out when called.
 This is used to support the lambda proxies on built in functions and FFI 
 functions, since they have unknown arity and many are variadic. E.g. cat, print, list etc.
