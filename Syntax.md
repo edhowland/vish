@@ -4,9 +4,9 @@
 
 - Control statements
 
-## Version 0.5.1
+## Version 0.6.0
 
-This document is complete as far as version 0.5.1  of the Vish language.
+This document is complete as far as version 0.6.0  of the Vish language.
 
 ## Abstract
 
