@@ -1,0 +1,13 @@
+(define (math-eval-combo expr)
+  (let ((arg1 (math-eval (cadr expr)))
+        (arg2 (math-eval (caddr expr))))
+     (cond ((eq? (car expr) '+)
+            (+ arg1 arg2))
+           ((eq? (car expr) '-)
+            (- arg1 arg2))
+           ((eq? (car expr) '*)
+            (* arg1 arg2))
+           ((eq? (car expr) '/)
+            (/ arg1 arg2))
+           (else
+            (error "Invalid operation in expr:" expr)))))

@@ -1,6 +1,6 @@
-# frame.rb - class Frame, BlockFrame, LoopFrame, FunctionFrame
+# frame.rb - class Frame,  MainFrame and FunctionFrame
 
-# class Frame - base class for BlockFrame, FunctionFrame and LoopFrame
+# class Frame - base class for  FunctionFrame 
 class Frame
   def initialize
     @ctx = Context.new
@@ -44,14 +44,16 @@ class MainFrame < Frame
   def frame_id
     "#{self.class.name}_#{self.object_id.to_s}".to_sym
   end
+  # get the current binding# Not to be confused with member :binding of the lambda itself
+  def _binding
+    @ctx.vars
+  end
 end
 
 # FunctionFrame - storage for user defined functions
 class FunctionFrame < MainFrame
 end
 
-class LoopFrame < Frame
-end
 
 
 # class UnionFrame For type match of either FunctionFrame or MainFrame

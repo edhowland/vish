@@ -18,11 +18,7 @@ class TestString < BaseSpike
     end
   end
 
-  def test_string_literal_object
-    string = 'this is a string'
-    lit  = StringLiteral.new string
-    assert_eq lit.value, string
-  end
+
 
   # compile steps
   def test_compile_empty_string
@@ -34,11 +30,11 @@ class TestString < BaseSpike
     assert_eq result, "line\n\\"
   end
   def test_string_interprets_internal_expression_with_addition
-    result = interpret '"when you add 4+4 you get :{4+4}"'
+    result = interpret '"when you add 4+4 you get %{4+4}"'
     assert_eq result, 'when you add 4+4 you get 8'
   end
   def test_really_complex_string_w_strings_escape_sequences_and_interpolations
-    result = interpret '"a1: :{5-3*6}\na2: :{12 == 3 * 4}\n"'
+    result = interpret '"a1: %{5-3*6}\na2: %{12 == 3 * 4}\n"'
     assert_eq result, "a1: -13\na2: true\n"
   end
 

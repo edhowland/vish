@@ -17,36 +17,6 @@ foo(2,3)
 # => 5
 ```
 
-### The @lambdas hash in VishCompiler
-
-The keys in the @lambdas hash point to tuples of 2 nodes in the AST.
-Each key is of the form: Symbol of node name: :lambda_9999
-Where this colon is the node name of a Tree::TreeNode.
-The tuple consists of the following:
-
-1. Lambda AST node. - Actual lambda of parms+body
-2. LambdaName: The value of the LambdaName is:
-- LambdaType
-  * Name is The key above(:lambda_xxx)
-  * Frame: (starts as Unknown) - Filled in at runtime.
-
-Note: You can use the exl function in pry_helper.rb to examine this structure.
-
-There is a bunch behind the scenes kind of stuff dealing with
-JumpTargets and the BulletinBoard (A place to store references until
-They get resolved in the generate phase.
-See lib/generation/resolve_lambda_locations.rb
-
-
-#### In the case of a defn foo() declaration:
-
-@lambdas consistof
-1. NamedLambda AST node. - Actual lambda of parms+body also contains the name: foo
-2. LambdaName: The value of the LambdaName is:
-- LambdaType
-  * Name is The key above(:NamedLlambda_xxx)
-  * Frame: (starts as Unknown) - Filled in at runtime.
-
 
 ## Let binding
 
@@ -266,76 +236,6 @@ Walk through bc.codes, replacing :fcall, 'xxxx' with :fcall, 90, ...
 
 ##### ??? Will this work with recursive application
 
-## Closures
-
-### How Ruby scopes them:
-
-```
-def f(x)
-  def g(y)
-    ->() { y + 2 }
-  end
-  g(x + 2)
-end
-z = f(1)
-# => Proc ...
-z.call
-# => 5 ... 3 + 2
-```
-
-Now lets look at function boundaries
-
-```
-def f(x)
-  def()
-    ->() { x + 2 }
-  end
-  g()
-end
-z = f(1)
-# => Proc
-z.call
-# Get unreference error on unknown x
-```
-
-This implies that the dereference is broken at run time.
-In the working example above, the 'y' variable is captured in the closure object
-when it was run: g(x + 2)
-Once lambdas have been discovered, before they are extracted,
-Locate any unbound variables within.
-Exclude any local variable assignments, and parameters:
-
-```
-ff=->(a) { c=99; :a + :b + :c }
-# In the above definition, :b is unbound
-# :a is a parameter
-# :c is a local variable
-```
-
-In the AST, the Lambda node has StringLiterals inside the LambdaEntry node.
-The local variables are defined in the Block node. Look for any assignments.
-
-??? Should we Hoist any variables to the top of the function?
-Probably not.
-
-Given any unbound variables at this step, search ancestor list for any matching
-assign blocks with first_child a StringLiteral matchin this name of unbound var.
-
-Only upto and inclusive of a Function body. (Not implemented yet)
-Or if the lambda is defined  outside of a function body,
-Then all the way up to the top level.
-
-Replace any Deref blocks with Closure blocks!
-
-#### The heap:
-
-The heap is maintained by the CodeInterpreter instance. Opcode :pushi
-will grab its its operand (which is a reference to a Closure object on the heap.
-
-Note: Must make sure this is avaliable tothe Evaluation object,
-esp. in bin/ivs REPL else, it will get overwritten upon every new line entered
-and then compiled.
-
 ## Debugging
 
 Must implement some kind of capture of the stack frame in case of an unrecoverable error.
@@ -437,9 +337,6 @@ Because, we can never miss dessert, even if we caught nothing.
 
 ### Implementation:
 
-The catch block must be :bcalled into preserving the return location
-on the call stack. The end of the catch block must :bcall into the dessert block.  
-The end of the dinner block must also :bcall into the dessert block.
 
 --- Or they merely :jmp there. ---
 

@@ -3,6 +3,11 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
+#require_relative 'sexp_transform'
+#require_relative 'list_proc'
+#require_relative 'semit'
+
+
 
 
 
@@ -44,13 +49,6 @@ def for_broke(ci)
 end
 
 
-# walker: walks the AST in pre-order, using .each
-def walker(ast)
-  ast.each {|e| p e.level; p e.content }
-  nil
-end
-
-
   def compile string, &blk
   begin
     parser = (block_given? ? (yield VishParser.new) : VishParser.new)
@@ -84,15 +82,11 @@ end
 
 
 
-def pa
-  return VishParser.new, AstTransform.new
+# ps - return VisParser, SexpTransform
+def ps
+  [VishParser.new, SexpTransform.new]
 end
 
-# mkast(string) : creates an AST after parsing string.
-def mk_ast string
-  p, a = pa
-  a.apply(p.parse(string))
-end
 
 # misty: play misty for me: runs one step
 # + ci : The CodeInterpreter
@@ -145,7 +139,15 @@ def mkcompiler source=''
   VishCompiler.new source
 end
 
-def inter source
+## interpret source runs full compiler stack
+def interpret(source)
+  c = compile(source)
+  ci = cifrom(c)
+  ci.run
+end
+
+## _inter source get the CodeInterpreter from compiling some source
+def _inter source
   c = compile source
   cifrom c
 end
@@ -167,6 +169,30 @@ def gparse &blk
     puts failure.parse_failure_cause.ascii_tree
   end
 end
+
+# pr string - return result and parse errors
+def pr str='', &blk
+  err=nil
+  begin
+    if block_given?
+      result = yield
+    else
+      result = interpret str
+    end
+  rescue Parslet::ParseFailed => err
+  end
+  [result, err]
+end
+# extract the Ascii art tree of the parse error
+def art obj
+  case obj
+  when Array
+    puts obj.last.parse_failure_cause.ascii_tree
+  else
+  puts obj.message
+  end
+end
+
 #  get_statements gets actual statements from AST root. Removes them.
 # Parameters
 # ast - The AST to work on
@@ -233,4 +259,99 @@ def fun_lamb
 end
 def cons(k, v)
   Builtins.mkpair(k, v)
+end
+
+def car(x)
+  x.key
+end
+def cdr(x)
+  x.value
+end
+def cadr(x)
+  car(cdr(x))
+end
+def caadr(x)
+  car(cadr(x))
+end
+def cddr(x)
+  cdr(cdr(x))
+end
+def caddr(x)
+  car(cddr(x))
+end
+
+# utility fns from Builtins
+
+
+
+# walk the S-expression tree
+def swalk(t)
+
+  return nil if null?(t)
+  if atom?(t)
+#    puts "atom: #{t.inspect}"
+    return nil
+  end
+  x = car(t)
+  if null?(x)
+    puts 'ascending at end of list'
+    return nil
+  elsif atom?(x)
+    puts x.inspect
+  elsif list?(x)
+    puts 'descending'
+    swalk(x)
+  elsif pair?(x)
+    puts "pair: #{x.key}: #{x.value}"
+  else
+    puts 'error'
+  end
+  swalk(cdr(t))
+end
+
+
+def walks(t)
+  begin
+    swalk(t)
+  rescue => err
+puts "swalk: error: #{err.message}"
+  end
+end
+
+def ex str, p=VishParser.new, s=SexpTransform.new
+  s.apply(p.parse(str))
+end
+
+
+def pse
+  ps + [Semit.new]
+end
+
+def gsexp str
+  p,s=ps
+  s.apply(p.parse(str))
+end
+
+def compute str
+  p,s,e = pse
+  codes = e.emit(s.apply(p.parse(str)))
+  ctx = Context.new
+  bc = ByteCodes.new
+  bc.codes = codes
+  ci = CodeInterpreter.new bc, ctx
+  ci.run
+end
+def cx codes
+    ctx = Context.new
+  bc = ByteCodes.new
+  bc.codes = codes
+  ci = CodeInterpreter.new bc, ctx
+end
+
+def ml str
+  "a=:<#{str}>:;body=_emit(:a);foo=_mklambda(:body, binding())"
+end
+# libvs - read in std/lib.vs
+def libvs
+  File.read('std/lib.vs')
 end

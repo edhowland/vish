@@ -162,12 +162,7 @@ class TestCodeInterpreter < BaseSpike
   end
 
   # loop stuff
-  def test_frame_opcode_pushes_frame_onto_stack
-    l = LoopFrame.new;
-    @bc.codes = [:frame, l, :halt]
-    @ci.run
-    assert_is @ci.frames.peek, LoopFrame
-  end
+
 
   # test :swp - swaps top 2 items on stack
   def test_swp_swaps_top_2_items_on_stack

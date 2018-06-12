@@ -31,8 +31,7 @@ class CodeInterpreter
     ebc, ectx = exit_handler
     @handlers[:_exit] = [ebc, ectx]
 
-    # Setup frames. Stack frame for LoopFrame, BlockFrame, MainFrame
-    # and FunctionFrame
+    # Setup frames. Stack frame for  MainFrame and FunctionFrame
     @frames = LockedStack.new(limit: 1000)
     # The MainFrame, which holds the Context, cannot be popped off this stack
     @frames.push(MainFrame.new(ctx))
@@ -40,9 +39,24 @@ class CodeInterpreter
     # Storage for the Heap
     @heap = {}
 
-    # hook into dispatcher. Mainly for debugging
+    # hook into dispatcher.
     InterpreterMethods.add_interpreter(self)
     Dispatch << InterpreterMethods
+    # Handle the single case for the binding() call lambda proxy
+    # It must grab from the penultimate frame, not its own
+    ctx.vars[:binding]= InternalFunction.new(parms:[], body:[:frame, :send, :previous, :send, :_binding], _binding:ctx.vars, loc:bc.codes.length)
+#binding.pry
+    ctx.vars[:binding][:name] = :binding
+    ctx.vars[:binding][:arity] = -1
+    bc.codes += ctx.vars[:binding][:body]
+
+    # setup all FFI methods as :icalls and ctx.vars in scope
+    Dispatch.ffi_ruby.each do |ffi|
+      ctx.vars[ffi] = InternalFunction.new(parms:[], body:[:pushl, ffi, :icall], _binding:ctx.vars, loc:bc.codes.length)
+      ctx.vars[ffi][:name] = ffi
+      ctx.vars[ffi][:arity] = -1
+      bc.codes += ctx.vars[ffi][:body]
+    end
   end
   attr_accessor :last_exception, :handlers, :register_a, :frames, :heap
 

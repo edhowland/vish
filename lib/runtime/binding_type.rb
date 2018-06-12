@@ -10,7 +10,7 @@ end
 class BindingType
   include Type
 
-  @@__TOP_LEVEL =  PairType.null
+  @@__TOP_LEVEL =  NullType.new
   def initialize bindings=@@__TOP_LEVEL
     @bindings =  bindings
   end
@@ -81,18 +81,28 @@ class BindingType
     walk {|pt| result << pt.to_a }
     result
   end
-  # Displays the type of this object: BintingType.
+  # get the number of defined variables. Includes all lambdas, esp. proxies for
+  # builtin and FFI functions
+  def length
+    count = 0
+    inter = @bindings
+
+    while inter != @@__TOP_LEVEL
+      count += 1
+      inter = inter.value
+    end
+    count
+  end
+  # Displays the type of this object: BindingType
   # To get contents, do xmit(binding(), variables:) in Vish ivs REPL
   def inspect
-    result ="#{type}"
-
-  walk do |b|
-    result << (b.inspect + ' ')
-  end
-    #type
-    result
+    "#{self.class.name} length: #{length}"
   end
   def xinspect
     @bindings.xinspect
+  end
+  def exist?(key)
+    attempt = find_pair(key)
+    ! root?(attempt)
   end
 end

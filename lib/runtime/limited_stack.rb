@@ -58,6 +58,11 @@ end
     a, b = pop(2)
     push(b, a)
   end
+  # return previous frame: the penultimate one
+  def previous
+    raise VishRuntimeError.new('Cannot return previous frame, bottom of stack reached.') unless self.length > 1
+    self[-2]
+  end
 end
 
 class LockedStackLimitReached < StackError

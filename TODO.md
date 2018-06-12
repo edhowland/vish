@@ -1,12 +1,83 @@
 # TODO
 
+
+## Todo: Make sure predicate of lambda? works in s-expression land
+
+## Todo: Improve string interpolation
+
+Currently, every character is an individual strtok For even short strings,
+this explodes the bytecode to perform a call to 'cat' builtin function.
+
+There should be a regular expression that captures the string run lengths 
+of contiguous strings upto escape sequences and %{ vish-expression } s.
+
+### Todo: Better syntax checking for string interpolation internal expressions
+
+
+
+## Todo: Derive a way to make variadic arguments to lambda def/call work.
+
+Should somehow be part of function signature. Needed for type/program correctness
+
+### Negative arity
+
+Currently, the :arity member of the LambdaType structure is 0  .. n
+It can be manually changed to -1 and the :ncall with not error out when called.
+This is used to support the lambda proxies on built in functions and FFI 
+functions, since they have unknown arity and many are variadic. E.g. cat, print, list etc.
+
+The _mklambda should have a way to set this or override its calculation.
+
+```
+# a variadic signature:
+defn foo(a, b, c&) {
+  :a # is single value
+  : b # as is b
+  :c # => [rest of args
+}
+# now call later
+foo(1,2,3)
+# => [3]
+```
+
+## Todo: Allow builtin functions to be passed in and out of higher order functions.
+
+The way to do this is via proxy variables. Each stands in for some  builtin function.
+
+```
+length([])
+# => 0
+:length
+# => LambdaType :builtin, name: length, arity: 1
+```
+
+This includes Builtins, and any Ruby FFI functions linked in.
+
+Will require the intended Ruby FFI modules to be supplied to the vishc
+compiler ahead of time.
+
+## Todo: Create 'curry' method
+
+Takes a function as one argument (for now)
+Returns new function that can be partially evaluated over its arg list.
+
+Actually kind of clones the LambdaType
+
+```
+defn foo(x, y, z) { :x + :y * :z }
+bar = curry(:foo)
+baz=bar(1)
+# => LambdaType
+qux=baz(2)
+# => LambdaType
+qux(3)
+# => 9
+```
+
 ## TODO make command history work in ivs REPL
 
 ## TODO: Add let binding
 
-## TODO: MUST: c.lambdas is hash of tuples of lambdas, lambda_names
-
-Need to take into account if lib/analysis/convert_funcall_to_lambda_call.rb
 
 
 
@@ -38,13 +109,6 @@ y=mkblock()
 %y
 # => 42
 ```
-
-
-##  Refactor function entries and function calls to use BulletinBoards
-
-Currently, the way function targets are specifed is w/target_p, whcih 
-returns a closure. Since we use BulletinBoard to resolve
-lambda targets via/JumpTarget, this is a better method.
 
 
 ## Make block instances become inline, wherever possible
@@ -87,12 +151,6 @@ CompileError: :name is not set yet
 
 do this in VishCompiler.analyze phase
 
-### Support for evntual closure stuff.
-
-In the analyze phase, the AST can find unbound variables in subtree nodes.. If any exist in
-lambdas, it can mark them for special runtime dereferences.
-
-any other variables will be reported by the compiler.
 
 ## Completions
 
@@ -110,27 +168,9 @@ Add the following builtins
 Later, we will have to handle exceptions ourselves.
 
 
-### Blocks:
-
-```
-# passing as an argument:
-my_func(:block)
-in my_func
-ok
-
 # in my_func()
 defn my_func(blk) {
   print('in my_func')
-%blk}
-```
-
-The variable block is dereferenced in the funcall: 
-( this behaviour currently works, if you can save a CodeContainer in named :block variable)
-Then this item on the stack is bound to the argument vairable :blk in 
-the new frame stack.
-After in the body of th function, it is dereferenced as aboove in the top level
-context.
-
 
 ### true and false in vasm, vdis.rb
 

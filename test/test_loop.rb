@@ -16,12 +16,18 @@ class TestLoop < BaseSpike
   end
 
   def test_function_can_break_out_of_enclosing_loop
-    interpret 'defn foo() {break};loop {foo()}'
+    assert_raises CompileError do
+      interpret 'defn foo() {break};loop {foo()}'
+    end
   end
-  def test_lambda_can_break_out_of_enclosing_loop
-    interpret 'm=->() {break};loop { %m() }'
+  def test_lambda_cannot_break_out_of_enclosing_loop_but_raises_compile_error
+    assert_raises CompileError do
+      interpret 'm=->() {break};loop { %m() }'
+    end
   end
-  def test_can_really_break_out_of_loop_from_lambda_function_within_function
-    interpret 'defn foo(bk) { %bk }; loop { foo(->() { break }) }'
+  def test_cannot_really_break_out_of_loop_from_lambda_function_within_function_but_raises_compile_error
+    assert_raises CompileError do
+          interpret 'defn foo(bk) { %bk }; loop { foo(->() { break }) }'
+        end
   end
 end

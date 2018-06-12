@@ -18,8 +18,7 @@ module Builtins
   def self.getenv()
     ENV
   end
-  ## getargs() - returns arguments passed to script or program, including name of
-  ## script or ivs
+  ## getargs() - returns arguments passed to script or program
   def self.getargs()
     ARGV
   end
@@ -37,9 +36,11 @@ module Builtins
     obj.send(:class)
     end
   end
-
-  ## length(object) - if item responds to :length message: returns length as integer
-  ### else returns false
+  ## idof(object) - returns object_id of object
+  def self.idof(object)
+    object.object_id
+  end
+  ## length(object) - if item responds to :length message: returns length as integer, else returns false
   def self.length(object)
     if object.respond_to?(:length)
       object.length
@@ -53,8 +54,7 @@ module Builtins
     args.inspect
   end
 
-  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
-  ## Outputs a trailing newline.
+  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.  Outputs a trailing newline.
   def self.echo(*args)
     args.map(&:to_s).join(' ') + "\n"
   end
@@ -148,12 +148,15 @@ module Builtins
   def self.print(*args)
     args.each { |e| $stdout.puts(e.inspect) }
   end
+  ## prints string - prints string w/o newlines
+  def self.prints(string)
+    $stdout.print string
+  end
 
-  ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  ## dict - returns object hash with every 2 items as key/value pairs.
   def self.dict(*args)
-    evens = array_select(args) {|e,i| i.even? }
-    odds = array_select(args) {|e,i| i.odd? }
-    evens.zip(odds).to_h
+    e = args.each
+    Array.new(args.length / 2).map { [e.next, e.next ] }.to_h
   end
 
   ## mksym(string_or_sym) - returns Symbol
@@ -200,6 +203,11 @@ module Builtins
     end
     null?(o)
   end
+  ## binding?(object) - true if object is some binding
+  def self.binding?(object)
+    object.instance_of?(BindingType)
+  end
+
   ## object?(object) - true if object is ObjectType : Dictionary/Hash
   def self.object?(object)
     object.kind_of?(ObjectType)
@@ -237,7 +245,18 @@ module Builtins
   end
   ## nul?(list) - true if list is the Null list : ()
   def self.null?(object)
-    pair?(object) && PairType.null?(object)
+    object.instance_of?(NullType)
+  end
+  ## undefined? object - true if object is an undefined
+  def self._undefined?(object, bind)
+    case object
+    when Symbol
+      bind.exist?(object)
+    when String
+      object == Undefined
+    else
+      false
+    end
   end
 
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)
@@ -266,20 +285,10 @@ module Builtins
 
 
 
-  ## mklambda - creates LambdaType 
-  def self.mklambda(name, arity, target)
-    l = LambdaType.new(name, arity)
-    l.target = target
-    l
-  end
+
   ## lambda?(object)
   def self.lambda?(object)
-    if symbol?(object)
-      s = object.to_s
-      s.start_with?('LambdaType')
-    else
-      false
-    end
+    object.class == LambdaType
   end
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
@@ -289,6 +298,10 @@ module Builtins
   ## string?(object) - true if object is a string
   def self.string?(object)
     object.instance_of?(String)
+  end
+  ## boolean? object - true if object is a true or false expression
+  def self.boolean?(object)
+    [TrueClass, FalseClass].member?(object.class)
   end
   ## number?(object) - true if object an integer
   def self.number?(object)

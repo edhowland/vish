@@ -1,4 +1,4 @@
 # checks.rb - requires for checks/
 
-
-require_relative 'checks/deprecation_functions'
+#Todo:  add any deprecation checks, if any.
+# Remember to recreate lib/checks/ folder

@@ -1,5 +1,21 @@
 # Bugs
 
+
+## Bug: Cannot escape single quote inside of single quote.
+
+```
+'\''
+# Syntax error from Parslet
+```
+
+
+### Bug: No arity checking on any type oof lambda
+
+1. First detect arity at compile time
+2. For function calls to lambdas, check arity of call
+
+This is a part of larger discussion with regard to variadic methods.
+See TODO.md wrt variadiac methods
 ## Bug: syntax error when trying to return, sometimes
 
 TBD: No sample code yet
@@ -10,7 +26,6 @@ Note: Seems to be missing return value. Perhaps this actually a REAL syntax erro
 ## Bug: :fret opcode will not work if encountered inside a loop frame or block frame.
 
 Since the current stack is inside either MainFrame or outer FunctionFrame,
-:frep trys to push the return value. It might be returning to a LoopFrame or BlockFrame.
 In that case, the frames.peek.ctx wil be nil or undefined method call.
 
 The solution would to 
@@ -44,7 +59,7 @@ This shoul have a default action at runtime,
 or be checked by the compiler during  analysis phase.
 
 
-## Bug: Should have actual Ruby objects in bytecodes, like LoopFrame objects
+## Bug: Should have actual Ruby objects in bytecodes, like 
 
 When written out .vsc files, as marshalled Ruby objects, this is not pure.
 

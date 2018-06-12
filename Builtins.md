@@ -10,10 +10,7 @@
   ## getenv() - returns dictionary object of running environment
 
 
-  ## getargs() - returns arguments passed to script or program, including name of
-
-
-  ## script or ivs
+  ## getargs() - returns arguments passed to script or program
 
 
   ## dup - just dups it input to its output (via the stack)
@@ -22,19 +19,16 @@
   ## typeof(obj) - gives the class/??? of the obj
 
 
-  ## length(object) - if item responds to :length message: returns length as integer
+  ## idof(object) - returns object_id of object
 
 
-  ### else returns false
+  ## length(object) - if item responds to :length message: returns length as integer, else returns false
 
 
   ## inspect runs inspect on its arguments
 
 
-  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.
-
-
-  ## Outputs a trailing newline.
+  ## echo(args) - concats its string parameters, Lseparated with a single space. ike Bash's echo command.  Outputs a trailing newline.
 
 
   ## cat(args) - concats its arguments and returns them
@@ -50,6 +44,9 @@
 
 
   ## readc - read a single character, do not wait for return
+
+
+    #consume
 
 
   ## File I/O
@@ -100,7 +97,10 @@
   ## print(args) - outputs all its args to stdout.
 
 
-  ## dict(:a,1,:b,2,:c,3) => {a: 1, b: 2, c: 3}
+  ## prints string - prints string w/o newlines
+
+
+  ## dict - returns object hash with every 2 items as key/value pairs.
 
 
   ## mksym(string_or_sym) - returns Symbol
@@ -122,6 +122,9 @@
 
 
   ## list?(possible_list) - true if really a list
+
+
+  ## binding?(object) - true if object is some binding
 
 
   ## object?(object) - true if object is ObjectType : Dictionary/Hash
@@ -149,6 +152,9 @@
 
 
   ## nul?(list) - true if list is the Null list : ()
+
+
+  ## undefined? object - true if object is an undefined
 
 
   ## ix(arr, index) - should work with lists or dicts (arrays/hashes)
@@ -205,10 +211,15 @@
   ## lambda?(object)
 
 
+
+
   # xmit(object, message) - sends Ruby message to object and returns its result.
 
 
   ## string?(object) - true if object is a string
+
+
+  ## boolean? object - true if object is a true or false expression
 
 
   ## number?(object) - true if object an integer

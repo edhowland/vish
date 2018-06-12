@@ -5,21 +5,30 @@
 # Usage: ./vishc -o file.vsc file.vs [file2.vs, ...]
 
 require 'optparse'
+require 'erb'
+require 'fileutils'
 require_relative '../lib/vish'
 require_relative '../common/store_codes'
 
 @options = {
   check: false,
-  compile: false,
+  compile: true,
   deprecations: false,
   stdlib: true,
-  ofile: 'v.out.vsc'
+  ofile: 'v.out.vsc',
+loads: [],
+  template: vish_path('/bin/vish.erb'),
+  ruby: false,
+  requires: [],
+includes: []
 }
 opt = OptionParser.new do |o|
-o.banner = 'Vish compiler'
-o.separator ''
+  o.banner = 'Vish compiler'
+  o.separator ''
+
   o.on('-c', '--check', 'Check syntax') do
     @options[:check] = true
+    @options[:compile] = false
   end
   o.on('--no-stdlib', 'Do not preload Vish standard lib first') do
     @options[:stdlib] = false
@@ -27,6 +36,22 @@ o.separator ''
   o.on('-o file', '--output file', String, 'Output to file') do |file|
     @options[:ofile] = file
     @options[:compile] = true
+  end
+  o.on('-l file', '--load file', String, 'Loads Vish sources files to be compiled before target.vs') do |file|
+    @options[:loads] << file
+  end
+  o.on('-R', '--ruby', 'Compile into Ruby output file.rb') do
+    @options[:ruby] = true
+@options[:compile] = false
+  end
+  o.on('-t file', '--template file', String, 'Use file.erb as template instead of vish.erb') do |file|
+    @options[:template] = file
+  end
+  o.on('-r file', '--require file', String, 'Add this required  gem or Ruby file into generated output .rb') do |file|
+    @options[:requires] << file.pathmap('%d/%f')
+  end
+  o.on('-i file', '--include file', String, 'Include file in Ruby output file') do |file|
+    @options[:includes] << file
   end
     o.separator '=================================================='
 
@@ -46,14 +71,15 @@ o.separator ''
 end
 opt.parse!
 
+
 def compose(source, opts=@options)
+  source = opts[:loads].map {|f| File.read(f) }.join("\n") + "\n" + source + "\n"
   if opts[:stdlib]
-    source = File.read(stdlib) + "\nversion='#{Vish::VERSION}'\n" + source
+    source = File.read(stdlib) + source
   end
   source
 end
 
-#source = ARGF.read
 
 # Possibly add in Vish StdLib stuff
 
@@ -77,7 +103,7 @@ rescue Parslet::ParseFailed => failure
 end
 
 if @options[:check]
-  exit(check(compose(ARGF.read)))
+  exit(check(compose(File.read(ARGV[0]))))
 end
 
 def deprecated?(source)
@@ -87,18 +113,19 @@ def deprecated?(source)
 end
 
 if @options[:deprecations]
-  exit(deprecated?(compose(ARGF.read)))
+  exit(deprecated?(compose(File.read(ARGV[0]))))
+end
+def save compiler, ofile
+io = File.open(ofile, 'w')
+  store_codes(compiler.bc, compiler.ctx, io)
 end
 
-def compile(source, ofile)
+
+def compile source
   result = false
 begin
   compiler = VishCompiler.new source
   compiler.run
-
-  # now write it out to file.vshc
-io = File.open(ofile, 'w')
-  store_codes(compiler.bc, compiler.ctx, io)
   result = true
 rescue Parslet::ParseFailed => failure
   $stderr.puts failure.parse_failure_cause.ascii_tree
@@ -106,10 +133,41 @@ rescue => err
   $stderr.puts err.class.name
   $stderr.puts err.message
   end
-  result
+  [compiler, result]
 end
 
-if @options[:compile]
-  result = compile(compose(ARGF.read), @options[:ofile])
+# render Ruby source file with ERB
+def render compiler, opt=@options
+  template = File.read(opt[:template])
+  renderer = ERB.new(template)
+  output = renderer.result(binding)
+File.write(opt[:ofile], output)
+  FileUtils.chmod('+x', opt[:ofile])
+end
+
+if __FILE__ == $0
+if ARGV.empty?
+  $stderr.puts 'Must supply a single source file to check or compile'
+  exit(1)
+end
+
+if  ! File.exist?(ARGV[0])
+  $stderr.puts "File #{ARGV[0]} does not exist"
+  exit(1)
+end
+
+
+if @options[:compile] and !@options[:ruby]
+  compiler, result = compile(compose(ARGF.read))
+save compiler, @options[:ofile] if result 
+elsif @options[:ruby]
+  compiler, result = compile(compose(File.read(ARGV[0]))) 
+  if result
+    render(compiler) 
+  else
+    $stderr.puts "Could not create output Ruby file: #{@options[:ofile]} because of compiler error."
+  end
+end
+
   exit([true,false].index(result))
 end
