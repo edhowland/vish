@@ -223,9 +223,9 @@ def opcodes tmpreg=nil
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
   argc = ctx.stack.pop
-  if ltype[:arity] >= 0
-      raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
-  end
+#  if ltype[:arity] >= 0
+#      raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
+#  end
 
   argv = ctx.stack.pop(argc)
       #_binding = ltype[:binding]
@@ -233,7 +233,7 @@ def opcodes tmpreg=nil
 #frame.ctx.constants = ctx.constants
 #frame.ctx.vars = ltype.binding_dup #_binding.dup
 
-      frame = ltype.frame_from(bc.pc)
+      frame = ltype.frame_from(argc, bc.pc)
       frame.ctx.stack.push(*argv)
       # Handle possible variadic LambdaType
   if ltype[:arity] < 0

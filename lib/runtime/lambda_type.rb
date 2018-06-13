@@ -20,7 +20,8 @@ class LambdaType < Hash
   end
   # frame_from - move code from opcodes[:ncall] to here
   # frame_from - returns new FunctionFrame
-  def frame_from(ret=0)
+  def frame_from(argc=0, ret=0)
+    raise VishArgumentError.new(self[:arity], argc) if self[:arity] >= 0 and argc != self[:arity]
     fr = FunctionFrame.new(Context.new)
     fr.ctx.vars = binding_dup
     fr.return_to = ret
