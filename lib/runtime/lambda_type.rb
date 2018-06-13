@@ -18,6 +18,14 @@ class LambdaType < Hash
   def binding_dup
     self[:binding].dup
   end
+  # frame_from - move code from opcodes[:ncall] to here
+  # frame_from - returns new FunctionFrame
+  def frame_from(ret=0)
+    fr = FunctionFrame.new(Context.new)
+    fr.ctx.vars = binding_dup
+    fr.return_to = ret
+    fr
+  end
 
   def inspect
     "#{type.name}: loc: #{self[:loc]}"

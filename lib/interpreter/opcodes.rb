@@ -229,17 +229,18 @@ def opcodes tmpreg=nil
 
   argv = ctx.stack.pop(argc)
       #_binding = ltype[:binding]
-      frame = FunctionFrame.new(Context.new)
-frame.ctx.constants = ctx.constants
-frame.ctx.vars = ltype.binding_dup #_binding.dup
-      frame.ctx.stack.push(*argv)
-#binding.pry
+#      frame = FunctionFrame.new(Context.new)
+#frame.ctx.constants = ctx.constants
+#frame.ctx.vars = ltype.binding_dup #_binding.dup
 
+      frame = ltype.frame_from(bc.pc)
+      frame.ctx.stack.push(*argv)
+      # Handle possible variadic LambdaType
   if ltype[:arity] < 0
     frame.ctx.stack.push(argc)
   end
 
-      frame.return_to = bc.pc
+#      frame.return_to = bc.pc
 
       fr.push(frame)
       bc.pc = ltype[:loc]

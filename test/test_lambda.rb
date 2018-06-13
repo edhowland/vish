@@ -128,4 +128,9 @@ EOC
     result = interpret 'defn foo() { ->() {} }; [%foo, %foo]'
     assert_eq result.first[:loc], result.last[:loc]
   end
+  def test_frame_from_has_dupped_binding
+    l = interpret 'defn foo() { a=9}'
+    fr = l.frame_from
+    assert_eq fr.ctx.vars.class, BindingType
+  end
 end
