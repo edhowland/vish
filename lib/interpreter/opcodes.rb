@@ -224,25 +224,6 @@ def opcodes tmpreg=nil
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       ltype.perform(intp)
     },
-    _ncall: 'New version of lambda call',
-    ncall: ->(bc, ctx, fr, intp) {
-      ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
-  argc = ctx.stack.pop
-
-  argv = ctx.stack.pop(argc)
-
-      frame = ltype.frame_from(argc, bc.pc)
-      frame.ctx.stack.push(*argv)
-      # Handle possible variadic LambdaType
-  if ltype[:arity] < 0
-    frame.ctx.stack.push(argc)
-  end
-
-
-      fr.push(frame)
-      bc.pc = ltype[:loc]
-    },
 
     # machine low-level instructions: nop, halt, :int,  etc.
     _frame: 'Pushes frame stack onto data stack',
