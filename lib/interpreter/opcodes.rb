@@ -218,6 +218,12 @@ def opcodes tmpreg=nil
     },
 
     # New version of  lcall: TODO. rename this to :lcall, remove old :lcall
+    _lcall: 'Pops LambdaType object, hands interpreter to it to perform call',
+    lcall: ->(bc, ctx, fr, intp) {
+      ltype = ctx.stack.pop
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+      ltype.perform(intp)
+    },
     _ncall: 'New version of lambda call',
     ncall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
