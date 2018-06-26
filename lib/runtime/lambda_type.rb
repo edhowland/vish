@@ -27,16 +27,24 @@ class LambdaType < Hash
     fr.return_to = ret
     fr
   end
+  # check arity
+  def check_arity(argc)
+    raise VishArgumentError.new(self[:arity], argc) if self[:arity] != argc
+  end
+  def handle_variadic(argc, fr)
+    #
+  end
   # perform lcall
   def perform(intp)
     argc = intp.ctx.stack.pop
-    raise VishArgumentError.new(self[:arity], argc) if self[:arity] != argc
+    check_arity(argc)
     fr = FunctionFrame.new(Context.new)
     fr.return_to = intp.bc.pc
     fr.ctx.vars = binding_dup
 
     argv = intp.ctx.stack.pop(argc)
     fr.ctx.stack.push *argv
+    handle_variadic(argc, fr)
     intp.frames.push fr
     intp.bc.pc = self[:loc]
   end
