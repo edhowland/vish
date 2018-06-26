@@ -9,10 +9,11 @@ class InternalFunction < LambdaType
   def perform(intp)
         argc = intp.ctx.stack.pop
         arity = self[:arity]
-#binding.pry
     raise VishArgumentError.new(arity, argc) if (arity != -1) and   arity != argc
     fr = FunctionFrame.new(Context.new)
     fr.return_to = intp.bc.pc
+    fr.ctx.vars = binding_dup
+
     argv = intp.ctx.stack.pop(argc)
     fr.ctx.stack.push *argv
     fr.ctx.stack.push argc if arity < 0

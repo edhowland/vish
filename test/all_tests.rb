@@ -35,6 +35,6 @@ require_relative 'test_pair_type'
 require_relative 'test_binding_type'
 require_relative 'test_expressions'
 require_relative 'test_vish'
-require_relative 'test_lcall'
+#require_relative 'test_lcall'
 
 

@@ -33,6 +33,8 @@ class LambdaType < Hash
     raise VishArgumentError.new(self[:arity], argc) if self[:arity] != argc
     fr = FunctionFrame.new(Context.new)
     fr.return_to = intp.bc.pc
+    fr.ctx.vars = binding_dup
+
     argv = intp.ctx.stack.pop(argc)
     fr.ctx.stack.push *argv
     intp.frames.push fr
