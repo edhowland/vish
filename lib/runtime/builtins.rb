@@ -311,4 +311,7 @@ module Builtins
   def self.symbol?(object)
     object.instance_of?(Symbol)
   end
+  def self.curry(fn)
+    CurryFunction.new(fn)
+  end
 end
