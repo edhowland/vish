@@ -48,6 +48,10 @@ class LambdaType < Hash
     intp.frames.push fr
     intp.bc.pc = self[:loc]
   end
+  def formals
+    c=(0..self[:arity]-1).to_a.map {|e| (e*5)+1}
+    c.each_with_object([]) {|e,o| o << self[:parms][e] }.reverse
+  end
 
   def inspect
     "#{type.name}: loc: #{self[:loc]}"
