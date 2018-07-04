@@ -11,17 +11,20 @@ class CurryFunction < LambdaType
     if self[:arity] == argc
     fr = FunctionFrame.new(Context.new)
     fr.return_to = intp.bc.pc
-    fr.ctx.vars = binding_dup
-
     argv = intp.ctx.stack.pop(argc)
-    fr.ctx.stack.push *argv
-    handle_variadic(argc, fr)
+
+    bn = binding_dup
+    formals.zip(argv).each {|k, v| bn.set(k, v) }
+    fr.ctx.vars = bn
+
+#    fr.ctx.stack.push *argv
+    handle_variadic(argc, fr, argv)
     intp.frames.push fr
     intp.bc.pc = self[:loc]
     else
     argv = intp.ctx.stack.pop(argc)
       bn = self[:binding].dup
-      
+
 
     end
   end

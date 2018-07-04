@@ -11,9 +11,12 @@ class InternalFunction < LambdaType
     arity= self[:arity]
     raise VishArgumentError.new(arity, argc) if (arity != -1) and   arity != argc
   end
-  def handle_variadic(argc, fr)
+  def handle_variadic(argc, fr, argv=[])
     arity= self[:arity]
-        fr.ctx.stack.push argc if arity < 0
+    if arity < 0
+      fr.ctx.stack.push(*argv)
+      fr.ctx.stack.push argc
+        end
   end
 
   def inspect

@@ -4,7 +4,8 @@ class LambdaType < Hash
   include Type
   def initialize parms:, body:, _binding:, loc: nil
     self[:parms] = parms
-    self[:body] = parms + body + [:fret]
+#    self[:body] = parms + body + [:fret]
+    self[:body] = body + [:fret]
     self[:binding] = _binding
     self[:loc] = loc
   self[:name] = :anonymous
@@ -31,7 +32,7 @@ class LambdaType < Hash
   def check_arity(argc)
     raise VishArgumentError.new(self[:arity], argc) if self[:arity] != argc
   end
-  def handle_variadic(argc, fr)
+  def handle_variadic(argc, fr, argv=[])
     #
   end
   # perform lcall
@@ -40,11 +41,14 @@ class LambdaType < Hash
     check_arity(argc)
     fr = FunctionFrame.new(Context.new)
     fr.return_to = intp.bc.pc
-    fr.ctx.vars = binding_dup
-
     argv = intp.ctx.stack.pop(argc)
-    fr.ctx.stack.push *argv
-    handle_variadic(argc, fr)
+
+    bn = binding_dup
+    formals.zip(argv).each {|k, v| bn.set(k, v) }
+    fr.ctx.vars = bn
+
+#    fr.ctx.stack.push *argv
+    handle_variadic(argc, fr, argv)
     intp.frames.push fr
     intp.bc.pc = self[:loc]
   end
