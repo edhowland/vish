@@ -24,11 +24,11 @@ class CurryFunction < LambdaType
     else
     argv = intp.ctx.stack.pop(argc)
       bn = self[:binding].dup
-#binding.pry
       formals[0..(argc - 1)].zip(argv).each {|k, v| bn.set(k, v) }
       result = self.class.new(self)
       result[:binding] = bn
       result[:arity] = self[:arity] - argc
+      result[:parms] = result[:parms][0..((argc * 5) - 1)]
       intp.ctx.stack.push(result)
     end
   end
