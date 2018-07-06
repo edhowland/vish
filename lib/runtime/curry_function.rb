@@ -27,8 +27,9 @@ class CurryFunction < LambdaType
       formals[0..(argc - 1)].zip(argv).each {|k, v| bn.set(k, v) }
       result = self.class.new(self)
       result[:binding] = bn
+      parent_arity = self[:arity]
       result[:arity] = self[:arity] - argc
-      result[:parms] = result[:parms][0..((argc * 5) - 1)]
+      result[:parms] = result[:parms][0..(((parent_arity - argc) * 5) - 1)]
       intp.ctx.stack.push(result)
     end
   end
