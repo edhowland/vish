@@ -29,7 +29,7 @@ class CurryFunction < LambdaType
       result[:binding] = bn
       parent_arity = self[:arity]
       result[:arity] = self[:arity] - argc
-      result[:parms] = result[:parms][0..(((parent_arity - argc) * 5) - 1)]
+      result[:formals] = result[:formals][argc..(-1)]
       intp.ctx.stack.push(result)
     end
   end

@@ -291,13 +291,9 @@ end
      [sym] + _to_a(cdr(sexp), result)
   end
   def parmlist(sexp)
-    result = _to_a(sexp)
-    count = result.length
-    result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :set, :drop] }
-    result
+    _to_a(sexp)
   end
   def lambda(sexp)
-#puts "lambda: #{sexp.inspect}"
     parms = self.eval(car(sexp))
     body = self.eval(cadr(sexp))
     [:pushl, parms, :pushl, body, :pushl, genid(Object.new), :pushl, 3, :pushl, :_mklambda, :icall]

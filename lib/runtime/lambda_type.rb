@@ -3,8 +3,9 @@
 class LambdaType < Hash
   include Type
   def initialize parms:, body:, _binding:, loc: nil
-    self[:parms] = parms
+#    self[:parms] = parms
 #    self[:body] = parms + body + [:fret]
+    self[:formals] = parms
     self[:body] = body + [:fret]
     self[:binding] = _binding
     self[:loc] = loc
@@ -53,8 +54,9 @@ class LambdaType < Hash
     intp.bc.pc = self[:loc]
   end
   def formals
-    c=(0..self[:arity]-1).to_a.map {|e| (e*5)+1}
-    c.each_with_object([]) {|e,o| o << self[:parms][e] }.reverse
+#    c=(0..self[:arity]-1).to_a.map {|e| (e*5)+1}
+#    c.each_with_object([]) {|e,o| o << self[:parms][e] }.reverse
+    self[:formals]
   end
 
   def inspect
