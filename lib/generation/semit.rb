@@ -291,13 +291,9 @@ end
      [sym] + _to_a(cdr(sexp), result)
   end
   def parmlist(sexp)
-    result = _to_a(sexp)
-    count = result.length
-    result = result.reverse.reduce([]) {|i,j|i + [:pushl, j, :swp, :set, :drop] }
-    result
+    _to_a(sexp)
   end
   def lambda(sexp)
-#puts "lambda: #{sexp.inspect}"
     parms = self.eval(car(sexp))
     body = self.eval(cadr(sexp))
     [:pushl, parms, :pushl, body, :pushl, genid(Object.new), :pushl, 3, :pushl, :_mklambda, :icall]
@@ -308,15 +304,15 @@ end
     symbol = self.eval(sexp).last
     [:pushl, @incr[], :pushl, symbol, :icall]
   end
-  # lambda call - deref symbol which should be a LambdaType. then :ncall
+  # lambda call - deref symbol which should be a LambdaType. then :lcall
   def lambdacall(sexp)
-    _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :ncall]
+    _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :lcall]
   end
   # deref first, then call lambda
   # argc should be [] if more than 0 args when called from lambdacall_args
   def lambdacall_index(sexp, argc=[:pushl, 0])
   argc[-1] += @incr[] unless argc[-1].nil?
-    argc +  self.eval(sexp) + [:ncall]
+    argc +  self.eval(sexp) + [:lcall]
   end
   # lambdacall_args - same as lambdacall_index, but possible args. Even if arg list is empty
   def lambdacall_args(sexp)

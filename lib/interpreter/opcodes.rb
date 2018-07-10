@@ -218,31 +218,11 @@ def opcodes tmpreg=nil
     },
 
     # New version of  lcall: TODO. rename this to :lcall, remove old :lcall
-    _ncall: 'New version of lambda call',
-    ncall: ->(bc, ctx, fr, intp) {
+    _lcall: 'Pops LambdaType object, hands interpreter to it to perform call',
+    lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
-  argc = ctx.stack.pop
-  if ltype[:arity] >= 0
-      raise VishArgumentError.new(ltype[:arity], argc) if argc != ltype[:arity]
-  end
-
-  argv = ctx.stack.pop(argc)
-      #_binding = ltype[:binding]
-      frame = FunctionFrame.new(Context.new)
-frame.ctx.constants = ctx.constants
-frame.ctx.vars = ltype.binding_dup #_binding.dup
-      frame.ctx.stack.push(*argv)
-#binding.pry
-
-  if ltype[:arity] < 0
-    frame.ctx.stack.push(argc)
-  end
-
-      frame.return_to = bc.pc
-
-      fr.push(frame)
-      bc.pc = ltype[:loc]
+      ltype.perform(intp)
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.
