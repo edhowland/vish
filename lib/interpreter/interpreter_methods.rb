@@ -43,7 +43,7 @@ module InterpreterMethods
   def self._mklambda(parms, body, id, loc=nil)
     result = LambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
     # compute arity here. Might have to change for variadic lambdas
-    result[:arity] = parms.length.zero? ? 0 : parms.length/5
+    result[:arity] = parms.length   #parms.length.zero? ? 0 : parms.length/5
     g = self._globals
     if g.exist? id
       loc = g[id]

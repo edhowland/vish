@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.1  2018-07-10
+
+### Additions
+
+Introduces the built-in 'curry' function.
+Returns a new function that is curried and can take partial application
+of its arguments.
+
+Must recompile all Vish source compiled under earlier versions.
+
 ## 0.6.0 2018-05-14
 
 This release eliminates the dependence on the rubytree gem.

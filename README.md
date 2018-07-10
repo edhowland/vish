@@ -15,7 +15,7 @@ application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.6.0
+## Version 0.6.1
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -56,6 +56,7 @@ Vish has support for:
 - Higher order functions. Functions can be passed or returned from other functions. Including both named and lambda functions.
 - Optional lazy evaluation
 - Foreign Function Interface (FFI) via simple Ruby module code.
+- Curry functions or partial application of functions or lambdas.
 
 ## Requirements
 

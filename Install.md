@@ -26,10 +26,7 @@ If you do not yethave  Ruby on your system, follow these steps
 # So it it is used here to achieve cross-platform simplicity.
 $ sudo apt update
 # Install git if not installed
-$ sudo apt install git git-flow
-#  The Vish project uses git flow operations for feature branches.
-# Currently version 0.6.0 is in git branch feature/0.6.0
-# It will be promoted to master in the comming days.
+$ sudo apt install git
 # Install the Ruby and dependancies
 $ sudo apt install ruby     build-essential   libjson-glib-dev   ruby-dev 
 ```
@@ -44,11 +41,6 @@ $ sudo gem install bundler
 # Get the Vish git repository
 git clone https://github.com/edhowland/vish.git
 cd ./vish
-# create the git flow steps with auto configuration.
-$ git flow init -d
-$ git flow feature track 0.6.0
-# You should be in the develop branch
-$ git checkout feature/0.6.0
 $ sudo bundle
 ```
 
