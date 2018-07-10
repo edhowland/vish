@@ -4,9 +4,9 @@
 
 - Control statements
 
-## Version 0.6.0
+## Version 0.6.1
 
-This document is complete as far as version 0.6.0  of the Vish language.
+This document is complete as far as version 0.6.1  of the Vish language.
 
 ## Abstract
 
@@ -344,6 +344,34 @@ bz[bb:]= 100
 %fb
 # => 100
 ```
+
+#### Curry functions
+
+A function can be curried, that can be made to apply less than its full
+set of arguments. To create such a function, you need to use the 'curry'
+built-in function. This returns a copy of the passed function that  can be curried.
+
+Once you have a curried function, you can apply it to all or a subset of its
+formal parameters. If you apply it to a set of arguments smaller than its
+total set of parameters, you will get a new curried function as a result.
+
+```
+defn foo(a, b, c) { :a + :b + :c }
+# Make me some curry!
+c0=curry(:foo)
+# => CurryFunction
+# Now apply it one argument at a time.
+c1=c0(1)
+# => CurryFunction
+c2=c1(2)
+# => CurryFunction
+c2(3)
+# => 6
+```
+
+Although the above example is admittedly contrived, you can imagine iterating
+over a loop and pulling each argument off a list one at time. When you get the
+last argument, you get the final answer.
 
 ## Collections
 

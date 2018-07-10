@@ -56,6 +56,7 @@ Vish has support for:
 - Higher order functions. Functions can be passed or returned from other functions. Including both named and lambda functions.
 - Optional lazy evaluation
 - Foreign Function Interface (FFI) via simple Ruby module code.
+- Curry functions or partial application of functions or lambdas.
 
 ## Requirements
 
