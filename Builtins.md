@@ -228,3 +228,5 @@
   ## symbol?(object) - true if object is a Symbol
 
 
+## curry(function) - Returns a new function that is curried.
+
