@@ -370,3 +370,8 @@ end
 def fact(n)
   "defn fact(n) {:n == 0 && return 1; :n * fact(:n - 1)};fact(#{n})"
 end
+
+def mkh
+  n=0
+  [->() {n}, ->(i) { return unless i.bc.peek == :fret; n = [n,i.frames.length].max }]
+end
