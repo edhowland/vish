@@ -355,3 +355,15 @@ end
 def libvs
   File.read('std/lib.vs')
 end
+def mkhook
+  ->(i) {
+    return unless i.bc.peek == :fret
+    puts "\n------\n"
+    i.frames.each {|f| puts "#{f.class.name}: ret: #{f.return_to}\n" }
+    puts "-----"
+  }
+end
+
+def fg()
+  'defn f() {g()};defn g() {99};f()'
+end
