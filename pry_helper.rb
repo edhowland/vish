@@ -367,3 +367,6 @@ end
 def fg()
   'defn f() {g()};defn g() {99};f()'
 end
+def fact(n)
+  "defn fact(n) {:n == 0 && return 1; :n * fact(:n - 1)};fact(#{n})"
+end
