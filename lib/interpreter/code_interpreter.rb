@@ -59,6 +59,14 @@ class CodeInterpreter
     end
   end
   attr_accessor :last_exception, :handlers, :register_a, :frames, :heap
+  def hook hookp
+    @hookps ||= []
+    @hookps << hookp
+  end
+  def call_hooks
+    @hookps ||= []
+    @hookps.each {|h| h.call(self) }
+  end
 
   def bc
     @code_stack.peek[0]
@@ -99,7 +107,9 @@ class CodeInterpreter
   def step
           code = fetch
       instruction = decode(code)
-      execute(instruction)
+      result = execute(instruction)
+      call_hooks
+      result
   end
 
   def interrupt_entry itype
