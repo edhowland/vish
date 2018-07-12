@@ -375,3 +375,15 @@ def mkh
   n=0
   [->() {n}, ->(i) { return unless i.bc.peek == :fret; n = [n,i.frames.length].max }]
 end
+def afact(n)
+  <<-EOD
+  defn fact(n) {
+      defn aux(n, acc) {
+        :n == 0 && return :acc
+        aux(:n - 1, :n * :acc)
+      }
+      aux(:n, 1)
+    }
+    fact(#{n})
+  EOD
+end
