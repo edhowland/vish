@@ -36,6 +36,26 @@ class LambdaType < Hash
   def handle_variadic(argc, fr, argv=[])
     #
   end
+  # tail_call: call from :tcall opcode. Does perform, but within existing stack
+  # frame. Does bind the args to formals
+  def tail_call(intp)
+        argc = intp.ctx.stack.pop
+    check_arity(argc)
+    argv = intp.ctx.stack.pop(argc)
+    fr = intp.frames.peek
+
+
+    bn = binding_dup
+    formals.zip(argv).each {|k, v| bn.set(k, v) }
+    fr.ctx.vars = bn
+
+#    handle_variadic(argc, fr, argv)
+
+    # heere is where we differ
+    intp.frames.peek.ctx.vars = bn
+    intp.bc.pc = self[:loc]
+  end
+
   # perform lcall
   def perform(intp)
     argc = intp.ctx.stack.pop

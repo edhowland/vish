@@ -224,6 +224,12 @@ def opcodes tmpreg=nil
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       ltype.perform(intp)
     },
+    _tcall: 'Tail call version of :lcall',
+    tcall: ->(bc, ctx, fr, intp) {
+          ltype = ctx.stack.pop
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+      ltype.tail_call(intp)
+    },
 
     # machine low-level instructions: nop, halt, :int,  etc.
     _frame: 'Pushes frame stack onto data stack',
