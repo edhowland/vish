@@ -387,3 +387,10 @@ def afact(n)
     fact(#{n})
   EOD
 end
+def countdown(num)
+  <<-EOD
+    defn cd(n) {
+      :n == 0 && 'ok' || cd(:n - 1)
+    }
+EOD
+end
