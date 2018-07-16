@@ -387,10 +387,20 @@ def afact(n)
     fact(#{n})
   EOD
 end
-def countdown(num)
+
+def li(n)
+  "list(" + (1..n).to_a.inspect[1..-2] + ")"
+end
+
+# ll - create lambda :ll to calculate length of list
+# Use with above li(n) method: interpret ll(li(9)) # => 9
+def ll(list)
   <<-EOD
-    defn cd(n) {
-      :n == 0 && 'ok' || cd(:n - 1)
+      defn cdr(l) { value(:l) }
+    defn ll(l) {
+      {null?(:l) && 0} || 1 + ll(cdr(:l))
     }
+    l=#{list}
+    ll(:l)
 EOD
 end

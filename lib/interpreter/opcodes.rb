@@ -147,7 +147,7 @@ def opcodes tmpreg=nil
     },
     _jmprt: 'Jumps relative to this position if top of stack true',
     jmprt: ->(bc, ctx, fr, intp) {
-  val = ctx.stack.pop
+  val = ctx.stack.peek #   pop
                   _loc = bc.next
       if val
               _curr = bc.pc
@@ -156,7 +156,7 @@ def opcodes tmpreg=nil
     },
     _jmprf: 'Jumps relative from here if top of stack is false',
     jmprf: ->(bc, ctx, fr, intp) {
-          val = ctx.stack.pop
+          val = ctx.stack.peek #   pop
               _loc = bc.next
       unless val
                     _curr = bc.pc
