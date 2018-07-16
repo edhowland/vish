@@ -1,5 +1,49 @@
 # Notes
 
+## Version 0.6.2
+
+### Tail call optimization
+
+To activate tail call optimization, set shell environment TCO=1
+This enables it at runtime. Otherwise, recursive calls will consume stack space.
+
+
+To ensure your code is setup for tail calls when doing recursion, ensure
+that the recursion is the very last call in the function body.
+
+```
+# How to do factorial wrong:
+defn fact(n) {
+  :n == 0 && return 1
+  :n * fact(:n - 1)
+}
+# The above has more work to do after the call to the fact(:n - 1)
+#
+# Do it right with an auxillary function with accumulator passing style
+defn fact(n) {
+  defn aux(n, acc) {
+    {:n == 0 && :acc} || aux(:n - 1, :n * :acc}
+  aux(:n, 1)
+}
+#
+# The :acc gets calculated and passed on the next recursive call to aux()
+```
+
+This version is properly tail recursive because the calls to the first aux(:n, 1)
+is in the tail position, and the recursive call within aux() is also
+in the tail position with aux(:n - 1, :n * :acc).
+### Semantics of if/then/else
+
+To get the effect of a if, then and else  clause, do this:
+
+```
+# if/then/else
+{ 4 < 2 && 'less'} || 'greater'
+# => 'greater'
+{ 2 < 4 && 'less'} || 'greater'
+# => 'less'
+```
+
 ## Version 0.5.0
 
 Changes the semantics of named function declarations to use lambda assignments

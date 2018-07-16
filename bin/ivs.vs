@@ -6,6 +6,7 @@ loop {
   parse(:src) | _emit() | _icall _call:
   argv=tail(:argv)
 }
+# main REP Loop
   loop {
     prints('vish>')
 src=read()
