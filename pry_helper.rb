@@ -404,3 +404,17 @@ def ll(list)
     ll(:l)
 EOD
 end
+
+def axll(list)
+  <<-EOD
+      defn cdr(l) { value(:l) }
+  defn axll(l) {
+    defn aux(l, acc) {
+      {null?(:l) && :acc} || aux(cdr(:l), 1 + :acc)
+    }
+    aux(:l, 0)
+    }
+    l=#{list}
+  axll(:l)
+EOD
+end
