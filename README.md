@@ -15,7 +15,7 @@ application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.6.1
+## Version 0.6.2
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -57,6 +57,11 @@ Vish has support for:
 - Optional lazy evaluation
 - Foreign Function Interface (FFI) via simple Ruby module code.
 - Curry functions or partial application of functions or lambdas.
+- Tail call optimization. Recursive calls written in tail call form do not consume new stack frames.
+
+For the latter (tail call opt.) see:
+
+[Notes.md](Notes.md)
 
 ## Requirements
 
