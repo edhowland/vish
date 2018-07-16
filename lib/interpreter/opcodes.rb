@@ -147,7 +147,7 @@ def opcodes tmpreg=nil
     },
     _jmprt: 'Jumps relative to this position if top of stack true',
     jmprt: ->(bc, ctx, fr, intp) {
-  val = ctx.stack.pop
+  val = ctx.stack.peek #   pop
                   _loc = bc.next
       if val
               _curr = bc.pc
@@ -156,7 +156,7 @@ def opcodes tmpreg=nil
     },
     _jmprf: 'Jumps relative from here if top of stack is false',
     jmprf: ->(bc, ctx, fr, intp) {
-          val = ctx.stack.pop
+          val = ctx.stack.peek #   pop
               _loc = bc.next
       unless val
                     _curr = bc.pc
@@ -223,6 +223,12 @@ def opcodes tmpreg=nil
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
       ltype.perform(intp)
+    },
+    _tcall: 'Tail call version of :lcall',
+    tcall: ->(bc, ctx, fr, intp) {
+          ltype = ctx.stack.pop
+      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+      ltype.tail_call(intp)
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.

@@ -19,6 +19,11 @@ class InternalFunction < LambdaType
         end
   end
 
+  # bypass tail call optimizations for internal functions
+  def tail_call(intp)
+    perform(intp)
+  end
+
   def inspect
     "#{self.class.name} #{self[:name]}"
   end

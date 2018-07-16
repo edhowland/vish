@@ -355,3 +355,66 @@ end
 def libvs
   File.read('std/lib.vs')
 end
+def mkhook
+  ->(i) {
+    return unless i.bc.peek == :fret
+    puts "\n------\n"
+    i.frames.each {|f| puts "#{f.class.name}: ret: #{f.return_to}\n" }
+    puts "-----"
+  }
+end
+
+def fg()
+  'defn f() {g()};defn g() {99};f()'
+end
+def fact(n)
+  "defn fact(n) {:n == 0 && return 1; :n * fact(:n - 1)};fact(#{n})"
+end
+
+def mkh
+  n=0
+  [->() {n}, ->(i) { return unless i.bc.peek == :fret; n = [n,i.frames.length].max }]
+end
+def afact(n)
+  <<-EOD
+  defn fact(n) {
+      defn aux(n, acc) {
+        :n == 0 && return :acc
+        aux(:n - 1, :n * :acc)
+      }
+      aux(:n, 1)
+    }
+    fact(#{n})
+  EOD
+end
+
+def li(n)
+  "list(" + (1..n).to_a.inspect[1..-2] + ")"
+end
+
+# ll - create lambda :ll to calculate length of list
+# Use with above li(n) method: interpret ll(li(9)) # => 9
+def ll(list)
+  <<-EOD
+      defn cdr(l) { value(:l) }
+    defn ll(l) {
+      {null?(:l) && 0} || 1 + ll(cdr(:l))
+    }
+    l=#{list}
+    ll(:l)
+EOD
+end
+
+def axll(list)
+  <<-EOD
+      defn cdr(l) { value(:l) }
+  defn axll(l) {
+    defn aux(l, acc) {
+      {null?(:l) && :acc} || aux(cdr(:l), 1 + :acc)
+    }
+    aux(:l, 0)
+    }
+    l=#{list}
+  axll(:l)
+EOD
+end

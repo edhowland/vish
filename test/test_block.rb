@@ -50,8 +50,12 @@ EOC
   def test_recursion_reaches_stack_limit
     bc, ctx = compile 'bk=:{ %bk }; %bk'
     ci = mkci bc, ctx
-    assert_raises StackLimitReached do
-      ci.run
+    # skip this test if tail call optimization is on. Will inifinite loop
+    # because no call stack frames are created
+    if !ENV['TCO']
+      assert_raises StackLimitReached do
+        ci.run
+      end
     end
   end
 
