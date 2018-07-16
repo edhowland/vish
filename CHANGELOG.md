@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.2 2018-07-16
+### Additions
+
+Implemented tail call optimization. Off by default.
+
+To enable it: set shell environment variable TCO before infoking any Vish
+program.
+
+E.g.
+```
+# enable tail call optimization for recursion:
+$ TCO=1 ./bin/ivs
+vish> list_length(list(1,2,3,4,5,6))
+6
+exit
+$
+```
+
 ## 0.6.1  2018-07-10
 
 ### Additions
