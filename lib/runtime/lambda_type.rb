@@ -71,6 +71,11 @@ class LambdaType < Hash
 #    fr.ctx.stack.push *argv
     handle_variadic(argc, fr, argv)
     intp.frames.push fr
+    # support for continuations
+    intp.ctx.vars[:_intp] = intp
+#    puts "in perform: #{intp.frames.length}"
+#    puts "vars: #{intp.ctx.vars[:_intp].frames.length}"
+    fr.ctx.vars[:_return_loc] = fr.return_to
     intp.bc.pc = self[:loc]
   end
   def formals

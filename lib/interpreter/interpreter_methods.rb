@@ -96,4 +96,18 @@ end
   def self._codes()
     @@interpreter.bc.codes
   end
+  def self._mkcontinuation(prc, return_to, intp)      #(return_to, _binding, intp)
+    prc[:return_to] = return_to
+#    prc[:stack] = intp.ctx.stack
+    prc[:frames] = LockedStack.new(limit:1000)
+    prc[:frames].push intp.frames.first
+       [intp.frames[0]]
+     # intp.frames[0..-2]
+    prc.extend(Continuation)
+#    Continuation.new intp.ctx.stack, return_to, intp.frames,_binding
+  end
+  ## callcc(lambda) - creates Continuation calls lambda with it as parm
+  def self._callcc
+    Continuation.new(@@interpreter.ctx.stack, @@interpreter.frames.peek.return_to, @@interpreter.frames[-2])
+  end
 end

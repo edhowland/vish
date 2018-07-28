@@ -27,6 +27,20 @@ module Builtins
   def self.dup(arg)
     arg
   end
+  ## clone - tries to do a deep clone of argument, else just sends :clone to it
+  def self.clone(arg)
+    if arg.respond_to? :_clone
+      arg._clone
+    elsif arg.respond_to? :clone
+      if arg.kind_of? Fixnum
+        arg
+      else
+        arg.clone
+      end
+    else
+      arg
+    end
+  end
 
   ## typeof(obj) - gives the class/??? of the obj
   def self.typeof(obj)

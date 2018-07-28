@@ -1,4 +1,5 @@
 # std/lib.vs - Vish Standard Library functions
+# internal identity function: used for continuations
 # mkarr - creates object for use of  in object construction
 # Usage: obj=mkarr(foo:, 2)
 defn mkattr(k,v) {
@@ -30,6 +31,12 @@ _undefined?(:key, binding())
 defn map(coll, fn) {
   empty?(:coll) && return []
   [%fn(head(:coll))] + map(tail(:coll), :fn)
+}
+# Continuation stuff
+defn callcc(l) {
+#  l(_mkcontinuation(:_return_loc, binding(), :_intp))
+  defn _identity(x) { :x }
+  l(_mkcontinuation(:_identity, :_return_loc, :_intp))
 }
 # set up some variables
 null=mknull()

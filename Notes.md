@@ -1,5 +1,21 @@
 # Notes
 
+## Porposed version 0.6.3: Continuations
+
+- pass identity lambda to _mkcontinuation w/:_return_loc, binding()
+- In _mkcontinuation: extend passed id lambda with module Continuation
+
+### module Continuation
+
+Hash keys in id lambda set with stack, frames and return_loc
+Or: create a deep clone of CodeInterpreter with those values
+
+in module Continuation
+In def perform(intp)
+Take in intp
+set the above stuff
+call super with (cloned?) intp
+
 ## Version 0.6.2
 
 ### Tail call optimization

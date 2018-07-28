@@ -1,4 +1,5 @@
 # frame.rb - class Frame,  MainFrame and FunctionFrame
+# TODO: Simplify this: Should only be MainFrame and FunctionFrame only
 
 # class Frame - base class for  FunctionFrame 
 class Frame
@@ -30,6 +31,13 @@ class Frame
     @return_to.pop
   end
 
+  def _clone
+    result = self.class.new
+    result.ctx = Builtins.clone(@ctx)
+    result.return_to = Builtins.clone(@return_to)
+    result
+  end
+
   def inspect
     "#{self.class.name}:  ctx: #{@ctx.inspect} return_to: #{@return_to}"
   end
@@ -47,6 +55,11 @@ class MainFrame < Frame
   # get the current binding# Not to be confused with member :binding of the lambda itself
   def _binding
     @ctx.vars
+  end
+  def _clone
+    result = self.class.new Builtins.clone(@ctx)
+    result.return_to = Builtins.clone(@return_to)
+    result
   end
 end
 

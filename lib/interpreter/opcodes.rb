@@ -221,7 +221,7 @@ def opcodes tmpreg=nil
     _lcall: 'Pops LambdaType object, hands interpreter to it to perform call',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+      raise LambdaNotFound.new('unknown', ltype.class.name) if ! ltype.kind_of? LambdaType
       ltype.perform(intp)
     },
     _tcall: 'Tail call version of :lcall',
