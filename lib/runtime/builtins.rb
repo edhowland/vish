@@ -32,7 +32,8 @@ module Builtins
     if arg.respond_to? :_clone
       arg._clone
     elsif arg.respond_to? :clone
-      if arg.kind_of? Fixnum
+      # Needed before Ruby version 2.4+
+      if [NilClass, TrueClass, FalseClass, Fixnum, Symbol].member? arg.class
         arg
       else
         arg.clone

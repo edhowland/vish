@@ -419,18 +419,21 @@ def axll(list)
 EOD
 end
 
-def cc
-  "a=8;defn foo() {a=callcc();99};%foo;%a"
-end
+
 # continuation testing
-def sc
+def cc
   <<-EOD
-  a=:null
-  defn foo() { 5 + callcc(->(k) { a=:k;  k(3)})}
-    %foo
+  defn callcc(l) {
+  l(_mkcontinuation(:_frames, :callcc))
+}
 EOD
 end
-
+def cont
+  <<-EOD
+kk=9
+  5 + callcc(->(k) {kk=:k;3})
+  EOD
+end
 def ef
   <<-EOD
   defn id(x) {:x}
