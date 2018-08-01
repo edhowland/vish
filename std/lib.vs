@@ -34,7 +34,6 @@ defn map(coll, fn) {
 }
 # Continuation stuff
 defn callcc(l) {
-  defn _identity(x) { :x }
   l(_mkcontinuation(:_frames, :callcc))
 }
 # set up some variables
