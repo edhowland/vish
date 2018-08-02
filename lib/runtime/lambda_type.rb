@@ -73,8 +73,6 @@ class LambdaType < Hash
     intp.frames.push fr
     # support for continuations
     intp.ctx.vars[:_frames] = intp.frames._clone
-#    intp.ctx.vars[:_function] = self
-#    fr.ctx.vars[:_return_loc] = fr.return_to
     # Now jump to start of function
     intp.bc.pc = self[:loc]
   end

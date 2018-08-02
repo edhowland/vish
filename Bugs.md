@@ -1,5 +1,17 @@
 # Bugs
 
+## Bug: in vish command line runner with --evaluate
+
+Cannot just pass '-e "expression"' alone, must use a empty null.vs file
+
+```
+$ bin/vish -e '100'
+# ... just hangs waiting for input
+
+$ touch null.vs
+$ ./bin/vish -e '100' null.vs
+# => 100
+```
 
 ## Bug: Cannot escape single quote inside of single quote.
 
