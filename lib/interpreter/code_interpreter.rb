@@ -49,8 +49,7 @@ class CodeInterpreter
     ctx.vars[:binding][:arity] = -1
     bc.codes += ctx.vars[:binding][:body]
 
-    # Handle the case of callcc - call-with-current-continuation
-    ctx.vars[:_callcc] = CallCC.new
+
     # setup all FFI methods as :icalls and ctx.vars in scope
     Dispatch.ffi_ruby.each do |ffi|
       ctx.vars[ffi] = InternalFunction.new(parms:[], body:[:pushl, ffi, :icall], _binding:ctx.vars, loc:bc.codes.length)

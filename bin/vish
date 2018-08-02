@@ -2,13 +2,19 @@
 # vish - runs Vish scripts: *.vs
 
 require_relative '../lib/vish'
-require_relative 'options'
+require_relative 'opt2'
 require_relative 'startup'
 
 options = { stdlib: true,
+evaluations: [],
   ifiles: []
 }
-opt=get_options('vish', 'Compile and run Vish source file file.vs') { options }
+opt=get_options(pgm:'vish', desc:'Compile and run Vish source file file.vs', options:options) do |o|
+  # aditional arguments
+o.on('-e eval', '--evaluate eval', String, 'Evaluate this expression') do |expr|
+    options[:evaluations] << expr
+  end
+end
 opt.parse!
 
 # This bit of Jiggery-Do is to ensure contract with scripts and outer environment
@@ -30,6 +36,8 @@ end
 
 # Now consume all Vish scripts loaded with -l or just on the command line
 source = startup(options) { options[:ifiles].map {|n| File.read(n) }.join("\n") } + "\n" + ARGF.read
+# add in any evaluation expressions from --evaluate expr
+source += "\n" + options[:evaluations].join("\n")
 
 # Now restore ARGV for our script
 remains.unshift script_name
