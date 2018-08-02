@@ -11,6 +11,12 @@ class MainFrame
     result.return_to = @return_to
     result
   end
+  def ==(other)
+    other.instance_of?(self.class)
+  end
+  def _binding
+    @ctx.vars
+  end
 end
 
 class FunctionFrame < MainFrame

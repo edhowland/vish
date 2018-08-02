@@ -201,8 +201,6 @@ def opcodes tmpreg=nil
       loc = frame.return_to
       bc.pc = loc 
     },
-#    _frame: 'Pushes Frame type on call stack',
-#    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
 
 
   # Lambda call stuff

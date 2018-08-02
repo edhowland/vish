@@ -10,7 +10,7 @@ require_relative 'test_string'
 
 require_relative 'test_compile'
 require_relative 'test_icall'
-require_relative 'test_block'
+#require_relative 'test_block'
 require_relative 'test_branch'
 require_relative 'test_variables'
 require_relative 'test_interrupt'
