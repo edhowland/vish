@@ -100,8 +100,5 @@ end
   def self._mkcontinuation(frames, id_function)
     Continuation.new(frames._clone, id_function)
   end
-  ## callcc(lambda) - creates Continuation calls lambda with it as parm
-  def self._callcc
-    Continuation.new(@@interpreter.ctx.stack, @@interpreter.frames.peek.return_to, @@interpreter.frames[-2])
-  end
+
 end
