@@ -212,7 +212,6 @@ def opcodes tmpreg=nil
       ret_val = frame.ctx.stack.safe_pop
       fr.peek.ctx.stack.push ret_val
      bc.pc = frame.return_to
-#      frame.pop_retto
     },
 
     # New version of  lcall: TODO. rename this to :lcall, remove old :lcall

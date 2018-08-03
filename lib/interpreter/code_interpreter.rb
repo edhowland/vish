@@ -76,16 +76,6 @@ class CodeInterpreter
   def ctx
     @frames.peek.ctx
   end
-  def _ctx
-    if @code_stack.length > 1
-      @code_stack.peek[1]
-    else
-      @frames.peek.ctx
-      # TODO: check this: not using LoopFrames or BlockFrames anymore
-#      frame_index = @frames.rindex {|f| f.kind_of? MainFrame }
-#      @frames[frame_index].ctx
-    end
-  end
 
 
   # fetch: gets and returns the next bytecode to run.

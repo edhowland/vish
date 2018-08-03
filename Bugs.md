@@ -1,9 +1,5 @@
 # Bugs
 
-## Bug: Unknown in test/all_tests.rb: when test_block is enabled
-
-In this case, the total tests just kill the Ruby process with some error status/code of ???
-Standalone rt block works, but takes a very long time
 
 ## Bug: in vish command line runner with --evaluate
 

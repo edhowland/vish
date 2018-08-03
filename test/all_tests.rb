@@ -10,7 +10,9 @@ require_relative 'test_string'
 
 require_relative 'test_compile'
 require_relative 'test_icall'
-#require_relative 'test_block'
+unless ENV['NOBLOCK']== '1'
+  require_relative 'test_block'
+end
 require_relative 'test_branch'
 require_relative 'test_variables'
 require_relative 'test_interrupt'
