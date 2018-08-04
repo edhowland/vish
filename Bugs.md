@@ -1,6 +1,17 @@
 # Bugs
 
+## Bug: ./bin/vish test.vs has incorrect output:
 
+### test.vs
+```
+{{{exit}}}
+```
+
+```
+$ ./bin/vish test.vs
+# => "0.6.2"
+# What is that?
+```
 ## Bug: in vish command line runner with --evaluate
 
 Cannot just pass '-e "expression"' alone, must use a empty null.vs file
