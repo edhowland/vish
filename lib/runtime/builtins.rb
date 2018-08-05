@@ -167,7 +167,14 @@ module Builtins
   def self.prints(string)
     $stdout.print string
   end
-
+  ## gensym() - creates unique id
+  def self.gensym
+    genid(Object.new)
+  end
+  ## range(start, end) - Creates new range type
+  def self.range(rs, re)
+    Range.new(rs, re)
+  end
   ## dict - returns object hash with every 2 items as key/value pairs.
   def self.dict(*args)
     e = args.each

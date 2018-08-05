@@ -1,5 +1,14 @@
 # Bugs
 
+## Bug: Parser: 
+
+```
+(1)
+# => 1
+(-1)
+.... Parser error
+```
+
 ## Bug: ./bin/vish test.vs has incorrect output:
 
 ### test.vs

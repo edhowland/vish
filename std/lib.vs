@@ -33,8 +33,15 @@ defn map(coll, fn) {
   [%fn(head(:coll))] + map(tail(:coll), :fn)
 }
 # Continuation stuff
+## REALLY do not call this:
+__frames=_mklambda([], [frame:], gensym())
+defn unwind_one(s) {
+  xmit(:s, pop:)
+  :s
+}
+# Bug: Must get the outer frame, not the __frames frame itself
 defn callcc(l) {
-  l(_mkcontinuation(:_frames, :callcc))
+  l(_mkcontinuation(unwind_one(__frames()), :callcc))
 }
 # set up some variables
 null=mknull()

@@ -229,8 +229,8 @@ def opcodes tmpreg=nil
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.
-    _frame: 'Pushes frame stack onto data stack',
-    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(fr) },
+    _frame: 'Pushes clone of frame stack onto data stack',
+    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(Builtins.clone(fr)) },
 
     _send: 'Sends the message in opcode to object on stop of stack, pushes result onto stack',
     send: ->(bc, ctx, fr, intp) {
