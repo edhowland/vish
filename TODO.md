@@ -1,5 +1,13 @@
 # TODO
 
+## TODO : MUST create load function
+
+```
+defn load(fname) {
+  fread(:fname) | parse() | _emit()
+}
+```
+
 ## continuation stuff
 
 ### Testing

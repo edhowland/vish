@@ -63,7 +63,10 @@ module Builtins
       false
     end
   end
-
+  ## reverse vector - reverses a vector : reverse([0,1,2]) # => [2,1,0]
+  def self.reverse(vector)
+    vector.reverse
+  end
   ## inspect runs inspect on its arguments
   def self.inspect(*args)
     args.inspect

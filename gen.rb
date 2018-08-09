@@ -1,10 +1,10 @@
 # gen.rb - method gen w/continuation
 
-
 $k=nil
 def gen
   init = false
   while true do 
+    # Here we replace $k with a new continuation each pass thru loop
     callcc {|k| $k = k}
     if not init
       init = true
