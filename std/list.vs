@@ -33,3 +33,12 @@ defn append(x, y) {
   null?(:x) && return :y
 cons(car(:x), append(cdr(:x), :y))
 }
+# list_length(l) - tail call version
+defn list_length(l) {
+  defn aux(li, acc) {
+    null?(:li) && return :acc
+    aux(cdr(:li), :acc + 1)
+  }
+  aux(:l, 0)
+}
+
