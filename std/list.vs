@@ -41,4 +41,9 @@ defn list_length(l) {
   }
   aux(:l, 0)
 }
+defn reverse_list(l) {
+  null?(:l) && return :null
+  append(reverse_list(cdr(:l)), list(car(:l)))
+}
+
 

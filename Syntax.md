@@ -469,6 +469,24 @@ l=list(1, 2, 3, 4)
 You can use familiar List/Scheme-like functions like car, cdr, cadr, cddr, .etc to
 deconstruct a list
 
+#### Note: extended list deconstruction functions like cadr, cdar, cddr, etc.
+
+These are located in std/list.vs, they are not loaded by default
+
+```
+# load the list functions for use in REPL:
+$ ./bin/ivs std/list.vs
+vish>x=list(1,2,3,4)
+vish> cadr(:x)
+# => 2
+vish> caddr(:x)
+# => 3
+vish> cadddr(:x)
+# => 4
+```
+
+Note: These are limited to a maximum of 4 combinations of 'a', 'd' between the 'c' and 'r'
+
 ```
 l=list(1, 2, 3, 4, 5)
 # get first element:
@@ -489,6 +507,14 @@ car(:l)
 >> car(cdr(cdddr(:l)))
 5
 ```
+
+### List manipulation functions
+
+Also in std/list.vs are:
+
+- append(:list1, :list2) - append 2 lists and return new new combined
+- list_length(:list) - returns length of list
+- reverse_list(:l) - reverses a list and returns it list
 
 
 ### Objects
