@@ -1,4 +1,14 @@
 # 2nd attempt of gen in Ruby w/continuation
+
+# Usage:
+# x, cc = gen
+# cc.call
+# => x will be 1
+# cc.call
+# => x will be 2
+# cc.call
+# => x will be 3
+# ...
 require 'continuation'
 
 def gen
@@ -12,10 +22,10 @@ def gen
     else
       if not_primed
         not_primed = false
-        return kk
+        return [nil, kk]
       end
       i += 1
-      return i
+      return [i, kk]
     end
     callcc {|k| kk=k }
   end
