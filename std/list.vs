@@ -28,3 +28,8 @@ defn caaddr(l) { car(caddr(:l)) }
 defn cdaddr(l) { cdr(caddr(:l)) }
 defn cadddr(l) { car(cdddr(:l)) } # fourth
 defn cddddr(l) { cdr(cdddr(:l)) }
+# list functions
+defn append(x, y) {
+  null?(:x) && return :y
+cons(car(:x), append(cdr(:x), :y))
+}
