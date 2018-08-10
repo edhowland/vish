@@ -1,12 +1,30 @@
 # list.vs - Lisp - like functions in Vish
+# limited to 4 internal expansions, like Racket and Chez Scheme
+defn caar(l) { car(car(:l)) }
+defn cdar(l) { cdr(car(:l)) }
 defn cadr(l) { car(cdr(:l)) }
 defn cddr(l) { cdr(cdr(:l)) }
+defn caaar(l) { car(caar(:l)) }
+defn cdaar(l) { cdr(caar(:l)) }
+defn cadar(l) { car(cdar(:l)) }
+defn cddar(l) { cdr(cdar(:l)) }
+defn caadr(l) { car(cadr(:l)) }
+defn cdadr(l) { cdr(cadr(:l)) }
 defn caddr(l) { car(cddr(:l)) }
 defn cdddr(l) { cdr(cddr(:l)) }
-# tail call version: use TCO=1 env var before call
-  defn list_length(l) {
-    defn aux(l, acc) {
-      {null?(:l) && :acc} || aux(cdr(:l), 1 + :acc)
-    }
-    aux(:l, 0)
-    }
+defn caaaar(l) { car(caaar(:l)) }
+defn cdaaar(l) { cdr(caaar(:l)) }
+defn cadaar(l) { car(cdaar(:l)) }
+defn cddaar(l) { cdr(cdaar(:l)) }
+defn caadar(l) { car(cadar(:l)) }
+defn cdadar(l) { cdr(cadar(:l)) }
+defn caddar(l) { car(cddar(:l)) }
+defn cdddar(l) { cdr(cddar(:l)) }
+defn caaadr(l) { car(caadr(:l)) }
+defn cdaadr(l) { cdr(caadr(:l)) }
+defn cadadr(l) { car(cdadr(:l)) }
+defn cddadr(l) { cdr(cdadr(:l)) }
+defn caaddr(l) { car(caddr(:l)) }
+defn cdaddr(l) { cdr(caddr(:l)) }
+defn cadddr(l) { car(cdddr(:l)) }
+defn cddddr(l) { cdr(cdddr(:l)) }
