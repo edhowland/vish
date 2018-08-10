@@ -2,7 +2,7 @@
 # limited to 4 internal expansions, like Racket and Chez Scheme
 defn caar(l) { car(car(:l)) }
 defn cdar(l) { cdr(car(:l)) }
-defn cadr(l) { car(cdr(:l)) }
+defn cadr(l) { car(cdr(:l)) } # second
 defn cddr(l) { cdr(cdr(:l)) }
 defn caaar(l) { car(caar(:l)) }
 defn cdaar(l) { cdr(caar(:l)) }
@@ -10,7 +10,7 @@ defn cadar(l) { car(cdar(:l)) }
 defn cddar(l) { cdr(cdar(:l)) }
 defn caadr(l) { car(cadr(:l)) }
 defn cdadr(l) { cdr(cadr(:l)) }
-defn caddr(l) { car(cddr(:l)) }
+defn caddr(l) { car(cddr(:l)) } # third
 defn cdddr(l) { cdr(cddr(:l)) }
 defn caaaar(l) { car(caaar(:l)) }
 defn cdaaar(l) { cdr(caaar(:l)) }
@@ -26,5 +26,5 @@ defn cadadr(l) { car(cdadr(:l)) }
 defn cddadr(l) { cdr(cdadr(:l)) }
 defn caaddr(l) { car(caddr(:l)) }
 defn cdaddr(l) { cdr(caddr(:l)) }
-defn cadddr(l) { car(cdddr(:l)) }
+defn cadddr(l) { car(cdddr(:l)) } # fourth
 defn cddddr(l) { cdr(cdddr(:l)) }
