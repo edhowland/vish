@@ -8,25 +8,25 @@ include CompileHelper
 def set_up
   @stdlib = File.read(stdlib()) + "\n"
 end
-  def test_stdlib
-    x = interpret @stdlib + '1'
-  end
-  def test_call_stdlib
-    x = interpret @stdlib + 'o=~{foo: 1};keys(:o)'
-    assert_eq x, [:foo]
+  def test_generator
+    src = <<-EOD
+    kk=9
+   defn gen() {
+  x=0
+init=false
+loop {
+  callcc(->(k) {kk=:k})
+! :init && return {init=true}
+  x=:x + 1
+return :x
+  }
+}
+%gen
+%kk
+#%kk
+EOD
+    x = interpret @stdlib + src
+
   end
 
-  def _test_one
-    x = interpret 'car(foo: 1)'
-    assert_eq x, :foo
-  end
-  def _test_keys
-    x=interpret 'keys(~{foo: 1, bar: 2})'
-    assert_eq x, [:foo, :bar]
-  end
-  def _test_compile
-    bc, ctx = compile 'keys(~{foo: 1})'
-    ci=CodeInterpreter.new bc, ctx
-    assert_eq ci.run, [:foo]
-  end
 end
