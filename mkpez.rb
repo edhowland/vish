@@ -1,8 +1,7 @@
 # mkpez.rb - create Pez dispensor / generator
 require 'continuation'
 
-
-def mkpez(ival)
+def mkpez(ival=0)
   gen = nil
   lambda do
     return gen.call unless gen.nil?
