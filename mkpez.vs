@@ -5,7 +5,7 @@ defn mkpez() {
   gen= 0
 
 ->() {
-    zero?(:gen) || return %gen
+    zero?(:gen) || %gen
     callcc(->(ret) {
       loop {
               callcc(->(next_pass) {

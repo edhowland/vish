@@ -4,7 +4,7 @@ require 'continuation'
 def mkpez(ival=0)
   gen = nil
   lambda do
-    return gen.call unless gen.nil?
+    gen.call unless gen.nil?
     callcc do |ret|
       loop do
         callcc do |next_pass|
