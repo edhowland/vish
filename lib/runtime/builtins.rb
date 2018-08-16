@@ -123,6 +123,10 @@ module Builtins
   def self.freadable?(fname)
     File.readable?(fname)
   end
+  ## fwritable?(fname) - true if fname is writable
+  def self.fwritable?(fname)
+    File.writable?(fname)
+  end
   ## file?(path) true if path is file and not directory
   def self.file?(path)
     fexist?(path) && !dir?(path)

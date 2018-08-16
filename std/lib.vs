@@ -1,5 +1,8 @@
 # std/lib.vs - Vish Standard Library functions
-# internal identity function: used for continuations
+defn failure(msg, k) {
+  print(:msg)
+}
+except=curry(:failure)
 # mkarr - creates object for use of  in object construction
 # Usage: obj=mkarr(foo:, 2)
 defn mkattr(k,v) {
