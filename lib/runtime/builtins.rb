@@ -119,6 +119,10 @@ module Builtins
   def self.fexist?(name)
     File.exist?(name)
   end
+  ## freadable?(filename) - true if fname is readable
+  def self.freadable?(fname)
+    File.readable?(fname)
+  end
   ## file?(path) true if path is file and not directory
   def self.file?(path)
     fexist?(path) && !dir?(path)
