@@ -37,6 +37,8 @@ require_relative 'test_binding_type'
 require_relative 'test_expressions'
 require_relative 'test_vish'
 require_relative 'test_curry'
+require_relative 'test_continuations'
+
 
 
 
