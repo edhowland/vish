@@ -1,4 +1,4 @@
-# test_continuations.rb - tests for
+# test_continuations.rb - tests for Continuation
 
 require_relative 'test_helper'
 
@@ -8,7 +8,14 @@ include CompileHelper
 def set_up
   @stdlib = File.read(stdlib()) + "\n"
 end
-  def test_mult0
+  def test_callcc_just_returns
+    result = interpret @stdlib + %q{"hello %{callcc(->(k) { 'world'})}"}
+    assert_eq result, 'hello world'
+  end
+  def test_callcc_w_saved_cont_can_be_called_w_new_param
+    result = interpret @stdlib + %q{kk=9;"hello %{callcc(->(k) { kk=:k; 'world'})}";kk('sailor')}
+  end
+  def test_can_escape_when_0_is_reached
     src =<<-EOC
 # mult0.vs - multiply items in list unless 0 is encountered, then return via continuation
 defn mult(l) {
