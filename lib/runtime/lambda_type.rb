@@ -68,9 +68,9 @@ class LambdaType < Hash
     formals.zip(argv).each {|k, v| bn.set(k, v) }
     fr.ctx.vars = bn
 
-#    fr.ctx.stack.push *argv
     handle_variadic(argc, fr, argv)
     intp.frames.push fr
+    # Now jump to start of function
     intp.bc.pc = self[:loc]
   end
   def formals

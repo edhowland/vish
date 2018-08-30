@@ -27,6 +27,21 @@ module Builtins
   def self.dup(arg)
     arg
   end
+  ## clone - tries to do a deep clone of argument, else just sends :clone to it
+  def self.clone(arg)
+    if arg.respond_to? :_clone
+      arg._clone
+    elsif arg.respond_to? :clone
+      # Needed before Ruby version 2.4+
+      if [NilClass, TrueClass, FalseClass, Fixnum, Symbol].member? arg.class
+        arg
+      else
+        arg.clone
+      end
+    else
+      arg
+    end
+  end
 
   ## typeof(obj) - gives the class/??? of the obj
   def self.typeof(obj)
@@ -48,7 +63,10 @@ module Builtins
       false
     end
   end
-
+  ## reverse vector - reverses a vector : reverse([0,1,2]) # => [2,1,0]
+  def self.reverse(vector)
+    vector.reverse
+  end
   ## inspect runs inspect on its arguments
   def self.inspect(*args)
     args.inspect
@@ -101,6 +119,14 @@ module Builtins
   def self.fexist?(name)
     File.exist?(name)
   end
+  ## freadable?(filename) - true if fname is readable
+  def self.freadable?(fname)
+    File.readable?(fname)
+  end
+  ## fwritable?(fname) - true if fname is writable
+  def self.fwritable?(fname)
+    File.writable?(fname)
+  end
   ## file?(path) true if path is file and not directory
   def self.file?(path)
     fexist?(path) && !dir?(path)
@@ -152,7 +178,14 @@ module Builtins
   def self.prints(string)
     $stdout.print string
   end
-
+  ## gensym() - creates unique id
+  def self.gensym
+    genid(Object.new)
+  end
+  ## range(start, end) - Creates new range type
+  def self.range(rs, re)
+    Range.new(rs, re)
+  end
   ## dict - returns object hash with every 2 items as key/value pairs.
   def self.dict(*args)
     e = args.each

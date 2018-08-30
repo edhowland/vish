@@ -2,7 +2,7 @@
 # raised if there is no actual Lambda body to jump to
 
 class LambdaNotFound < VishRuntimeError
-  def initialize name
-    super "Lambda not found: #{name}"
+  def initialize name, klass='Object'
+    super "Lambda not found: #{name}, class: #{klass}"
   end
 end

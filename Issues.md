@@ -1,5 +1,52 @@
-# Bugs
+# Issues
 
+## Bug: Tail call optimization does not work in all situations
+
+The trick of checking for a a :lcall in the spot before :fret, is not sufficient.
+Will have to walk the AST to find actual tail positions
+This is conceptually hard to do.
+There may be a tail call in an earlier leg of some branch of conditional.
+
+## Bug: Parser: 
+
+```
+(1)
+# => 1
+(-1)
+.... Parser error
+```
+
+## Enhancement
+
+Provide a phase in compiler to perform some optimizations and features
+
+- Insert name of function into function body
+- Pre-evaluate any arithmetic sub-expressions  and replace them.
+
+## Bug: ./bin/vish test.vs has incorrect output:
+
+### test.vs
+```
+{{{exit}}}
+```
+
+```
+$ ./bin/vish test.vs
+# => "0.6.2"
+# What is that?
+```
+## Bug: in vish command line runner with --evaluate
+
+Cannot just pass '-e "expression"' alone, must use a empty null.vs file
+
+```
+$ bin/vish -e '100'
+# ... just hangs waiting for input
+
+$ touch null.vs
+$ ./bin/vish -e '100' null.vs
+# => 100
+```
 
 ## Bug: Cannot escape single quote inside of single quote.
 

@@ -274,7 +274,7 @@ end
     self.eval(sexp) + [:fret]
   end
   def _exit(sexp)
-    [:int, :_exit]
+    [:exit]
   end
   def _break(sexp)
     [:jmpr, UnknownBreak.new]

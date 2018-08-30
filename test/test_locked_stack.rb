@@ -3,6 +3,7 @@
 require_relative 'test_helper'
 
 class TestLockedStack < BaseSpike
+  include CompileHelper
   def set_up
     @stack = LockedStack.new limit: 10
   end
@@ -86,5 +87,29 @@ class TestLockedStack < BaseSpike
         @stack.previous
       end
     end
+  end
+
+  # test clone of limited stack
+  def _test_clone_preserves_length
+    x=interpret 'defn foo() {clone(:_intp)};%foo'
+    assert_eq x.frames.length, 2
+  end
+  def test_clone_of_limited_stack_starts_at_0_remains_0
+    ls = LimitedStack.new limit:100
+    x = ls.clone
+    assert_eq x.length, 0
+  end
+  def test_limited_stack_of_1_after_clone_is_still_1
+    ls = LimitedStack.new limit:100
+    ls.push 3
+    x = ls.clone
+    assert_eq x.length, 1
+
+  end
+  def test_underbar_clone_does_deep_copy
+    ls = LimitedStack.new limit: 100
+    ls.push Object.new
+    x = ls._clone
+    assert_neq x[0], ls[0]
   end
 end

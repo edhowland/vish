@@ -10,10 +10,11 @@ require_relative 'test_string'
 
 require_relative 'test_compile'
 require_relative 'test_icall'
-require_relative 'test_block'
+unless ENV['NOBLOCK']== '1'
+  require_relative 'test_block'
+end
 require_relative 'test_branch'
 require_relative 'test_variables'
-require_relative 'test_interrupt'
 require_relative 'test_parser'
 require_relative 'test_locked_stack'
 
@@ -36,6 +37,8 @@ require_relative 'test_binding_type'
 require_relative 'test_expressions'
 require_relative 'test_vish'
 require_relative 'test_curry'
+require_relative 'test_continuations'
+
 
 
 

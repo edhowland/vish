@@ -201,8 +201,6 @@ def opcodes tmpreg=nil
       loc = frame.return_to
       bc.pc = loc 
     },
-#    _frame: 'Pushes Frame type on call stack',
-#    frame: ->(bc, ctx, fr, intp) { frame = bc.next; fr.push frame },
 
 
   # Lambda call stuff
@@ -213,15 +211,14 @@ def opcodes tmpreg=nil
       frame = fr.pop
       ret_val = frame.ctx.stack.safe_pop
       fr.peek.ctx.stack.push ret_val
-      bc.pc = frame.return_to
-      frame.pop_retto
+     bc.pc = frame.return_to
     },
 
     # New version of  lcall: TODO. rename this to :lcall, remove old :lcall
     _lcall: 'Pops LambdaType object, hands interpreter to it to perform call',
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
-      raise LambdaNotFound.new('unknown') if ! ltype.kind_of? LambdaType
+      raise LambdaNotFound.new('unknown', ltype.class.name) if ! ltype.kind_of? LambdaType
       ltype.perform(intp)
     },
     _tcall: 'Tail call version of :lcall',
@@ -232,8 +229,8 @@ def opcodes tmpreg=nil
     },
 
     # machine low-level instructions: nop, halt, :int,  etc.
-    _frame: 'Pushes frame stack onto data stack',
-    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(fr) },
+    _frame: 'Pushes clone of frame stack onto data stack',
+    frame: ->(bc, ctx, fr, intp) { ctx.stack.push(Builtins.clone(fr)) },
 
     _send: 'Sends the message in opcode to object on stop of stack, pushes result onto stack',
     send: ->(bc, ctx, fr, intp) {
@@ -254,11 +251,10 @@ def opcodes tmpreg=nil
     _exit: 'Early exit from program',
     exit: ->(bc, ctx, _, intp) { raise ExitState.new },
 
-  _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default. bc.pc is incremented by one, in case an :iret is called in handler',
-  int: ->(bc, ctx, _, intp) { name = bc.codes[bc.pc]; bc.pc += 1; raise InterruptCalled.new(name) },
-  _iret: 'Return from interrupt handler',
-  iret: ->(bc, ctx, _, intp) { raise InterruptReturn.new },
-
+#  _int: 'Force an interrupt. Will cause interrupt handler to be called. The operand is the name(:symbol) of the handler to call. Normally :_default. bc.pc is incremented by one, in case an :iret is called in handler',
+#  int: ->(bc, ctx, _, intp) { name = bc.codes[bc.pc]; bc.pc += 1; raise InterruptCalled.new(name) },
+#  _iret: 'Return from interrupt handler',
+#  iret: ->(bc, ctx, _, intp) { raise InterruptReturn.new },
   }
 end
 
