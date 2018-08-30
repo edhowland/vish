@@ -12,8 +12,14 @@ end
     result = interpret @stdlib + %q{"hello %{callcc(->(k) { 'world'})}"}
     assert_eq result, 'hello world'
   end
-  def test_callcc_w_saved_cont_can_be_called_w_new_param
-    result = interpret @stdlib + %q{kk=9;"hello %{callcc(->(k) { kk=:k; 'world'})}";kk('sailor')}
+  def test_cycle_thru_continuation
+    src =<<-EOC
+# h.vs - hello. world w/continuation
+r=callcc(->(k) { :k })
+r(->(a) { 'ok' })
+EOC
+    result = interpret @stdlib + src
+    assert_eq result, 'ok'
   end
   def test_can_escape_when_0_is_reached
     src =<<-EOC
