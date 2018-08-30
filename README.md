@@ -15,7 +15,7 @@ application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.6.2
+## Version 0.6.3
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -50,18 +50,20 @@ Vish has support for:
 - Boolean expressions
 - String expressions, including string interpolations.
 - Collections : Vectors (arrays), Dictionaries(Hashes) and Scheme-style lists.
-- Lambda or anonymous functions.
-- Lexical closures.
+- Lambda or anonymous functions. : Lexical closures.
 - Named functions (supporting recursion).
 - Higher order functions. Functions can be passed or returned from other functions. Including both named and lambda functions.
 - Optional lazy evaluation
 - Foreign Function Interface (FFI) via simple Ruby module code.
 - Curry functions or partial application of functions or lambdas.
 - Tail call optimization. Recursive calls written in tail call form do not consume new stack frames.
+- Support for Continuation Passing Style: CPS. (As in any language with higher order functions)
+- First class (unlimited) continuations
 
-For the latter (tail call opt.) see:
+Note: Tail call optimization is, as of version 0.6.2, an experimental feature.
+It is turned off by default. Plans are to make it on by default in 0.7+
 
-[Notes.md](Notes.md)
+See: [Notes.md](Notes.md)
 
 ## Requirements
 
@@ -118,6 +120,35 @@ $ ./fib.rb
 
 
 The file fib.vs can be found in ./compiler/
+
+### Example usage with tail code optimization
+
+```
+# fib-cps.vs - continuation passing style of fib(n)
+defn fib(n) {
+  defn fib_cps(n, k) {
+    zero?(:n) && return k(0, 1)
+    :n == 1 && return k(0, 1)
+  fib_cps(:n - 1, ->(x, y) { k(:y, :x + :y) })
+
+  }
+  fib_cps(:n, ->(x, y) { :x + :y })
+}
+```
+
+In the above code, we rewrote the Fibonacci function with an internal helper:
+'fib_cps' that is written in continuation passing style. This shows internal
+functions, use of anonymous lambdas and all recursive calls in tail position.
+
+```
+$ cat main.vs
+fib(34)
+
+
+$ TCO=1 ./bin/vish -l ./fib-cps.vs main.vs 
+9227465
+```
+
 
 The convention is to use .vs for source files and .vsc extensions for their
 compiled brethren.
