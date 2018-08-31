@@ -1,0 +1,18 @@
+# combo.vs - combinator functions
+# identity - lambda v v - the identity function
+defn identity(x) { :x }
+# flip - reverses arguments of function, returning new function
+defn flip(fn) {
+  ->(y, x) { fn(:x, :y) }
+}
+
+# seq - runs 32 things in sequence
+defn seq(f, s) { %f; %s }
+# k : The k combinatorial or Kestral
+defn k(v) { ->(z) { :v } }
+# card(a, b, v) - The cardinal
+defn card(p) {
+  ->(v,pp) { p(:v, :pp) }
+}
+
+

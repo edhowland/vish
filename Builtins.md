@@ -16,6 +16,12 @@
   ## dup - just dups it input to its output (via the stack)
 
 
+  ## clone - tries to do a deep clone of argument, else just sends :clone to it
+
+
+      # Needed before Ruby version 2.4+
+
+
   ## typeof(obj) - gives the class/??? of the obj
 
 
@@ -23,6 +29,9 @@
 
 
   ## length(object) - if item responds to :length message: returns length as integer, else returns false
+
+
+  ## reverse vector - reverses a vector : reverse([0,1,2]) # => [2,1,0]
 
 
   ## inspect runs inspect on its arguments
@@ -59,6 +68,12 @@
 
 
   ## fexist?(filename) - true if filename exists on disk
+
+
+  ## freadable?(filename) - true if fname is readable
+
+
+  ## fwritable?(fname) - true if fname is writable
 
 
   ## file?(path) true if path is file and not directory
@@ -98,6 +113,12 @@
 
 
   ## prints string - prints string w/o newlines
+
+
+  ## gensym() - creates unique id
+
+
+  ## range(start, end) - Creates new range type
 
 
   ## dict - returns object hash with every 2 items as key/value pairs.
@@ -205,12 +226,7 @@
 #  end
 
 
-  ## mklambda - creates LambdaType 
-
-
   ## lambda?(object)
-
-
 
 
   # xmit(object, message) - sends Ruby message to object and returns its result.
@@ -227,6 +243,4 @@
 
   ## symbol?(object) - true if object is a Symbol
 
-
-## curry(function) - Returns a new function that is curried.
 

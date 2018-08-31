@@ -91,12 +91,6 @@ The only exception is that you cannot pass user-defined functions or builtin/FFI
 functions to other builtin/FFI functions. Ruby does not how
 to handle these. There are no builtin functions that take a function as a parameter.
 
-#### Future implementation of the 'curry' function.
-
-The only exception to the last exception might be the eventuall 'curry' function. It
-will take a builtin function, some parameters and return the curried result,
-either another lambda or the result of applying all the remaining parameters
-to the original function.
 
 ### Built-in Functions
 
@@ -230,13 +224,6 @@ Read uses the Gnu readline
 line editor but does not have any history.
 
 
-### Caveats with the REPL
-
-Ivs does not allow for forward function references. You can define 2 functions
-that refer to each other, but if foo() calls bar(), but 
-defines bar() after foo(), and you call foo(),
-you will get a UnknownFunction runtime error.
-
 
 ## Executables:
 
@@ -256,6 +243,13 @@ All these programs respond to flags. See the complete list with the --help flag.
 By default, all of these programs will pre-load the file ./std/lib.vs before
 compiling and running your program.
 This can be disabled with the '--no-stdlib' flag.
+
+## Additional standard library functions
+
+Below is a list of additional library files that can be loaded with the -l flag:
+
+- std/list.vs
+
 
 ## Extending the language with more builtin functions.
 

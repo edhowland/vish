@@ -6,7 +6,33 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.3 2018-09-01
+
+## Warnings
+
+Do not rely on Tail Call Optimization working in all possible tail positions.
+Implementation of this feature is incomplete. Remains off by default.
+
+## Additions
+
+- First class continuations
+
+Unlimited continuations implemented via the callcc method in std/lib.vs. Works
+like Scheme or Ruby w/ -r continuation flag.
+
+callcc takes a lambda taking one argument: 'k' - the continuation. Returns result
+of calling the lambda. The 'k' continuation can be called like any function.
+and jump back to location of callcc inside any function or expression
+
+These continuations cannot be composed or used in other expressions. See
+test/test_continuations.rb for ideas on use cases.
+
+Note: callcc requires std/lib.vs to be included in Vish programs. This default
+unless --no-stdlib flag is passed.
+
+
 ## 0.6.2 2018-07-16
+
 ### Additions
 
 Implemented tail call optimization. Off by default.
