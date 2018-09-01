@@ -1,9 +1,10 @@
 # Rakefile - compile ivs Ruby wrapped ivs.vs to ./ivs executable
 
-desc 'Builds the ivs REPL for Vish language'
+desc 'build - Builds the ivs REPL for Vish language'
 task :build do
   sh './vishc -R -i ./parser_lib.rb -t ivs.erb -o ivs ivs.vs'
 end
 
 
+desc 'default: runs task :build'
 task :default => :build
