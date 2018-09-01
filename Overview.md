@@ -250,6 +250,35 @@ Below is a list of additional library files that can be loaded with the -l flag:
 
 - std/list.vs
 
+## Continuations : callcc
+
+Vis, as of version 0.6.3, supports first class continuations via the 'callcc'
+function. (From Scheme, Ruby: call-with-current-continuation: call/cc, callcc)
+
+'callcc' takes a lambda which takes a single parameter: 'k' It returns the
+result of calling the lambda, passing the current continuation in the 'k' parameter.
+(Note: the use of 'k' for the formal parameter is arbitray, it is just convention)
+
+The 'k'  continuation is callable with a single parameter. If called, it will
+replay the continuation at the point of the callcc invocation returning the parameter instead.
+
+Thus, it is possible to create advanced control-flow structures: non-local jumps, backtracking, etc.
+
+It is simple to use an example in the REPL: 'ivs'
+
+```
+
+$ ivs
+vish>kk=9
+9
+vish>"hello %{callcc(->(k) {kk=:k; 'world'})}"
+"hello world"
+vish>:kk
+Continuation: frames.length 3, id function location: 784
+vish>kk('sailor')
+"hello sailor"
+```
+
 
 ## Extending the language with more builtin functions.
 

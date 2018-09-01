@@ -1,3 +1,0 @@
-cardinal.call(proc_over_proc).call(a_value).call(a_proc)
-  => proc_over_proc.call(a_proc).call(a_value)
-
