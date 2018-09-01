@@ -63,6 +63,11 @@ end
     raise VishRuntimeError.new('Cannot return previous frame, bottom of stack reached.') unless self.length > 1
     self[-2]
   end
+  def _clone
+    result = self.class.new limit: @limit
+    self.each {|f| result.push Builtins.clone(f) }
+    result
+  end
 end
 
 class LockedStackLimitReached < StackError

@@ -16,8 +16,11 @@ class TestContext < BaseSpike
   def test_empty_vars
     assert @ctx.vars.empty?
   end
-
-  # test merging merging Contexts
-  # Useful for ./bin/repl.rb
-
+  # _clone
+  def test_underbar_clone
+    x = Context.new
+    x.stack.push 1,2,3
+    y = x._clone
+    assert_eq y.stack.pop(3), [1,2,3]
+  end
 end

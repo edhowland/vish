@@ -26,3 +26,6 @@ require_relative "runtime/lambda_not_found"
 require_relative "runtime/unknown_function"
 require_relative "runtime/undefined_variable"
 require_relative "runtime/stdlib"
+require_relative 'runtime/continuation'
+
+

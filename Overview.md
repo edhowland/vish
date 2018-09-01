@@ -91,12 +91,6 @@ The only exception is that you cannot pass user-defined functions or builtin/FFI
 functions to other builtin/FFI functions. Ruby does not how
 to handle these. There are no builtin functions that take a function as a parameter.
 
-#### Future implementation of the 'curry' function.
-
-The only exception to the last exception might be the eventuall 'curry' function. It
-will take a builtin function, some parameters and return the curried result,
-either another lambda or the result of applying all the remaining parameters
-to the original function.
 
 ### Built-in Functions
 
@@ -230,13 +224,6 @@ Read uses the Gnu readline
 line editor but does not have any history.
 
 
-### Caveats with the REPL
-
-Ivs does not allow for forward function references. You can define 2 functions
-that refer to each other, but if foo() calls bar(), but 
-defines bar() after foo(), and you call foo(),
-you will get a UnknownFunction runtime error.
-
 
 ## Executables:
 
@@ -256,6 +243,42 @@ All these programs respond to flags. See the complete list with the --help flag.
 By default, all of these programs will pre-load the file ./std/lib.vs before
 compiling and running your program.
 This can be disabled with the '--no-stdlib' flag.
+
+## Additional standard library functions
+
+Below is a list of additional library files that can be loaded with the -l flag:
+
+- std/list.vs
+
+## Continuations : callcc
+
+Vis, as of version 0.6.3, supports first class continuations via the 'callcc'
+function. (From Scheme, Ruby: call-with-current-continuation: call/cc, callcc)
+
+'callcc' takes a lambda which takes a single parameter: 'k' It returns the
+result of calling the lambda, passing the current continuation in the 'k' parameter.
+(Note: the use of 'k' for the formal parameter is arbitray, it is just convention)
+
+The 'k'  continuation is callable with a single parameter. If called, it will
+replay the continuation at the point of the callcc invocation returning the parameter instead.
+
+Thus, it is possible to create advanced control-flow structures: non-local jumps, backtracking, etc.
+
+It is simple to use an example in the REPL: 'ivs'
+
+```
+
+$ ivs
+vish>kk=9
+9
+vish>"hello %{callcc(->(k) {kk=:k; 'world'})}"
+"hello world"
+vish>:kk
+Continuation: frames.length 3, id function location: 784
+vish>kk('sailor')
+"hello sailor"
+```
+
 
 ## Extending the language with more builtin functions.
 

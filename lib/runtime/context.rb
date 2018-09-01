@@ -38,6 +38,13 @@ class Context
   def inspect
     "constants: #{@constants.inspect}\nVariables: #{@vars.inspect}\nstack: #{@stack.inspect}\n"
   end
+  def _clone
+    result = self.class.new
+    result.constants = @constants.clone
+    result.stack = Builtins.clone(@stack)
+    result.vars = self.vars.dup
+    result
+  end
   def to_h
     {stack: @stack, constants: @constants, vars: @vars }
   end

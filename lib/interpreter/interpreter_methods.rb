@@ -46,8 +46,9 @@ if ENV["TCO"]
     if body.last == :lcall
       body[-1] = :tcall
     end
-#    binding.pry
+
     result = LambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
+
     # compute arity here. Might have to change for variadic lambdas
     result[:arity] = parms.length   #parms.length.zero? ? 0 : parms.length/5
     g = self._globals
@@ -96,4 +97,8 @@ end
   def self._codes()
     @@interpreter.bc.codes
   end
+  def self._mkcontinuation(frames, id_function)
+    Continuation.new(frames._clone, id_function)
+  end
+
 end

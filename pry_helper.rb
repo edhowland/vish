@@ -418,3 +418,46 @@ def axll(list)
   axll(:l)
 EOD
 end
+
+
+# continuation testing
+def cc
+  <<-EOD
+  defn callcc(l) {
+  l(_mkcontinuation(:_frames, :callcc))
+}
+EOD
+end
+def cont
+  <<-EOD
+kk=9
+  5 + callcc(->(k) {kk=:k;3})
+  EOD
+end
+def ef
+  <<-EOD
+  defn id(x) {:x}
+  5 + id(33)
+EOD
+end
+
+
+
+# gci - get ci from source
+def gci source
+  cifrom(compile(source))
+end
+
+def rci ci, &blk
+  begin
+    loop do
+      yield ci if block_given?
+      raise StopIteration if ci.bc.peek == :halt
+      ci.step
+    end
+  rescue => err
+  
+  
+  end
+  err
+end

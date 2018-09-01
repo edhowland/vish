@@ -180,4 +180,27 @@ class TestCodeInterpreter < BaseSpike
     @ci.run
     assert @ctx.stack.empty?
   end
+
+  # transferred from test/test_interrupt.rb
+    def test_dup_actually_duplicates_the_top_of_the_stack
+    @ctx.stack.push :xxx
+    @bc.codes = [:dup, :halt]
+    @ci.run
+    assert_eq @ctx.stack.peek, :xxx
+    assert_eq @ctx.stack[-2], :xxx
+  end
+  def test_loadt_loads_top_of_stack_into_ci_register_a
+    @ctx.stack.push :yyy
+    @bc.codes = [:loadt, :halt]
+    @ci.run
+    assert_eq @ci.register_a.value, :yyy
+  end
+  def test_pusht_pushes_contentsci_register_a_onto_stack
+    @bc.codes = [:cls, :pusht, :halt]
+    @ci.register_a.load(:yes)
+    @ci.run
+    assert_eq @ctx.stack.peek, :yes
+  end
+
+
 end

@@ -1,9 +1,0 @@
-  "\a" == "\x07" # => true # ASCII 0x07 = BEL
- (Sound system bell)
-  "\b" == "\x08" # => true # ASCII 0x08 = BS (Backspace)
-  "\e" == "\x1b" # => true # ASCII 0x1B = ESC (Escape)
-  "\f" == "\x0c" # => true # ASCII 0x0C = FF (Form feed)
-  "\n" == "\x0a" # => true # ASCII 0x0A = LF (Newline/line feed)
-  "\r" == "\x0d" # => true # ASCII 0x0D = CR (Carriage return)
-  "\t" == "\x09" # => true # ASCII 0x09 = HT (Tab/horizontal tab)
-  "\v" == "\x0b" # => true # ASCII 0x0B = VT (Vertical tab)

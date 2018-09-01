@@ -1,7 +1,27 @@
 # TODO
 
+## TODO : MUST create load function
 
-## Todo: Make sure predicate of lambda? works in s-expression land
+```
+defn load(fname) {
+  fread(:fname) | parse() | _emit()
+}
+```
+
+## continuation stuff
+
+### Testing
+
+create test/test_continuation.rb
+
+## Todo: :halt and :exit are redundant
+
+Probably should mae :exit just raise HaltState, unless someday  we want to return exit codes.
+
+## Todo: change :_frames from lib/runtime/lambda_type.rb :def perform into:
+
+Make _frames() an internal function
+
 
 ## Todo: Improve string interpolation
 
