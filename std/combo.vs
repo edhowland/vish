@@ -12,6 +12,8 @@ defn seq(f, s) { %f; %s }
 # K : The k combinatorial or Kestral - curryied
 defn kestral(v, x) {  :v }
 K=curry(:kestral)
+# kite - explicit version, not composed w/K I
+defn kite(x, y) { :y }
 # card(a, b, v) - The cardinal
 defn card(p) {
   ->(v,pp) { p(:v, :pp) }
