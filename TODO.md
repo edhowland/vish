@@ -18,10 +18,6 @@ create test/test_continuation.rb
 
 Probably should mae :exit just raise HaltState, unless someday  we want to return exit codes.
 
-## Todo: change :_frames from lib/runtime/lambda_type.rb :def perform into:
-
-Make _frames() an internal function
-
 
 ## Todo: Improve string interpolation
 

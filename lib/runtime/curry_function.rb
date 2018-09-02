@@ -33,7 +33,7 @@ class CurryFunction < LambdaType
       intp.ctx.stack.push(result)
     end
   end
-#  alias_method :apply, :perform
+
 end
 
 
