@@ -6,7 +6,7 @@ class CurryFunction < LambdaType
       self[k] = v
     end
   end
-  def perform(intp)
+  def apply(intp)
     argc = intp.ctx.stack.pop
     if self[:arity] == argc
     fr = FunctionFrame.new(Context.new)
@@ -33,7 +33,7 @@ class CurryFunction < LambdaType
       intp.ctx.stack.push(result)
     end
   end
-  alias_method :apply, :perform
+#  alias_method :apply, :perform
 end
 
 
