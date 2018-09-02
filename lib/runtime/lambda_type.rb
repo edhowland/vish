@@ -73,6 +73,7 @@ class LambdaType < Hash
     # Now jump to start of function
     intp.bc.pc = self[:loc]
   end
+  alias_method :apply, :perform
   def formals
 #    c=(0..self[:arity]-1).to_a.map {|e| (e*5)+1}
 #    c.each_with_object([]) {|e,o| o << self[:parms][e] }.reverse
