@@ -219,7 +219,7 @@ def opcodes tmpreg=nil
     lcall: ->(bc, ctx, fr, intp) {
       ltype = ctx.stack.pop
       raise LambdaNotFound.new('unknown', ltype.class.name) if ! ltype.kind_of? LambdaType
-      ltype.perform(intp)
+      ltype.apply(intp)
     },
     _tcall: 'Tail call version of :lcall',
     tcall: ->(bc, ctx, fr, intp) {

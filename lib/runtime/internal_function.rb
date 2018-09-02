@@ -21,7 +21,7 @@ class InternalFunction < LambdaType
 
   # bypass tail call optimizations for internal functions
   def tail_call(intp)
-    perform(intp)
+    apply(intp)
   end
 
   def inspect

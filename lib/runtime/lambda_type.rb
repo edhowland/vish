@@ -56,7 +56,7 @@ class LambdaType < Hash
     intp.bc.pc = self[:loc]
   end
 
-  # perform lcall
+  # apply, was: perform lcall
   def perform(intp)
     argc = intp.ctx.stack.pop
     check_arity(argc)
