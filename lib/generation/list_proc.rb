@@ -33,6 +33,12 @@ module ListProc
   def cdr x
     x.value
   end
+  def caar(sexp)
+    car(car(sexp))
+  end
+  def cdar(sexp)
+    cdr(car(sexp))
+  end
 def cadr(x)
   car(cdr(x))
 end
@@ -42,5 +48,11 @@ end
   def caddr(x)
     car(cadr(x))
   end
-#
+  def copy(sexp)
+    if null?(sexp)
+      NullType.new
+    else
+      cons(car(sexp), copy(cdr(sexp)))
+    end
+  end
 end

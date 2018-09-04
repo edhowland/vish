@@ -2,7 +2,23 @@
 
 class TCOAnalysis
   include ListProc
-  def last_child sexp, acc=nil
+    def list(*args)
+      Builtins.list(*args)
+    end
+    def handle_last_child(sexp)
+      if null?(sexp)
+        Null.type.new
+      elsif null?(cdr(sexp))
+        if caar(sexp) == :lambdacall
+          cons(:tailcall, cdar(sexp))
+        else
+          sexp
+        end
+      else
+        cons(car(sexp), handle_last_child(cdr(sexp)))
+      end
+    end
+  def last_child sexp, acc=NullType.new
     if null?(sexp)
       acc
     else
@@ -11,13 +27,17 @@ class TCOAnalysis
   end
 
   def block sexp
-    child = last_child sexp
-    if car(child) == :lambdacall
-      cons(:tail_call, cdr(child))
-    else
-      child
-    end
+    cons(:block, handle_last_child(sexp))
+
+
+#    child = last_child sexp
+#    if car(child) == :lambdacall
+#      cons(:tail_call, cdr(child))
+#    else
+#      child
+#    end
   end
+
   def lambda(sexp)
     parms = self._eval(car(sexp))
     body = _eval(cadr(sexp))
