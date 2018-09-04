@@ -11,7 +11,12 @@ class TCOAnalysis
   end
 
   def block sexp
-    last_child sexp
+    child = last_child sexp
+    if car(child) == :lambdacall
+      cons(:tail_call, cdr(child))
+    else
+      child
+    end
   end
   def lambda(sexp)
     parms = self._eval(car(sexp))
