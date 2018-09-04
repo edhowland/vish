@@ -1,5 +1,22 @@
 # Notes
 
+## 0.6.3-1 Improve TCO
+
+Rules
+
+- Entire block of :lambda is in tail position.
+- Last child of :block of :lambda is in tail position.
+- If last child is:
+  * :lambda_call : Ripe for TCE
+  * Conditional in last child
+    - All legs of conditional are also in tail call position
+- Non-lambda calls/conditionals are not in tail position.
+- A :block in last child is in tail position. Recur on block above.
+
+Therefore, we recursively define each leg according to these rules.
+
+Final observation, Any return expression, apply the above rules. Because it is 
+by definition in tail position.
 ## Porposed version 0.6.3: Continuations
 
 Subclass of LambdaType is Continuation.

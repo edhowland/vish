@@ -461,3 +461,13 @@ def rci ci, &blk
   end
   err
 end
+
+def tc
+  TCOAnalysis.new
+end
+
+def co str
+  t=tc
+  c=compile str
+  [t, caadr(c.ast)]
+end
