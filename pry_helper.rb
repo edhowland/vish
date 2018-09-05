@@ -276,6 +276,12 @@ end
 def cddr(x)
   cdr(cdr(x))
 end
+def caar(x)
+  car(car(x))
+end
+def cdddr(x)
+  cdr(cddr(x))
+end
 def caddr(x)
   car(cddr(x))
 end
@@ -470,4 +476,34 @@ def co str
   t=tc
   c=compile str
   [t, caadr(c.ast)]
+end
+
+def null?(s)
+  Builtins.null?(s)
+end
+def list?(sexp)
+  Builtins.list?(sexp)
+end
+
+def level_eq? s1, s2
+#binding.pry
+  if null?(s1) && null?(s2)
+    true
+  else
+  car(s1) == car(s2) &&
+    level_eq?(cdr(s1), cdr(s2))
+  end
+end
+
+def trees_eq? t1,t2
+  (null?(t1) and null?(t2)) ||
+    level_eq?(t1,t2)
+end
+
+def list_length l
+  if null?(l)
+    0
+  else
+    1 + list_length(cdr(l))
+  end
 end

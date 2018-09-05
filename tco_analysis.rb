@@ -27,15 +27,7 @@ class TCOAnalysis
   end
 
   def block sexp
-    cons(:block, handle_last_child(sexp))
-
-
-#    child = last_child sexp
-#    if car(child) == :lambdacall
-#      cons(:tail_call, cdr(child))
-#    else
-#      child
-#    end
+    list(cons(:block, handle_last_child(sexp)))
   end
 
   def lambda(sexp)
