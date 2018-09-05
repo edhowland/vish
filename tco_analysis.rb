@@ -7,9 +7,13 @@ class TCOAnalysis
     end
     def handle_last_child(sexp)
       if null?(sexp)
-        Null.type.new
+        NullType.new
+      # handle the last child condition
       elsif null?(cdr(sexp))
-        if caar(sexp) == :lambdacall
+      if caar(sexp) == :block
+      puts 'found inner block'
+        block(cdar(sexp))
+        elsif caar(sexp) == :lambdacall
           cons(:tailcall, cdar(sexp))
         else
           sexp
@@ -18,13 +22,6 @@ class TCOAnalysis
         cons(car(sexp), handle_last_child(cdr(sexp)))
       end
     end
-  def last_child sexp, acc=NullType.new
-    if null?(sexp)
-      acc
-    else
-      last_child(cdr(sexp), car(sexp))
-    end
-  end
 
   def block sexp
     list(cons(:block, handle_last_child(sexp)))
