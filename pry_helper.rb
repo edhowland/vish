@@ -276,14 +276,29 @@ end
 def cddr(x)
   cdr(cdr(x))
 end
+def cddar(x)
+  cddr(car(x))
+end
 def caar(x)
   car(car(x))
+end
+def cdar(x)
+  cdr(car(x))
+end
+def cadar(x)
+  car(cdar(x))
+end
+def caddar(x)
+  car(cddr(x))
 end
 def cdddr(x)
   cdr(cddr(x))
 end
 def caddr(x)
   car(cddr(x))
+end
+def caddar(x)
+  car(cddar(x))
 end
 
 # utility fns from Builtins

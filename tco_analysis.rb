@@ -5,14 +5,21 @@ class TCOAnalysis
     def list(*args)
       Builtins.list(*args)
     end
+  # helper functions
+  def conditional?(sym)
+    [:logical_and, :logical_or].member? sym
+  end
     def handle_last_child(sexp)
       if null?(sexp)
         NullType.new
       # handle the last child condition
       elsif null?(cdr(sexp))
       if caar(sexp) == :block
-      puts 'found inner block'
+#      puts 'found inner block'
         block(cdar(sexp))
+      elsif conditional?(caar(sexp))
+#        list(cons(caar(sexp), list(handle_last_child(cadar(sexp)), handle_last_child(caddar(sexp))))
+        list(cons(caar(sexp), list(cadar(sexp), caddar(sexp)) ) )
         elsif caar(sexp) == :lambdacall
           cons(:tailcall, cdar(sexp))
         else

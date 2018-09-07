@@ -36,8 +36,20 @@ module ListProc
   def caar(sexp)
     car(car(sexp))
   end
+  def cddr(x)
+    cdr(cdr(x))
+  end
   def cdar(sexp)
     cdr(car(sexp))
+  end
+  def cddar(x)
+    cdr(cdar(x))
+  end
+  def cadar(x)
+    car(cdar(x))
+  end
+  def caddar(x)
+    car(cddar(x))
   end
 def cadr(x)
   car(cdr(x))
