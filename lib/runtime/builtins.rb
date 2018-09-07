@@ -162,12 +162,12 @@ module Builtins
   end
 
   ## headvectorst) - returns the first item on a vector or array.
-  def self.head(*args)
-    args[0][0]
+  def self.head(vector)
+    vector.first
   end
   ## tail(vector) returns the remaining elements on a vector after the head.
-  def self.tail(*args)
-    args[0][1..(-1)] || []
+  def self.tail(vector)
+    vector.drop(1)
   end
 
   ## print(args) - outputs all its args to stdout.

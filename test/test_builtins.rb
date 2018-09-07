@@ -87,4 +87,11 @@ class TestBuiltins < BaseSpike
   def test_non_empty_w_object_with_2_key_value_pairs
     assert_false interpret('empty?(~{foo: bar:, baz: 44})')
   end
+  # head/tail of vectors
+  def test_head
+    assert_eq interpret('head([0,1,2,3])'), 0
+  end
+  def test_tail
+    assert_eq interpret('tail([0,1,2,3])'), [1,2,3]
+  end
 end
