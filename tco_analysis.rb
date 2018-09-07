@@ -19,7 +19,7 @@ class TCOAnalysis
         block(cdar(sexp))
       elsif conditional?(caar(sexp))
 #        list(cons(caar(sexp), list(handle_last_child(cadar(sexp)), handle_last_child(caddar(sexp))))
-        list(cons(caar(sexp), list(cadar(sexp), caddar(sexp)) ) )
+        list(cons(caar(sexp), list( car(handle_last_child(cdar(sexp))), car(handle_last_child(cddar(sexp)))) ) )
         elsif caar(sexp) == :lambdacall
           cons(:tailcall, cdar(sexp))
         else
