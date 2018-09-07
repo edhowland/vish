@@ -522,3 +522,8 @@ def list_length l
     1 + list_length(cdr(l))
   end
 end
+
+
+def mkcp
+  Object.new.extend TreeUtils
+end
