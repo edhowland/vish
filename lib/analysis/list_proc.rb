@@ -20,6 +20,9 @@ module ListProc
   def pair?(x)
     Builtins.pair?(x)
   end
+  def cons(a, b)
+    Builtins.cons(a, b)
+  end
 
 
 

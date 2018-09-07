@@ -2,4 +2,8 @@
 
 class ConstantFolder
   include TreeUtils
+
+  def run(ast)
+    copy_tree(ast)
+  end
 end
