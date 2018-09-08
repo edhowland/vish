@@ -1,5 +1,4 @@
-# copy_tree.rb - copies input tree, with possible changed subtree via passed
-#block
+# tre_utils.rb - Module TreeUtils : like copy_tree
 
 # TreeUtils - Used in optimizers within VishCompiler
 module TreeUtils

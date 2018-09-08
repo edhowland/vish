@@ -61,7 +61,7 @@ def caadr(x)
   car(cadr(x))
 end
   def caddr(x)
-    car(cadr(x))
+    car(cddr(x))
   end
   def copy(sexp)
     if null?(sexp)
