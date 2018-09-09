@@ -10,6 +10,9 @@ module ListProc
   def atom?(x)
     Builtins.atom?(x)
   end
+  def list(*args)
+    Builtins.list(*args)
+  end
   def list?(x)
     begin
       Builtins.list?(x)
