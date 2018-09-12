@@ -18,7 +18,7 @@ class ConstantFolder
     dict[sym]
   end
   def mkInteger(ival)
-    list(:integer, Parslet::Slice.new(0, ival.to_s))
+    list(:integer, ival) 
   end
 
   def fold_constant(node)
@@ -30,19 +30,15 @@ class ConstantFolder
   end
 
 
-def _run(ast)
+def run(ast)
     if null?(ast)
       NullType.new
     elsif const_expr?(ast)
       mkInteger(fold_constant(ast))
     elsif pair?(car(ast))
-      cons(copy_tree(car(ast), &blk), copy_tree(cdr(ast), &blk))
+      cons(run(car(ast) ), run(cdr(ast)))
     else
-      cons(car(ast), copy_tree(cdr(ast)))
+      cons(car(ast), run(cdr(ast)))
     end
-
-end
-  def run(ast)
-    copy_tree(ast)
   end
 end
