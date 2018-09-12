@@ -260,6 +260,9 @@ end
 def cons(k, v)
   Builtins.mkpair(k, v)
 end
+def pair?(x)
+  Builtins.pair?(x)
+end
 
 def car(x)
   x.key
@@ -514,6 +517,9 @@ def trees_eq? t1,t2
   (null?(t1) and null?(t2)) ||
     level_eq?(t1,t2)
 end
+def list(*args)
+  Builtins.list(*args)
+end
 
 def list_length l
   if null?(l)
@@ -526,4 +532,16 @@ end
 
 def mkcp
   Object.new.extend TreeUtils
+end
+
+# depth of tree. even empty list is depth of 1
+def depth(ast, acc=1)
+  if null?(ast)
+    acc
+  elsif pair?(car(ast))
+    v = depth(car(ast), 1 + acc)
+    depth(cdr(ast), [acc, v].max)
+  else
+    depth(cdr(ast), acc)
+  end
 end
