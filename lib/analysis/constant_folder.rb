@@ -19,11 +19,12 @@ class ConstantFolder
   def const_expr?(node)
     operator?(car(node)) && constant_node?(cadr(node)) && constant_node?(caddr(node))
   end
-  # constant or constant expression
+
 
   def op_from(sym, dict={:add => :+, :sub => :-, :mult => :*, :div => :/, :modulo => :%})
     dict[sym]
   end
+
   def mkInteger(ival)
     list(:integer, ival) 
   end
@@ -43,7 +44,7 @@ class ConstantFolder
     end
   end
 
-  # fold_constant(node) # new version that is recursive
+  # fold_constant(node)
   def fold_constant(node)
     if constant_node?(node)
       cadr(node).to_s.to_i
@@ -54,17 +55,7 @@ class ConstantFolder
     end
   end
 
-  def _fold_constant(node)
-    op = op_from(car(node))
 
-    e1 = MkConstant.new(cadr(cadr(node)))
-    e2 = MkConstant.new(cadr(caddr(node)))
-    e1.integer.send(op, e2.integer)
-  end
-
-  def _run(ast)
-    ast
-  end
 
 def run(ast)
     if null?(ast)
