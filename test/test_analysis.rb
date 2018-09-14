@@ -29,6 +29,10 @@ class TestAnalysis < BaseSpike
     compile '1+3'
     assert_eq 3, depth(@compiler.ast)
   end
+  def test_modulus_is_constant_folded
+    compile '15 % 3'
+    assert_eq 3, depth(@compiler.ast)
+  end
   # multiple sub-expressions wherein all the exprs are constant
   def test_multiple_sub_expressions
     secs_in_year = compile '60*60*24*7*52'

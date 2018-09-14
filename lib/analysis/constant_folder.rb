@@ -4,7 +4,7 @@ class ConstantFolder
   include TreeUtils
 
   def operator?(sym)
-    [:add,:sub,:mult,:div].member? sym
+    [:add,:sub,:mult,:div, :modulo].member? sym
   end
   # Add additional types here: :boolean, :string
   def constant?(sym)
@@ -20,10 +20,8 @@ class ConstantFolder
     operator?(car(node)) && constant_node?(cadr(node)) && constant_node?(caddr(node))
   end
   # constant or constant expression
-  def constant_or_constant_expr?(node)
-    constant_node?(node) || const_expr?(node)
-  end
-  def op_from(sym, dict={:add => :+, :sub => :-, :mult => :*, :div => :/})
+
+  def op_from(sym, dict={:add => :+, :sub => :-, :mult => :*, :div => :/, :modulo => :%})
     dict[sym]
   end
   def mkInteger(ival)
