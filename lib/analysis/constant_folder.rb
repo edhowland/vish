@@ -30,7 +30,33 @@ class ConstantFolder
     list(:integer, ival) 
   end
 
+  # foldable? can fold_constant
+  def foldable?(node)
+    if null?(node)
+      false
+    elsif constant_node?(node)
+      true
+    elsif const_expr?(node)
+      true
+    elsif operator?(car(node))
+      foldable?(cadr(node)) && foldable?(caddr(node))
+    else
+      false
+    end
+  end
+
+  # fold_constant(node) # new version that is recursive
   def fold_constant(node)
+    if constant_node?(node)
+      cadr(node).to_s.to_i
+    else
+      op = op_from(car(node))
+      fold_constant(cadr(node)).send(op, fold_constant(caddr(node)))
+
+    end
+  end
+
+  def _fold_constant(node)
     op = op_from(car(node))
 
     e1 = MkConstant.new(cadr(cadr(node)))
@@ -38,11 +64,14 @@ class ConstantFolder
     e1.integer.send(op, e2.integer)
   end
 
+  def _run(ast)
+    ast
+  end
 
 def run(ast)
     if null?(ast)
       NullType.new
-    elsif const_expr?(ast)
+    elsif foldable?(ast)
       mkInteger(fold_constant(ast))
     elsif pair?(car(ast))
       cons(run(car(ast) ), run(cdr(ast)))
