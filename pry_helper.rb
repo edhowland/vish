@@ -545,3 +545,8 @@ def depth(ast, acc=1)
     depth(cdr(ast), acc)
   end
 end
+
+
+def ast_co(str)
+  [compile(str).ast, ConstantFolder.new]
+end

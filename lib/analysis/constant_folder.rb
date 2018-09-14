@@ -6,13 +6,22 @@ class ConstantFolder
   def operator?(sym)
     [:add,:sub,:mult,:div].member? sym
   end
-
+  # Add additional types here: :boolean, :string
   def constant?(sym)
     [:integer].member? sym
   end
 
+  # constant_node?(node)
+  def constant_node?(node)
+    constant?(car(node))
+  end
+
   def const_expr?(node)
-    operator?(car(node)) && constant?(car(cadr(node))) && constant?(car(caddr(node)))
+    operator?(car(node)) && constant_node?(cadr(node)) && constant_node?(caddr(node))
+  end
+  # constant or constant expression
+  def constant_or_constant_expr?(node)
+    constant_node?(node) || const_expr?(node)
   end
   def op_from(sym, dict={:add => :+, :sub => :-, :mult => :*, :div => :/})
     dict[sym]
