@@ -255,7 +255,7 @@ module Builtins
   end
   ## atom?(object) - true if not a list
   def self.atom?(object)
-    not(pair?(object)) && not(list?(object)) && not(string?(object)) && not(vector?(object)) && not(object?(object))
+    not(pair?(object)) && not(list?(object)) && not(vector?(object)) && not(object?(object))
   end
 
   ## key(pair) - returns .key member from PairType
@@ -343,6 +343,14 @@ module Builtins
   ## symbol?(object) - true if object is a Symbol
   def self.symbol?(object)
     object.instance_of?(Symbol)
+  end
+  ## max args - returns maximum of args
+  def self.max(*args)
+    args.max
+  end
+  ## min args - returns minimum of args
+  def self.min(*args)
+    args.min
   end
   def self.curry(fn)
     CurryFunction.new(fn)
