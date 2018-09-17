@@ -6,6 +6,7 @@ module ParserLib
     c = VishCompiler.new string
     c.parse
     c.transform
+    c.analyze
     c.ast
   end
   ## _emit(AST) :  Given a AST node subtree, return the emitted bytecodes
