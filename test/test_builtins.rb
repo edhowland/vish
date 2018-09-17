@@ -32,9 +32,7 @@ class TestBuiltins < BaseSpike
   def test_non_atom_w_pair
     assert interpret('! atom?(bax: 33)')
   end
-  def test_atom_w_string
-    assert interpret('!atom?("")')
-  end
+
   def test_atom_true_is_true
     assert interpret('atom?(true)')
   end
@@ -47,14 +45,15 @@ class TestBuiltins < BaseSpike
   def test_non_atom_for_list_of_2_elements
     assert interpret('!atom?(list(1,2))')
   end
-  def test_non_atom_for_string
-    assert_false interpret('atom?("")')
-  end
+
   def test_non_atom_for_vector_of_1_element
     assert interpret('! atom?([1])')
   end
   def test_non_atom_w_object
     assert_false interpret('atom?(~{})')
+  end
+  def test_atom_is_true_for_strings
+    assert interpret('atom?("string")')
   end
   # empty
   def test_empty_w_string

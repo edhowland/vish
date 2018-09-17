@@ -10,8 +10,7 @@ class TestAnalysis < BaseSpike
     if null?(ast)
       acc
     elsif pair?(car(ast))
-      v = depth(car(ast), 1 + acc)
-      depth(cdr(ast), [acc, v].max)
+      depth(cdr(ast), [acc,  depth(car(ast), 1 + acc)].max)
     else
       depth(cdr(ast), acc)
     end
