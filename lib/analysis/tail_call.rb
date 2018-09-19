@@ -38,11 +38,21 @@ class TailCall
   def mktailcall(sexp)
     cons(:tailcall, cdr(sexp))
   end
+  # handle_last_child S-Expression - compute varieties of possible tail conditions
+  def handle_last_child(sexp)
+    if lambdacall?(car(sexp))
+      mktailcall(sexp)
+    else
+      sexp
+    end
+  end
   # compose_statements ast - given a tail_candidate block, return
   # transformed last_child
   def compose_statements(sexp)
     if null?(sexp)
       NullType.new
+      elsif last_child?(sexp)
+        handle_last_child(sexp)
     else
       cons(car(sexp), compose_statements(cdr(sexp)))
     end
