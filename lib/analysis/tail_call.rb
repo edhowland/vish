@@ -34,10 +34,19 @@ class TailCall
   def tail_candidate?(ast)
     lambdacall?(last_child(ast))
   end
+  # compose_statements ast - given a tail_candidate block, return
+  # transformed last_child
+  def compose_statements(sexp)
+    if null?(sexp)
+      NullType.new
+    else
+      cons(car(sexp), compose_statements(cdr(sexp)))
+    end
+  end
 
   # compose_block  body - handle last child because it is in tail position
   def compose_block(body)
-    body
+    cons(:block, compose_statements(cdr(body)))
   end
 
   def _run(ast)
