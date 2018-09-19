@@ -34,6 +34,10 @@ class TailCall
   def tail_candidate?(ast)
     lambdacall?(last_child(ast))
   end
+  # mktailcall sexp - return reconstituted tailcall from lambdacall
+  def mktailcall(sexp)
+    cons(:tailcall, cdr(sexp))
+  end
   # compose_statements ast - given a tail_candidate block, return
   # transformed last_child
   def compose_statements(sexp)
