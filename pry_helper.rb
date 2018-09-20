@@ -3,17 +3,13 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
-#require_relative 'sexp_transform'
-#require_relative 'list_proc'
-#require_relative 'semit'
 
-
-
-
-
-
-
-
+# trace helper
+def trace(msg, &blk)
+  result = yield
+  puts msg + " : #{result}"
+  result
+end
 def go
   CodeInterpreter.new(*compile(''))
 end
