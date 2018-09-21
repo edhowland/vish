@@ -39,7 +39,7 @@ class TailCall
     cons(:tailcall, cdr(sexp))
   end
   def mkcond(sexp)
-    list(car(sexp), true, false)
+    list(caar(sexp), true, false)
   end
   def conditional?(sym)
     trace("conditional?",sym) { [:logical_and, :logical_or].member? sym }
