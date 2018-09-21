@@ -19,7 +19,7 @@ class TailCall
     end
   end
   def lambdacall?(sexp)
-    trace("lambdacall? #{sexp}") { car(sexp) == :lambdacall }
+    trace("lambdacall?", sexp) { car(sexp) == :lambdacall }
   end
   def lambda?(ast)
     car(ast) == :lambda
@@ -32,14 +32,17 @@ class TailCall
   end
   # tail_candidate? body -  true if last_child(body) is a lambdacall or ...
   def tail_candidate?(ast)
-    trace("tail_candidate? #{ast.inspect}") { lambdacall?(last_child(ast)) || conditional_node?(last_child(ast))}
+    trace("tail_candidate?", ast) { lambdacall?(last_child(ast)) || conditional_node?(last_child(ast))}
   end
   # mktailcall sexp - return reconstituted tailcall from lambdacall
   def mktailcall(sexp)
     cons(:tailcall, cdr(sexp))
   end
+  def mkcond(sexp)
+    list(car(sexp), true, false)
+  end
   def conditional?(sym)
-    trace("conditional? #{sym.inspect}") { [:logical_and, :logical_or].member? sym }
+    trace("conditional?",sym) { [:logical_and, :logical_or].member? sym }
   end
   def conditional_node?(sexp)
     trace("conditional_node?") { conditional?(car(sexp)) }
@@ -50,7 +53,7 @@ class TailCall
     if lambdacall?(car(sexp))
       mktailcall(sexp)
     elsif conditional?(caar(sexp))
-      sexp
+      mkcond(sexp)
     else
       sexp
     end

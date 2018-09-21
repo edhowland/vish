@@ -5,9 +5,33 @@ require_relative 'lib/vish'
 require_relative 'pry/lib'
 
 # trace helper
-def trace(msg, &blk)
-  result = yield
+# set this to false to turn off tracing. Leave it on to discover code that stills contains trace calls
+$tracing = true
+def trace!(val=true)
+  $tracing = val
+end
+def trace?
+  $tracing
+end
+# set this to true to inspect arguments to functions
+$inspecting = false
+def inspect!(val=true)
+  $inspecting = val
+end
+def inspect?
+  $inspecting
+end
+
+def trace_enter(msg, *args)
+  puts msg
+  $inspecting && puts(args.inspect)
+end
+def trace_exit(msg, result)
   puts msg + " : #{result}"
+end
+def trace(msg, *args, &blk)
+  result = yield if block_given?
+  ->(msg, result, *args) { trace_enter(msg, *args); trace_exit(msg, result) }.(msg, result, args) if $tracing
   result
 end
 def go
