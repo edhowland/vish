@@ -52,18 +52,19 @@ class TailCall
 #  binding.pry
     if lambdacall?(car(sexp))
       mktailcall(sexp)
-    elsif conditional?(caar(sexp))
+    elsif conditional_node?(car(sexp))
       mkcond(sexp)
     else
       sexp
     end
   end
-  # compose_statements ast - given a tail_candidate block, return
+  # compose_statements ast - given a tail candidate block, return
   # transformed last_child
   def compose_statements(sexp)
     if null?(sexp)
       NullType.new
       elsif last_child?(sexp)
+        trace('in last child')
         handle_last_child(sexp)
     else
       cons(car(sexp), compose_statements(cdr(sexp)))
