@@ -13,6 +13,9 @@ end
 def trace?
   $tracing
 end
+def notrace
+  trace! false
+end
 # set this to true to inspect arguments to functions
 $inspecting = false
 def inspect!(val=true)
@@ -20,6 +23,9 @@ def inspect!(val=true)
 end
 def inspect?
   $inspecting
+end
+def noinspect
+  inspect! false
 end
 
 def trace_enter(msg, *args)

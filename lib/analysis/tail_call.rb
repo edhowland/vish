@@ -39,7 +39,8 @@ class TailCall
     cons(:tailcall, cdr(sexp))
   end
   def mkcond(sexp)
-    list(caar(sexp), true, false)
+#  binding.pry
+    list(car(sexp), cadr(sexp), caddr(sexp))
   end
   def conditional?(sym)
     trace("conditional?",sym) { [:logical_and, :logical_or].member? sym }
@@ -49,11 +50,10 @@ class TailCall
   end
   # handle_last_child S-Expression - compute varieties of possible tail conditions
   def handle_last_child(sexp)
-#  binding.pry
     if lambdacall?(car(sexp))
       mktailcall(sexp)
     elsif conditional_node?(car(sexp))
-      mkcond(sexp)
+      list(mkcond(car(sexp)))
     else
       sexp
     end
