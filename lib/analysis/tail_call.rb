@@ -38,9 +38,9 @@ class TailCall
   def mktailcall(sexp)
     cons(:tailcall, cdr(sexp))
   end
+  # mkcond - reconstitute logical and/or node after recursing on both legs.
   def mkcond(sexp)
-#  binding.pry
-    list(car(sexp), cadr(sexp), caddr(sexp))
+    list(car(sexp), single_or_block(cadr(sexp)), single_or_block(caddr(sexp)))
   end
   def conditional?(sym)
     trace("conditional?",sym) { [:logical_and, :logical_or].member? sym }
@@ -50,13 +50,17 @@ class TailCall
   end
   # handle_last_child S-Expression - compute varieties of possible tail conditions
   def handle_last_child(sexp)
-    if lambdacall?(car(sexp))
+    if lambdacall?(sexp)
       mktailcall(sexp)
-    elsif conditional_node?(car(sexp))
-      list(mkcond(car(sexp)))
+    elsif conditional_node?(sexp)
+      list(mkcond(sexp))
     else
       sexp
     end
+  end
+  # block? - true if node is a block
+  def block?(sexp)
+    car(sexp) == :block
   end
   # compose_statements ast - given a tail candidate block, return
   # transformed last_child
@@ -65,9 +69,9 @@ class TailCall
       NullType.new
       elsif last_child?(sexp)
         trace('in last child')
-        handle_last_child(sexp)
+        handle_last_child(car(sexp))
     else
-      cons(car(sexp), compose_statements(cdr(sexp)))
+      cons(_run(car(sexp)), compose_statements(cdr(sexp)))
     end
   end
 
@@ -76,6 +80,15 @@ class TailCall
     cons(:block, compose_statements(cdr(body)))
   end
 
+  # single_or_block - handle leg of conditional
+  def single_or_block(sexp)
+#  binding.pry
+    if pair?(sexp) && block?(sexp)
+      compose_block(sexp)
+    else
+      handle_last_child(sexp)
+    end
+  end
   def _run(ast)
     if null?(ast)
       NullType.new
@@ -87,7 +100,6 @@ class TailCall
       end
     elsif pair?(car(ast))
       cons(_run(car(ast) ), _run(cdr(ast)))
-
     else
       cons(car(ast), _run(cdr(ast)))
     end
