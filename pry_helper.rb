@@ -40,6 +40,38 @@ def trace(msg, *args, &blk)
   ->(msg, result, *args) { trace_enter(msg, *args); trace_exit(msg, result) }.(msg, result, args) if $tracing
   result
 end
+
+# AST helpers
+# dpair - inner helper for actual pairs
+def ptoa(pair, acc=[])
+  if null?(pair)
+    acc.join(' ')
+  else
+    acc << dp(car(pair))
+    ptoa(cdr(pair), acc)
+  end
+end
+def dpair(pair, sep='')
+binding.pry
+  if null?(pair)
+    ''
+  else
+    sep + car(pair).to_s + ' ' + dpair(cdr(pair), ' ')
+  end
+end
+def dp(pair)
+  if null?(pair)
+    '()'
+  elsif pair?(pair)
+    '(' + ptoa(pair) + ')'
+  else
+    pair.to_s
+  end
+end
+def null
+  NullType.new
+end
+
 def go
   CodeInterpreter.new(*compile(''))
 end
