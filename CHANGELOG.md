@@ -6,6 +6,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.3-p181003 2018-10-03
+
+## Changes
+
+Due to Ruby version >= 2.4 making Fixnum constant deprecated, this version
+checks for this and replacesFixnum with Integer. This affects the clone method
+in the binding() call, esp.
+
+## Additions
+
+New function: ruby_version() which returns 3-tuple of Ruby version: RUBY_VERSION
+
+
+Tuple is made up of :
+
+1. Major version: E.g. 2
+2. Minor version : E.g. 5
+3. Patchlevel : E.g. 1
+
+E.g. "2.2.2" would be [2,2,2]
+
+
 ## 0.6.3 2018-09-01
 
 ## Warnings
