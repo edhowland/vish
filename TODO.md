@@ -1,5 +1,26 @@
 # TODO
 
+## Todo: Add more escape sequences into string interpolation
+
+- "\e" - Escape character
+- "\b" - Backspace character
+- "\r" - Carriage return
+- "\s" - space character
+
+
+The remainder characters are already encoded:
+
+- "\t" Tab
+- "\a" :bell
+
+Insert new escape sequences in lib/parser/vish_parser.rb:
+at this line: ~118
+  # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
+
+
+
+
+
 ## TODO : MUST create load function
 
 ```
