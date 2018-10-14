@@ -10,6 +10,10 @@ class BreakCalled < RuntimeError; end
 
 # Vish Language built in functions
 module Builtins
+  ## The Ruby version as tuple of ints
+  def self.ruby_version
+    RUBY_VERSION.split('.').map(&:to_i)
+  end
   ## output the version of the runtime
   def self.version()
     Vish::VERSION
@@ -29,11 +33,16 @@ module Builtins
   end
   ## clone - tries to do a deep clone of argument, else just sends :clone to it
   def self.clone(arg)
+      # Needed before Ruby version 2.4+
+    if ruby_version[1] >= 4
+      class_set =       [NilClass, TrueClass, FalseClass, Integer, Symbol]
+    else
+      class_set =       [NilClass, TrueClass, FalseClass, Fixnum, Symbol]
+    end
     if arg.respond_to? :_clone
       arg._clone
     elsif arg.respond_to? :clone
-      # Needed before Ruby version 2.4+
-      if [NilClass, TrueClass, FalseClass, Fixnum, Symbol].member? arg.class
+      if class_set.member? arg.class
         arg
       else
         arg.clone
