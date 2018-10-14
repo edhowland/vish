@@ -17,6 +17,8 @@ Insert new escape sequences in lib/parser/vish_parser.rb:
 at this line: ~118
   # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
 
+Note: Should require any code generation changes. Reuses Ruby to transform
+actual sequences.
 
 
 
