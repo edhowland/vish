@@ -23,6 +23,16 @@ actual sequences.
 
 
 
+## Add sh function to Builtins module
+
+```
+vish>sh('echo hi')
+hi
+vish>
+```
+
+Find in Vishmail: util.rb module Util
+
 ## TODO : MUST create load function
 
 ```
