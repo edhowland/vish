@@ -364,4 +364,19 @@ module Builtins
   def self.curry(fn)
     CurryFunction.new(fn)
   end
+
+  # string/array methods: chomp, split and join
+    ## chompstring - chomps a string
+  def self.chomp(string)
+    string.chomp
+  end
+  ## join array, sep - joins array with sep or empty string
+  def self.join(arr, sep)
+    arr.join(sep)#
+  end
+  ## split string, sep - array  
+  def self.split(string, sep)
+    string.split(sep)
+  end
+  
 end
