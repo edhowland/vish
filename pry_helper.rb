@@ -608,3 +608,7 @@ end
 def ast_co(str)
   [compile(str).ast, ConstantFolder.new]
 end
+# string interpolation debugging
+def str_inter
+  'obj="draft.1";x=~{email: ->() {"ed.howland@gmail.com"}};'
+end
