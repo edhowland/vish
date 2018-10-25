@@ -6,7 +6,7 @@ class Continuation < LambdaType
     @id = _id
   end
   attr_reader :frames, :id
-  def perform(intp)
+  def apply(intp)
         argc = intp.ctx.stack.pop
         if argc == 1
       argv = intp.ctx.stack.pop
@@ -25,6 +25,7 @@ class Continuation < LambdaType
 #    intp.frames.peek.ctx.stack.push argv
     intp.bc.pc = @id[:loc] + (@id[:body].length - 1)
   end
+
 
   def inspect
     "Continuation: frames.length #{@frames.length}, id function location: #{@id[:loc]}"

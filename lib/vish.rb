@@ -25,7 +25,7 @@ require_relative 'compiler'
 
 # AST analysis stuff
 # Restore this whenever some AST analysis is going on
-#require_relative 'analysis'
+require_relative 'analysis'
 
 
 # code emission stuff 

@@ -104,7 +104,9 @@ class VishParser < Parslet::Parser
   # string interpolation stuff
   # See: Notes.md
   rule(:percent_lbrace) { percent >> lbrace }
-  rule(:deref_expr) { percent_lbrace >> expr >> rbrace }
+  # Note: the final '}' cannot auto-consume all whitespace. All whitespace in
+  # a string is significant
+  rule(:deref_expr) { percent_lbrace >> expr >> str('}') }
 
   # escape sequences
   rule(:esc_newline) { bslash >> str('n') }

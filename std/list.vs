@@ -47,3 +47,10 @@ defn reverse_list(l) {
 }
 
 
+# depth.vs function depth(tree, acc) - returns max depth of tree of S-Exp s
+defn depth(l) {
+  defn depth_x(tree, acc) {
+    {  {null?(:tree) && :acc} ||  {pair?(car(:tree)) && depth_x(cdr(:tree), max(:acc, depth_x(car(:tree), :acc + 1))) }   } ||   depth_x(cdr(:tree), :acc)
+  }
+  depth_x(:l, 1)
+}

@@ -28,7 +28,10 @@ class VishCompiler
   end
 
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
-    # NOP # for now, at least
+    # fold constants
+    @ast = ConstantFolder.new.run(ast)
+    # Optimize possible tail calls
+    @ast = TailCall.new.run(@ast)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
