@@ -6,6 +6,27 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## 0.6.3-2 2018-10-25
+
+### Changes
+
+- Corrected string interpolation bug where it consumes all whitespace after
+a right brace.
+
+### Additions
+
+Added logic for constant folding in analysis phase.
+- Added non-activated code for tail call rewriting of AST in analysis phase.
+
+The tail call will be finilized in feature/0.6.4
+
+- Added some more builtin functions:
+
+* chomp
+* join
+* split
+
+
 ## 0.6.3-p181003 2018-10-03
 
 ## Changes
