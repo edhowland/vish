@@ -14,6 +14,11 @@ module Builtins
   def self.ruby_version
     RUBY_VERSION.split('.').map(&:to_i)
   end
+  ## vish_base(trail) - returns path for base of Vish stuff with optional trailing part
+    ### Add to Builtins
+  def self.vish_base(trail='')
+    vish_path(trail)
+  end
   ## output the version of the runtime
   def self.version()
     Vish::VERSION
