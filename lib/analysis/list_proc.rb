@@ -10,6 +10,9 @@ module ListProc
   def atom?(x)
     Builtins.atom?(x)
   end
+  def list(*args)
+    Builtins.list(*args)
+  end
   def list?(x)
     begin
       Builtins.list?(x)
@@ -19,6 +22,9 @@ module ListProc
   end
   def pair?(x)
     Builtins.pair?(x)
+  end
+  def cons(a, b)
+    Builtins.cons(a, b)
   end
 
 
@@ -33,6 +39,24 @@ module ListProc
   def cdr x
     x.value
   end
+  def caar(sexp)
+    car(car(sexp))
+  end
+  def cddr(x)
+    cdr(cdr(x))
+  end
+  def cdar(sexp)
+    cdr(car(sexp))
+  end
+  def cddar(x)
+    cdr(cdar(x))
+  end
+  def cadar(x)
+    car(cdar(x))
+  end
+  def caddar(x)
+    car(cddar(x))
+  end
 def cadr(x)
   car(cdr(x))
 end
@@ -40,7 +64,13 @@ def caadr(x)
   car(cadr(x))
 end
   def caddr(x)
-    car(cadr(x))
+    car(cddr(x))
   end
-#
+  def copy(sexp)
+    if null?(sexp)
+      NullType.new
+    else
+      cons(car(sexp), copy(cdr(sexp)))
+    end
+  end
 end

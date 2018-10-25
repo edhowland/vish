@@ -73,4 +73,26 @@ class TestString < BaseSpike
   def test_empty_double_quoted_string
     assert_eq interpret('""'), ""
   end
+
+  # more string interpolation stuff
+  def test_string_interpolation_string_expression_trailing_non_space
+    result = interpret '"%{1}X"'
+    assert_eq result, "1X"
+  end
+  def test_string_interpolation_w_escape_seq_and_trailing_space
+    result = interpret '"\n "'
+    assert_eq result, "\n "
+  end
+  def test_string_interpolation_space_following_expression
+    result = interpret '"%{1} "'
+    assert_eq result, '1 '
+  end
+  def test_interpolation_w_preserves_spaces_between_elements
+    result = interpret <<-EOC
+str='draft.1'
+obj=~{email: ->() {'ed.howland@example.com'}}
+"./command.sh %{:str} %{%obj.email}"
+EOC
+    assert_eq result, './command.sh draft.1 ed.howland@example.com'
+  end
 end

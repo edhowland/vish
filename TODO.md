@@ -1,5 +1,95 @@
 # TODO
 
+## Todo: Add notes re: creating your own Rakefiles
+
+Note how you can load the /path/to/vish/bin/vishc in your Rakefile
+Then, you can call the compile function and save the compiled bit if the result is true.
+
+Note: You can make your own vish.erb and use vishc -R --template my_vish.erb -o myvish_target.rb myvish_target.vs
+This can be used to get the full path to the vishc binary to use 
+in the Ruby 'load' call.
+
+```
+# Rakefile
+
+load %x{./myvish_target.rb}
+
+task :compile do
+  compiler, result = compile(compose(File.read(t.source)))
+    abort("Failed to compile #{t.source}") unless result
+  save(compiler, t.name)
+end
+```
+## Move all meant for lib/runtime/builtins.rb : module Builtins from VishMail:util.rb
+
+## Todo: Provide new flag to vish runtime to not do final inspect
+
+Normally, the last instruction executed is inspected. Ok, whenever simple
+testing .vs scripts.
+
+But, by the -P, --no-inspect flag, do not output final instructio executed 
+inspected on top of stack
+
+```
+$ cat test.vs
+# test.vs compute 3 + 4
+3 + 4
+$ vish test.vs
+7
+
+$ cat print.vs
+# print.vs - print something
+println('ok')
+$ vish print.vs
+ok
+nil
+# latter 'nil' return value of println function call
+$ vish --no-inspect print.vs
+ok
+$
+```
+
+
+## Todo: Change return code for frm - if it does not exist or problem removing file.
+
+Currently returns 1 if Ok, false otherwise.
+Should be at least true. Or tuple of status with reason ...
+Make sure can handle in Vish language semantics
+
+
+## Todo: Add more escape sequences into string interpolation
+
+- "\e" - Escape character
+- "\b" - Backspace character
+- "\r" - Carriage return
+- "\s" - space character
+
+
+The remainder characters are already encoded:
+
+- "\t" Tab
+- "\a" :bell
+
+Insert new escape sequences in lib/parser/vish_parser.rb:
+at this line: ~118
+  # TODO: make room for hex digits: \x00fe, ... posibly unicodes, etc
+
+Note: Should require any code generation changes. Reuses Ruby to transform
+actual sequences.
+
+
+
+
+## Add sh function to Builtins module
+
+```
+vish>sh('echo hi')
+hi
+vish>
+```
+
+Find in Vishmail: util.rb module Util
+
 ## TODO : MUST create load function
 
 ```
@@ -17,10 +107,6 @@ create test/test_continuation.rb
 ## Todo: :halt and :exit are redundant
 
 Probably should mae :exit just raise HaltState, unless someday  we want to return exit codes.
-
-## Todo: change :_frames from lib/runtime/lambda_type.rb :def perform into:
-
-Make _frames() an internal function
 
 
 ## Todo: Improve string interpolation

@@ -3,16 +3,74 @@
 # setup Pry environment
 require_relative 'lib/vish'
 require_relative 'pry/lib'
-#require_relative 'sexp_transform'
-#require_relative 'list_proc'
-#require_relative 'semit'
 
+# trace helper
+# set this to false to turn off tracing. Leave it on to discover code that stills contains trace calls
+$tracing = true
+def trace!(val=true)
+  $tracing = val
+end
+def trace?
+  $tracing
+end
+def notrace
+  trace! false
+end
+# set this to true to inspect arguments to functions
+$inspecting = false
+def inspect!(val=true)
+  $inspecting = val
+end
+def inspect?
+  $inspecting
+end
+def noinspect
+  inspect! false
+end
 
+def trace_enter(msg, *args)
+  puts msg
+  $inspecting && puts(args.inspect)
+end
+def trace_exit(msg, result)
+  puts msg + " : #{result}"
+end
+def trace(msg, *args, &blk)
+  result = yield if block_given?
+  ->(msg, result, *args) { trace_enter(msg, *args); trace_exit(msg, result) }.(msg, result, args) if $tracing
+  result
+end
 
-
-
-
-
+# AST helpers
+# dpair - inner helper for actual pairs
+def ptoa(pair, acc=[])
+  if null?(pair)
+    acc.join(' ')
+  else
+    acc << dp(car(pair))
+    ptoa(cdr(pair), acc)
+  end
+end
+def dpair(pair, sep='')
+binding.pry
+  if null?(pair)
+    ''
+  else
+    sep + car(pair).to_s + ' ' + dpair(cdr(pair), ' ')
+  end
+end
+def dp(pair)
+  if null?(pair)
+    '()'
+  elsif pair?(pair)
+    '(' + ptoa(pair) + ')'
+  else
+    pair.to_s
+  end
+end
+def null
+  NullType.new
+end
 
 def go
   CodeInterpreter.new(*compile(''))
@@ -260,6 +318,9 @@ end
 def cons(k, v)
   Builtins.mkpair(k, v)
 end
+def pair?(x)
+  Builtins.pair?(x)
+end
 
 def car(x)
   x.key
@@ -276,8 +337,29 @@ end
 def cddr(x)
   cdr(cdr(x))
 end
+def cddar(x)
+  cddr(car(x))
+end
+def caar(x)
+  car(car(x))
+end
+def cdar(x)
+  cdr(car(x))
+end
+def cadar(x)
+  car(cdar(x))
+end
+def caddar(x)
+  car(cddr(x))
+end
+def cdddr(x)
+  cdr(cddr(x))
+end
 def caddr(x)
   car(cddr(x))
+end
+def caddar(x)
+  car(cddar(x))
 end
 
 # utility fns from Builtins
@@ -460,4 +542,73 @@ def rci ci, &blk
   
   end
   err
+end
+
+def tc
+  TCOAnalysis.new
+end
+
+def co str
+  t=tc
+  c=compile str
+  [t, caadr(c.ast)]
+end
+
+def null?(s)
+  Builtins.null?(s)
+end
+def list?(sexp)
+  Builtins.list?(sexp)
+end
+
+def level_eq? s1, s2
+#binding.pry
+  if null?(s1) && null?(s2)
+    true
+  else
+  car(s1) == car(s2) &&
+    level_eq?(cdr(s1), cdr(s2))
+  end
+end
+
+def trees_eq? t1,t2
+  (null?(t1) and null?(t2)) ||
+    level_eq?(t1,t2)
+end
+def list(*args)
+  Builtins.list(*args)
+end
+
+def list_length l
+  if null?(l)
+    0
+  else
+    1 + list_length(cdr(l))
+  end
+end
+
+
+def mkcp
+  Object.new.extend TreeUtils
+end
+
+# depth of tree. even empty list is depth of 1
+def depth(ast, acc=1)
+  if null?(ast)
+    acc
+  elsif pair?(car(ast))
+    v = depth(car(ast), 1 + acc)
+    depth(cdr(ast), [acc, v].max)
+  else
+    depth(cdr(ast), acc)
+  end
+end
+
+
+def ast_co(str)
+  [compile(str).ast, ConstantFolder.new]
+end
+# string interpolation debugging
+def str_inter
+  'obj="draft.1";x=~{email: ->() {"ed.howland@gmail.com"}};'
 end

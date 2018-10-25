@@ -56,8 +56,8 @@ class LambdaType < Hash
     intp.bc.pc = self[:loc]
   end
 
-  # perform lcall
-  def perform(intp)
+  # apply interpreter
+  def apply(intp)
     argc = intp.ctx.stack.pop
     check_arity(argc)
     fr = FunctionFrame.new(Context.new)
@@ -73,6 +73,7 @@ class LambdaType < Hash
     # Now jump to start of function
     intp.bc.pc = self[:loc]
   end
+
   def formals
 #    c=(0..self[:arity]-1).to_a.map {|e| (e*5)+1}
 #    c.each_with_object([]) {|e,o| o << self[:parms][e] }.reverse

@@ -35,6 +35,9 @@ defn unwind_one(s) {
 defn callcc(l) {
   l(_mkcontinuation(unwind_one(__frames()), :callcc))
 }
+# From The Little Schemer by D. Friedman
+defn sub1(n) { :n - 1}
+defn add1(n) { :n + 1 }
 # set up some variables
 null=mknull()
 version=version()
