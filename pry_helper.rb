@@ -612,3 +612,32 @@ end
 def str_inter
   'obj="draft.1";x=~{email: ->() {"ed.howland@gmail.com"}};'
 end
+
+######
+# print AST and cons cells, pairs, .etc
+# atom? - not a pair?
+def atom?(object)
+  ! pair?(object)
+end
+
+def plist(lst, sep='')
+  if null?(lst)
+    ''
+  else
+    sep + pl(car(lst)) + plist(cdr(lst), ' ')
+  end
+end
+# pl(object)recursive list printer
+def pl(obj)
+  if null?(obj)
+    ''
+  elsif atom?(obj)
+    obj.inspect
+  elsif list?(obj)
+    '(' + plist(obj) + ')'
+  elsif pair?(obj)
+    '(' + pl(car(obj)) + ' . ' + pl(cdr(obj)) + ')'
+  else
+    fail 'pl: should never get here'
+  end
+end
