@@ -27,11 +27,17 @@ class VishCompiler
     @ast = @transform.apply ir
   end
 
-  def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
+  # Optimize Phase
+  def optimize(ast)
     # fold constants
     @ast = ConstantFolder.new.run(ast)
     # Optimize possible tail calls
-    @ast = TailCall.new.run(@ast)
+    @ast = TailCall.new.run(@ast)    
+  end
+
+  # Analysis Phase
+  def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
+    @ast=optimize(ast)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
