@@ -22,12 +22,13 @@ require_relative 'compiler'
 # AST stuff
 
 
-# Optimizer stuff
-require_relative 'optimizer'
 
 # AST analysis stuff
 # Restore this whenever some AST analysis is going on
 require_relative 'analysis'
+
+# Optimizer stuff
+require_relative 'optimizer'
 
 
 # code emission stuff 
