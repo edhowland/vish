@@ -44,10 +44,6 @@ class VishCompiler
   def optimize(ast)
     # run thru currently set optimizers
     @optimizers.to_a.select {|k, v| @default_optimizers[k] }.map {|k, v| v }.reduce(ast) {|tree, klass| klass.new.run(tree) }
-    # fold constants
-#    @ast = ConstantFolder.new.run(ast)
-    # Optimize possible tail calls
-#    @ast = TailCall.new.run(@ast)
   end
 
   # Analysis Phase
