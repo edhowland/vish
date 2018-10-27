@@ -15,8 +15,21 @@ class VishCompiler
     @blocks = []
     @lambdas = {}
     @functions = {}
+    # Optimizeation parameters
+    @optimizers = {
+      identity_optimizer: IdentityOptimizer,
+      constant_folder: ConstantFolder,
+      tail_call: TailCall
+    }
+    # Default optimizers actually turned.
+    # Must at least have IdentityOptimizer :identity_optimizer
+    @default_optimizers = {
+           identity_optimizer: true,
+      constant_folder: false,
+      tail_call: false 
+    }
   end
-  attr_accessor :ast, :parser, :transform, :generator, :ir, :ctx, :blocks, :lambdas, :functions, :source
+  attr_accessor :ast, :parser, :transform, :generator, :ir, :ctx, :blocks, :lambdas, :functions, :source, :default_optimizers, :optimizers
   attr_reader :bc
 
   def parse source=@source
@@ -29,10 +42,12 @@ class VishCompiler
 
   # Optimize Phase
   def optimize(ast)
+    # run thru currently set optimizers
+    @optimizers.to_a.select {|k, v| @default_optimizers[k] }.map {|k, v| v }.reduce(ast) {|tree, klass| klass.new.run(tree) }
     # fold constants
-    @ast = ConstantFolder.new.run(ast)
+#    @ast = ConstantFolder.new.run(ast)
     # Optimize possible tail calls
-    @ast = TailCall.new.run(@ast)    
+#    @ast = TailCall.new.run(@ast)
   end
 
   # Analysis Phase
