@@ -60,6 +60,13 @@ opt = OptionParser.new do |o|
       @options[:stdlib] = false
     end
   o.separator ''
+  o.on('-O1', '--optimize_constant_fold', 'Optimize for constant folding') do
+    #
+  end
+  o.on('-O2', '--optimize_tail_calls', 'Optimize for tail calls') do
+    #
+  end
+  o.separator ''
   o.on('-h', '--help', 'Display this help') do |op|
     puts o
     exit(0)
