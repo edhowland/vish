@@ -20,7 +20,9 @@ loads: [],
   template: vish_path('/bin/vish.erb'),
   ruby: false,
   requires: [],
-includes: []
+includes: [],
+  # Get the default optimizers from actual VishCompiler
+  optimizers: VishCompiler.new.default_optimizers
 }
 opt = OptionParser.new do |o|
   o.banner = 'Vish compiler'
@@ -59,12 +61,24 @@ opt = OptionParser.new do |o|
       @options[:deprecations] = true
       @options[:stdlib] = false
     end
-  o.separator ''
-  o.on('-O1', '--optimize_constant_fold', 'Optimize for constant folding') do
-    #
+  o.separator '=== Optimization flags'
+  o.on('-N', '--none', 'Turn off all optimizers') do
+    @options[:optimizers].each_pair {|k, v| @options[:optimizers][k] = false unless k == :identity_optimizer }
   end
-  o.on('-O2', '--optimize_tail_calls', 'Optimize for tail calls') do
-    #
+  o.on('-A', '--all', 'Turn all optimizations on') do
+    @options[:optimizers].each_pair {|k, v| @options[:optimizers][k] = true }
+  end
+  o.on('-O', '--list-optimizers', 'List all currently set optimization flags') do
+    @options[:optimizers].each_pair do |k, v|
+      puts "--#{k.to_s}" if v
+    end
+exit(0)
+  end
+  o.on('-C', '--[no-]constant_folder', 'Optimize for constant folding') do |v|
+    @options[:optimizers][:constant_folder] = v
+  end
+  o.on('-T', '--[no-]tail_call', 'Optimize for tail calls') do |v|
+    @options[:optimizers][:tail_call] = v
   end
   o.separator ''
   o.on('-h', '--help', 'Display this help') do |op|
@@ -132,6 +146,7 @@ def compile source
   result = false
 begin
   compiler = VishCompiler.new source
+    compiler.default_optimizers = @options[:optimizers]
   compiler.run
   result = true
 rescue Parslet::ParseFailed => failure
