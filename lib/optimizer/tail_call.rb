@@ -3,6 +3,7 @@
 class TailCall
   include ListProc
   def run(ast)
+puts 'In tail Call optimizer'
     ast
   end
   # helper methods

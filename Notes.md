@@ -17,6 +17,7 @@ Therefore, we recursively define each leg according to these rules.
 
 Final observation, Any return expression, apply the above rules. Because it is 
 by definition in tail position.
+
 ## Porposed version 0.6.3: Continuations
 
 Subclass of LambdaType is Continuation.
@@ -33,7 +34,12 @@ Tests in test/test_continuations.rb
 
 ### Tail call optimization
 
-To activate tail call optimization, set shell environment TCO=1
+To activate tail call optimization: TCO:
+Use the --tail_call flag for the vishc executable. Or, set it to true in
+
+```
+VishCompiler.new.default_optimizers[:tail_call] = true
+#
 This enables it at runtime. Otherwise, recursive calls will consume stack space.
 
 
