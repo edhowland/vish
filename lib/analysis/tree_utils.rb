@@ -14,9 +14,23 @@ module TreeUtils
     elsif pair?(car(ast))
       cons(copy_tree(car(ast), &blk), copy_tree(cdr(ast), &blk))
     else
-      cons(car(ast), copy_tree(cdr(ast)))
+      cons(car(ast), copy_tree(cdr(ast), &blk))
     end
   end
-  
+
+  def map_tree(ast, &blk)
+    if !null?(ast) && pair?(ast) && atom?(car(ast))
+      yield car(ast) if block_given?
+    end
+
+    if null?(ast)
+      NullType.new
+    elsif pair?(car(ast))
+      cons(map_tree(car(ast), &blk), map_tree(cdr(ast), &blk))
+    else
+      cons(blk.call(car(ast)), map_tree(cdr(ast), &blk))
+    end
   end
+
+end
   

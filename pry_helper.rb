@@ -4,6 +4,8 @@
 require_relative 'lib/vish'
 require_relative 'pry/lib'
 
+include TreeUtils
+
 # trace helper
 # set this to false to turn off tracing. Leave it on to discover code that stills contains trace calls
 $tracing = true
@@ -544,8 +546,8 @@ def rci ci, &blk
   err
 end
 
-def tc
-  File.read('tc.vs')
+def tc(src='tc.vs')
+  File.read(src)
 end
 
 def co str
@@ -646,4 +648,46 @@ end
 ## Helpers for tail call optimizers
 def fact_s
   File.read('fact.vs')
+end
+def tc_compiler(src)
+  r=VishCompiler.new(src)
+  r.default_optimizers[:tail_call] = true
+  r
+end
+
+
+def astsl(ast, sl=[])
+  if null?(ast)
+    sl
+  else
+    [car(ast)] + astsl(cdr(ast), sl)
+  end
+end
+
+def pgm_sl(ast)
+  astsl(cadr(ast))
+end
+
+def t1
+  tc('t1.vs')
+end
+
+def lmp(lm)
+  [cadr(lm), caddr(lm)]
+end
+# temp helper for t1
+def t1pb ast
+  lmp(pgm_sl(ast).first)
+  #
+end
+
+# get the last item in list
+def last(sexp)
+  if null?(sexp)
+    sexp
+  elsif null?(cdr(sexp))
+    car(sexp)
+  else
+    last(cdr(sexp))
+  end
 end

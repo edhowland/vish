@@ -8,7 +8,6 @@ puts 'In tail Call optimizer'
   end
   # helper methods
   def last_child?(ast)
-#binding.pry
     !undefined?(cdr(ast)) && null?(cdr(ast))
   end
   def last_child(ast)
@@ -24,7 +23,7 @@ puts 'In tail Call optimizer'
   end
   def lambdacall?(sexp)
 #    trace("lambdacall?", sexp) { 
-car(sexp) == :lambdacall 
+car(sexp) == :lambdacall
 #}
   end
   def lambda?(ast)
@@ -38,13 +37,14 @@ car(sexp) == :lambdacall
   end
   # tail_candidate? body -  true if last_child(body) is a lambdacall or ...
   def tail_candidate?(ast)
-#    trace("tail_candidate?", ast) { 
     lambdacall?(last_child(ast)) || conditional_node?(last_child(ast))
-#    }
   end
   # mktailcall sexp - return reconstituted tailcall from lambdacall
   def mktailcall(sexp)
-    cons(:tailcall, cdr(sexp))
+     result=cons(:tailcall, cdr(sexp))
+#     binding.pry
+#    list(list(:tailcall, cadr(sexp)))
+    result
   end
   # mkcond - reconstitute logical and/or node after recursing on both legs.
   def mkcond(sexp)
@@ -62,7 +62,6 @@ conditional?(car(sexp))
   end
   # handle_last_child S-Expression - compute varieties of possible tail conditions
   def handle_last_child(sexp)
-#binding.pry
     if lambdacall?(sexp)
       mktailcall(sexp)
     elsif conditional_node?(sexp)
@@ -78,29 +77,27 @@ conditional?(car(sexp))
   # compose_statements ast - given a tail candidate block, return
   # transformed last_child
   def compose_statements(sexp)
-#binding.pry
     if null?(sexp)
       NullType.new
       elsif last_child?(sexp)
-#        trace('in last child')
+      puts 'with car'
         handle_last_child(car(sexp))
     else
-      cons(_run(car(sexp)), compose_statements(cdr(sexp)))
+      cons(run(car(sexp)), compose_statements(cdr(sexp)))
     end
   end
 
   # compose_block  body - handle last child because it is in tail position
   def compose_block(body)
-#binding.pry
     cons(:block, compose_statements(cdr(body)))
   end
 
   # single_or_block - handle leg of conditional
   def single_or_block(sexp)
-#  binding.pry
     if pair?(sexp) && block?(sexp)
       compose_block(sexp)
     else
+    puts 'w/o car'
       handle_last_child(sexp)
     end
   end  
@@ -111,7 +108,7 @@ conditional?(car(sexp))
     if null?(ast)
       NullType.new
     elsif lambda?(ast)
-binding.pry
+#binding.pry
       if tail_candidate?(body(ast))
         list(:lambda, formals(ast), compose_block(body(ast)))
       else

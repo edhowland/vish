@@ -1,5 +1,16 @@
 # Issues
 
+## Design problem : Cannot curry any internal function.
+
+```
+vish>x=curry(:head)
+x=x([1,2,3])
+# works, now call it
+%x
+# ... Dies in CurryFunction.apply
+```
+
+
 ## Bug: Tail call optimization does not work in all situations
 
 The trick of checking for a a :lcall in the spot before :fret, is not sufficient.
