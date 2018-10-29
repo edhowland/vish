@@ -54,3 +54,12 @@ defn depth(l) {
   }
   depth_x(:l, 1)
 }
+
+# fold stuff
+defn foldr(f, i, l) {
+  null?(:l) && return :i
+  foldr(:f, f(:i, car(:l)), cdr(:l))
+}
+foldr=curry(:foldr)
+
+

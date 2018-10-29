@@ -545,7 +545,7 @@ def rci ci, &blk
 end
 
 def tc
-  TCOAnalysis.new
+  File.read('tc.vs')
 end
 
 def co str
@@ -640,4 +640,10 @@ def pl(obj)
   else
     fail 'pl: should never get here'
   end
+end
+
+
+## Helpers for tail call optimizers
+def fact_s
+  File.read('fact.vs')
 end

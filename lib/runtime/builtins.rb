@@ -193,6 +193,10 @@ module Builtins
   def self.prints(string)
     $stdout.print string
   end
+  ## chars(string) - string.chars
+  def self.chars(string)
+    string.chars
+  end
   ## gensym() - creates unique id
   def self.gensym
     genid(Object.new)
