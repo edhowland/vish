@@ -672,6 +672,7 @@ def t1
   tc('t1.vs')
 end
 
+# extract params and block from lambda
 def lmp(lm)
   [cadr(lm), caddr(lm)]
 end
@@ -681,13 +682,36 @@ def t1pb ast
   #
 end
 
-# get the last item in list
-def last(sexp)
-  if null?(sexp)
-    sexp
-  elsif null?(cdr(sexp))
-    car(sexp)
+
+
+def lambda?(sexp)
+  list?(sexp) && car(sexp) == :lambda
+end
+def lambdacall?(sexp)
+  list?(sexp) && car(sexp) == :lambdacall
+end
+
+def t2
+  tc('t2.vs')
+end
+
+def tail_candidate?(sexp)
+  if lambda?(sexp)
+    pa, bk = lmp(sexp)
+    lambdacall?last_element((bk))
   else
-    last(cdr(sexp))
+    false
+  end
+end
+
+
+## temp
+def l_and_tail sexp
+  if lambda?(sexp)
+    if tail_candidate?(sexp)
+      puts 'found tail'
+    else
+      puts 'normal lambda'
+    end
   end
 end

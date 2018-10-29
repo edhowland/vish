@@ -32,5 +32,29 @@ module TreeUtils
     end
   end
 
+  def map_inner_tree(ast, &blk)
+    if !null?(ast) && pair?(ast) && atom?(car(ast))
+      yield car(ast) if block_given?
+    end
+
+    if null?(ast)
+      NullType.new
+    elsif pair?(car(ast))
+      cons(map_inner_tree(blk.call(car(ast)), &blk), map_inner_tree(cdr(ast), &blk))
+    else
+      cons(car(ast), map_inner_tree(cdr(ast), &blk))
+    end
+  end
+
+# get the last item in list
+def last_element(sexp)
+  if null?(sexp)
+    sexp
+  elsif null?(cdr(sexp))
+    car(sexp)
+  else
+    last_element(cdr(sexp))
+  end
+end
 end
   
