@@ -727,6 +727,9 @@ def tail_rewrite(ast)
   map_inner_tree(ast, &fn)
 end
 
+# The identity Proc: id
+@id=->(x) {x}
+
 
 ## helper for tail call optimizer
 # Walk tree and perform on function for most nodes,: front
@@ -743,3 +746,34 @@ def map_front_back(ast, fr:, ba:)
   end
 end
 
+
+
+# attempt to rewrite lambdacall into tailcall
+@lcall = ->(t) {
+puts "examining last: #{t.class.name}"
+case t
+when list?(t)
+  puts 'found list'
+    puts pl(t)
+    t
+when PairType
+  puts 'found bare pair'
+    puts pl(t)
+
+      t
+when Symbol
+  if t == :lambdacall
+    puts 'found lambdacall'
+    t
+  else
+    puts "symbol: #{t}"
+    t
+  end
+when Parslet::Slice
+  puts t.to_s
+  t
+else
+  puts 'unknown type:' + t.class.name
+  t
+  end
+  }
