@@ -4,6 +4,28 @@
 module TreeUtils
   include ListProc
 
+  ##
+  # visit_tree AST, **visiters
+  # Walks the AST, possibly calling Procs passed in visiters keyword hash
+  #
+  # Example: Given: t=list(:foo, 1, list(:bar, 2))
+  # visit_tree(t, foo: ->(st) { puts "in foo: #{cadr(st).inspect}"}, bar:->(st) { puts "in bar: #{cadr(st).inspect}"})
+  #  in foo: 1
+  #  in bar: 2
+  def visit_tree(ast, **nf)
+    if null?(ast)
+      NullType.new
+    elsif pair?(car(ast))
+      visit_tree(car(ast), **nf)
+      visit_tree(cdr(ast), **nf)
+    else
+      if nf[car(ast)]
+        nf[car(ast)].call(ast)
+      end
+    visit_tree(cdr(ast), **nf)
+    end
+  end
+
   def copy_tree(ast, &blk)
     if !null?(ast) && pair?(ast) && atom?(car(ast))
       yield car(ast) if block_given?
