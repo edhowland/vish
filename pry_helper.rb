@@ -718,7 +718,7 @@ end
 # prototype for tail rewriting
 def tail_rewrite(ast)
   fn = ->(v) { if tail_candidate?(v)
-    list(car(v), cadr(v), caddr(v))
+    list(car(v), cadr(v), map_inner_tree(caddr(v), &fn))
   else
     v
   end
