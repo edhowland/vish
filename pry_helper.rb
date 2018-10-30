@@ -715,3 +715,14 @@ def l_and_tail sexp
     end
   end
 end
+# prototype for tail rewriting
+def tail_rewrite(ast)
+  fn = ->(v) { if tail_candidate?(v)
+    list(car(v), cadr(v), caddr(v))
+  else
+    v
+  end
+  }
+
+  map_inner_tree(ast, &fn)
+end
