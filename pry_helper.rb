@@ -726,3 +726,20 @@ def tail_rewrite(ast)
 
   map_inner_tree(ast, &fn)
 end
+
+
+## helper for tail call optimizer
+# Walk tree and perform on function for most nodes,: front
+# But call the :back proc on the last node
+def map_front_back(ast, fr:, ba:)
+  if null?(ast)
+    NullType.new
+  elsif pair?(car(ast))
+    cons(map_front_back(car(ast), fr:fr, ba:ba), map_front_back(cdr(ast), fr:fr, ba:ba))
+  elsif null?(cdr(ast))
+      cons(ba.call(car(ast)), map_front_back(cdr(ast), fr:fr, ba:ba))
+  else
+    cons(fr.call(car(ast)), map_front_back(cdr(ast), fr:fr, ba:ba))
+  end
+end
+
