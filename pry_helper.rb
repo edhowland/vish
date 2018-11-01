@@ -777,3 +777,35 @@ else
   t
   end
   }
+
+
+def mkl
+  ->(x) {
+  cons(:tailcall, cdr(x))
+  }
+end
+
+
+# fin: return last element in any list
+def fin lst
+  if null?(lst)
+    NullType.new
+  elsif null?(cdr(lst))
+    car(lst)
+  else
+    fin(cdr(lst))
+  end
+end
+
+# but_last - return all elements of list except the last
+def but_last lst, &blk
+  if null?(lst)
+    NullType.new
+  elsif null?(cdr(lst))
+#binding.pry
+    block_given? ? list(blk.call(car(lst))) : NullType.new
+  else
+    cons(car(lst), but_last(cdr(lst), &blk))
+  end
+end
+

@@ -18,8 +18,32 @@ class PairType
   def value=(value)
     @value = value
   end
+def plist(lst, sep='')
+  if null?(lst)
+    ''
+  else
+    sep + pl(car(lst)) + plist(cdr(lst), ' ')
+  end
+end
+# pl(object)recursive list printer
+def pl(obj)
+  if null?(obj)
+    ''
+  elsif atom?(obj)
+    obj.inspect
+  elsif list?(obj)
+    '(' + plist(obj) + ')'
+  elsif pair?(obj)
+    '(' + pl(car(obj)) + ' . ' + pl(cdr(obj)) + ')'
+  else
+    fail 'pl: should never get here'
+  end
+end
+
+
   def inspect
-  '(' + to_a.map(&:inspect).join(', ') + ')'
+  pl(self)
+  #'(' + to_a.map(&:inspect).join(', ') + ')'
   end
   def xinspect
     "#{self.class.name}: key: #{@key.inspect} value: #{@value.inspect}"
