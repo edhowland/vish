@@ -311,7 +311,7 @@ end
 
   # Do the same things as lambdacall, but emit a :tcall
   def tailcall(sexp)
-        _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :lcall]
+        _args(sexp) + [:pushv, car(sexp).to_s.to_sym, :tcall]
   end
   # deref first, then call lambda
   # argc should be [] if more than 0 args when called from lambdacall_args

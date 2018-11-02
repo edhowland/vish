@@ -695,13 +695,15 @@ def t2
   tc('t2.vs')
 end
 
+def ti
+  tc('ti.vs')
+end
+def  tp
+  tc('tp.vs')
+end
+
 def tail_candidate?(sexp)
-  if lambda?(sexp)
-    pa, bk = lmp(sexp)
-    lambdacall?last_element((bk))
-  else
-    false
-  end
+  block?(sexp) && lambdacall?(fin(sexp))
 end
 
 
@@ -817,10 +819,13 @@ end
 def xftail(ast)
   l_to_t = mkl
   map_inner_tree(ast) do |v|
-    if block?(v) && lambdacall?(fin(v))
+    if  tail_candidate?(v)
       but_last(v, &l_to_t)
     else
       v
     end
   end
 end
+
+
+# block?(v) && lambdacall?(fin(v))
