@@ -817,11 +817,10 @@ end
 def xftail(ast)
   l_to_t = mkl
   map_inner_tree(ast) do |v|
-    if block?(v)
+    if block?(v) && lambdacall?(fin(v))
       but_last(v, &l_to_t)
     else
       v
     end
   end
-  #
 end
