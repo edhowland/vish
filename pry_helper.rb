@@ -691,6 +691,14 @@ def lambdacall?(sexp)
   list?(sexp) && car(sexp) == :lambdacall
 end
 
+# handle returns that go thru a function
+def return?(sexp)
+  list?(sexp) && car(sexp) == :_return
+end
+def return_via_lambdacall?(sexp)
+  list?(sexp) && return?(sexp) && lambdacall?(cdr(sexp))
+end
+
 def t2
   tc('t2.vs')
 end
@@ -826,7 +834,9 @@ end
 def xftail(ast)
   l_to_t = mkl
   map_inner_tree(ast) do |v|
-    if  tail_candidate?(v)
+    if return_via_lambdacall?(v)
+      cons(car(v), l_to_t.call(cdr(v)))
+    elsif  tail_candidate?(v)
       but_last(v, &l_to_t)
     elsif conditional?(v)
 #      list(car(v), xftail(cadr(v)), xftail(caddr(v)))
@@ -845,3 +855,10 @@ end
 
 
 # block?(v) && lambdacall?(fin(v))
+
+## debugging functions for tail calls
+def calls(sexp)
+  visit_tree sexp,
+    lambdacall: ->(x) { puts x.inspect },
+    tailcall: ->(x) { puts x.inspect }
+end
