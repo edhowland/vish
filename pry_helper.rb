@@ -831,7 +831,7 @@ def xftail(ast)
     elsif conditional?(v)
 #      list(car(v), xftail(cadr(v)), xftail(caddr(v)))
       left = cadr(v); right = caddr(v)
-      if leaf?(right) && lambdacall?(right)
+      if lambdacall?(right)
         right = l_to_t.call(right)
       else
         right = xftail(right)
