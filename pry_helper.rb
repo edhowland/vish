@@ -813,14 +813,30 @@ end
 
 
 
+def leaf?(sexp)
+  list?(sexp) && depth(sexp) == 1
+end
 def block? x
   list?(x) && car(x) == :block
+end
+
+def conditional?(sexp)
+  list?(sexp) && [:logical_or, :logical_and].member?(car(sexp))
 end
 def xftail(ast)
   l_to_t = mkl
   map_inner_tree(ast) do |v|
     if  tail_candidate?(v)
       but_last(v, &l_to_t)
+    elsif conditional?(v)
+#      list(car(v), xftail(cadr(v)), xftail(caddr(v)))
+      left = cadr(v); right = caddr(v)
+      if leaf?(right) && lambdacall?(right)
+        right = l_to_t.call(right)
+      else
+        right = xftail(right)
+      end
+      list(car(v), xftail(left), right)
     else
       v
     end
