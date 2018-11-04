@@ -862,3 +862,39 @@ def calls(sexp)
     lambdacall: ->(x) { puts x.inspect },
     tailcall: ->(x) { puts x.inspect }
 end
+
+### try out stuff from test/test_tail_call.rb
+def tcompile source
+  @tc ||= VishCompiler.new
+  @tc.source = source
+  @tc.default_optimizers[:tail_call] = true
+  @tc.run
+  @tc
+end
+  def vcompile source
+    @vc ||= VishCompiler.new
+    @vc.source = source
+    @vc.run
+    @vc
+  end
+
+  def mkvi(source)
+    cifrom(vcompile(source))
+  end
+def mkti source
+  cifrom(tcompile(source))
+end
+
+
+
+
+  def fact_dir
+         <<-EOC
+    # fact-direct.vs - Direct method of factorial
+defn fact(n) {
+  {zero?(:n) && 1} || :n * fact(:n - 1)
+}
+fact(5)
+EOC
+  end
+  
