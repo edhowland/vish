@@ -532,6 +532,7 @@ def gci source
   cifrom(compile(source))
 end
 
+# rci - Run CodeInterpreter instance a single step at a time. Yields ci to block if given for inspection
 def rci ci, &blk
   begin
     loop do
@@ -543,7 +544,7 @@ def rci ci, &blk
   
   
   end
-  err
+  [ci.ctx.stack.peek, err]
 end
 
 def tc(src='tc.vs')
@@ -703,9 +704,6 @@ def t2
   tc('t2.vs')
 end
 
-def ti
-  tc('ti.vs')
-end
 def  tp
   tc('tp.vs')
 end
@@ -865,17 +863,17 @@ end
 
 ### try out stuff from test/test_tail_call.rb
 def tcompile source
-  @tc ||= VishCompiler.new
-  @tc.source = source
-  @tc.default_optimizers[:tail_call] = true
-  @tc.run
-  @tc
+  tc = VishCompiler.new
+  tc.source = source
+  tc.default_optimizers[:tail_call] = true
+  tc.run
+  tc
 end
   def vcompile source
-    @vc ||= VishCompiler.new
-    @vc.source = source
-    @vc.run
-    @vc
+    vc = VishCompiler.new
+    vc.source = source
+    vc.run
+    vc
   end
 
   def mkvi(source)

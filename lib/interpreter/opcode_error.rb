@@ -2,8 +2,10 @@
 
 class OpcodeError < RuntimeError
   def initialize param
-    super "#{self.class.name}: Unexpected opcode #{param}"
+    @opcode = param
+    super "#{self.class.name}: Unexpected opcode #{@opcode}"
   end
+  attr_reader :opcode
   def exit_code
     1
   end

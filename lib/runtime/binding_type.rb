@@ -10,15 +10,12 @@ end
 class BindingType
   include Type
 
-  @@__TOP_LEVEL =  NullType.new
-  def initialize bindings=@@__TOP_LEVEL
+  def initialize bindings=NullType.new  
     @bindings =  bindings
   end
-  def top_level
-    @@__TOP_LEVEL
-  end
+
   def root?(pair=@bindings)
-    top_level == pair
+    bnull?(pair)
   end
   alias_method :empty?, :root?
 
@@ -83,16 +80,15 @@ class BindingType
   end
   # get the number of defined variables. Includes all lambdas, esp. proxies for
   # builtin and FFI functions
-  def length
-    count = 0
-    inter = @bindings
-
-    while inter != @@__TOP_LEVEL
-      count += 1
-      inter = inter.value
-    end
-    count
+  def bnull?(b)
+    b.instance_of?(NullType)
   end
+
+  def length(b=@bindings, result=0)
+    return 0 if bnull?(b)
+    1 + length(b.value, result)
+  end
+
   # Displays the type of this object: BindingType
   # To get contents, do xmit(binding(), variables:) in Vish ivs REPL
   def inspect
