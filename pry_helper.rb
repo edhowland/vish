@@ -5,7 +5,19 @@ require_relative 'lib/vish'
 require_relative 'pry/lib'
 
 # Experimental
-require_relative 'vish_machine'
+require_relative 'vish_machine_ex'
+require_relative 'vish_ffi'
+
+def vmfrom(compiler)
+  result = VishMachineEx.new(compiler.bc, compiler.ctx)
+  result.ffi.extend FFITypes
+  result
+end
+def vmrun(source)
+  c = compile source
+  vm = vmfrom(c)
+  vm.run
+end
 
 
 include TreeUtils
