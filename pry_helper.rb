@@ -4,6 +4,10 @@
 require_relative 'lib/vish'
 require_relative 'pry/lib'
 
+# Experimental
+require_relative 'vish_machine'
+
+
 include TreeUtils
 
 # trace helper
