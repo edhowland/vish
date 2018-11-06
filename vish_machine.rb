@@ -6,9 +6,15 @@ class VishMachine
     @bc = bc
     @ctx = ctx
     @frames = LockedStack.new limit: 1000
+    @frames.push(MainFrame.new(@ctx))
+
     @opcodes = opcodes
   end
-  attr_reader :bc, :ctx
+  attr_reader :bc, :frames
+
+  def ctx
+    @frames.peek.ctx
+  end
   def fetch
     @bc.next
   end
@@ -16,7 +22,7 @@ class VishMachine
     @opcodes[code]
   end
   def execute(blob)
-    blob.call(@bc, @ctx, @frames, self)
+    blob.call(@bc, ctx, @frames, self)
   end
 
   def step

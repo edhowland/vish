@@ -19,6 +19,14 @@ def vmrun(source)
   vm.run
 end
 
+def mkfoo
+  "defn foo(a, b) { :a + :b}\n"
+end
+def callfoo(x=3, y=4)
+  "foo(#{x}, #{y})\n"
+end
+## Experimental end 
+
 
 include TreeUtils
 

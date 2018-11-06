@@ -22,4 +22,6 @@ class VishMachineEx < VishMachine
     }
   end
   attr_reader :ffi
+
+
 end
