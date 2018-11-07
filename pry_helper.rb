@@ -10,9 +10,7 @@ require_relative 'lib/vm'
 
 def vmfrom(compiler)
   result = VishMachineEx.new(compiler.bc, compiler.ctx)
-  result.ffi.extend FFITypes
-  result.ffi.extend VishPredicates
-  
+
   VishPrelude.build result
   result
 end

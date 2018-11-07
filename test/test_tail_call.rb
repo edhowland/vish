@@ -2,6 +2,13 @@
 
 require_relative 'test_helper'
 
+## NOTE:
+# Since old CodeInterpreter does not support multiple instances of itself,
+# we use instead prototype of VishMachine(Ex) instead. This allows us to compare
+# the results of a non-tail call optimized compiler with a tail call optimized
+# one.
+require_relative '../lib/vm'
+
 
 class TestTailCall < BaseSpike
   include CompileHelper
@@ -16,7 +23,9 @@ fact(5)
 EOC
 end
   def cifrom(compiler)
-    CodeInterpreter.new(compiler.bc, compiler.ctx)
+    result = VishMachineEx.new(compiler.bc, compiler.ctx)
+    VishPrelude.build result
+    result
   end
   def vcompile source
     @vc.source = source
