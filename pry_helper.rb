@@ -810,17 +810,6 @@ else
 
 # fin: return last element in any list
 
-# but_last - return all elements of list except the last
-def but_last lst, &blk
-  if null?(lst)
-    NullType.new
-  elsif null?(cdr(lst))
-#binding.pry
-    block_given? ? list(blk.call(car(lst))) : NullType.new
-  else
-    cons(car(lst), but_last(cdr(lst), &blk))
-  end
-end
 
 
 
@@ -853,10 +842,12 @@ end
   end
 
   def mkvi(source)
-    cifrom(vcompile(source))
+#    cifrom(vcompile(source))
+  vmfrom vcompile source
   end
 def mkti source
-  cifrom(tcompile(source))
+#  cifrom(tcompile(source))
+  vmfrom tcompile source
 end
 
 
@@ -872,7 +863,7 @@ fact(5)
 EOC
   end
 
-def fact_aps
+def src_fact_aps
   <<-EOC
   # fact-aps.vs - Factorial using accumulator passing style
 defn fact(n) {

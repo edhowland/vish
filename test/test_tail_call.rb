@@ -63,7 +63,7 @@ end
   def set_up
     @vc = VishCompiler.new
     @tc = VishCompiler.new
-    @vc.default_optimizers[:tail_call] = true
+    @tc.default_optimizers[:tail_call] = true
   end
 
   def test_simple_block_returns_match
