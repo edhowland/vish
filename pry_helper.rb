@@ -716,17 +716,8 @@ end
 def lambda?(sexp)
   list?(sexp) && car(sexp) == :lambda
 end
-def lambdacall?(sexp)
-  list?(sexp) && car(sexp) == :lambdacall
-end
 
 # handle returns that go thru a function
-def return?(sexp)
-  list?(sexp) && car(sexp) == :_return
-end
-def return_via_lambdacall?(sexp)
-  list?(sexp) && return?(sexp) && lambdacall?(cdr(sexp))
-end
 
 def t2
   tc('t2.vs')
@@ -815,23 +806,9 @@ else
   }
 
 
-def mkl
-  ->(x) {
-  cons(:tailcall, cdr(x))
-  }
-end
 
 
 # fin: return last element in any list
-def fin lst
-  if null?(lst)
-    NullType.new
-  elsif null?(cdr(lst))
-    car(lst)
-  else
-    fin(cdr(lst))
-  end
-end
 
 # but_last - return all elements of list except the last
 def but_last lst, &blk
@@ -850,35 +827,6 @@ end
 def leaf?(sexp)
   list?(sexp) && depth(sexp) == 1
 end
-def block? x
-  list?(x) && car(x) == :block
-end
-
-def conditional?(sexp)
-  list?(sexp) && [:logical_or, :logical_and].member?(car(sexp))
-end
-def xftail(ast)
-  l_to_t = mkl
-  map_inner_tree(ast) do |v|
-    if return_via_lambdacall?(v)
-      cons(car(v), l_to_t.call(cdr(v)))
-    elsif  tail_candidate?(v)
-      but_last(v, &l_to_t)
-    elsif conditional?(v)
-#      list(car(v), xftail(cadr(v)), xftail(caddr(v)))
-      left = cadr(v); right = caddr(v)
-      if lambdacall?(right)
-        right = l_to_t.call(right)
-      else
-        right = xftail(right)
-      end
-      list(car(v), xftail(left), right)
-    else
-      v
-    end
-  end
-end
-
 
 # block?(v) && lambdacall?(fin(v))
 
@@ -923,4 +871,31 @@ defn fact(n) {
 fact(5)
 EOC
   end
+
+def fact_aps
+  <<-EOC
+  # fact-aps.vs - Factorial using accumulator passing style
+defn fact(n) {
+defn fact_aps(x, acc) {
+  {zero?(:x) && :acc} || fact_aps(:x - 1, :acc * :x)
+}
+
+  # Now call helper
+  fact_aps(:n, 1)
+}
+fact(6)
+EOC
+end
   
+    def max_depth &blk
+    xmax =  0
+    loop do
+      begin
+        xmax = [xmax, yield].max
+      rescue HaltState
+        raise StopIteration
+      end
+    end
+    xmax
+  end
+

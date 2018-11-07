@@ -22,6 +22,21 @@ defn fact(n) {
 fact(5)
 EOC
 end
+
+def src_fact_aps
+  <<-EOC
+  # fact-aps.vs - Factorial using accumulator passing style
+defn fact(n) {
+defn fact_aps(x, acc) {
+  {zero?(:x) && :acc} || fact_aps(:x - 1, :acc * :x)
+}
+
+  # Now call helper
+  fact_aps(:n, 1)
+}
+fact(6)
+EOC
+end
   def cifrom(compiler)
     result = VishMachineEx.new(compiler.bc, compiler.ctx)
     VishPrelude.build result
@@ -76,6 +91,39 @@ end
   def test_fact_direct_both_get_same_result
     vi = mkvi src_fact_direct; ti = mkti src_fact_direct
     assert_eq ti.run, vi.run
+  end
+  def test_fact_aps_both_agree
+    vi = mkvi src_fact_aps; ti = mkti src_fact_aps
+    assert_eq ti.run, vi.run
+  end
+
+  # Now capture maximum stack depth reached
+  def max_depth &blk
+    xmax =  0
+    loop do
+      begin
+        xmax = [xmax, yield].max
+      rescue HaltState
+        raise StopIteration
+      end
+    end
+    xmax
+  end
+
+  def test_fact_dir_matches_stack_depth
+    vi = mkvi src_fact_direct; ti = mkti src_fact_direct
+    vmax = max_depth { vi.step; vi.frames.length }
+    tmax = max_depth { ti.step; ti.frames.length }
+    assert_eq tmax, vmax
+    # puts "vmax #{vmax}, tmax #{tmax}"
+  end
+
+  # Should not be same stack depth, must be smaller
+  def test_fact_aps_should_result_smaller_max_depth_for_tail_call
+    vi = mkvi src_fact_aps; ti = mkti src_fact_aps
+    vmax = max_depth { vi.step; vi.frames.length }
+    tmax = max_depth { ti.step; ti.frames.length }
+    assert tmax < vmax, "Expected #{tmax} to be less than #{vmax}"
   end
   end
   
