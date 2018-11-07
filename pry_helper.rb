@@ -5,8 +5,8 @@ require_relative 'lib/vish'
 require_relative 'pry/lib'
 
 # Experimental
-require_relative 'vish_machine_ex'
-require_relative 'vish_ffi'
+require_relative 'lib/vm'
+
 
 def vmfrom(compiler)
   result = VishMachineEx.new(compiler.bc, compiler.ctx)
