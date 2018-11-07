@@ -4,6 +4,11 @@ require_relative 'vish_machine'
 require_relative 'vish_ffi'
 # Prelude stuff - Here For now 
 require_relative 'ffi_types'
+require_relative 'vish_predicates'
+
+require_relative 'vish_prelude'
+
+
 
 
 

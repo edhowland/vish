@@ -11,12 +11,18 @@ require_relative 'vish_ffi'
 def vmfrom(compiler)
   result = VishMachineEx.new(compiler.bc, compiler.ctx)
   result.ffi.extend FFITypes
+  result.ffi.extend VishPredicates
+  
+  VishPrelude.build result
   result
 end
 def vmrun(source)
   c = compile source
   vm = vmfrom(c)
   vm.run
+end
+def mkvm(source)
+  vmfrom(compile(source))
 end
 
 def mkfoo
