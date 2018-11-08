@@ -25,6 +25,13 @@ class VishMachineEx < VishMachine
     argv = ctx.stack.pop(argc)
     ctx.stack.push(@ffi.send(meth, *argv))
     }
+    @opcodes[:fret] = ->(bc, ctx, fr, intp) {
+      frame = fr.pop
+      ret_val = frame.ctx.stack.safe_pop
+      #fr
+      intp.ctx.stack.push ret_val
+      bc.pc = frame.return_to
+    }
   end
   attr_reader :ffi
 

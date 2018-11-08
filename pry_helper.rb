@@ -890,3 +890,8 @@ end
     xmax
   end
 
+
+def blktail
+  
+  'defn f() {9};{1;%f}'
+end

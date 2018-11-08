@@ -5,15 +5,20 @@ class VishMachine
   def initialize bc, ctx
     @bc = bc
     @ctx = ctx
-    @frames = LockedStack.new limit: 1000
-    @frames.push(MainFrame.new(@ctx))
+#    @frames = LockedStack.new limit: 1000
+#    @frames.push(MainFrame.new(@ctx))
+    @frames = LimitedStack.new limit: 1000
 
     @opcodes = opcodes
   end
   attr_reader :bc, :frames
 
   def ctx
-    @frames.peek.ctx
+    if @frames.length.zero?
+      @ctx
+    else
+      @frames.peek.ctx
+    end
   end
   def fetch
     @bc.next

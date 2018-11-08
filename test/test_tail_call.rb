@@ -125,5 +125,34 @@ end
     tmax = max_depth { ti.step; ti.frames.length }
     assert tmax < vmax, "Expected #{tmax} to be less than #{vmax}"
   end
+
+  # simple block: TODO: Must handle top-level block
+  def test_simple_block_will_tail_call
+    src =<<-EOC
+    defn t() {
+      defn g() { 2;9}
+      {3;%g}
+    }
+    %t
+EOC
+    vi = mkvi src; ti = mkti src
+    vmax = max_depth { vi.step; vi.frames.length }
+    tmax = max_depth { ti.step; ti.frames.length }
+
+      assert tmax < vmax, "Expected #{tmax} to be less than #{vmax}"
+  end
+
+  # test return via tail call
+  def test_will_return_via_tail_call
+    src =<<-EOC
+defn g() {9}
+defn f(x) {
+  zero?(:x) && return %g
+  %g + 9
+}
+
+EOC
+    vi = mkvi src+"\nf(0)\n";ti = mkti src+"\nf(0)\n"
+  end
   end
   
