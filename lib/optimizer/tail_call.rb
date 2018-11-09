@@ -22,7 +22,7 @@ class TailCall
   end
 
 
-  def tail_candidate?(sexp)
+  def block_has_tail_lambda?(sexp)
     block?(sexp) && lambdacall?(fin(sexp))
   end
   def return?(sexp)
@@ -59,10 +59,9 @@ end
     map_inner_tree(ast) do |v|
       if return_via_lambdacall?(v)
         cons(car(v), l_to_t.call(cdr(v)))
-      elsif  tail_candidate?(v)
+      elsif  block_has_tail_lambda?(v)
         but_last(v, &l_to_t)
       elsif conditional?(v)
-  #      list(car(v), xftail(cadr(v)), xftail(caddr(v)))
         left = cadr(v); right = caddr(v)
         if lambdacall?(right)
           right = l_to_t.call(right)

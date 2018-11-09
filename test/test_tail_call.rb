@@ -173,5 +173,28 @@ EOC
     assert !tail_found, "Expected to not find any :tailcalls, but did"
     assert lambdacall_found, "Expected to find a :lambdacall node"  
   end
+
+  # Cannot have tail calls in blocks that are not the tail position inside 
+  # lambdas. Must refrain from promoting anything in block or conditional
+  # into tailcall.
+  def test_non_tail_position_blocks_cannot_have_tailcalls
+    tails_found = 0
+    tcompile 'defn foo() {{9; %g}; 99}'
+    visit_tree @tc.ast, tailcall:->(x) {tails_found += 1 }
+    assert tails_found.zero?, "Expected to not find any tail calls, but found #{tails_found} instead" 
+  end
+  def test_block_at_tail_position_will_still_be_checked_for_tail_call
+    tcompile 'defn foo() {1; {9;%g}}'
+    tails_found = 0
+    visit_tree @tc.ast, tailcall: ->(x) { tails_found += 1 }
+    assert_eq tails_found, 1
+  end
+  def test_conditionals_not_tail_position_cannot_have_tail_calls
+    tails_found = 0
+
+    tcompile 'defn foo() { zero?(0) && %g; 3}'
+    visit_tree @tc.ast, tailcall:->(x) {tails_found += 1 }
+    assert tails_found.zero?, "Expected to not find any tail calls, but found #{tails_found} instead" 
+  end
   end
   
