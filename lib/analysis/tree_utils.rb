@@ -3,6 +3,19 @@
 # TreeUtils - Used in optimizers within VishCompiler
 module TreeUtils
   include ListProc
+  ##
+  # map_tree_with tree, nf: optional keywords
+  # Returns tree after replacing requested node types  with output of passed
+  # lambdas
+  def map_tree_with(tree, **nf)
+    map_inner_tree(tree) do |node|
+      if list?(node) && nf[car(node)]
+        nf[car(node)].call(node)
+      else
+        node
+      end
+    end
+  end
 
   ##
   # visit_tree AST, **visiters

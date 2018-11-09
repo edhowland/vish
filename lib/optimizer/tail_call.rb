@@ -76,8 +76,22 @@ end
     end
   end
 
+
+# map_tree_for tree, keywords w/lambdas for various node types. Like visit_tree
+
+def map_tree_for(tree, **nf)
+  map_inner_tree(tree) do |node|
+    if list?(node) && nf[car(node)]
+      nf[car(node)].call(node)
+    else
+      node
+    end
+  end
+end
+
+
   def run(ast)
-    xftail(ast)
-#    ast
+    map_tree_with(ast, lambda: ->(node) { xftail(node) })
+#    xftail(ast)
   end
 end

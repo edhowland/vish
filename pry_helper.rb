@@ -853,17 +853,17 @@ end
 
 
 
-  def fact_dir
+  def fact_dir(n=5)
          <<-EOC
     # fact-direct.vs - Direct method of factorial
 defn fact(n) {
   {zero?(:n) && 1} || :n * fact(:n - 1)
 }
-fact(5)
+fact(#{n})
 EOC
   end
 
-def src_fact_aps
+def src_fact_aps(n=6)
   <<-EOC
   # fact-aps.vs - Factorial using accumulator passing style
 defn fact(n) {
@@ -874,7 +874,7 @@ defn fact_aps(x, acc) {
   # Now call helper
   fact_aps(:n, 1)
 }
-fact(6)
+fact(#{n})
 EOC
 end
   

@@ -12,6 +12,7 @@ require_relative '../lib/vm'
 
 class TestTailCall < BaseSpike
   include CompileHelper
+  include TreeUtils
 
 def src_fact_direct
       <<-EOC
@@ -150,9 +151,27 @@ defn f(x) {
   zero?(:x) && return %g
   %g + 9
 }
-
 EOC
     vi = mkvi src+"\nf(0)\n";ti = mkti src+"\nf(0)\n"
+  end
+
+  # Should tail call within non-lambda bodies E.g. top-level blocks, conditionals
+  def test_does_not_convert_lambdacalls_to_tailcalls_for_top_level_constructs
+    tcompile 'defn g() {9}; {1; %g}'
+    tail_found = false
+    lambdacall_found = false
+    visit_tree @tc.ast, lambdacall: ->(x) { lambdacall_found = true }, tailcall: ->(x) { tail_found = true }
+    assert !tail_found, "Expected to not find any :tailcalls, but did"
+    assert lambdacall_found, "Expected to find a :lambdacall node"
+  end
+  # Should not have any tail calls for top-level conditionals, either.
+  def test_top_level_conditionals_should_not_have_tail_calls
+    tcompile 'zero?(0) && %g'
+      tail_found = false
+    lambdacall_found = false
+    visit_tree @tc.ast, lambdacall: ->(x) { lambdacall_found = true }, tailcall: ->(x) { tail_found = true }
+    assert !tail_found, "Expected to not find any :tailcalls, but did"
+    assert lambdacall_found, "Expected to find a :lambdacall node"  
   end
   end
   
