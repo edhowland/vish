@@ -79,7 +79,20 @@ end
     vi=cifrom(vcompile(source))
     assert_eq vi.run, 99
   end
-  def test_fib_direct_works_for_normal
+  # simplest tail call
+  def test_simplest_tail_call_is_converted
+    tcompile 'defn f() {%f}'
+    tails_found = 0
+    visit_tree @tc.ast, tailcall: ->(x) { tails_found += 1}
+    assert_eq tails_found, 1
+  end
+  def test_non_tc_optimized_compiler_does_not_transform_lambdacallls
+        vcompile 'defn f() {%f}'
+    tails_found = 0
+    visit_tree @vc.ast, tailcall: ->(x) { tails_found += 1}
+        assert tails_found.zero?, "Expected to not find any tail calls, but found #{tails_found} instead" 
+  end
+  def test_fact_direct_works_for_normal
     vi = mkvi src_fact_direct
     result = vi.run
     assert_eq result, 120
@@ -153,8 +166,22 @@ defn f(x) {
 }
 EOC
     vi = mkvi src+"\nf(0)\n";ti = mkti src+"\nf(0)\n"
+    assert (vi.run == 9) && (ti.run == 9), "Expected both optimized and non_optiized to return9, but one of them did not"
   end
-
+  def test_return_with_work_left_to_do_will_not_tail_call
+    src = 'defn foo() { return 8 + %g}'
+    tails_found = 0
+    tcompile src
+    visit_tree @tc.ast, tailcall: ->(x) { tails_found += 1 }
+    assert tails_found.zero?, "Expected to not find any tail calls because work left to do, but found #{tails_found}"
+  end
+  def test_return_via_block_withtail_call_is_tail_call
+    src = 'defn foo() { return {9; %g}}'
+    tcompile src
+    tails_found = 0
+        visit_tree @tc.ast, tailcall: ->(x) { tails_found += 1 }
+    assert_eq tails_found, 1
+  end
   # Should tail call within non-lambda bodies E.g. top-level blocks, conditionals
   def test_does_not_convert_lambdacalls_to_tailcalls_for_top_level_constructs
     tcompile 'defn g() {9}; {1; %g}'

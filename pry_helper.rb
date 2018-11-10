@@ -895,3 +895,11 @@ def blktail
   
   'defn f() {9};{1;%f}'
 end
+
+
+# New tail call helpers
+def get_lambda(sexp)
+  l=nil
+  visit_tree(sexp, lambda: ->(x) { l=x})
+  l
+end

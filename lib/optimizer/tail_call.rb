@@ -4,11 +4,45 @@ class TailCall
   include ListProc
   include TreeUtils
 
+  # util methods
+  def parmlist_of_lambda(lmb)
+    cadr(lmb)
+  end
+  def block_of_lambda(sexp)
+    caddr(sexp)
+  end
+  def mklambda(parms, block)
+    list(:lambda, parms, block)
+  end
+  # _run ast, - Eventually run
+  def _run(ast)
+    mklambda(parmlist_of_lambda(ast), handle_block(block_of_lambda(ast)))
+  end
+
+  # predicate methods
   def block? x
     list?(x) && car(x) == :block
   end
   def lambdacall?(sexp)
     list?(sexp) && car(sexp) == :lambdacall
+  end
+
+  # re-composer methods
+  def lambdacall_to_tailcall(x)
+        cons(:tailcall, cdr(x))
+  end
+  def taily(sexp)
+    if lambdacall?(sexp)
+      lambdacall_to_tailcall(sexp)
+    elsif block?(sexp)
+      handle_block(sexp)
+    else
+      sexp
+    end
+  end
+
+  def handle_block(block)
+    but_last(block) {|tail| taily(tail) }
   end
 
   def fin lst
