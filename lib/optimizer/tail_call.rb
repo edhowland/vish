@@ -16,7 +16,9 @@ class TailCall
   end
   # _run ast, - Eventually run
   def _run(ast)
-    mklambda(parmlist_of_lambda(ast), handle_block(block_of_lambda(ast)))
+    map_tree_with ast, lambda: ->(lmb) {
+      mklambda(parmlist_of_lambda(lmb), handle_block(block_of_lambda(lmb)))
+    }
   end
 
   # predicate methods
@@ -31,9 +33,30 @@ class TailCall
   def lambdacall_to_tailcall(x)
         cons(:tailcall, cdr(x))
   end
+
+  # expression_or_block(sexp) - Handle the left side of conditional  expression
+  def expression_or_block(sexp)
+    if block?(sexp)
+      handle_block(sexp)
+    else
+      sexp
+    end
+  end
+
+  # taily - TODO: MUST Rename this badly named function
+  # handles the tail of a block, in a block of a lambda, for example
   def taily(sexp)
     if lambdacall?(sexp)
       lambdacall_to_tailcall(sexp)
+    elsif conditional?(sexp)
+        left = cadr(sexp); right = caddr(sexp)
+        left = expression_or_block(left)
+        if lambdacall?(right)
+          right = lambdacall_to_tailcall(right)
+        else
+          right = expression_or_block(right)
+        end
+        list(car(sexp), left, right)
     elsif block?(sexp)
       handle_block(sexp)
     else
