@@ -15,7 +15,7 @@ class TailCall
     list(:lambda, parms, block)
   end
   # _run ast, - Eventually run
-  def _run(ast)
+  def run(ast)
     map_tree_with ast, lambda: ->(lmb) {
       mklambda(parmlist_of_lambda(lmb), handle_block(block_of_lambda(lmb)))
     }
@@ -64,8 +64,20 @@ class TailCall
     end
   end
 
+  def convert_returns(sexp)
+    map_tree_with sexp, _return: ->(x) {
+      if lambdacall?(cdr(x))
+        cons(:_return, lambdacall_to_tailcall(cdr(x)))
+      elsif block?(cdr(x))
+        cons(:_return, handle_block(cdr(x)))
+      else
+        x
+      end
+    }
+  end
+
   def handle_block(block)
-    but_last(block) {|tail| taily(tail) }
+    convert_returns(but_last(block) {|tail| taily(tail) })
   end
 
   def fin lst
@@ -135,7 +147,7 @@ end
 
 
 
-  def run(ast)
+  def x_run(ast)
     map_tree_with(ast, lambda: ->(node) { xftail(node) })
 #    xftail(ast)
   end

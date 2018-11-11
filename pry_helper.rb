@@ -877,7 +877,14 @@ defn fact_aps(x, acc) {
 fact(#{n})
 EOC
 end
-  
+def fact_aps
+  <<-EOC
+  defn fact_aps(x, acc) {
+  {zero?(:x) && :acc} ||
+   fact_aps(:x - 1, :acc * :x)
+}
+EOC
+end  
     def max_depth &blk
     xmax =  0
     loop do
