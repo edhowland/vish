@@ -881,7 +881,8 @@ def fact_aps
   <<-EOC
   defn fact_aps(x, acc) {
   {zero?(:x) && :acc} ||
-   fact_aps(:x - 1, :acc * :x)
+%fact_aps
+#   fact_aps(:x - 1, :acc * :x)
 }
 EOC
 end  
@@ -909,4 +910,33 @@ def get_lambda(sexp)
   l=nil
   visit_tree(sexp, lambda: ->(x) { l=x})
   l
+end
+
+def contains? tree, sym, result=false
+  if null?(tree)
+    result
+  elsif list?(car(tree)) && caar(tree) == sym
+    contains?(cdr(tree), sym, true)
+  else
+    contains?(cdr(tree), sym, result)
+  end
+end
+def filter_list_for(lst, **nf)
+  if null?(lst)
+    NullType.new
+    elsif list?(car(lst)) && nf[caar(lst)]
+      filter_list_for(cdr(lst), **nf)
+  else
+      cons(car(lst), filter_list_for(cdr(lst), **nf))
+  end
+end
+
+def filter_tree_for(tree, **nf)
+  map_inner_tree(tree) do |node|
+    if list?(node) && contains?(node, :ignore)
+      filter_list_for(node, **nf)
+    else
+      node
+    end
+  end
 end

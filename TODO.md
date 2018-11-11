@@ -1,5 +1,9 @@
 # TODO
 
+## Todo: Must improve SexpTransform to convert import/export  and pragma
+
+into S-Expressions
+
 ## Todo: Add notes re: creating your own Rakefiles
 
 Note how you can load the /path/to/vish/bin/vishc in your Rakefile
