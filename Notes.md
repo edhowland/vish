@@ -11,12 +11,33 @@ Rules
   * Conditional in last child
     - All legs of conditional are also in tail call position
 - Non-lambda calls/conditionals are not in tail position.
-- A :block in last child is in tail position. Recur on block above.
+- A block in last child is in tail position. Recur on block above.
 
 Therefore, we recursively define each leg according to these rules.
 
+Any left childs of a conditional are not in tail position, unless they are a block.
+Then only the block rules apply.
+
+You would expect to have a predicate happen in left child. Since it still has
+work to do, you would not like to leave the function body and not return.
+
+However, if you have a nested conditional, and a lambdacall occurs in the upper
+left child, but inside the right child, then it is a tailcall. (Only if it is
+inside a lambda body.)
+
+```
+->(x) {
+  {zero?(:x) && %g} || %f
+}
+```
+
+In the above example, both %g and %f are in tail position. but zero?(:x) is not.
+
 Final observation, Any return expression, apply the above rules. Because it is 
 by definition in tail position.
+
+This is not true for returns outside of Lambda blocks.
+
 ## Porposed version 0.6.3: Continuations
 
 Subclass of LambdaType is Continuation.
@@ -33,7 +54,12 @@ Tests in test/test_continuations.rb
 
 ### Tail call optimization
 
-To activate tail call optimization, set shell environment TCO=1
+To activate tail call optimization: TCO:
+Use the --tail_call flag for the vishc executable. Or, set it to true in
+
+```
+VishCompiler.new.default_optimizers[:tail_call] = true
+#
 This enables it at runtime. Otherwise, recursive calls will consume stack space.
 
 

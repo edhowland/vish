@@ -16,6 +16,12 @@ class TestAnalysis < BaseSpike
     end
   end
 
+  # set options for constant folding
+  def set_up
+    @compiler = VishCompiler.new('')
+    @compiler.default_optimizers[:constant_folder] = true
+  end
+
 
   def test_can_fold_constant
     assert_eq interpret('3+4'), 7

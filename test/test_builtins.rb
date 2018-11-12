@@ -93,4 +93,20 @@ class TestBuiltins < BaseSpike
   def test_tail
     assert_eq interpret('tail([0,1,2,3])'), [1,2,3]
   end
+
+  # vish_base stuff
+  def test_vish_base_works_with_no_trailing_add_on
+    prelude=vish_path
+    assert_eq Builtins.vish_base, prelude
+  end
+  def test_vish_base_w_o_begging_slash
+    prelude=vish_path
+    result = Builtins.vish_base('bin/vishc')
+    assert_eq result, prelude + '/' + 'bin/vishc'
+  end
+  def test_vish_base_w_leading_slash
+    prelude = vish_path
+    result = Builtins.vish_base('/bin/vishc')
+    assert_eq result, prelude + '/' + 'bin/vishc'
+  end
 end

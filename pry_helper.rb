@@ -4,6 +4,36 @@
 require_relative 'lib/vish'
 require_relative 'pry/lib'
 
+# Experimental
+require_relative 'lib/vm'
+
+
+def vmfrom(compiler)
+  result = VishMachineEx.new(compiler.bc, compiler.ctx)
+
+  VishPrelude.build result
+  result
+end
+def vmrun(source)
+  c = compile source
+  vm = vmfrom(c)
+  vm.run
+end
+def mkvm(source)
+  vmfrom(compile(source))
+end
+
+def mkfoo
+  "defn foo(a, b) { :a + :b}\n"
+end
+def callfoo(x=3, y=4)
+  "foo(#{x}, #{y})\n"
+end
+## Experimental end 
+
+
+include TreeUtils
+
 # trace helper
 # set this to false to turn off tracing. Leave it on to discover code that stills contains trace calls
 $tracing = true
@@ -530,6 +560,7 @@ def gci source
   cifrom(compile(source))
 end
 
+# rci - Run CodeInterpreter instance a single step at a time. Yields ci to block if given for inspection
 def rci ci, &blk
   begin
     loop do
@@ -541,11 +572,11 @@ def rci ci, &blk
   
   
   end
-  err
+  [ci.ctx.stack.peek, err]
 end
 
-def tc
-  TCOAnalysis.new
+def tc(src='tc.vs')
+  File.read(src)
 end
 
 def co str
@@ -611,4 +642,272 @@ end
 # string interpolation debugging
 def str_inter
   'obj="draft.1";x=~{email: ->() {"ed.howland@gmail.com"}};'
+end
+
+######
+# print AST and cons cells, pairs, .etc
+# atom? - not a pair?
+def atom?(object)
+  ! pair?(object)
+end
+
+def plist(lst, sep='')
+  if null?(lst)
+    ''
+  else
+    sep + pl(car(lst)) + plist(cdr(lst), ' ')
+  end
+end
+# pl(object)recursive list printer
+def pl(obj)
+  if null?(obj)
+    ''
+  elsif atom?(obj)
+    obj.inspect
+  elsif list?(obj)
+    '(' + plist(obj) + ')'
+  elsif pair?(obj)
+    '(' + pl(car(obj)) + ' . ' + pl(cdr(obj)) + ')'
+  else
+    fail 'pl: should never get here'
+  end
+end
+
+
+## Helpers for tail call optimizers
+def fact_s
+  File.read('fact.vs')
+end
+def tc_compiler(src)
+  r=VishCompiler.new(src)
+  r.default_optimizers[:tail_call] = true
+  r
+end
+
+
+def astsl(ast, sl=[])
+  if null?(ast)
+    sl
+  else
+    [car(ast)] + astsl(cdr(ast), sl)
+  end
+end
+
+def pgm_sl(ast)
+  astsl(cadr(ast))
+end
+
+def t1
+  tc('t1.vs')
+end
+
+# extract params and block from lambda
+def lmp(lm)
+  [cadr(lm), caddr(lm)]
+end
+# temp helper for t1
+def t1pb ast
+  lmp(pgm_sl(ast).first)
+  #
+end
+
+
+
+def lambda?(sexp)
+  list?(sexp) && car(sexp) == :lambda
+end
+
+# handle returns that go thru a function
+
+def t2
+  tc('t2.vs')
+end
+
+def  tp
+  tc('tp.vs')
+end
+
+def tail_candidate?(sexp)
+  block?(sexp) && lambdacall?(fin(sexp))
+end
+
+
+## temp
+def l_and_tail sexp
+  if lambda?(sexp)
+    if tail_candidate?(sexp)
+      puts 'found tail'
+    else
+      puts 'normal lambda'
+    end
+  end
+end
+# prototype for tail rewriting
+def tail_rewrite(ast)
+  fn = ->(v) { if tail_candidate?(v)
+    list(car(v), cadr(v), map_inner_tree(caddr(v), &fn))
+  else
+    v
+  end
+  }
+
+  map_inner_tree(ast, &fn)
+end
+
+# The identity Proc: id
+@id=->(x) {x}
+
+
+## helper for tail call optimizer
+# Walk tree and perform on function for most nodes,: front
+# But call the :back proc on the last node
+def map_front_back(ast, fr:, ba:)
+  if null?(ast)
+    NullType.new
+  elsif pair?(car(ast))
+    cons(map_front_back(car(ast), fr:fr, ba:ba), map_front_back(cdr(ast), fr:fr, ba:ba))
+  elsif null?(cdr(ast))
+      cons(ba.call(car(ast)), map_front_back(cdr(ast), fr:fr, ba:ba))
+  else
+    cons(fr.call(car(ast)), map_front_back(cdr(ast), fr:fr, ba:ba))
+  end
+end
+
+
+
+# attempt to rewrite lambdacall into tailcall
+@lcall = ->(t) {
+puts "examining last: #{t.class.name}"
+case t
+when list?(t)
+  puts 'found list'
+    puts pl(t)
+    t
+when PairType
+  puts 'found bare pair'
+    puts pl(t)
+
+      t
+when Symbol
+  if t == :lambdacall
+    puts 'found lambdacall'
+    t
+  else
+    puts "symbol: #{t}"
+    t
+  end
+when Parslet::Slice
+  puts t.to_s
+  t
+else
+  puts 'unknown type:' + t.class.name
+  t
+  end
+  }
+
+
+
+
+# fin: return last element in any list
+
+
+
+
+def leaf?(sexp)
+  list?(sexp) && depth(sexp) == 1
+end
+
+# block?(v) && lambdacall?(fin(v))
+
+## debugging functions for tail calls
+def calls(sexp)
+  visit_tree sexp,
+    lambdacall: ->(x) { puts x.inspect },
+    tailcall: ->(x) { puts x.inspect }
+end
+
+### try out stuff from test/test_tail_call.rb
+def tcompile source
+  tc = VishCompiler.new
+  tc.source = source
+  tc.default_optimizers[:tail_call] = true
+  tc.run
+  tc
+end
+  def vcompile source
+    vc = VishCompiler.new
+    vc.source = source
+    vc.run
+    vc
+  end
+
+  def mkvi(source)
+#    cifrom(vcompile(source))
+  vmfrom vcompile source
+  end
+def mkti source
+#  cifrom(tcompile(source))
+  vmfrom tcompile source
+end
+
+
+
+
+  def fact_dir(n=5)
+         <<-EOC
+    # fact-direct.vs - Direct method of factorial
+defn fact(n) {
+  {zero?(:n) && 1} || :n * fact(:n - 1)
+}
+fact(#{n})
+EOC
+  end
+
+def src_fact_aps(n=6)
+  <<-EOC
+  # fact-aps.vs - Factorial using accumulator passing style
+defn fact(n) {
+defn fact_aps(x, acc) {
+  {zero?(:x) && :acc} || fact_aps(:x - 1, :acc * :x)
+}
+
+  # Now call helper
+  fact_aps(:n, 1)
+}
+fact(#{n})
+EOC
+end
+def fact_aps
+  <<-EOC
+  defn fact_aps(x, acc) {
+  {zero?(:x) && :acc} ||
+%fact_aps
+#   fact_aps(:x - 1, :acc * :x)
+}
+EOC
+end  
+    def max_depth &blk
+    xmax =  0
+    loop do
+      begin
+        xmax = [xmax, yield].max
+      rescue HaltState
+        raise StopIteration
+      end
+    end
+    xmax
+  end
+
+
+def blktail
+  
+  'defn f() {9};{1;%f}'
+end
+
+
+# New tail call helpers
+def get_lambda(sexp)
+  l=nil
+  visit_tree(sexp, lambda: ->(x) { l=x})
+  l
 end

@@ -12,7 +12,7 @@ application. It is written in Ruby and hosted in Ruby which provides a rich
 ecosystem of tools and libraries.
 
 
-## Version 0.6.3-2
+## Version 0.6.4
 
 Note: Major releases of Vish will drop on April 1st of every year. This is
 similar to point releases of Ruby dropping on Christmas day each year.
@@ -59,7 +59,12 @@ Vish has support for:
 
 Note: Tail call optimization is, as of version 0.6.2, an experimental feature.
 It is turned off by default. Plans are to make it on by default in 0.7+
-Experimental version 0.6.4 will rewite the AST to make tail calls work at compile time.
+
+## Note:
+
+Tail call optimization is improved in 0.6.4 and above. Although still turned
+off by default, you can turn it it on with a compiler flag. Other optimizers
+also can be turned on.
 
 See: [Notes.md](Notes.md)
 
@@ -68,6 +73,10 @@ See: [Notes.md](Notes.md)
 Vish, as of 0.6.3-1, folds constants so integer expressions are computed
 at compile time, if they contain only constants.
 
+#### Note:
+
+This optimization is also turned off by default. You can turn it on with a
+compiler flag.
 ## Requirements
 
 Vish requires Ruby 2.2+
@@ -148,7 +157,7 @@ $ cat main.vs
 fib(34)
 
 
-$ TCO=1 ./bin/vish -l ./fib-cps.vs main.vs 
+$ ./bin/vish -l ./fib-cps.vs main.vs 
 9227465
 ```
 

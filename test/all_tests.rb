@@ -39,3 +39,5 @@ require_relative 'test_vish'
 require_relative 'test_curry'
 require_relative 'test_continuations'
 require_relative 'test_analysis'
+require_relative 'test_tail_call'
+

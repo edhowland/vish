@@ -4,6 +4,12 @@
 # Vish Language built in functions
 
 
+  ## The Ruby version as tuple of ints
+
+
+  ## vish_base(trail) - returns path for base of Vish stuff with optional trailing part
+
+
   ## output the version of the runtime
 
 
@@ -113,6 +119,9 @@
 
 
   ## prints string - prints string w/o newlines
+
+
+  ## chars(string) - string.chars
 
 
   ## gensym() - creates unique id
@@ -242,5 +251,32 @@
 
 
   ## symbol?(object) - true if object is a Symbol
+
+
+  ## max args - returns maximum of args
+
+
+  ## min args - returns minimum of args
+
+
+  # string/array methods: chomp, split and join
+
+
+    ## chompstring - chomps a string
+
+
+  ## join array, sep - joins array with sep or empty string
+
+
+    arr.join(sep)#
+
+
+  ## split string, sep - array  
+
+
+  ## shx input, command - Run the command through the shell and gather stdout
+
+
+  ## and return it  along with stderr and status code
 
 

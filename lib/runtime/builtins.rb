@@ -1,5 +1,7 @@
 # builtins.rb - module Builtins - builtin methods
 require 'fileutils'
+require 'open3'
+
 require 'readline'
 
 
@@ -13,6 +15,10 @@ module Builtins
   ## The Ruby version as tuple of ints
   def self.ruby_version
     RUBY_VERSION.split('.').map(&:to_i)
+  end
+  ## vish_base(trail) - returns path for base of Vish stuff with optional trailing part
+  def self.vish_base(trail='')
+    vish_path(trail)
   end
   ## output the version of the runtime
   def self.version()
@@ -186,6 +192,10 @@ module Builtins
   ## prints string - prints string w/o newlines
   def self.prints(string)
     $stdout.print string
+  end
+  ## chars(string) - string.chars
+  def self.chars(string)
+    string.chars
   end
   ## gensym() - creates unique id
   def self.gensym
@@ -377,6 +387,27 @@ module Builtins
   ## split string, sep - array  
   def self.split(string, sep)
     string.split(sep)
+  end
+  ## shx input, command - Run the command through the shell and gather stdout
+  ## and return it  along with stderr and status code
+  def self.shx(inp, command)
+    begin
+      stdin, stdout, stderr, status = Open3.popen3(command)
+    unless inp.nil?
+      stdin.write(inp.to_s)
+      stdin.close
+    end
+      out=stdout.read
+      err=stderr.read
+      status = status.value.exitstatus
+    rescue => err
+    err.message
+    ensure
+      stdout.close unless stdout.nil?
+      stderr.close unless stderr.nil?
+    end
+
+    [out, err, status]
   end
   
 end

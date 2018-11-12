@@ -40,29 +40,7 @@ module InterpreterMethods
   end
 
   ## _mklambda - creates a LambdaType object. Can be called with :ncall bytecode
-# Check if TCO environment var is set. If so, apply tail code optimization.
-if ENV["TCO"]
-  def self._mklambda(parms, body, id, loc=nil)
-    if body.last == :lcall
-      body[-1] = :tcall
-    end
 
-    result = LambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
-
-    # compute arity here. Might have to change for variadic lambdas
-    result[:arity] = parms.length   #parms.length.zero? ? 0 : parms.length/5
-    g = self._globals
-    if g.exist? id
-      loc = g[id]
-    else
-      loc = _attach(result[:body])
-    g[id] = loc
-    end
-    result[:loc] = loc
-    result[:id] = id
-    result
-  end
-else
   def self._mklambda(parms, body, id, loc=nil)
     result = LambdaType.new(parms:parms, body:body, _binding:@@interpreter.ctx.vars(), loc:loc)
     # compute arity here. Might have to change for variadic lambdas
@@ -78,7 +56,6 @@ else
     result[:id] = id
     result
   end
-end
   ## _globals - returns top level bindings
   def self._globals()
     @@interpreter.frames[0].ctx.vars

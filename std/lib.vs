@@ -38,6 +38,12 @@ defn callcc(l) {
 # From The Little Schemer by D. Friedman
 defn sub1(n) { :n - 1}
 defn add1(n) { :n + 1 }
+# a simple sh ... ell - shell function
+# Takes input, command and returns stdout, if exit status is 0, else false
+defn sh(inp, command) {
+  out=shx(:inp, :command)
+  zero?(:out[2]) && :out[0]
+}
 # set up some variables
 null=mknull()
 version=version()
