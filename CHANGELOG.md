@@ -23,7 +23,52 @@ Then, call VishPrelude.build(vm)
 
 - Tail call optimization occurs in analysis phase of VishCompiler
 - Optimizers are optionally set by compiler flags.
+- All optimizers are off by default.
 
+The current optimizers are:
+
+1. Constant folding
+2. Tail call optimizer
+
+Please see the help message for 'vishc' to understand the flags.
+
+### Constant folding
+
+Consider the following code expression:
+
+```
+a=12 * (2 + 4)
+```
+
+Since this expressions only contains constants, it can be precomputed at
+compile time.
+
+### Tail call optimization
+
+Any function definition with a function call in its tail position will be
+changed into a tail call at the opcode level. A new stack frame will not
+be constructed and the current stack frame of the calling function. The final
+return from the called function will return to the point where the calling
+cunction was invoked.
+
+```
+defn tail() { 9 }
+defn caller() { %tail }
+
+# Now call the outer function:
+%caller
+# => 9
+```
+
+In the above example, the call to %tail will not consume a  any more stack.
+
+Please see [Notes.md](Notes.md) for a fuller description of when function
+calls are optimized and when there not.
+
+Pleas compare 'examples/fact-direct.vs' and 'examples/fact-aps.vs'
+for implementations of factorial in direct style, and accumulator passing
+style. The latter will be tail call optimized if compiled with the --tail_call
+flag.
 
 ## 0.6.3-2 2018-10-25
 
