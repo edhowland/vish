@@ -3,6 +3,37 @@
 # TreeUtils - Used in optimizers within VishCompiler
 module TreeUtils
   include ListProc
+
+  ##
+  
+def contains? tree, sym, result=false
+  if null?(tree)
+    result
+  elsif list?(car(tree)) && caar(tree) == sym
+    contains?(cdr(tree), sym, true)
+  else
+    contains?(cdr(tree), sym, result)
+  end
+end
+def filter_list_for(lst, **nf)
+  if null?(lst)
+    NullType.new
+    elsif list?(car(lst)) && nf[caar(lst)]
+      filter_list_for(cdr(lst), **nf)
+  else
+      cons(car(lst), filter_list_for(cdr(lst), **nf))
+  end
+end
+
+def filter_tree_for(tree, **nf)
+  map_inner_tree(tree) do |node|
+    if list?(node) && nf.keys.reduce(false) {|i, j| i || contains?(node, j) }
+      filter_list_for(node, **nf)
+    else
+      node
+    end
+  end
+end
   ##
   # map_tree_with tree, nf: optional keywords
   # Returns tree after replacing requested node types  with output of passed

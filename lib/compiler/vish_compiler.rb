@@ -1,6 +1,9 @@
 # vish_compiler.rb - class VishCompiler - handles all phases of compile action
 
 class VishCompiler
+include TreeUtils
+
+
   def initialize source=''
     @source = source
 #  $node_name = 0 # start this from the beginning
@@ -48,7 +51,11 @@ class VishCompiler
 
   # Analysis Phase
   def analyze ast=@ast, functions:@functions, blocks:@blocks, lambdas:@lambdas
-    @ast=optimize(ast)
+    # Unavoidable: (:ignore) nodes are artifact of VishParser, so lets remove them
+    @ast = filter_tree_for(ast, ignore:true)
+
+    # Optimize, optionally.
+    @ast=optimize(@ast)
   end
 
   def generate ast=@ast, ctx:@ctx, bcodes:@bc
