@@ -13,7 +13,9 @@ module CompileHelper
     File.read('std/lib.vs')
   end
   def compile string
-  @compiler = VishCompiler.new string
+  # @compiler = VishCompiler.new string
+  @compiler ||= VishCompiler.new('')
+  @compiler.source = string
   @compiler.run
   return @compiler.bc, @compiler.ctx
   end

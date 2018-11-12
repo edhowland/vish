@@ -59,7 +59,6 @@ Vish has support for:
 
 Note: Tail call optimization is, as of version 0.6.2, an experimental feature.
 It is turned off by default. Plans are to make it on by default in 0.7+
-Experimental version 0.6.4 will rewite the AST to make tail calls work at compile time.
 
 See: [Notes.md](Notes.md)
 
@@ -148,7 +147,7 @@ $ cat main.vs
 fib(34)
 
 
-$ TCO=1 ./bin/vish -l ./fib-cps.vs main.vs 
+$ ./bin/vish -l ./fib-cps.vs main.vs 
 9227465
 ```
 

@@ -21,4 +21,9 @@ module Dispatch
   def self.ffi_ruby
     @@klasses.map {|k| k.methods(false) }.flatten
   end
+
+  # check if already contains this klass
+  def self.contains?(klass)
+    @@klasses.member? klass
+  end
 end

@@ -8,6 +8,16 @@ require_relative 'vish/vish_path'
 # common stuff
 require_relative 'runtime'
 
+# AST analysis stuff
+require_relative 'analysis'
+
+# Optimizer stuff
+require_relative 'optimizer'
+
+
+# code emission stuff 
+require_relative 'generation'
+
 
 # compiler stuff
 require_relative 'parser'
@@ -23,13 +33,6 @@ require_relative 'compiler'
 
 
 
-# AST analysis stuff
-# Restore this whenever some AST analysis is going on
-require_relative 'analysis'
-
-
-# code emission stuff 
-require_relative 'generation'
 
 
 # bytecode interpreter stuff

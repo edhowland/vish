@@ -41,7 +41,7 @@ class CodeInterpreter
 
     # hook into dispatcher.
     InterpreterMethods.add_interpreter(self)
-    Dispatch << InterpreterMethods
+    Dispatch << InterpreterMethods unless Dispatch.contains?(InterpreterMethods)
     # Handle the single case for the binding() call lambda proxy
     # It must grab from the penultimate frame, not its own
     ctx.vars[:binding]= InternalFunction.new(parms:[], body:[:frame, :send, :previous, :send, :_binding], _binding:ctx.vars, loc:bc.codes.length)
