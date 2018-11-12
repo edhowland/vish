@@ -6,6 +6,25 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### VishMachine will replace CodeInterpreter
+
+Currently, you cannot have more than one CodeInterpreter at a time in same
+process. This is improved with lib/vm/vish_machine.rb: VishMachine
+
+#### Note:
+
+ This will deprecate the Dispatch << MyModule method of adding
+FFI. Instead, you must vm.ffi itself with your module.
+Then, call VishPrelude.build(vm)
+
+## 0.6.4 2018-11-12
+
+### Changes
+
+- Tail call optimization occurs in analysis phase of VishCompiler
+- Optimizers are optionally set by compiler flags.
+
+
 ## 0.6.3-2 2018-10-25
 
 ### Changes
